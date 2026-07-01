@@ -1,8 +1,10 @@
+import browser from "webextension-polyfill"
+
 import { resolveBlockabilityStatus } from "~core/domain/status"
 import type { ObserverEvent } from "~core/domain/types"
 
 function emit(event: Omit<ObserverEvent, "tabId">) {
-  chrome.runtime.sendMessage({ type: "OBSERVED_EVENT", payload: { ...event, tabId: -1 } }).catch(() => undefined)
+  browser.runtime.sendMessage({ type: "OBSERVED_EVENT", payload: { ...event, tabId: -1 } }).catch(() => undefined)
 }
 
 function observeCanvasReads() {

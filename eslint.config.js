@@ -5,7 +5,6 @@ export default tseslint.config(js.configs.recommended, ...tseslint.configs.recom
   ignores: ["build/**", "dist/**", "out/**", ".plasmo/**", "node_modules/**", "*.tsbuildinfo"],
   languageOptions: {
     globals: {
-      chrome: "readonly",
       console: "readonly",
       crypto: "readonly",
       document: "readonly",

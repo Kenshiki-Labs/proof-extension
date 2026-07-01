@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
+import browser from "webextension-polyfill"
 
+import { RuntimeMessageSchema } from "~core/contracts/schemas"
 import type { SiteSummary } from "~core/domain/types"
 
 const EMPTY_SUMMARY: SiteSummary = {
@@ -20,15 +22,18 @@ function IndexPopup() {
 
   useEffect(() => {
     async function loadSummary() {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+      const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
       if (!tab?.id) return
 
-      const response = await chrome.runtime.sendMessage({
+      const response = await browser.runtime.sendMessage({
         type: "GET_SITE_SUMMARY",
         tabId: tab.id
       })
 
-      if (response?.type === "SITE_SUMMARY") setSummary(response.payload)
+      const parsedResponse = RuntimeMessageSchema.safeParse(response)
+      if (parsedResponse.success && parsedResponse.data.type === "SITE_SUMMARY") {
+        setSummary(parsedResponse.data.payload)
+      }
     }
 
     loadSummary().catch(() => setSummary(EMPTY_SUMMARY))

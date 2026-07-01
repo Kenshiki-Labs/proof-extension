@@ -21,14 +21,14 @@ export type FirstPartyPolicyLabel =
 export type ObserverEvent = {
   id: string
   tabId: number
-  frameId?: number
+  frameId?: number | undefined
   origin: string
   observedAt: number
   source: "network" | "content" | "api-hook"
-  trackerId?: string
-  companyId?: string
+  trackerId?: string | undefined
+  companyId?: string | undefined
   firstParty: boolean
-  policyLabel?: FirstPartyPolicyLabel
+  policyLabel?: FirstPartyPolicyLabel | undefined
   eventType:
     | "request_seen"
     | "request_blocked"
@@ -43,7 +43,7 @@ export type ObserverEvent = {
   status: ObservationStatus
   confidence: DetectionConfidence
   evidence: string[]
-  details?: Record<string, string | number | boolean>
+  details?: Record<string, string | number | boolean> | undefined
 }
 
 export type SiteSummary = {

@@ -9,6 +9,13 @@
     "./**/*.tsx"
   ],
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "strict": true,
     "moduleResolution": "bundler",
     "paths": {
       "~*": [
