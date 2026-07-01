@@ -1,0 +1,22 @@
+[
+  {
+    "id": "fullstory",
+    "schemaVersion": 1,
+    "match": {
+      "domains": ["fullstory.com", "edge.fullstory.com"],
+      "paths": ["/s/fs.js", "/rec/page"],
+      "requestTypes": ["script", "xmlhttprequest"]
+    },
+    "companyId": "fullstory",
+    "category": "session-replay",
+    "collects": ["scrolls", "clicks", "navigation", "potential form interaction metadata"],
+    "monetization": ["UX analytics", "conversion optimization", "behavior replay"],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block"
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": ["Request matched FullStory domain or ingest path."],
+    "remediationId": "fullstory-default"
+  }
+]

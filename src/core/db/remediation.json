@@ -1,0 +1,14 @@
+[
+  {
+    "id": "fullstory-default",
+    "future_collection_url": "https://www.fullstory.com/legal/privacy/",
+    "deletion_url": "https://www.fullstory.com/legal/privacy/",
+    "identity_verification_required": true,
+    "estimated_time_minutes": 20,
+    "recheck_interval_days": 180,
+    "friction_class": "medium",
+    "notes": "FullStory remediation depends on the site using FullStory and the applicable privacy request route.",
+    "jurisdiction_notes": "Rights vary by jurisdiction.",
+    "last_verified_at": "2026-07-01"
+  }
+]

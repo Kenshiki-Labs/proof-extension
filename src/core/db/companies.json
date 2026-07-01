@@ -1,0 +1,11 @@
+[
+  {
+    "id": "fullstory",
+    "name": "FullStory",
+    "parentCompany": "FullStory",
+    "aliases": ["FullStory", "FS"],
+    "categoryLabels": ["session replay", "product analytics"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@fullstory.com"
+  }
+]

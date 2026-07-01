@@ -1,0 +1,57 @@
+{
+  "name": "proof-extension",
+  "displayName": "Proof Extension",
+  "version": "0.0.1",
+  "description": "A browser-local observer panel for tracker detection, mitigation status, and source-level remediation routing.",
+  "private": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kenshiki-Labs/proof-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kenshiki-Labs/proof-extension/issues"
+  },
+  "homepage": "https://github.com/Kenshiki-Labs/proof-extension#readme",
+  "type": "module",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "build:chrome": "plasmo build --target=chrome-mv3",
+    "build:firefox": "plasmo build --target=firefox-mv2",
+    "build:edge": "plasmo build --target=edge-mv3",
+    "package": "plasmo package",
+    "lint": "eslint src eslint.config.js --ext .ts,.tsx,.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "plasmo": "^0.90.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@ianvs/prettier-plugin-sort-imports": "4.1.1",
+    "@types/chrome": "0.0.258",
+    "@types/node": "20.11.5",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "eslint": "^9.19.0",
+    "typescript-eslint": "^8.23.0",
+    "prettier": "3.2.4",
+    "typescript": "5.3.3",
+    "vitest": "^3.0.5"
+  },
+  "manifest": {
+    "permissions": [
+      "activeTab",
+      "declarativeNetRequest",
+      "scripting",
+      "storage"
+    ],
+    "host_permissions": [
+      "<all_urls>"
+    ]
+  }
+}
