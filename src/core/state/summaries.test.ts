@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent } from "~core/domain/types"
-import { createEmptySiteSummary, upsertEvent } from "./summaries"
+import { createEmptySiteSummary, pruneExpiredEvents, upsertEvent } from "./summaries"
 
 function event(overrides: Partial<ObserverEvent> = {}): ObserverEvent {
   return {
@@ -39,6 +39,15 @@ describe("upsertEvent", () => {
     expect(second.activeCompanies).toEqual([])
   })
 
+  it("caps retained events per tab", () => {
+    const first = upsertEvent(createEmptySiteSummary("https://example.test", 1), event({ id: "event-1" }), 2)
+    const second = upsertEvent(first, event({ id: "event-2", eventType: "webgl_query" }), 2)
+    const third = upsertEvent(second, event({ id: "event-3", eventType: "audio_fingerprint" }), 2)
+
+    expect(third.events.map((item) => item.id)).toEqual(["event-2", "event-3"])
+    expect(third.exposedSignals).toEqual(["webgl_query", "audio_fingerprint"])
+  })
+
   it("uses tracker and unknown keys for non-first-party events", () => {
     const first = upsertEvent(
       createEmptySiteSummary("https://example.test", 1),
@@ -48,5 +57,30 @@ describe("upsertEvent", () => {
 
     expect(second.blockedCompanies).toEqual(["fullstory"])
     expect(second.cannotBlockSignals).toEqual(["canvas_read"])
+  })
+})
+
+describe("pruneExpiredEvents", () => {
+  it("returns the same summary when every event is inside retention", () => {
+    const summary = upsertEvent(
+      createEmptySiteSummary("https://example.test", 1),
+      event({ observedAt: 1000 })
+    )
+
+    expect(pruneExpiredEvents(summary, 1, 2000)).toBe(summary)
+  })
+
+  it("drops expired events and rebuilds derived summary fields", () => {
+    const now = 10 * 24 * 60 * 60 * 1000
+    const first = upsertEvent(
+      createEmptySiteSummary("https://example.test", 1),
+      event({ id: "expired", observedAt: 1, status: "blocked", trackerId: "fullstory" })
+    )
+    const second = upsertEvent(first, event({ id: "fresh", observedAt: now, status: "active" }))
+    const pruned = pruneExpiredEvents(second, 1, now)
+
+    expect(pruned.events.map((item) => item.id)).toEqual(["fresh"])
+    expect(pruned.blockedCompanies).toEqual([])
+    expect(pruned.activeCompanies).toEqual(["https://example.test"])
   })
 })

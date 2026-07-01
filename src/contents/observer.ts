@@ -1,34 +1,27 @@
 import browser from "webextension-polyfill"
+import type { PlasmoCSConfig } from "plasmo"
 
-import { resolveBlockabilityStatus } from "~core/domain/status"
 import type { ObserverEvent } from "~core/domain/types"
+
+const PAGE_EVENT_TYPE = "proof-extension:observer-event"
+
+export const config: PlasmoCSConfig = {
+  matches: ["<all_urls>"],
+  run_at: "document_start"
+}
 
 function emit(event: Omit<ObserverEvent, "tabId">) {
   browser.runtime.sendMessage({ type: "OBSERVED_EVENT", payload: { ...event, tabId: -1 } }).catch(() => undefined)
 }
 
-function observeCanvasReads() {
-  const original = HTMLCanvasElement.prototype.toDataURL
+window.addEventListener("message", (message) => {
+  if (message.source !== window) return
+  if (message.data?.type !== PAGE_EVENT_TYPE) return
 
-  HTMLCanvasElement.prototype.toDataURL = function patchedToDataURL(...args) {
-    const status = resolveBlockabilityStatus("content_mitigatable", { mitigated: false })
+  emit(message.data.payload)
+})
 
-    emit({
-      id: crypto.randomUUID(),
-      origin: location.origin,
-      observedAt: Date.now(),
-      source: "api-hook",
-      firstParty: true,
-      policyLabel: "fingerprinting",
-      eventType: "canvas_read",
-      blockability: "content_mitigatable",
-      status,
-      confidence: "probable",
-      evidence: ["HTMLCanvasElement.toDataURL was called by page script."]
-    })
-
-    return original.apply(this, args)
-  }
-}
-
-observeCanvasReads()
+document.addEventListener(PAGE_EVENT_TYPE, (event) => {
+  if (!(event instanceof CustomEvent)) return
+  emit(event.detail)
+})

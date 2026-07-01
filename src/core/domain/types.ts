@@ -61,6 +61,7 @@ export type SiteSummary = {
 
 export type UserSettings = {
   retentionDays: number
+  maxEventsPerTab: number
   mitigateCanvas: boolean
   mitigateAudio: boolean
   mitigateWebgl: boolean

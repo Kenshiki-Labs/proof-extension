@@ -65,6 +65,7 @@ export const SiteSummarySchema = z.object({
 
 export const UserSettingsSchema = z.object({
   retentionDays: z.number().int().min(1).max(365),
+  maxEventsPerTab: z.number().int().min(1).max(500),
   mitigateCanvas: z.boolean(),
   mitigateAudio: z.boolean(),
   mitigateWebgl: z.boolean()
