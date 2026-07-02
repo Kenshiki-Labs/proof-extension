@@ -46,6 +46,18 @@ export type ObserverEvent = {
   details?: Record<string, string | number | boolean> | undefined
 }
 
+// A page-level uncaught error observed while this extension was active on
+// the tab. Correlation, not causation — the spec bans false certainty, and
+// attributing a page error to our own hooks vs. a pre-existing site bug is
+// not reliably knowable from a stack trace alone. The point is to never stay
+// silent if the page might have broken while we were running on it.
+export type PageError = {
+  id: string
+  observedAt: number
+  message: string
+  stackPreview?: string | undefined
+}
+
 export type SiteSummary = {
   origin: string
   tabId: number
@@ -55,6 +67,7 @@ export type SiteSummary = {
   exposedSignals: string[]
   cannotBlockSignals: string[]
   events: ObserverEvent[]
+  pageErrors: PageError[]
   incomplete: boolean
   updatedAt: number
 }
@@ -62,6 +75,7 @@ export type SiteSummary = {
 export type UserSettings = {
   retentionDays: number
   maxEventsPerTab: number
+  blockedTrackerIds: string[]
   mitigateCanvas: boolean
   mitigateAudio: boolean
   mitigateWebgl: boolean
@@ -69,8 +83,11 @@ export type UserSettings = {
 
 export type RuntimeMessage =
   | { type: "OBSERVED_EVENT"; payload: ObserverEvent }
+  | { type: "PAGE_ERROR_OBSERVED"; payload: Omit<PageError, "id"> }
   | { type: "GET_SITE_SUMMARY"; tabId: number }
   | { type: "SITE_SUMMARY"; payload: SiteSummary }
   | { type: "REFRESH_TAB_SCAN"; tabId: number }
+  | { type: "GET_SETTINGS" }
+  | { type: "SETTINGS"; payload: UserSettings }
   | { type: "UPDATE_SETTINGS"; payload: Partial<UserSettings> }
   | { type: "CLEAR_LOCAL_DATA" }

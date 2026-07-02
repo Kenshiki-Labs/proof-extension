@@ -1,4 +1,13 @@
-# Permissions
+---
+title: "Permissions"
+description: "The browser permissions Pulse Observer requests and why each one is needed."
+owner: Kenshiki
+section: docs
+lastReviewed: 2026-07-01
+nextReview: 2026-09-29
+version: "0.0.1"
+status: draft
+---
 
 - `activeTab`: read the active tab context for popup summaries.
 - `declarativeNetRequest`: block Chromium MV3 network requests where rules apply.

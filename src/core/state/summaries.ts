@@ -1,6 +1,7 @@
-import type { ObserverEvent, SiteSummary } from "~core/domain/types"
+import type { ObserverEvent, PageError, SiteSummary } from "~core/domain/types"
 
 export const DEFAULT_MAX_EVENTS_PER_TAB = 100
+export const MAX_PAGE_ERRORS_PER_TAB = 5
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 // retentionDays was defined in UserSettingsSchema but nothing ever enforced
@@ -52,8 +53,25 @@ export function createEmptySiteSummary(origin: string, tabId: number): SiteSumma
     exposedSignals: [],
     cannotBlockSignals: [],
     events: [],
+    pageErrors: [],
     incomplete: true,
     updatedAt: Date.now()
+  }
+}
+
+export function normalizeSiteSummary(summary: Partial<SiteSummary>, origin = "unknown", tabId = -1): SiteSummary {
+  return {
+    origin: summary.origin ?? origin,
+    tabId: summary.tabId ?? tabId,
+    activeCompanies: summary.activeCompanies ?? [],
+    blockedCompanies: summary.blockedCompanies ?? [],
+    mitigatedCompanies: summary.mitigatedCompanies ?? [],
+    exposedSignals: summary.exposedSignals ?? [],
+    cannotBlockSignals: summary.cannotBlockSignals ?? [],
+    events: summary.events ?? [],
+    pageErrors: summary.pageErrors ?? [],
+    incomplete: summary.incomplete ?? true,
+    updatedAt: summary.updatedAt ?? Date.now()
   }
 }
 
@@ -66,4 +84,13 @@ export function upsertEvent(
   const events = nextEvents.slice(-maxEventsPerTab)
 
   return { ...rebuildSummary(summary, events), origin: event.origin, incomplete: false }
+}
+
+// Deliberately never dropped by pruneExpiredEvents/retention — a record
+// that the page may have broken while this extension was active is exactly
+// the kind of thing "no silent action" means should stay visible, not age
+// out quietly like routine tracker noise.
+export function recordPageError(summary: SiteSummary, pageError: PageError, maxPerTab = MAX_PAGE_ERRORS_PER_TAB): SiteSummary {
+  const pageErrors = [...summary.pageErrors, pageError].slice(-maxPerTab)
+  return { ...summary, pageErrors, updatedAt: Date.now() }
 }

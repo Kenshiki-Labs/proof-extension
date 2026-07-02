@@ -20,6 +20,9 @@ vi.stubGlobal("chrome", {
     RuleActionType: {
       BLOCK: "block"
     },
+    onRuleMatchedDebug: {
+      addListener: vi.fn()
+    },
     getDynamicRules: vi.fn().mockResolvedValue([]),
     updateDynamicRules: vi.fn().mockResolvedValue(undefined)
   },
@@ -31,5 +34,10 @@ vi.stubGlobal("chrome", {
   },
   tabs: {
     query: vi.fn()
+  },
+  webRequest: {
+    onBeforeRequest: {
+      addListener: vi.fn()
+    }
   }
 })

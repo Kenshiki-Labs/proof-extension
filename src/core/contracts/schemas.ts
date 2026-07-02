@@ -50,6 +50,13 @@ export const ObserverEventSchema = z.object({
   details: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional()
 })
 
+export const PageErrorSchema = z.object({
+  id: z.string().min(1),
+  observedAt: z.number().int().nonnegative(),
+  message: z.string().min(1),
+  stackPreview: z.string().optional()
+})
+
 export const SiteSummarySchema = z.object({
   origin: z.string().min(1),
   tabId: z.number().int(),
@@ -59,6 +66,7 @@ export const SiteSummarySchema = z.object({
   exposedSignals: z.array(z.string()),
   cannotBlockSignals: z.array(z.string()),
   events: z.array(ObserverEventSchema),
+  pageErrors: z.array(PageErrorSchema),
   incomplete: z.boolean(),
   updatedAt: z.number().int().nonnegative()
 })
@@ -66,6 +74,11 @@ export const SiteSummarySchema = z.object({
 export const UserSettingsSchema = z.object({
   retentionDays: z.number().int().min(1).max(365),
   maxEventsPerTab: z.number().int().min(1).max(500),
+  // This is primarily an observer, not a blocker — network blocking is
+  // opt-in and per-tracker, chosen right where the tracker is observed (the
+  // popup), not a single global switch. Empty by default, so nothing
+  // changes site behavior until the user opts a specific tracker in.
+  blockedTrackerIds: z.array(z.string().min(1)),
   mitigateCanvas: z.boolean(),
   mitigateAudio: z.boolean(),
   mitigateWebgl: z.boolean()
@@ -73,9 +86,12 @@ export const UserSettingsSchema = z.object({
 
 export const RuntimeMessageSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("OBSERVED_EVENT"), payload: ObserverEventSchema }),
+  z.object({ type: z.literal("PAGE_ERROR_OBSERVED"), payload: PageErrorSchema.omit({ id: true }) }),
   z.object({ type: z.literal("GET_SITE_SUMMARY"), tabId: z.number().int() }),
   z.object({ type: z.literal("SITE_SUMMARY"), payload: SiteSummarySchema }),
   z.object({ type: z.literal("REFRESH_TAB_SCAN"), tabId: z.number().int() }),
+  z.object({ type: z.literal("GET_SETTINGS") }),
+  z.object({ type: z.literal("SETTINGS"), payload: UserSettingsSchema }),
   z.object({ type: z.literal("UPDATE_SETTINGS"), payload: UserSettingsSchema.partial() }),
   z.object({ type: z.literal("CLEAR_LOCAL_DATA") })
 ])
@@ -100,6 +116,8 @@ export const TrackerRecordSchema = z.object({
   evidenceTemplate: z.array(z.string().min(1)).min(1),
   remediationId: z.string().min(1)
 })
+
+export type TrackerRecord = z.infer<typeof TrackerRecordSchema>
 
 export const CompanyRecordSchema = z.object({
   id: z.string().min(1),

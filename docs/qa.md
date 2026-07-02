@@ -1,4 +1,13 @@
-# QA Stack
+---
+title: "QA Stack"
+description: "The layered QA gates — schema validation, static analysis, unit, browser, and E2E tests — that must pass before release."
+owner: Kenshiki
+section: docs
+lastReviewed: 2026-07-01
+nextReview: 2026-09-29
+version: "0.0.1"
+status: draft
+---
 
 Proof Extension uses layered QA so bad data, unsafe contracts, broken adapters, and browser behavior regressions fail before release.
 

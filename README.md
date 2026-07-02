@@ -1,4 +1,12 @@
-# Proof Extension
+---
+title: "Proof Extension README"
+description: "Repository overview, development commands, and layout for the Pulse Observer browser extension."
+owner: Kenshiki
+status: draft
+version: "0.0.1"
+lastReviewed: 2026-07-01
+nextReview: 2026-09-29
+---
 
 Proof Extension is a browser-local observer panel for tracker detection, mitigation status, and source-level remediation routing.
 
@@ -42,6 +50,32 @@ pnpm build:chrome
 pnpm build:firefox
 pnpm build:edge
 ```
+
+Package and upload a Chrome MV3 release ZIP to Supabase Storage:
+
+```bash
+SUPABASE_SERVICE_ROLE_KEY=... pnpm release:supabase
+```
+
+If the Supabase CLI is already logged in, the script can also fetch the service-role key for the configured project without printing it:
+
+```bash
+supabase login
+pnpm release:supabase
+```
+
+The script builds and packages `chrome-mv3` by default, then uploads both:
+
+- `releases/<package-version>/proof-extension-chrome-mv3-<package-version>.zip`
+- `releases/latest/proof-extension-chrome-mv3-latest.zip`
+
+Optional environment variables:
+
+- `SUPABASE_URL` defaults to `https://rldcspgvbthxwklvsuhc.supabase.co`
+- `SUPABASE_BUCKET` defaults to `proof-extension`
+- `SUPABASE_PROJECT_REF` defaults to `rldcspgvbthxwklvsuhc`
+- `EXTENSION_TARGET` defaults to `chrome-mv3`
+- `RELEASE_VERSION` defaults to `package.json` version
 
 Run checks:
 

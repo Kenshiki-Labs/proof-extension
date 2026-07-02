@@ -16,6 +16,7 @@
     "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "strict": true,
+    "types": ["chrome", "node"],
     "moduleResolution": "bundler",
     "paths": {
       "~*": [

@@ -48,10 +48,13 @@ describe("validateTrackerDatabase", () => {
   it("validates DB schemas and cross-file references", () => {
     const db = validateTrackerDatabase()
 
-    expect(db.trackers).toHaveLength(1)
-    expect(db.trackers[0]?.companyId).toBe("fullstory")
-    expect(db.companies[0]?.id).toBe("fullstory")
-    expect(db.remediation[0]?.id).toBe("fullstory-default")
+    // The spec requires seeding at least 25 high-value trackers/vendors.
+    expect(db.trackers.length).toBeGreaterThanOrEqual(25)
+
+    const fullstoryTracker = db.trackers.find((item) => item.id === "fullstory")
+    expect(fullstoryTracker?.companyId).toBe("fullstory")
+    expect(db.companies.some((company) => company.id === "fullstory")).toBe(true)
+    expect(db.remediation.some((record) => record.id === "fullstory-default")).toBe(true)
   })
 
   it("rejects duplicate ids", () => {

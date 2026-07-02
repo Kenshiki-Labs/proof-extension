@@ -7,5 +7,228 @@
     "categoryLabels": ["session replay", "product analytics"],
     "jurisdiction": "US",
     "privacyContact": "privacy@fullstory.com"
+  },
+  {
+    "id": "google",
+    "name": "Google Analytics",
+    "parentCompany": "Alphabet Inc.",
+    "aliases": ["GA4", "Universal Analytics", "gtag.js"],
+    "categoryLabels": ["analytics"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@google.com"
+  },
+  {
+    "id": "google-tag-manager",
+    "name": "Google Tag Manager",
+    "parentCompany": "Alphabet Inc.",
+    "aliases": ["GTM"],
+    "categoryLabels": ["tag manager"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@google.com"
+  },
+  {
+    "id": "google-ads",
+    "name": "Google Ads / DoubleClick",
+    "parentCompany": "Alphabet Inc.",
+    "aliases": ["DoubleClick", "Google Ads Conversion Tracking"],
+    "categoryLabels": ["advertising", "retargeting"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@google.com"
+  },
+  {
+    "id": "meta",
+    "name": "Meta Pixel",
+    "parentCompany": "Meta Platforms, Inc.",
+    "aliases": ["Facebook Pixel", "Meta Ads"],
+    "categoryLabels": ["advertising", "retargeting"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@meta.com"
+  },
+  {
+    "id": "tiktok",
+    "name": "TikTok Pixel",
+    "parentCompany": "ByteDance Ltd.",
+    "aliases": ["TikTok Ads"],
+    "categoryLabels": ["advertising", "retargeting"],
+    "jurisdiction": "SG"
+  },
+  {
+    "id": "linkedin",
+    "name": "LinkedIn Insight Tag",
+    "parentCompany": "Microsoft Corporation",
+    "aliases": ["LinkedIn Ads"],
+    "categoryLabels": ["advertising", "b2b analytics"],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "hotjar",
+    "name": "Hotjar",
+    "parentCompany": "Contentsquare",
+    "aliases": ["Hotjar"],
+    "categoryLabels": ["session replay", "heatmaps"],
+    "jurisdiction": "EU",
+    "privacyContact": "privacy@hotjar.com"
+  },
+  {
+    "id": "mixpanel",
+    "name": "Mixpanel",
+    "parentCompany": "Mixpanel, Inc.",
+    "aliases": ["Mixpanel"],
+    "categoryLabels": ["product analytics"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@mixpanel.com"
+  },
+  {
+    "id": "segment",
+    "name": "Segment",
+    "parentCompany": "Twilio Inc.",
+    "aliases": ["Twilio Segment"],
+    "categoryLabels": ["customer data platform", "analytics"],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "amplitude",
+    "name": "Amplitude",
+    "parentCompany": "Amplitude, Inc.",
+    "aliases": ["Amplitude Analytics"],
+    "categoryLabels": ["product analytics"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@amplitude.com"
+  },
+  {
+    "id": "criteo",
+    "name": "Criteo",
+    "parentCompany": "Criteo SA",
+    "aliases": ["Criteo"],
+    "categoryLabels": ["advertising", "retargeting"],
+    "jurisdiction": "FR",
+    "privacyContact": "privacy@criteo.com"
+  },
+  {
+    "id": "adobe",
+    "name": "Adobe Analytics",
+    "parentCompany": "Adobe Inc.",
+    "aliases": ["Omniture", "SiteCatalyst"],
+    "categoryLabels": ["analytics"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@adobe.com"
+  },
+  {
+    "id": "braze",
+    "name": "Braze",
+    "parentCompany": "Braze, Inc.",
+    "aliases": ["Braze SDK"],
+    "categoryLabels": ["customer engagement", "behavioral profiling"],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "intercom",
+    "name": "Intercom",
+    "parentCompany": "Intercom, Inc.",
+    "aliases": ["Intercom Widget"],
+    "categoryLabels": ["customer messaging", "analytics"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@intercom.com"
+  },
+  {
+    "id": "drift",
+    "name": "Drift",
+    "parentCompany": "Salesloft, Inc.",
+    "aliases": ["Drift Chat"],
+    "categoryLabels": ["customer messaging"],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "optimizely",
+    "name": "Optimizely",
+    "parentCompany": "Optimizely, Inc.",
+    "aliases": ["Optimizely X"],
+    "categoryLabels": ["experimentation", "analytics"],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "crazyegg",
+    "name": "Crazy Egg",
+    "parentCompany": "Crazy Egg, Inc.",
+    "aliases": ["CrazyEgg"],
+    "categoryLabels": ["heatmaps", "session replay"],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "quantcast",
+    "name": "Quantcast",
+    "parentCompany": "Quantcast Corporation",
+    "aliases": ["Quantcast Measure"],
+    "categoryLabels": ["analytics", "advertising"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@quantcast.com"
+  },
+  {
+    "id": "taboola",
+    "name": "Taboola",
+    "parentCompany": "Taboola.com Ltd.",
+    "aliases": ["Taboola Native Ads"],
+    "categoryLabels": ["advertising", "content recommendation"],
+    "jurisdiction": "IL",
+    "privacyContact": "privacy@taboola.com"
+  },
+  {
+    "id": "outbrain",
+    "name": "Outbrain",
+    "parentCompany": "Outbrain Inc.",
+    "aliases": ["Outbrain Amplify"],
+    "categoryLabels": ["advertising", "content recommendation"],
+    "jurisdiction": "IL",
+    "privacyContact": "privacy@outbrain.com"
+  },
+  {
+    "id": "snap",
+    "name": "Snapchat Pixel",
+    "parentCompany": "Snap Inc.",
+    "aliases": ["Snap Pixel"],
+    "categoryLabels": ["advertising", "retargeting"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@snap.com"
+  },
+  {
+    "id": "pinterest",
+    "name": "Pinterest Tag",
+    "parentCompany": "Pinterest, Inc.",
+    "aliases": ["Pinterest Ads"],
+    "categoryLabels": ["advertising", "retargeting"],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "twitter",
+    "name": "X (Twitter) Pixel",
+    "parentCompany": "X Corp.",
+    "aliases": ["Twitter Ads Pixel"],
+    "categoryLabels": ["advertising", "retargeting"],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "yandex",
+    "name": "Yandex Metrica",
+    "parentCompany": "Yandex N.V.",
+    "aliases": ["Yandex.Metrica"],
+    "categoryLabels": ["analytics", "session replay"],
+    "jurisdiction": "RU"
+  },
+  {
+    "id": "microsoft-clarity",
+    "name": "Microsoft Clarity",
+    "parentCompany": "Microsoft Corporation",
+    "aliases": ["Clarity"],
+    "categoryLabels": ["session replay", "heatmaps"],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@microsoft.com"
+  },
+  {
+    "id": "datadog",
+    "name": "Datadog RUM",
+    "parentCompany": "Datadog, Inc.",
+    "aliases": ["Datadog Real User Monitoring"],
+    "categoryLabels": ["performance monitoring", "session replay"],
+    "jurisdiction": "US"
   }
 ]

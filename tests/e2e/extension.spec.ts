@@ -1,6 +1,9 @@
 import { chromium, expect, test } from "@playwright/test"
+import { rm } from "node:fs/promises"
 import http from "node:http"
 import path from "node:path"
+
+import { MAIN_WORLD_SCRIPT_ID } from "../../src/core/domain/constants"
 
 async function withFixtureServer(html: string, run: (url: string) => Promise<void>) {
   const server = http.createServer((_request, response) => {
@@ -22,6 +25,7 @@ async function withFixtureServer(html: string, run: (url: string) => Promise<voi
 test("loads the built Chromium extension popup", async () => {
   const extensionPath = path.resolve("build/chrome-mv3-prod")
   const userDataDir = path.resolve(".playwright/user-data/chromium-extension")
+  await rm(userDataDir, { force: true, recursive: true })
 
   const context = await chromium.launchPersistentContext(userDataDir, {
     args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
@@ -44,6 +48,7 @@ test("loads the built Chromium extension popup", async () => {
 test("records canvas reads from page scripts", async () => {
   const extensionPath = path.resolve("build/chrome-mv3-prod")
   const userDataDir = path.resolve(".playwright/user-data/chromium-canvas")
+  await rm(userDataDir, { force: true, recursive: true })
 
   const context = await chromium.launchPersistentContext(userDataDir, {
     args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
@@ -58,10 +63,10 @@ test("records canvas reads from page scripts", async () => {
     const page = await context.newPage()
     await expect
       .poll(async () => {
-        return await worker.evaluate(async () => {
-          const scripts = await chrome.scripting.getRegisteredContentScripts({ ids: ["srcContentsPageObserver"] })
+        return await worker.evaluate(async (scriptId) => {
+          const scripts = await chrome.scripting.getRegisteredContentScripts({ ids: [scriptId] })
           return scripts.length
-        })
+        }, MAIN_WORLD_SCRIPT_ID)
       })
       .toBe(1)
 
@@ -85,10 +90,13 @@ test("records canvas reads from page scripts", async () => {
         return await worker.evaluate(async () => {
           const stored = await chrome.storage.local.get("siteSummaries")
           const summaries = Object.values(stored.siteSummaries ?? {}) as Array<{ events?: Array<{ eventType: string }> }>
-          return summaries.some((summary) => summary.events?.some((event) => event.eventType === "canvas_read"))
+          return summaries.reduce(
+            (count, summary) => count + (summary.events?.filter((event) => event.eventType === "canvas_read").length ?? 0),
+            0
+          )
         })
       })
-      .toBe(true)
+      .toBe(1)
   } finally {
     await context.close()
   }
