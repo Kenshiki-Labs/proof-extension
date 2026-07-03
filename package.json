@@ -1,7 +1,7 @@
 {
   "name": "proof-extension",
   "displayName": "Proof Extension",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A browser-local observer panel for tracker detection, mitigation status, and source-level remediation routing.",
   "private": false,
   "license": "MIT",
@@ -23,6 +23,7 @@
     "build:firefox": "plasmo build --target=firefox-mv2",
     "build:edge": "plasmo build --target=edge-mv3",
     "package": "plasmo package",
+    "release:observe": "pnpm build:chrome && pnpm package && node scripts/release-observe.mjs",
     "release:supabase": "node scripts/release-supabase.mjs",
     "lint": "eslint src eslint.config.js --ext .ts,.tsx,.js",
     "typecheck": "tsc --noEmit",
