@@ -753,17 +753,17 @@ The popup is a compact controller. Detailed evidence belongs in a full extension
 
 The report tab must use normalized background state only. It must not own observation state independently of the background service worker.
 
-Report sections, in this order:
+Report sections, in this order (user-facing titles follow the tone rules — plain language, no mechanism names; internal identifiers in parentheses are stable for tests and tickets):
 
-1. `Summary`
-2. `Exposure scan`
-3. `Atomic observe/block matrix`
-4. `Observer details`
-5. `Stop at source`
-6. `Evidence timeline`
-7. `Diagnostics`
+1. `Summary` (summary)
+2. `What could be read about you` (exposure-scan)
+3. `Signals seen — and what can be done` (observe-block-matrix)
+4. `Who is watching` (observer-details)
+5. `Stop at source` (remediation)
+6. `Timeline` (evidence-timeline)
+7. `Diagnostics` (diagnostics)
 
-`Exposure scan` must be labeled as extension-run local visibility. It must not imply the current page queried those fields. `Atomic observe/block matrix` must exclude exposure-scan and extension-diagnostic events so it answers what page activity was actually observed and what can be blocked or mitigated.
+The exposure-scan section must be labeled as extension-run local visibility. It must not imply the current page queried those fields. The observe-block matrix must exclude exposure-scan and extension-diagnostic events so it answers what page activity was actually observed and what can be blocked or mitigated.
 
 ### Card fields
 

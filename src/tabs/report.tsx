@@ -6,6 +6,8 @@ import browser from "webextension-polyfill"
 import { RuntimeMessageSchema } from "~core/contracts/schemas"
 import { getObserverRemediation } from "~core/domain/remediation"
 import { isDiagnosticEvent } from "~core/state/summaries"
+import ValueLedgerView from "~components/value/ValueLedgerView"
+import { useValuationRollup } from "~hooks/useValuationRollup"
 import type { AtomicSignalRow, DisplayObservation } from "~core/report/display"
 import {
   EMPTY_SUMMARY,
@@ -71,10 +73,39 @@ function SectionTitle({ number, title }: { number: string; title: string }) {
   )
 }
 
+type ReportView = "evidence" | "value"
+
+function initialReportView(): ReportView {
+  return new URLSearchParams(location.search).get("view") === "value" ? "value" : "evidence"
+}
+
+function ReportViewSwitch({ onViewChange, view }: { onViewChange: (view: ReportView) => void; view: ReportView }) {
+  const options: Array<{ label: string; value: ReportView }> = [
+    { label: "Evidence", value: "evidence" },
+    { label: "Value ledger", value: "value" }
+  ]
+
+  return (
+    <div className="flex flex-wrap gap-1" role="tablist">
+      {options.map((option) => (
+        <button
+          aria-selected={view === option.value}
+          className={`border px-3 py-1.5 font-mono text-xs uppercase tracking-[0.1em] ${view === option.value ? "border-foreground text-foreground" : "border-border text-muted-foreground"}`}
+          key={option.value}
+          onClick={() => onViewChange(option.value)}
+          role="tab"
+          type="button">
+          {option.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 function AtomicSignalMatrix({ rows }: { rows: AtomicSignalRow[] }) {
   return (
     <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-      <SectionTitle number="03" title="Atomic observe/block matrix" />
+      <SectionTitle number="03" title="Signals seen — and what can be done" />
       <div className="mt-3 overflow-x-auto">
         <table className="w-full border-collapse text-left">
           <thead>
@@ -118,7 +149,7 @@ function exposureTitle(event: ObserverEvent) {
 function ExposureScanSection({ events }: { events: ObserverEvent[] }) {
   return (
     <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-      <SectionTitle number="02" title="Exposure scan" />
+      <SectionTitle number="02" title="What could be read about you" />
       <p className={`${TYPE.small} mt-2`}>
         This section shows what Pulse Observer could read locally from browser APIs. It does not prove the current website used these fields.
       </p>
@@ -294,7 +325,7 @@ function EvidenceTimeline({ events }: { events: ObserverEvent[] }) {
 
   return (
     <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-      <SectionTitle number="06" title="Evidence timeline" />
+      <SectionTitle number="06" title="Timeline" />
       <div className="mt-3 space-y-3">
         {observations.length === 0 ? <p className={TYPE.body}>No evidence events have been recorded for this tab yet.</p> : observations.map(({ event, count }) => (
           <div className="grid gap-2 border-t border-border pt-3 first:border-t-0 first:pt-0 sm:grid-cols-[120px_1fr]" key={displayEventKey(event)}>
@@ -419,6 +450,8 @@ function ReportTab() {
   const [settings, setSettings] = useState<UserSettings>(EMPTY_SETTINGS)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle")
+  const [reportView, setReportView] = useState<ReportView>(initialReportView)
+  const { error: valuationError, period: valuationPeriod, refresh: refreshValuationRollup, rollup: valuationRollup, setPeriod: setValuationPeriod } = useValuationRollup("week")
 
   useEffect(() => {
     async function loadSummary() {
@@ -427,6 +460,10 @@ function ReportTab() {
       const tabId = Number.isFinite(tabIdParam) && tabIdParam > 0 ? tabIdParam : undefined
 
       if (!tabId) {
+        if (initialReportView() === "value") {
+          setLoadError(null)
+          return
+        }
         setLoadError("No source tab was supplied for this report.")
         return
       }
@@ -451,6 +488,17 @@ function ReportTab() {
     loadSummary().catch((error: unknown) => setLoadError(error instanceof Error ? error.message : String(error)))
     loadSettings().catch(() => undefined)
   }, [])
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    params.set("view", reportView)
+    history.replaceState(null, "", `${location.pathname}?${params.toString()}`)
+  }, [reportView])
+
+  async function clearLedger() {
+    await browser.runtime.sendMessage({ type: "CLEAR_VALUATION_LEDGER" })
+    refreshValuationRollup()
+  }
 
   async function toggleTrackerBlocking(trackerId: string, blocked: boolean) {
     const blockedTrackerIds = blocked
@@ -482,45 +530,69 @@ function ReportTab() {
         <header className={`${UI.panel} flex flex-wrap items-start justify-between gap-4 p-5`}>
           <div>
             <SiteLogo textClass="text-xl" sublabel="Pulse Observer report" />
-            <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight">Current tab evidence</h1>
-            <p className={`${TYPE.body} mt-2 break-all`}>{summary.origin}</p>
+            <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight">{reportView === "value" ? "Local value ledger" : "Current tab evidence"}</h1>
+            <p className={`${TYPE.body} mt-2 break-all`}>
+              {reportView === "value" ? "Local estimates from tracker presence observed by this extension. Not revenue measurements." : summary.origin}
+            </p>
           </div>
-          <Button onClick={() => copyReport().catch(() => setCopyState("failed"))}>
-            {copyState === "copied" ? "Copied" : copyState === "failed" ? "Copy failed" : "Copy report"}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            {reportView === "value" ? <Button onClick={() => clearLedger().catch(() => undefined)} variant="secondary">Clear ledger</Button> : null}
+            <Button onClick={() => copyReport().catch(() => setCopyState("failed"))}>
+              {copyState === "copied" ? "Copied" : copyState === "failed" ? "Copy failed" : "Copy report"}
+            </Button>
+          </div>
         </header>
 
-        {loadError ? (
+        <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
+          <ReportViewSwitch onViewChange={setReportView} view={reportView} />
+        </section>
+
+        {loadError && reportView === "evidence" ? (
           <section className="mt-6 border border-danger bg-card p-4" role="alert">
             <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger">Report load failed</h2>
             <p className={`${TYPE.body} mt-2 break-words`}>{loadError}</p>
           </section>
         ) : null}
 
-        <section aria-label="Report summary" className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-          <SectionTitle number="01" title="Summary" />
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-            <Metric label="Signals" value={rows.length} />
-            <Metric label="Events" value={summary.events.filter((event) => !isDiagnosticEvent(event) && event.source !== "extension-scan").length} />
-            <Metric label="Exposure" value={exposureEvents.length} />
-            <Metric label="Active" value={summary.activeCompanies.length} />
-            <Metric label="Blocked" value={summary.blockedCompanies.length} />
-            <Metric label="Cannot" value={summary.cannotBlockSignals.length} />
+        {valuationError && reportView === "value" ? (
+          <section className="mt-6 border border-danger bg-card p-4" role="alert">
+            <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger">Value ledger unavailable</h2>
+            <p className={`${TYPE.body} mt-2 break-words`}>{valuationError}</p>
+          </section>
+        ) : null}
+
+        {reportView === "value" ? (
+          <div className="mt-6">
+            <ValueLedgerView onPeriodChange={setValuationPeriod} period={valuationPeriod} rollup={valuationRollup} showMethodology />
           </div>
-        </section>
+        ) : (
+          <>
+            <section aria-label="Report summary" className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
+              <SectionTitle number="01" title="Summary" />
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+                <Metric label="Signals" value={rows.length} />
+                <Metric label="Events" value={summary.events.filter((event) => !isDiagnosticEvent(event) && event.source !== "extension-scan").length} />
+                <Metric label="Exposure" value={exposureEvents.length} />
+                <Metric label="Active" value={summary.activeCompanies.length} />
+                <Metric label="Blocked" value={summary.blockedCompanies.length} />
+                <Metric label="Cannot" value={summary.cannotBlockSignals.length} />
+              </div>
+            </section>
 
-        <ExposureScanSection events={exposureEvents} />
-        <AtomicSignalMatrix rows={rows} />
-        <ValuationSection events={summary.events} />
+            <ExposureScanSection events={exposureEvents} />
+            <AtomicSignalMatrix rows={rows} />
+            <ValuationSection events={summary.events} />
 
-        <section className="mt-6">
-          <SectionTitle number="04" title="Observer details" />
-          <ObservationTable blockedTrackerIds={settings.blockedTrackerIds} observations={observations} onToggleBlocking={toggleTrackerBlocking} />
-        </section>
+            <section className="mt-6">
+              <SectionTitle number="04" title="Who is watching" />
+              <ObservationTable blockedTrackerIds={settings.blockedTrackerIds} observations={observations} onToggleBlocking={toggleTrackerBlocking} />
+            </section>
 
-        <RemediationPanel observations={observations} />
-        <EvidenceTimeline events={summary.events} />
-        <DiagnosticsPanel summary={summary} />
+            <RemediationPanel observations={observations} />
+            <EvidenceTimeline events={summary.events} />
+            <DiagnosticsPanel summary={summary} />
+          </>
+        )}
       </div>
     </main>
   )

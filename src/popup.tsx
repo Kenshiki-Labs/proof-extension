@@ -1,6 +1,7 @@
 import "~style.css"
 
 import { Fragment, useEffect, useState } from "react"
+import { Activity, AlertTriangle, CircleDollarSign, ClipboardCopy, Eye, EyeOff, FileText, Info, LineChart, Settings2, ShieldCheck, TrendingUp, type LucideIcon } from "lucide-react"
 import browser from "webextension-polyfill"
 
 import { RuntimeMessageSchema } from "~core/contracts/schemas"
@@ -49,18 +50,74 @@ const STATUS_LABELS: Record<ObserverEvent["status"], string> = {
 
 // Muted, low-saturation status colors — cold and factual, not celebratory.
 const STATUS_CLASSES: Record<ObserverEvent["status"], string> = {
-  active: "border-amber-700 text-amber-700",
-  blocked: "border-emerald-700 text-emerald-700",
-  mitigated: "border-sky-700 text-sky-700",
-  cannot_block: "border-border text-muted-foreground"
+  active: "border-amber-700/60 bg-amber-700/10 text-amber-700",
+  blocked: "border-emerald-700/60 bg-emerald-700/10 text-emerald-700",
+  mitigated: "border-sky-700/60 bg-sky-700/10 text-sky-700",
+  cannot_block: "border-border bg-muted/40 text-muted-foreground"
 }
 
-function Metric({ label, value, title }: { label: string; title?: string; value: number | string }) {
+// Section headings carry a small icon so the popup scans by shape and
+// color, not by reading every label. Tones reuse the status palette:
+// amber = still happening, emerald = stopped, muted = out of reach.
+function SectionHeading({ icon: IconComponent, children }: { icon: LucideIcon; children: React.ReactNode }) {
+  return (
+    <h2 className={`${TYPE.label} flex items-center gap-1.5`}>
+      <IconComponent aria-hidden className="h-3 w-3 shrink-0" />
+      {children}
+    </h2>
+  )
+}
+
+const SECTION_ICONS: Record<string, LucideIcon> = {
+  Blocked: ShieldCheck,
+  "Still exposed": Eye,
+  "Cannot block": EyeOff
+}
+
+const METRIC_TONES = {
+  amber: "text-amber-700",
+  emerald: "text-emerald-700",
+  muted: "text-muted-foreground",
+  none: ""
+} as const
+
+function Metric({ label, value, title, tone = "none" }: { label: string; title?: string; value: number | string; tone?: keyof typeof METRIC_TONES }) {
   return (
     <div className="min-w-0 border border-border bg-card/80 p-3 shadow-sm" title={title}>
       <div className={TYPE.label}>{label}</div>
-      <div className="mt-1 font-display text-xl font-semibold tracking-tight">{value}</div>
+      <div className={`mt-1 font-display text-xl font-semibold tracking-tight ${METRIC_TONES[tone]}`}>{value}</div>
     </div>
+  )
+}
+
+function HeaderIconButton({
+  children,
+  disabled,
+  label,
+  onClick
+}: {
+  children: React.ReactNode
+  disabled?: boolean
+  label: string
+  onClick: () => void
+}) {
+  return (
+    <span className="group relative inline-flex">
+      <button
+        aria-label={label}
+        className="inline-flex min-h-9 min-w-9 items-center justify-center border border-border bg-card text-foreground shadow-sm transition-colors hover:border-foreground hover:bg-background focus:outline-none focus:ring-1 focus:ring-foreground disabled:cursor-not-allowed disabled:opacity-40"
+        disabled={disabled}
+        onClick={onClick}
+        title={label}
+        type="button">
+        {children}
+      </button>
+      <span
+        className="pointer-events-none absolute right-0 top-[calc(100%+6px)] z-20 whitespace-nowrap border border-border bg-background px-2 py-1 font-mono text-[0.625rem] uppercase tracking-[0.08em] text-foreground opacity-0 shadow-sm transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"
+        role="tooltip">
+        {label}
+      </span>
+    </span>
   )
 }
 
@@ -240,7 +297,7 @@ function ValueSection({ events }: { events: ObserverEvent[] }) {
 
   return (
     <section className="mt-4">
-      <h2 className={TYPE.label}>Estimated data value</h2>
+      <SectionHeading icon={CircleDollarSign}>Estimated data value</SectionHeading>
       <div className={`mt-2.5 ${UI.subtlePanel} p-3`}>
         <dl className="grid grid-cols-[128px_1fr] gap-1.5">
           <dt className={TYPE.small}>This visit</dt>
@@ -288,7 +345,7 @@ function RollingValueSection({
   return (
     <section className="mt-4">
       <div className="flex items-center justify-between gap-2">
-        <h2 className={TYPE.label}>Rolling local value</h2>
+        <SectionHeading icon={TrendingUp}>Rolling local value</SectionHeading>
         <div className="flex gap-1">
           {ROLLING_PERIODS.map((item) => (
             <button
@@ -335,7 +392,7 @@ function DiagnosticsSection({ diagnostics, summary }: { diagnostics: ObserverEve
 
   return (
     <section className={`mt-4 ${UI.panel} ${UI.inset}`}>
-      <h2 className={TYPE.label}>Runtime details</h2>
+      <SectionHeading icon={Settings2}>Runtime details</SectionHeading>
       <dl className="mt-2 grid grid-cols-[112px_1fr] gap-1.5">
         <dt className={TYPE.small}>Tab</dt>
         <dd className={TYPE.body}>{summary.tabId}</dd>
@@ -381,7 +438,7 @@ function EventSection({
 
   return (
     <section className="mt-4">
-      <h2 className={TYPE.label}>{title}</h2>
+      <SectionHeading icon={SECTION_ICONS[title] ?? Activity}>{title}</SectionHeading>
       {events.map((event) => (
         <ObserverCard
           count={event.count}
@@ -474,11 +531,12 @@ function IndexPopup() {
 
   async function openFullReport() {
     if (summary.tabId < 0) return
-    await browser.tabs.create({ url: browser.runtime.getURL(`tabs/report.html?tabId=${summary.tabId}`) })
+    await browser.tabs.create({ url: browser.runtime.getURL(`tabs/report.html?tabId=${summary.tabId}&view=evidence`) })
   }
 
   async function openValueLedger() {
-    await browser.tabs.create({ url: browser.runtime.getURL("tabs/value-ledger.html") })
+    const query = summary.tabId >= 0 ? `?tabId=${summary.tabId}&view=value` : "?view=value"
+    await browser.tabs.create({ url: browser.runtime.getURL(`tabs/report.html${query}`) })
   }
 
   async function requestFullReport() {
@@ -517,11 +575,17 @@ function IndexPopup() {
       <header className={`${UI.panel} ${UI.inset} flex items-start justify-between gap-3`}>
         <SiteLogo textClass="text-base" sublabel="Pulse Observer" />
         <div className="flex flex-wrap justify-end gap-2">
-          <Button onClick={() => requestFullReport().catch(() => undefined)} disabled={summary.tabId < 0}>Full report</Button>
-          <Button onClick={() => openValueLedger().catch(() => undefined)} variant="secondary">Value ledger</Button>
-          <Button onClick={() => copyOutput().catch(() => setCopyState("failed"))}>
-            {copyState === "copied" ? "Copied" : copyState === "failed" ? "Copy failed" : "Copy output"}
-          </Button>
+          <HeaderIconButton disabled={summary.tabId < 0} label="Open full report" onClick={() => requestFullReport().catch(() => undefined)}>
+            <FileText aria-hidden="true" size={16} strokeWidth={1.8} />
+          </HeaderIconButton>
+          <HeaderIconButton label="Open value ledger" onClick={() => openValueLedger().catch(() => undefined)}>
+            <LineChart aria-hidden="true" size={16} strokeWidth={1.8} />
+          </HeaderIconButton>
+          <HeaderIconButton
+            label={copyState === "copied" ? "Copied output" : copyState === "failed" ? "Copy failed" : "Copy output"}
+            onClick={() => copyOutput().catch(() => setCopyState("failed"))}>
+            <ClipboardCopy aria-hidden="true" size={16} strokeWidth={1.8} />
+          </HeaderIconButton>
         </div>
       </header>
 
@@ -545,8 +609,7 @@ function IndexPopup() {
           the report tab diagnostics for anyone investigating. */}
       {pageErrors.length > 0 && (summary.blockedCompanies.length > 0 || summary.mitigatedCompanies.length > 0) ? (
         <section className="mt-3.5 border border-danger bg-card p-3 shadow-sm" role="alert">
-          <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger">
-            Page error while this extension was active
+          <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger" style={{display:"flex",alignItems:"center",gap:"6px"}}><AlertTriangle aria-hidden className="h-3 w-3 shrink-0" />Page error while this extension was active
           </h2>
           <p className={`${TYPE.small} mt-1`}>
             This tab threw {summary.pageErrors.length === 1 ? "an uncaught error" : `${summary.pageErrors.length} uncaught errors`}{" "}
@@ -572,16 +635,16 @@ function IndexPopup() {
       ) : null}
 
       <section className={`mt-3.5 ${UI.panel} ${UI.inset}`}>
-        <h2 className={TYPE.label}>Watching now</h2>
+        <SectionHeading icon={Eye}>Watching now</SectionHeading>
         <p className={`${TYPE.body} mt-1 break-all`}>{summary.origin}</p>
       </section>
 
       {/* Three company-oriented numbers. Signal/event counts are detail, not
           headline — they live in the Recent observations line and the report. */}
       <section aria-label="Observation summary" className="mt-2.5 grid grid-cols-3 gap-2">
-        <Metric label="Watching" title="Companies whose collection on this tab is still happening" value={summary.activeCompanies.length} />
-        <Metric label="Blocked" title="Companies actually blocked by a rule you enabled — nothing blocks by default" value={summary.blockedCompanies.length} />
-        <Metric label="Can't block" title="Signals no browser tool can block at all" value={summary.cannotBlockSignals.length} />
+        <Metric label="Watching" tone="amber" title="Companies whose collection on this tab is still happening" value={summary.activeCompanies.length} />
+        <Metric label="Blocked" tone="emerald" title="Companies actually blocked by a rule you enabled — nothing blocks by default" value={summary.blockedCompanies.length} />
+        <Metric label="Can't block" tone="muted" title="Signals no browser tool can block at all" value={summary.cannotBlockSignals.length} />
       </section>
 
       <details className="mt-1.5">
@@ -600,7 +663,7 @@ function IndexPopup() {
       <RollingValueSection onPeriodChange={setValuationPeriod} period={valuationPeriod} rollup={valuationRollup} />
 
       <section className="mt-4">
-        <h2 className={TYPE.label}>Recent observations</h2>
+        <SectionHeading icon={Activity}>Recent observations</SectionHeading>
         <p className={`${TYPE.body} mt-1`}>
           {summary.events.length === 0
             ? "No observer events have been recorded for this tab yet."
@@ -615,7 +678,7 @@ function IndexPopup() {
           copy (spec) — these are true on every page load, so they render
           unconditionally rather than waiting for a cannot_block event. */}
       <section className="mt-4">
-        <h2 className={TYPE.label}>Cannot block</h2>
+        <SectionHeading icon={EyeOff}>Cannot block</SectionHeading>
         <div className={`mt-2.5 ${UI.subtlePanel} p-3`}>
           <dl className="grid grid-cols-[128px_1fr] gap-1.5">
             <dt className={TYPE.small}>Your address</dt>
@@ -654,7 +717,7 @@ function IndexPopup() {
       ) : null}
 
       <section className="mt-4 border border-border bg-card p-3">
-        <h2 className={TYPE.label}>What blocking changes</h2>
+        <SectionHeading icon={Info}>What blocking changes</SectionHeading>
         <p className={`${TYPE.small} mt-2`}>
           Browser blocking can stop or reduce future browser-layer collection. It does not delete prior records, account-level data, server logs, IP visibility, or TLS fingerprints.
         </p>
