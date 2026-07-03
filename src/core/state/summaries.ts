@@ -1,3 +1,4 @@
+import { isIgnoredPageError } from "~core/domain/page-errors"
 import type { ObserverEvent, PageError, SiteSummary } from "~core/domain/types"
 
 export const DEFAULT_MAX_EVENTS_PER_TAB = 100
@@ -20,16 +21,37 @@ function unique(values: string[]) {
   return [...new Set(values)]
 }
 
+// Housekeeping the extension emits about itself (isolated bridge ready,
+// main-world hooks installed, popup-triggered scans) — useful diagnostics,
+// but not observations of page behavior. They must never inflate company or
+// signal counts, or the report claims observers that do not exist.
+// The script_injected clause covers events persisted by builds that used
+// that type for housekeeping; real script-injection detections use ids
+// prefixed dom_script: and are never diagnostic.
+export function isDiagnosticEvent(event: ObserverEvent) {
+  if (event.eventType === "extension_diagnostic") return true
+  return event.eventType === "script_injected" && !event.id.startsWith("dom_script:")
+}
+
+export function isExposureScanEvent(event: ObserverEvent) {
+  return event.source === "extension-scan"
+}
+
+export function isPageActivityEvent(event: ObserverEvent) {
+  return !isDiagnosticEvent(event) && !isExposureScanEvent(event)
+}
+
 function companyKey(event: ObserverEvent) {
   return event.companyId ?? event.trackerId ?? (event.firstParty ? event.origin : "unknown")
 }
 
 function rebuildSummary(summary: SiteSummary, events: ObserverEvent[]): SiteSummary {
-  const activeCompanies = events.filter((item) => item.status === "active").map(companyKey)
-  const blockedCompanies = events.filter((item) => item.status === "blocked").map(companyKey)
-  const mitigatedCompanies = events.filter((item) => item.status === "mitigated").map(companyKey)
-  const exposedSignals = events.map((item) => item.eventType)
-  const cannotBlockSignals = events.filter((item) => item.status === "cannot_block").map((item) => item.eventType)
+  const observations = events.filter(isPageActivityEvent)
+  const activeCompanies = observations.filter((item) => item.status === "active").map(companyKey)
+  const blockedCompanies = observations.filter((item) => item.status === "blocked").map(companyKey)
+  const mitigatedCompanies = observations.filter((item) => item.status === "mitigated").map(companyKey)
+  const exposedSignals = observations.map((item) => item.eventType)
+  const cannotBlockSignals = observations.filter((item) => item.status === "cannot_block").map((item) => item.eventType)
 
   return {
     ...summary,
@@ -69,7 +91,10 @@ export function normalizeSiteSummary(summary: Partial<SiteSummary>, origin = "un
     exposedSignals: summary.exposedSignals ?? [],
     cannotBlockSignals: summary.cannotBlockSignals ?? [],
     events: summary.events ?? [],
-    pageErrors: summary.pageErrors ?? [],
+    // Drop known-benign messages here too, not just at the reporter — errors
+    // recorded by builds that predate the ignore list live on in storage and
+    // would otherwise occupy the small page-error budget forever.
+    pageErrors: (summary.pageErrors ?? []).filter((pageError) => !isIgnoredPageError(pageError.message)),
     incomplete: summary.incomplete ?? true,
     updatedAt: summary.updatedAt ?? Date.now()
   }
@@ -80,10 +105,20 @@ export function upsertEvent(
   event: ObserverEvent,
   maxEventsPerTab = DEFAULT_MAX_EVENTS_PER_TAB
 ): SiteSummary {
-  const nextEvents = [...summary.events.filter((existing) => existing.id !== event.id), event]
+  // Same id = same observation recurring, so accumulate its count instead of
+  // silently replacing — the popup reports how many times a signal fired.
+  const existing = summary.events.find((item) => item.id === event.id)
+  const merged = existing ? { ...event, count: (existing.count ?? 1) + (event.count ?? 1) } : event
+  const nextEvents = [...summary.events.filter((item) => item.id !== event.id), merged]
   const events = nextEvents.slice(-maxEventsPerTab)
 
-  return { ...rebuildSummary(summary, events), origin: event.origin, incomplete: false }
+  // The summary origin is the tab's top-level document, set at creation and
+  // on main-frame navigation. Events must not rename it — iframe and network
+  // events carry their own initiator origins (e.g. an embedded YouTube
+  // player), and letting them win misattributes the whole report.
+  const origin = summary.origin === "unknown" ? event.origin : summary.origin
+
+  return { ...rebuildSummary(summary, events), origin, incomplete: false }
 }
 
 // Deliberately never dropped by pruneExpiredEvents/retention — a record
@@ -91,6 +126,11 @@ export function upsertEvent(
 // the kind of thing "no silent action" means should stay visible, not age
 // out quietly like routine tracker noise.
 export function recordPageError(summary: SiteSummary, pageError: PageError, maxPerTab = MAX_PAGE_ERRORS_PER_TAB): SiteSummary {
+  // Guard here as well as in the main-world reporter: tabs opened before an
+  // extension update keep running the previous content script until reload,
+  // so benign messages can still arrive from stale pages.
+  if (isIgnoredPageError(pageError.message)) return summary
+
   const pageErrors = [...summary.pageErrors, pageError].slice(-maxPerTab)
   return { ...summary, pageErrors, updatedAt: Date.now() }
 }

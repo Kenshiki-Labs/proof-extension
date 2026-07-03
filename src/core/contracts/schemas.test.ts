@@ -25,6 +25,21 @@ describe("ObserverEventSchema", () => {
   it("rejects events without evidence", () => {
     expect(() => ObserverEventSchema.parse({ ...observerEvent, evidence: [] })).toThrow()
   })
+
+  it("accepts extension browser-surface exposure scan events", () => {
+    expect(ObserverEventSchema.parse({
+      ...observerEvent,
+      id: "browser_surface:https://example.test:passive",
+      source: "extension-scan",
+      eventType: "browser_surface",
+      blockability: "observable_only",
+      confidence: "confirmed",
+      evidence: ["Browser APIs exposed passive surface fields to the extension scan."]
+    })).toMatchObject({
+      source: "extension-scan",
+      eventType: "browser_surface"
+    })
+  })
 })
 
 describe("RuntimeMessageSchema", () => {

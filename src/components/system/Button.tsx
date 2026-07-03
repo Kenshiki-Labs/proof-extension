@@ -1,8 +1,9 @@
 import type { ButtonHTMLAttributes } from "react"
 
 const VARIANT = {
-  primary: "border-foreground text-foreground hover:bg-foreground hover:text-background",
-  danger: "border-danger text-danger hover:bg-danger hover:text-background"
+  primary: "border-foreground bg-foreground text-background hover:border-signal hover:bg-signal",
+  secondary: "border-border bg-card text-foreground hover:border-foreground hover:bg-background",
+  danger: "border-danger bg-card text-danger hover:bg-danger hover:text-background"
 }
 
 export default function Button({
@@ -13,7 +14,7 @@ export default function Button({
   return (
     <button
       type="button"
-      className={`border px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] transition-colors disabled:opacity-40 ${VARIANT[variant]} ${className}`}
+      className={`min-h-9 border px-3 py-1.5 font-mono text-xs uppercase tracking-[0.1em] shadow-sm disabled:cursor-not-allowed disabled:opacity-40 ${VARIANT[variant]} ${className}`}
       {...props}
     />
   )

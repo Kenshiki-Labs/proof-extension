@@ -3,25 +3,30 @@ import "~style.css"
 import { Fragment, useEffect, useState } from "react"
 import browser from "webextension-polyfill"
 
-import { RuntimeMessageSchema, SiteSummarySchema } from "~core/contracts/schemas"
+import { RuntimeMessageSchema } from "~core/contracts/schemas"
 import { getObserverRemediation } from "~core/domain/remediation"
+import {
+  EMPTY_SUMMARY,
+  blockabilitySummary,
+  buildCopyPayload,
+  compactEvents,
+  compactPageErrors,
+  detailEntries,
+  displayEventKey,
+  eventSummary,
+  formatDetailKey,
+  formatTime,
+  observerName,
+  parseSiteSummaryResponse,
+  titleCase,
+  visibleSignals,
+  type DisplayObservation
+} from "~core/report/display"
+import { isDiagnosticEvent } from "~core/state/summaries"
 import type { ObserverEvent, SiteSummary, UserSettings } from "~core/domain/types"
 import Button from "~components/system/Button"
-import { TYPE } from "~components/system/tokens"
-
-const EMPTY_SUMMARY: SiteSummary = {
-  origin: "unknown",
-  tabId: -1,
-  activeCompanies: [],
-  blockedCompanies: [],
-  mitigatedCompanies: [],
-  exposedSignals: [],
-  cannotBlockSignals: [],
-  events: [],
-  pageErrors: [],
-  incomplete: true,
-  updatedAt: 0
-}
+import SiteLogo from "~components/system/SiteLogo"
+import { TYPE, UI } from "~components/system/tokens"
 
 const EMPTY_SETTINGS: UserSettings = {
   retentionDays: 14,
@@ -29,7 +34,8 @@ const EMPTY_SETTINGS: UserSettings = {
   blockedTrackerIds: [],
   mitigateCanvas: false,
   mitigateAudio: false,
-  mitigateWebgl: false
+  mitigateWebgl: false,
+  skipReportOpenConfirm: false
 }
 
 const STATUS_LABELS: Record<ObserverEvent["status"], string> = {
@@ -47,154 +53,11 @@ const STATUS_CLASSES: Record<ObserverEvent["status"], string> = {
   cannot_block: "border-border text-muted-foreground"
 }
 
-type DisplayObservation = {
-  event: ObserverEvent
-  count: number
-}
-
-function titleCase(value: string) {
-  return value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
-}
-
-function observerName(event: ObserverEvent) {
-  return event.companyId ?? event.trackerId ?? (event.firstParty ? "First-party script" : "Unknown observer")
-}
-
-function isDiagnosticEvent(event: ObserverEvent) {
-  return event.eventType === "script_injected"
-}
-
-function visibleSignals(summary: SiteSummary) {
-  return summary.exposedSignals.filter((signal) => signal !== "script_injected")
-}
-
-function displayEventKey(event: ObserverEvent) {
-  return [
-    event.companyId ?? "",
-    event.trackerId ?? "",
-    event.firstParty ? event.origin : "",
-    event.eventType,
-    event.source,
-    event.status,
-    event.blockability
-  ].join("|")
-}
-
-function compactEvents(events: ObserverEvent[]): DisplayObservation[] {
-  const observations = new Map<string, DisplayObservation>()
-
-  for (const event of events) {
-    if (isDiagnosticEvent(event)) continue
-
-    const key = displayEventKey(event)
-    const existing = observations.get(key)
-    if (!existing) {
-      observations.set(key, { event, count: 1 })
-      continue
-    }
-
-    observations.set(key, {
-      event: event.observedAt >= existing.event.observedAt ? event : existing.event,
-      count: existing.count + 1
-    })
-  }
-
-  return [...observations.values()].sort((left, right) => right.event.observedAt - left.event.observedAt)
-}
-
-function eventSummary(event: ObserverEvent) {
-  if (event.eventType === "canvas_read") return "Canvas data was read by page script."
-  if (event.eventType === "webgl_query") return "WebGL rendering details were queried."
-  if (event.eventType === "audio_fingerprint") return "Audio rendering behavior was sampled."
-  if (event.eventType === "font_enumeration") return "Font surface was enumerated."
-  if (event.eventType === "request_blocked") return "A tracker network request was blocked."
-  if (event.eventType === "request_seen") return "A tracker network request was observed."
-  return `${titleCase(event.eventType)} observed.`
-}
-
-function formatDetailKey(value: string) {
-  return titleCase(value).replace(/^Url$/, "URL").replace(/^Id$/, "ID")
-}
-
-function detailEntries(event: ObserverEvent) {
-  return Object.entries(event.details ?? {}).filter(([, value]) => value !== "")
-}
-
-function formatTime(timestamp: number) {
-  if (!timestamp) return "Unknown"
-  return new Intl.DateTimeFormat("en", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
-  }).format(timestamp)
-}
-
-function buildCopyPayload(summary: SiteSummary) {
-  const observations = compactEvents(summary.events)
-
-  return JSON.stringify(
-    {
-      generatedAt: new Date().toISOString(),
-      origin: summary.origin,
-      tabId: summary.tabId,
-      incomplete: summary.incomplete,
-      counts: {
-        observations: observations.length,
-        rawEvents: summary.events.length,
-        activeCompanies: summary.activeCompanies.length,
-        blockedCompanies: summary.blockedCompanies.length,
-        mitigatedCompanies: summary.mitigatedCompanies.length,
-        exposedSignals: summary.exposedSignals.filter((signal) => signal !== "script_injected").length,
-        cannotBlockSignals: summary.cannotBlockSignals.length
-      },
-      observations: observations.map(({ event, count }) => formatCopyEvent(event, count)),
-      rawEvents: summary.events.map((event) => formatCopyEvent(event, 1))
-    },
-    null,
-    2
-  )
-}
-
-function formatCopyEvent(event: ObserverEvent, count: number) {
-  const remediation = getObserverRemediation(event)
-
-  return {
-    id: event.id,
-    count,
-    lastObservedAt: new Date(event.observedAt).toISOString(),
-    observer: remediation?.observerName ?? observerName(event),
-    parentCompany: remediation?.parentCompany,
-    origin: event.origin,
-    signal: event.eventType,
-    source: event.source,
-    status: event.status,
-    blockability: event.blockability,
-    confidence: event.confidence,
-    firstParty: event.firstParty,
-    policyLabel: event.policyLabel,
-    trackerId: event.trackerId,
-    companyId: event.companyId,
-    frameId: event.frameId,
-    details: event.details,
-    evidence: event.evidence,
-    remediation
-  }
-}
-
-function parseSiteSummaryResponse(response: unknown) {
-  const payload =
-    response && typeof response === "object" && "type" in response && response.type === "SITE_SUMMARY" && "payload" in response
-      ? response.payload
-      : response
-  const normalizedPayload = payload && typeof payload === "object" ? { pageErrors: [], ...payload } : payload
-  return SiteSummarySchema.safeParse(normalizedPayload)
-}
-
 function Metric({ label, value }: { label: string; value: number }) {
   return (
-    <div className="min-w-0 border border-border bg-card p-3">
+    <div className="min-w-0 border border-border bg-card/80 p-3 shadow-sm">
       <div className={TYPE.label}>{label}</div>
-      <div className="mt-1 text-xl font-bold">{value}</div>
+      <div className="mt-1 font-display text-xl font-semibold tracking-tight">{value}</div>
     </div>
   )
 }
@@ -216,7 +79,7 @@ function ObserverCard({
   const details = detailEntries(event)
 
   return (
-    <article className="mt-2.5 border border-border p-3">
+    <article className={`mt-2.5 ${UI.subtlePanel} p-3`}>
       <div className="flex items-center justify-between gap-2">
         <strong className="text-sm">{remediation?.observerName ?? observerName(event)}</strong>
         <div className="flex items-center gap-1.5">
@@ -254,7 +117,9 @@ function ObserverCard({
         <dd className={TYPE.body}>{event.firstParty ? "First party" : "Third party"}</dd>
         <dt className={TYPE.small}>Confidence</dt>
         <dd className={TYPE.body}>{titleCase(event.confidence)}</dd>
-        <dt className={TYPE.small}>Blockability</dt>
+        <dt className={TYPE.small}>Capability</dt>
+        <dd className={TYPE.body}>{blockabilitySummary(event)}</dd>
+        <dt className={TYPE.small}>Class</dt>
         <dd className={TYPE.body}>{titleCase(event.blockability)}</dd>
         {event.policyLabel ? (
           <>
@@ -326,7 +191,7 @@ function DiagnosticsSection({ diagnostics, summary }: { diagnostics: ObserverEve
   const latestDiagnostics = diagnostics.slice(-4).reverse()
 
   return (
-    <section className="mt-4 border border-border bg-card p-3">
+    <section className={`mt-4 ${UI.panel} ${UI.inset}`}>
       <h2 className={TYPE.label}>Runtime details</h2>
       <dl className="mt-2 grid grid-cols-[112px_1fr] gap-1.5">
         <dt className={TYPE.small}>Tab</dt>
@@ -392,6 +257,7 @@ function IndexPopup() {
   const [settings, setSettings] = useState<UserSettings>(EMPTY_SETTINGS)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle")
+  const [showReportConfirm, setShowReportConfirm] = useState(false)
 
   useEffect(() => {
     async function loadSummary() {
@@ -451,26 +317,70 @@ function IndexPopup() {
     }
   }
 
+  async function openFullReport() {
+    if (summary.tabId < 0) return
+    await browser.tabs.create({ url: browser.runtime.getURL(`tabs/report.html?tabId=${summary.tabId}`) })
+  }
+
+  async function requestFullReport() {
+    if (settings.skipReportOpenConfirm) {
+      await openFullReport()
+      return
+    }
+
+    setShowReportConfirm(true)
+  }
+
+  async function openFullReportAndRemember() {
+    setSettings((current) => ({ ...current, skipReportOpenConfirm: true }))
+    await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { skipReportOpenConfirm: true } }).catch(() => undefined)
+    await openFullReport()
+  }
+
   const displayEvents = compactEvents(summary.events)
-  const recentEvents = displayEvents.slice(0, 12)
-  const blockedEvents = recentEvents.filter(({ event }) => event.status === "blocked")
-  const exposedEvents = recentEvents.filter(({ event }) => event.status === "active" || event.status === "mitigated")
-  const cannotBlockEvents = recentEvents.filter(({ event }) => event.status === "cannot_block")
+  const pageErrors = compactPageErrors(summary.pageErrors)
+  // Cap per section, not before the split — otherwise a burst of exposed
+  // events pushes older blocked observations out of the Blocked section.
+  const blockedEvents = displayEvents.filter(({ event }) => event.status === "blocked").slice(0, 12)
+  const exposedEvents = displayEvents.filter(({ event }) => event.status === "active" || event.status === "mitigated").slice(0, 12)
+  const cannotBlockEvents = displayEvents.filter(({ event }) => event.status === "cannot_block").slice(0, 12)
+  const remediableObservers = [
+    ...new Map(
+      displayEvents
+        .map(({ event }) => ({ event, remediation: getObserverRemediation(event) }))
+        .filter((item) => item.remediation)
+        .map((item) => [item.remediation!.observerName, item])
+    ).values()
+  ]
 
   return (
-    <main className="max-h-[620px] min-w-[460px] overflow-y-auto bg-background p-4 font-mono text-foreground">
-      <header className="flex items-start justify-between gap-3">
-        <div>
-          <p className={TYPE.label}>Proof Extension</p>
-          <h1 className="mt-1 text-lg">Pulse Observer</h1>
+    <main className="max-h-[640px] min-w-[480px] overflow-y-auto bg-background p-4 font-body text-foreground">
+      <header className={`${UI.panel} ${UI.inset} flex items-start justify-between gap-3`}>
+        <SiteLogo textClass="text-base" sublabel="Pulse Observer" />
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button onClick={() => requestFullReport().catch(() => undefined)} disabled={summary.tabId < 0}>Full report</Button>
+          <Button onClick={() => copyOutput().catch(() => setCopyState("failed"))}>
+            {copyState === "copied" ? "Copied" : copyState === "failed" ? "Copy failed" : "Copy output"}
+          </Button>
         </div>
-        <Button onClick={() => copyOutput().catch(() => setCopyState("failed"))}>
-          {copyState === "copied" ? "Copied" : copyState === "failed" ? "Copy failed" : "Copy output"}
-        </Button>
       </header>
 
-      {summary.pageErrors.length > 0 ? (
-        <section className="mt-3.5 border border-danger bg-card p-3" role="alert">
+      {showReportConfirm ? (
+        <section className={`mt-3.5 ${UI.panel} ${UI.inset}`}>
+          <h2 className={TYPE.label}>Open full report in a new tab?</h2>
+          <p className={`${TYPE.small} mt-2`}>
+            The report opens an extension tab with detailed evidence, atomic signal capability, source remediation, and diagnostics for this page.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button onClick={() => openFullReport().catch(() => undefined)}>Open report</Button>
+            <Button onClick={() => openFullReportAndRemember().catch(() => undefined)} variant="secondary">Open and don't ask again</Button>
+            <Button onClick={() => setShowReportConfirm(false)} variant="secondary">Not now</Button>
+          </div>
+        </section>
+      ) : null}
+
+      {pageErrors.length > 0 ? (
+        <section className="mt-3.5 border border-danger bg-card p-3 shadow-sm" role="alert">
           <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger">
             Page error while this extension was active
           </h2>
@@ -479,9 +389,10 @@ function IndexPopup() {
             while Pulse Observer was running. This may or may not be caused by the extension — correlation, not proof.
           </p>
           <ul className={`${TYPE.small} mt-2 list-disc pl-4`}>
-            {summary.pageErrors.map((pageError) => (
+            {pageErrors.map(({ pageError, count }) => (
               <li key={pageError.id}>
-                {pageError.message} <span className="text-muted-foreground">· {formatTime(pageError.observedAt)}</span>
+                {pageError.message} {count > 1 ? <span className="text-muted-foreground">× {count}</span> : null}{" "}
+                <span className="text-muted-foreground">· {formatTime(pageError.observedAt)}</span>
                 {pageError.stackPreview ? <pre className="mt-1 whitespace-pre-wrap break-words text-[0.625rem] text-muted-foreground">{pageError.stackPreview}</pre> : null}
               </li>
             ))}
@@ -490,13 +401,13 @@ function IndexPopup() {
       ) : null}
 
       {loadError ? (
-        <section className="mt-3.5 border border-danger bg-card p-3" role="alert">
+        <section className="mt-3.5 border border-danger bg-card p-3 shadow-sm" role="alert">
           <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger">Observer connection failed</h2>
           <p className={`${TYPE.small} mt-1 break-words`}>{loadError}</p>
         </section>
       ) : null}
 
-      <section className="mt-3.5 border border-border bg-card p-3">
+      <section className={`mt-3.5 ${UI.panel} ${UI.inset}`}>
         <h2 className={TYPE.label}>Watching now</h2>
         <p className={`${TYPE.body} mt-1 break-all`}>{summary.origin}</p>
       </section>
@@ -520,14 +431,55 @@ function IndexPopup() {
       <EventSection events={blockedEvents} title="Blocked" blockedTrackerIds={settings.blockedTrackerIds} onToggleBlocking={toggleTrackerBlocking} />
       <EventSection events={exposedEvents} title="Still exposed" blockedTrackerIds={settings.blockedTrackerIds} onToggleBlocking={toggleTrackerBlocking} />
       <EventSection events={cannotBlockEvents} title="Cannot block" blockedTrackerIds={settings.blockedTrackerIds} onToggleBlocking={toggleTrackerBlocking} />
-      {displayEvents.length > 0 ? (
-        <section className="mt-4 border border-border bg-card p-3">
-          <h2 className={TYPE.label}>What blocking changes</h2>
-          <p className={`${TYPE.small} mt-2`}>
-            Browser blocking can stop or reduce future browser-layer collection. It does not delete prior records, account-level data, server logs, IP visibility, or TLS fingerprints.
+
+      {/* Non-blockable exposures are first-class evidence, not empty-state
+          copy (spec) — these are true on every page load, so they render
+          unconditionally rather than waiting for a cannot_block event. */}
+      <section className="mt-4">
+        <h2 className={TYPE.label}>Cannot block</h2>
+        <div className={`mt-2.5 ${UI.subtlePanel} p-3`}>
+          <dl className="grid grid-cols-[128px_1fr] gap-1.5">
+            <dt className={TYPE.small}>IP address</dt>
+            <dd className={TYPE.body}>The destination server sees your IP on every request.</dd>
+            <dt className={TYPE.small}>TLS fingerprint</dt>
+            <dd className={TYPE.body}>Connection characteristics are visible before any content runs.</dd>
+            <dt className={TYPE.small}>Server-side logs</dt>
+            <dd className={TYPE.body}>What the server records about your visit is outside the browser.</dd>
+            <dt className={TYPE.small}>Request headers</dt>
+            <dd className={TYPE.body}>Headers sent before content hooks run cannot be intercepted.</dd>
+          </dl>
+          <p className={`${TYPE.small} mt-2.5`}>
+            This extension cannot prevent the destination server from seeing your IP address or request headers.
           </p>
+        </div>
+      </section>
+
+      {remediableObservers.length > 0 ? (
+        <section className="mt-4">
+          <h2 className={TYPE.label}>Stop at source</h2>
+          <div className={`mt-2.5 ${UI.subtlePanel} p-3`}>
+            <ul className="space-y-2">
+              {remediableObservers.map(({ remediation }) => (
+                <li className="flex flex-wrap items-baseline justify-between gap-2" key={remediation!.observerName}>
+                  <span className={TYPE.body}>{remediation!.observerName}</span>
+                  <span className="flex gap-2">
+                    <a className={`${TYPE.label} underline`} href={remediation!.futureCollectionUrl} rel="noreferrer" target="_blank">Opt out</a>
+                    <a className={`${TYPE.label} underline`} href={remediation!.deletionUrl} rel="noreferrer" target="_blank">Request deletion</a>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className={`${TYPE.small} mt-2.5`}>Details, friction, and identity requirements are on each observer card above.</p>
+          </div>
         </section>
       ) : null}
+
+      <section className="mt-4 border border-border bg-card p-3">
+        <h2 className={TYPE.label}>What blocking changes</h2>
+        <p className={`${TYPE.small} mt-2`}>
+          Browser blocking can stop or reduce future browser-layer collection. It does not delete prior records, account-level data, server logs, IP visibility, or TLS fingerprints.
+        </p>
+      </section>
       <DiagnosticsSection diagnostics={summary.events.filter(isDiagnosticEvent)} summary={summary} />
       {summary.incomplete ? (
         <p className={`${TYPE.small} mt-4`}>This tab summary is incomplete until background and content events arrive.</p>

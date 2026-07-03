@@ -13,7 +13,9 @@ export default {
         danger: "hsl(var(--danger))"
       },
       fontFamily: {
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"]
+        body: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Space Grotesk", "Inter", "ui-sans-serif", "sans-serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"]
       }
     }
   },

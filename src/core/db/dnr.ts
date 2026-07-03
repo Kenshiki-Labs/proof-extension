@@ -41,6 +41,7 @@ const DEFAULT_RESOURCE_TYPES: ResourceType[] = [
 ]
 
 const VALID_RESOURCE_TYPES = new Set<string>(Object.values(RESOURCE_TYPE))
+let installedDynamicBlockRuleMetadata = new Map<number, DynamicBlockRuleMetadata>()
 
 function normalizeRequestTypes(types: string[]): ResourceType[] {
   const normalized = types.filter((type): type is ResourceType => VALID_RESOURCE_TYPES.has(type))
@@ -49,6 +50,11 @@ function normalizeRequestTypes(types: string[]): ResourceType[] {
 
 function domainFilter(domain: string) {
   return `||${domain}^`
+}
+
+function domainPathFilter(domain: string, path: string) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`
+  return `||${domain}^${normalizedPath}`
 }
 
 export function buildDynamicBlockRules(blockedTrackerIds: readonly string[] = []) {
@@ -89,19 +95,21 @@ export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = 
       })
     }
 
-    for (const path of tracker.match.paths) {
-      const ruleId = DYNAMIC_RULE_ID_BASE + rules.length
-      rules.push({
-        id: ruleId,
-        priority: 1,
-        action: { type: RULE_ACTION_BLOCK as chrome.declarativeNetRequest.RuleActionType },
-        condition: { resourceTypes, urlFilter: path }
-      })
-      metadata.set(ruleId, {
-        ruleId,
-        tracker,
-        evidence: `Request matched ${tracker.id} path ${path}.`
-      })
+    for (const domain of tracker.match.domains) {
+      for (const path of tracker.match.paths) {
+        const ruleId = DYNAMIC_RULE_ID_BASE + rules.length
+        rules.push({
+          id: ruleId,
+          priority: 1,
+          action: { type: RULE_ACTION_BLOCK as chrome.declarativeNetRequest.RuleActionType },
+          condition: { resourceTypes, urlFilter: domainPathFilter(domain, path) }
+        })
+        metadata.set(ruleId, {
+          ruleId,
+          tracker,
+          evidence: `Request matched ${tracker.id} path ${path} on ${domain}.`
+        })
+      }
     }
   }
 
@@ -109,7 +117,7 @@ export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = 
 }
 
 export function getDynamicBlockRuleMetadata(ruleId: number) {
-  return buildDynamicBlockRuleSet().metadata.get(ruleId) ?? null
+  return installedDynamicBlockRuleMetadata.get(ruleId) ?? null
 }
 
 function hasDeclarativeNetRequest(): boolean {
@@ -123,9 +131,10 @@ export async function installDynamicBlockRules(blockedTrackerIds: readonly strin
   const removeRuleIds = existingRules
     .map((rule) => rule.id)
     .filter((ruleId) => ruleId >= DYNAMIC_RULE_ID_BASE)
-  const addRules = buildDynamicBlockRules(blockedTrackerIds)
+  const { metadata, rules: addRules } = buildDynamicBlockRuleSet(blockedTrackerIds)
 
   await chrome.declarativeNetRequest.updateDynamicRules({ addRules, removeRuleIds })
+  installedDynamicBlockRuleMetadata = metadata
 
   return { installed: addRules.length }
 }
@@ -141,6 +150,7 @@ export async function uninstallDynamicBlockRules() {
   const removeRuleIds = existingRules.map((rule) => rule.id).filter((ruleId) => ruleId >= DYNAMIC_RULE_ID_BASE)
 
   await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds })
+  installedDynamicBlockRuleMetadata = new Map()
 
   return { removed: removeRuleIds.length }
 }

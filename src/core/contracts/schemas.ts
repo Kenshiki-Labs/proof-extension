@@ -27,7 +27,7 @@ export const ObserverEventSchema = z.object({
   frameId: z.number().int().optional(),
   origin: z.string().min(1),
   observedAt: z.number().int().nonnegative(),
-  source: z.enum(["network", "content", "api-hook"]),
+  source: z.enum(["network", "content", "api-hook", "extension-scan"]),
   trackerId: z.string().min(1).optional(),
   companyId: z.string().min(1).optional(),
   firstParty: z.boolean(),
@@ -36,6 +36,8 @@ export const ObserverEventSchema = z.object({
     "request_seen",
     "request_blocked",
     "script_injected",
+    "extension_diagnostic",
+    "browser_surface",
     "canvas_read",
     "audio_fingerprint",
     "webgl_query",
@@ -47,6 +49,7 @@ export const ObserverEventSchema = z.object({
   status: ObservationStatusSchema,
   confidence: DetectionConfidenceSchema,
   evidence: z.array(z.string().min(1)).min(1),
+  count: z.number().int().positive().optional(),
   details: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional()
 })
 
@@ -81,7 +84,8 @@ export const UserSettingsSchema = z.object({
   blockedTrackerIds: z.array(z.string().min(1)),
   mitigateCanvas: z.boolean(),
   mitigateAudio: z.boolean(),
-  mitigateWebgl: z.boolean()
+  mitigateWebgl: z.boolean(),
+  skipReportOpenConfirm: z.boolean()
 })
 
 export const RuntimeMessageSchema = z.discriminatedUnion("type", [
@@ -95,6 +99,33 @@ export const RuntimeMessageSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("UPDATE_SETTINGS"), payload: UserSettingsSchema.partial() }),
   z.object({ type: z.literal("CLEAR_LOCAL_DATA") })
 ])
+
+export const TrackerSourceFamilySchema = z.enum([
+  "manual_seed",
+  "manual_fixture",
+  "vendor_docs",
+  "easyprivacy",
+  "easylist",
+  "duckduckgo_tracker_radar",
+  "first_party_evidence"
+])
+
+export const TrackerSourceSchema = z.object({
+  family: TrackerSourceFamilySchema,
+  name: z.string().min(1),
+  url: z.url().optional(),
+  version: z.string().min(1).optional(),
+  retrieved_at: z.iso.date().optional(),
+  license: z.string().min(1),
+  transform_notes: z.string().min(1)
+})
+
+export const TrackerReviewSchema = z.object({
+  status: z.enum(["seed", "source_backed", "false_positive_review", "deprecated"]),
+  last_reviewed_at: z.iso.date(),
+  reviewer: z.string().min(1),
+  notes: z.string().min(1)
+})
 
 export const TrackerRecordSchema = z.object({
   id: z.string().min(1),
@@ -114,9 +145,13 @@ export const TrackerRecordSchema = z.object({
   }),
   confidence: DetectionConfidenceSchema,
   evidenceTemplate: z.array(z.string().min(1)).min(1),
-  remediationId: z.string().min(1)
+  remediationId: z.string().min(1),
+  sources: z.array(TrackerSourceSchema).min(1),
+  review: TrackerReviewSchema
 })
 
+export type TrackerSource = z.infer<typeof TrackerSourceSchema>
+export type TrackerReview = z.infer<typeof TrackerReviewSchema>
 export type TrackerRecord = z.infer<typeof TrackerRecordSchema>
 
 export const CompanyRecordSchema = z.object({

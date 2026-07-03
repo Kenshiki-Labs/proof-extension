@@ -25,7 +25,8 @@ const DEFAULT_SETTINGS: UserSettings = {
   blockedTrackerIds: [],
   mitigateCanvas: false,
   mitigateAudio: false,
-  mitigateWebgl: false
+  mitigateWebgl: false,
+  skipReportOpenConfirm: false
 }
 
 let settings = DEFAULT_SETTINGS
@@ -172,10 +173,35 @@ function originFromUrl(url: string | undefined) {
   }
 }
 
+// A dom_script event carries only what the content script can see: a script
+// element and its src. The tracker DB join happens here so a known vendor's
+// injection gets named (e.g. connect.facebook.net → Meta) with deterministic
+// evidence, while unknown scripts stay honestly unattributed.
+function enrichScriptInjection(event: ObserverEvent): ObserverEvent {
+  if (event.eventType !== "script_injected" || event.trackerId) return event
+
+  const src = typeof event.details?.src === "string" ? event.details.src : undefined
+  if (!src) return event
+
+  const match = matchTrackerRequest({ type: "script", url: src }, trackers)[0]
+  if (!match) return event
+
+  return {
+    ...event,
+    trackerId: match.tracker.id,
+    companyId: match.tracker.companyId,
+    firstParty: false,
+    policyLabel: undefined,
+    confidence: match.tracker.confidence,
+    evidence: [...event.evidence, ...match.evidence]
+  }
+}
+
 async function recordActiveTabScan(tabId: number) {
   const tab = await browser.tabs.get(tabId)
   const origin = originFromUrl(tab.url)
   const evidence = ["Proof popup requested a live scan for this tab."]
+  let scanReachedPage = true
 
   try {
     await chrome.scripting.executeScript({
@@ -186,9 +212,13 @@ async function recordActiveTabScan(tabId: number) {
     evidence.push("Proof active-tab scan reached this page. Reload the tab to attach document-start API hooks if this tab was open before the extension was loaded.")
   } catch (error) {
     console.warn("Failed to run active tab scan", error)
+    scanReachedPage = false
     evidence.push("Chrome refused active script injection on this tab. This can happen on browser pages, extension pages, restricted URLs, or stale tabs.")
   }
 
+  // A refused injection is a scan limitation, not an observation of page
+  // behavior — it must not carry the same confident shape as a successful
+  // scan, or the report contradicts its own evidence text.
   const event: ObserverEvent = {
     id: `active_tab_scan:${tabId}:${origin}`,
     tabId,
@@ -196,11 +226,11 @@ async function recordActiveTabScan(tabId: number) {
     observedAt: Date.now(),
     source: "content",
     firstParty: true,
-    policyLabel: "unknown_first_party",
-    eventType: "script_injected",
+    ...(scanReachedPage ? { policyLabel: "unknown_first_party" as const } : {}),
+    eventType: "extension_diagnostic",
     blockability: "observable_only",
     status: "active",
-    confidence: "confirmed",
+    confidence: scanReachedPage ? "confirmed" : "weak",
     evidence
   }
 
@@ -299,6 +329,29 @@ browser.tabs.onRemoved.addListener((tabId) => {
   persistSummaries().catch(() => undefined)
 })
 
+// A summary describes the page the user is on now. When the tab's top-level
+// document moves to a different origin, the old origin's events must not
+// carry over — otherwise the report claims observers from pages the user has
+// already left (e.g. YouTube trackers shown on a claude.ai report).
+browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (!changeInfo.url) return
+  const origin = originFromUrl(changeInfo.url)
+  if (origin === "unknown") return
+
+  // Set unconditionally, even when no summary exists yet — otherwise the
+  // first recorded event (which can be an iframe-initiated tracker request
+  // carrying the iframe's origin) would create the summary and pin the wrong
+  // top-level origin.
+  if (summaries.get(tabId)?.origin === origin) return
+
+  ensureHydrated()
+    .then(() => {
+      summaries.set(tabId, createEmptySiteSummary(origin, tabId))
+      return persistSummaries()
+    })
+    .catch((error: unknown) => console.warn("Failed to reset summary on navigation", error))
+})
+
 browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.MessageSender) => {
   const parsedMessage = RuntimeMessageSchema.safeParse(rawMessage)
   if (!parsedMessage.success) return Promise.resolve({ ok: false, error: "invalid_message" })
@@ -312,7 +365,7 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
       const event = { ...message.payload, tabId: sender.tab?.id ?? message.payload.tabId } as ObserverEvent
       if (!originMatchesSender(event, sender)) return { ok: false, error: "origin_mismatch" }
 
-      await recordEvent(event)
+      await recordEvent(enrichScriptInjection(event))
       return { ok: true }
     }
 

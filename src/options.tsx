@@ -17,7 +17,8 @@ const DEFAULT_SETTINGS: UserSettings = {
   blockedTrackerIds: [],
   mitigateCanvas: false,
   mitigateAudio: false,
-  mitigateWebgl: false
+  mitigateWebgl: false,
+  skipReportOpenConfirm: false
 }
 
 const dbCounts = (() => {
@@ -131,14 +132,17 @@ function OptionsPage() {
       <Section
         title="Mitigation toggles"
         description="These flag which content-mitigatable classes are reported as mitigated once a hook actually constrains the API result. They do not themselves add new hooks.">
-        {(["mitigateCanvas", "mitigateAudio", "mitigateWebgl"] as const).map((key) => (
-          <Toggle
-            key={key}
-            checked={settings[key]}
-            onChange={(checked) => updateSettings({ [key]: checked })}
-            label={key.replace("mitigate", "Mitigate ").toLowerCase()}
-          />
-        ))}
+        <Toggle
+          checked={settings.mitigateCanvas}
+          onChange={(checked) => updateSettings({ mitigateCanvas: checked })}
+          label="mitigate canvas"
+        />
+        {/* Audio and WebGL hooks currently observe only — no code constrains
+            their API results yet. A toggle that changes nothing would imply
+            protection that does not exist, so these stay disabled until the
+            mitigation paths are implemented. */}
+        <Toggle checked={false} onChange={() => undefined} label="mitigate audio" disabled note="Not implemented yet — audio is observed, not constrained." />
+        <Toggle checked={false} onChange={() => undefined} label="mitigate webgl" disabled note="Not implemented yet — WebGL is observed, not constrained." />
       </Section>
 
       <Section

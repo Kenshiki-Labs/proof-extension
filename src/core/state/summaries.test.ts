@@ -30,6 +30,24 @@ describe("upsertEvent", () => {
     expect(summary.exposedSignals).toEqual(["canvas_read"])
   })
 
+  it("keeps extension-scan events out of page-observation summary buckets", () => {
+    const summary = upsertEvent(
+      createEmptySiteSummary("https://example.test", 1),
+      event({
+        id: "browser-surface",
+        source: "extension-scan",
+        eventType: "browser_surface",
+        blockability: "observable_only",
+        confidence: "confirmed",
+        evidence: ["Browser APIs exposed passive surface fields to the extension scan."]
+      })
+    )
+
+    expect(summary.activeCompanies).toEqual([])
+    expect(summary.exposedSignals).toEqual([])
+    expect(summary.events).toHaveLength(1)
+  })
+
   it("replaces existing events by id", () => {
     const first = upsertEvent(createEmptySiteSummary("https://example.test", 1), event())
     const second = upsertEvent(first, event({ status: "mitigated" }))
@@ -140,5 +158,12 @@ describe("recordPageError", () => {
     )
 
     expect(withErrors.pageErrors.map((item) => item.id)).toEqual(["error-2", "error-3"])
+  })
+
+  it("ignores generic uncaught page errors without actionable detail", () => {
+    const summary = createEmptySiteSummary("https://example.test", 1)
+    const withError = recordPageError(summary, { id: "error-1", message: "Uncaught error", observedAt: 1 })
+
+    expect(withError).toBe(summary)
   })
 })

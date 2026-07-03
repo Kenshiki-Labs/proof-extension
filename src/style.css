@@ -2,23 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design tokens — cold, factual, non-theatrical per the product spec.
-   Muted, low-saturation palette; no bright colors, no gradients, no
-   celebratory styling. Mirrors the token-driven approach used in
-   proof/kenshiki-web (CSS vars + a small tokens.js layer over Tailwind
-   utilities), scaled down for a popup/options surface. */
+/* Design tokens — aligned with Proof's warm paper + signal accent, scaled
+   down for extension surfaces. The UI should read as an instrument panel:
+   quiet, factual, and precise rather than decorative. */
 :root {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 9%;
-  --card: 0 0% 98%;
-  --border: 0 0% 85%;
-  --muted-foreground: 0 0% 40%;
-  --signal: 200 20% 35%;
-  --danger: 0 35% 40%;
+  --background: 40 20% 95%;
+  --foreground: 80 3% 10%;
+  --card: 40 22% 98%;
+  --border: 80 5% 78%;
+  --muted-foreground: 80 3% 38%;
+  --signal: 175 39% 39%;
+  --danger: 10 60% 49%;
+  --panel-shadow: 0 8px 24px rgb(31 41 55 / 0.07);
+  --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
   margin: 0;
   color: hsl(var(--foreground));
   background: hsl(var(--background));
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+button,
+a {
+  transition: color var(--transition-interactive), background-color var(--transition-interactive), border-color var(--transition-interactive), box-shadow var(--transition-interactive);
 }

@@ -24,7 +24,7 @@ export type ObserverEvent = {
   frameId?: number | undefined
   origin: string
   observedAt: number
-  source: "network" | "content" | "api-hook"
+  source: "network" | "content" | "api-hook" | "extension-scan"
   trackerId?: string | undefined
   companyId?: string | undefined
   firstParty: boolean
@@ -33,6 +33,11 @@ export type ObserverEvent = {
     | "request_seen"
     | "request_blocked"
     | "script_injected"
+    // The extension reporting on itself (bridge ready, hooks installed, scan
+    // attempts) — never an observation of page behavior. Kept separate so
+    // script_injected stays reserved for real dynamic-script detection.
+    | "extension_diagnostic"
+    | "browser_surface"
     | "canvas_read"
     | "audio_fingerprint"
     | "webgl_query"
@@ -43,6 +48,9 @@ export type ObserverEvent = {
   status: ObservationStatus
   confidence: DetectionConfidence
   evidence: string[]
+  // How many times this observation recurred; merged by upsertEvent when an
+  // event with the same id is recorded again. Absent means 1.
+  count?: number | undefined
   details?: Record<string, string | number | boolean> | undefined
 }
 
@@ -79,6 +87,7 @@ export type UserSettings = {
   mitigateCanvas: boolean
   mitigateAudio: boolean
   mitigateWebgl: boolean
+  skipReportOpenConfirm: boolean
 }
 
 export type RuntimeMessage =
