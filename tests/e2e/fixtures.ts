@@ -1,5 +1,5 @@
 import { chromium, expect, type BrowserContext, type Worker } from "@playwright/test"
-import { rm } from "node:fs/promises"
+import { readFile, rm } from "node:fs/promises"
 import http from "node:http"
 import path from "node:path"
 
@@ -65,6 +65,14 @@ export async function withExtensionContext(
   run: (context: BrowserContext, worker: Worker, extensionId: string) => Promise<void>
 ) {
   const extensionPath = path.resolve("build/chrome-mv3-prod")
+  // Fail with a diagnosis instead of a generic launch timeout when the
+  // build is missing or half-written (e.g. a build interrupted mid-write).
+  const manifestPath = path.join(extensionPath, "manifest.json")
+  try {
+    JSON.parse(await readFile(manifestPath, "utf8"))
+  } catch (error) {
+    throw new Error(`Extension build at ${extensionPath} is missing or incomplete (run pnpm build:chrome): ${String(error)}`)
+  }
   const userDataDir = path.resolve(`.playwright/user-data/${profileName}`)
   await rm(userDataDir, { force: true, recursive: true })
 
