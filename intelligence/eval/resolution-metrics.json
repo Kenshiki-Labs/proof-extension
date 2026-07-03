@@ -1,0 +1,303 @@
+{
+  "schemaVersion": 1,
+  "labeledPairs": 494,
+  "positives": 434,
+  "negatives": 60,
+  "truePositives": 386,
+  "falsePositives": 0,
+  "falseNegatives": 48,
+  "trueNegatives": 60,
+  "precision": 1,
+  "recall": 0.8894009216589862,
+  "missedMatches": [
+    {
+      "broker2025Id": "alcllc_32ba3bf2",
+      "caRegistry2026Id": "belardi-ostroy-alc-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy.officer@belardiwong.com"
+    },
+    {
+      "broker2025Id": "clickagy_c_32f405e8",
+      "caRegistry2026Id": "datanyze-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@datanyze.com"
+    },
+    {
+      "broker2025Id": "clickagy_c_32f405e8",
+      "caRegistry2026Id": "zoominfo-technologies-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@zoominfo.com"
+    },
+    {
+      "broker2025Id": "crunchbase_b9ef33c7",
+      "caRegistry2026Id": "crunchbase-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Crunchbase / Crunchbase, Inc.)"
+    },
+    {
+      "broker2025Id": "dataaxleinc_d_89386907",
+      "caRegistry2026Id": "donorbase-inc",
+      "label": "match",
+      "evidence": "exact privacy email doba_privacy@donorbase.com"
+    },
+    {
+      "broker2025Id": "dealerdirectllc_d_46948cf0",
+      "caRegistry2026Id": "dealerdirect-llc",
+      "label": "match",
+      "evidence": "exact privacy email dprivacy@forddirect.com"
+    },
+    {
+      "broker2025Id": "economicmodelin_e_dcc6f277",
+      "caRegistry2026Id": "lightcast-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@lightcast.io"
+    },
+    {
+      "broker2025Id": "equimine_e_309fcda5",
+      "caRegistry2026Id": "equimine-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Equimine / EquiMine Inc.)"
+    },
+    {
+      "broker2025Id": "exactdata_8ed23405",
+      "caRegistry2026Id": "consumerbase-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@exactdata.com"
+    },
+    {
+      "broker2025Id": "familytreenowll_f_b3bdbd28",
+      "caRegistry2026Id": "mississippi-tornado-alley-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@mtalley.zendesk.com"
+    },
+    {
+      "broker2025Id": "foomonkllc_f_97df7c35",
+      "caRegistry2026Id": "foo-monk-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@instantly.ai"
+    },
+    {
+      "broker2025Id": "heartbeataiinc_h_6c4fceb4",
+      "caRegistry2026Id": "swordfish-ai-inc",
+      "label": "match",
+      "evidence": "exact privacy email contact@swordfish.ai"
+    },
+    {
+      "broker2025Id": "hivestackinc_a9062111",
+      "caRegistry2026Id": "hivestack-technologies-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@hivestack.com"
+    },
+    {
+      "broker2025Id": "irys_i_7b17311f",
+      "caRegistry2026Id": "irys-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@irys.us"
+    },
+    {
+      "broker2025Id": "j2martechcorp_j_f35cd1bd",
+      "caRegistry2026Id": "j2-global-canada-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@ziffdavis.com"
+    },
+    {
+      "broker2025Id": "listsonline_l_538f7e76",
+      "caRegistry2026Id": "listsonline-com-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Listsonline / ListsOnline.com, Inc.)"
+    },
+    {
+      "broker2025Id": "liveintent_792ea661",
+      "caRegistry2026Id": "liveintent",
+      "label": "match",
+      "evidence": "exact privacy email privacy@zetaglobal.com"
+    },
+    {
+      "broker2025Id": "liveintent_792ea661",
+      "caRegistry2026Id": "zeta-global",
+      "label": "match",
+      "evidence": "exact privacy email privacy@zetaglobal.com"
+    },
+    {
+      "broker2025Id": "netwise_866af877",
+      "caRegistry2026Id": "netwise-data-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacyofficer@dnb.com"
+    },
+    {
+      "broker2025Id": "nuwberinc_n_40125eca",
+      "caRegistry2026Id": "nuwber-inc",
+      "label": "match",
+      "evidence": "exact privacy email support@nuwber.com"
+    },
+    {
+      "broker2025Id": "peopleconnectin_p_451c7f62",
+      "caRegistry2026Id": "truthfinder-llc",
+      "label": "match",
+      "evidence": "exact privacy email legal@peopleconnect.us"
+    },
+    {
+      "broker2025Id": "predactiv_63b8088d",
+      "caRegistry2026Id": "predactiv",
+      "label": "match",
+      "evidence": "exact privacy email privacy@predactiv.com"
+    },
+    {
+      "broker2025Id": "pulsepointinc_p_caf95fcd",
+      "caRegistry2026Id": "pulsepoint-inc",
+      "label": "match",
+      "evidence": "exact privacy email dataprivacy@pulsepoint.com"
+    },
+    {
+      "broker2025Id": "realeflowllc_r_cc492291",
+      "caRegistry2026Id": "realeflow-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (REALEFLOW LLC / Realeflow LLC)"
+    },
+    {
+      "broker2025Id": "realintentinc_r_b15813df",
+      "caRegistry2026Id": "real-intent-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (REAL INTENT Inc. / REAL INTENT INC)"
+    },
+    {
+      "broker2025Id": "redmobllc_r_18c46f49",
+      "caRegistry2026Id": "redmob-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@redmob.io"
+    },
+    {
+      "broker2025Id": "sabioinc_s_b374107a",
+      "caRegistry2026Id": "sabio-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@sabio.inc"
+    },
+    {
+      "broker2025Id": "sambatvinc_s_00dc50cb",
+      "caRegistry2026Id": "samba-tv-inc",
+      "label": "match",
+      "evidence": "exact privacy email jagdip.sekhon@samba.tv"
+    },
+    {
+      "broker2025Id": "schmermsllc_s_d7a166d9",
+      "caRegistry2026Id": "date-detective-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (DATE DETECTIVE Inc / Date Detective Inc)"
+    },
+    {
+      "broker2025Id": "sharelocalmedia_s_79e591e3",
+      "caRegistry2026Id": "share-local-media-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (SHARE LOCAL MEDIA Inc / Share Local Media, Inc.)"
+    },
+    {
+      "broker2025Id": "statsocial_3c7dc71f",
+      "caRegistry2026Id": "statsocial",
+      "label": "match",
+      "evidence": "exact privacy email privacy@statsocial.com"
+    },
+    {
+      "broker2025Id": "stirista_s_6f26d7c4",
+      "caRegistry2026Id": "stirista-llc",
+      "label": "match",
+      "evidence": "exact privacy email info@stirista.com"
+    },
+    {
+      "broker2025Id": "subdirectllc_ce0c99b6",
+      "caRegistry2026Id": "subdirect-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@360mediadirect.com"
+    },
+    {
+      "broker2025Id": "swoopcominc_4b529e85",
+      "caRegistry2026Id": "swoop-com-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Swoop.Com, Inc. / Swoop.com Inc)"
+    },
+    {
+      "broker2025Id": "techtargetinc_t_e31d1801",
+      "caRegistry2026Id": "techtarget-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@techtarget.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "datalink-services-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "drivers-history-information-sales-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "iovation-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "trans-union-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "transunion-digital-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "transunion-interactive-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "transunion-risk-and-alternative-data-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "tunnlllc_t_c782296e",
+      "caRegistry2026Id": "tunnl-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Tunnl, LLC / Tunnl, LLC)"
+    },
+    {
+      "broker2025Id": "unearthcampaign_u_0bd55301",
+      "caRegistry2026Id": "unearth-campaigns-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@unearthcampaigns.com"
+    },
+    {
+      "broker2025Id": "venntel_587e9de9",
+      "caRegistry2026Id": "venntel-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@venntel.com"
+    },
+    {
+      "broker2025Id": "wealthfeed_w_7fdddd08",
+      "caRegistry2026Id": "wealthfeed-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (WEALTHFEED / WealthFeed, Inc.)"
+    },
+    {
+      "broker2025Id": "wizainc_cc30416e",
+      "caRegistry2026Id": "wiza-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Wiza, Inc. / Wiza, Inc.)"
+    },
+    {
+      "broker2025Id": "yobiventuresllc_42f21d08",
+      "caRegistry2026Id": "yobi-ventures-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Yobi Ventures, LLC / Yobi Ventures, Inc.)"
+    }
+  ],
+  "falseMerges": []
+}

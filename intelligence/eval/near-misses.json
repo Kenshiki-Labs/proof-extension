@@ -1,0 +1,628 @@
+{
+  "schemaVersion": 1,
+  "count": 67,
+  "candidates": [
+    {
+      "broker2025Id": "alcllc_32ba3bf2",
+      "broker2025Name": "ALC LLC",
+      "caRegistry2026Id": "belardi-ostroy-alc-llc",
+      "caRegistry2026Name": "Belardi Ostroy, ALC, LLC",
+      "reasons": [
+        "exact email privacy.officer@belardiwong.com",
+        "full name-token containment (ALC LLC / Belardi Ostroy, ALC, LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "clickagy_c_32f405e8",
+      "broker2025Name": "CLICKAGY LLC",
+      "caRegistry2026Id": "datanyze-llc",
+      "caRegistry2026Name": "Datanyze LLC",
+      "reasons": [
+        "exact email privacy@datanyze.com"
+      ]
+    },
+    {
+      "broker2025Id": "clickagy_c_32f405e8",
+      "broker2025Name": "CLICKAGY LLC",
+      "caRegistry2026Id": "zoominfo-technologies-llc",
+      "caRegistry2026Name": "ZoomInfo Technologies, LLC",
+      "reasons": [
+        "exact email privacy@zoominfo.com"
+      ]
+    },
+    {
+      "broker2025Id": "crunchbase_b9ef33c7",
+      "broker2025Name": "Crunchbase",
+      "caRegistry2026Id": "crunchbase-inc",
+      "caRegistry2026Name": "Crunchbase, Inc.",
+      "reasons": [
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "dataaxleinc_d_89386907",
+      "broker2025Name": "DATA AXLE Inc",
+      "caRegistry2026Id": "donorbase-inc",
+      "caRegistry2026Name": "DonorBase, Inc.",
+      "reasons": [
+        "exact email doba_privacy@donorbase.com"
+      ]
+    },
+    {
+      "broker2025Id": "datamailinc_1fcda3e1",
+      "broker2025Name": "Data Management LLC",
+      "caRegistry2026Id": "epsilon-data-management-llc",
+      "caRegistry2026Name": "Epsilon Data Management, LLC",
+      "reasons": [
+        "full name-token containment (Data Management LLC / Epsilon Data Management, LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "datamarketingso_13eb8e99",
+      "broker2025Name": "Data Marketing Solutions, Inc.",
+      "caRegistry2026Id": "agr-marketing-solutions-llc",
+      "caRegistry2026Name": "AGR Marketing Solutions LLC",
+      "reasons": [
+        "full name-token containment (Data Marketing Solutions, Inc. / AGR Marketing Solutions LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "datamarketingso_13eb8e99",
+      "broker2025Name": "Data Marketing Solutions, Inc.",
+      "caRegistry2026Id": "blue-hill-marketing-solutions-inc",
+      "caRegistry2026Name": "Blue Hill Marketing Solutions, Inc",
+      "reasons": [
+        "full name-token containment (Data Marketing Solutions, Inc. / Blue Hill Marketing Solutions, Inc)"
+      ]
+    },
+    {
+      "broker2025Id": "datamarketingso_13eb8e99",
+      "broker2025Name": "Data Marketing Solutions, Inc.",
+      "caRegistry2026Id": "experian-marketing-solutions-llc",
+      "caRegistry2026Name": "Experian Marketing Solutions, LLC",
+      "reasons": [
+        "full name-token containment (Data Marketing Solutions, Inc. / Experian Marketing Solutions, LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "datamarketingso_13eb8e99",
+      "broker2025Name": "Data Marketing Solutions, Inc.",
+      "caRegistry2026Id": "milestone-marketing-solutions",
+      "caRegistry2026Name": "Milestone Marketing Solutions",
+      "reasons": [
+        "full name-token containment (Data Marketing Solutions, Inc. / Milestone Marketing Solutions)"
+      ]
+    },
+    {
+      "broker2025Id": "datapartnersinc_d_fef3f276",
+      "broker2025Name": "DATA PARTNERS Inc",
+      "caRegistry2026Id": "dealerx-partners-llc",
+      "caRegistry2026Name": "DealerX Partners LLC",
+      "reasons": [
+        "full name-token containment (DATA PARTNERS Inc / DealerX Partners LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "datapartnersinc_d_fef3f276",
+      "broker2025Name": "DATA PARTNERS Inc",
+      "caRegistry2026Id": "giant-partners-inc",
+      "caRegistry2026Name": "Giant Partners, Inc.",
+      "reasons": [
+        "full name-token containment (DATA PARTNERS Inc / Giant Partners, Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "datapartnersinc_d_fef3f276",
+      "broker2025Name": "DATA PARTNERS Inc",
+      "caRegistry2026Id": "marketshare-partners-llc",
+      "caRegistry2026Name": "MarketShare Partners, LLC",
+      "reasons": [
+        "full name-token containment (DATA PARTNERS Inc / MarketShare Partners, LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "datapartnersinc_d_fef3f276",
+      "broker2025Name": "DATA PARTNERS Inc",
+      "caRegistry2026Id": "ror-partners-llc",
+      "caRegistry2026Name": "ROR Partners, LLC",
+      "reasons": [
+        "full name-token containment (DATA PARTNERS Inc / ROR Partners, LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "dealerdirectllc_d_46948cf0",
+      "broker2025Name": "DEALERDIRECT LLC",
+      "caRegistry2026Id": "dealerdirect-llc",
+      "caRegistry2026Name": "DealerDirect LLC",
+      "reasons": [
+        "exact email dprivacy@forddirect.com",
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "economicmodelin_e_dcc6f277",
+      "broker2025Name": "ECONOMIC MODELING LLC",
+      "caRegistry2026Id": "lightcast-llc",
+      "caRegistry2026Name": "Lightcast, LLC",
+      "reasons": [
+        "exact email privacy@lightcast.io"
+      ]
+    },
+    {
+      "broker2025Id": "equimine_e_309fcda5",
+      "broker2025Name": "Equimine",
+      "caRegistry2026Id": "equimine-inc",
+      "caRegistry2026Name": "EquiMine Inc.",
+      "reasons": [
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "exactdata_8ed23405",
+      "broker2025Name": "Consumerbase LLC",
+      "caRegistry2026Id": "consumerbase-llc",
+      "caRegistry2026Name": "Consumerbase, LLC",
+      "reasons": [
+        "exact email privacy@exactdata.com"
+      ]
+    },
+    {
+      "broker2025Id": "familytreenowll_f_b3bdbd28",
+      "broker2025Name": "FAMILY TREE NOW LLC",
+      "caRegistry2026Id": "mississippi-tornado-alley-llc",
+      "caRegistry2026Name": "Mississippi Tornado Alley, LLC",
+      "reasons": [
+        "exact email privacy@mtalley.zendesk.com"
+      ]
+    },
+    {
+      "broker2025Id": "foomonkllc_f_97df7c35",
+      "broker2025Name": "FOO MONK LLC",
+      "caRegistry2026Id": "foo-monk-llc",
+      "caRegistry2026Name": "Foo Monk, LLC",
+      "reasons": [
+        "exact email privacy@instantly.ai",
+        "street number + zip + name overlap",
+        "full name-token containment (FOO MONK LLC / Foo Monk, LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "healthcarecom_h_73828d95",
+      "broker2025Name": "Healthcare, Inc",
+      "caRegistry2026Id": "definitive-healthcare-llc",
+      "caRegistry2026Name": "Definitive Healthcare LLC",
+      "reasons": [
+        "full name-token containment (Healthcare, Inc / Definitive Healthcare LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "healthcarecom_h_73828d95",
+      "broker2025Name": "Healthcare, Inc",
+      "caRegistry2026Id": "finthrive-healthcare-inc",
+      "caRegistry2026Name": "FinThrive Healthcare, Inc.",
+      "reasons": [
+        "full name-token containment (Healthcare, Inc / FinThrive Healthcare, Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "heartbeataiinc_h_6c4fceb4",
+      "broker2025Name": "All The Way Up LTD",
+      "caRegistry2026Id": "swordfish-ai-inc",
+      "caRegistry2026Name": "Swordfish AI Inc",
+      "reasons": [
+        "exact email contact@swordfish.ai"
+      ]
+    },
+    {
+      "broker2025Id": "hivestackinc_a9062111",
+      "broker2025Name": "Hivestack Inc.",
+      "caRegistry2026Id": "hivestack-technologies-inc",
+      "caRegistry2026Name": "Hivestack Technologies Inc.",
+      "reasons": [
+        "exact email privacy@hivestack.com",
+        "full name-token containment (Hivestack Inc. / Hivestack Technologies Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "interactivedata_i_0d60f0a9",
+      "broker2025Name": "INTERACTIVE DATA LLC",
+      "caRegistry2026Id": "apollo-interactive-llc",
+      "caRegistry2026Name": "Apollo Interactive, LLC",
+      "reasons": [
+        "full name-token containment (INTERACTIVE DATA LLC / Apollo Interactive, LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "interactivedata_i_0d60f0a9",
+      "broker2025Name": "INTERACTIVE DATA LLC",
+      "caRegistry2026Id": "transunion-interactive-inc",
+      "caRegistry2026Name": "TransUnion Interactive, Inc.",
+      "reasons": [
+        "full name-token containment (INTERACTIVE DATA LLC / TransUnion Interactive, Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "irys_i_7b17311f",
+      "broker2025Name": "Irys",
+      "caRegistry2026Id": "irys-inc",
+      "caRegistry2026Name": "Irys, Inc",
+      "reasons": [
+        "exact email privacy@irys.us",
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "j2martechcorp_j_f35cd1bd",
+      "broker2025Name": "J2 GLOBAL CANADA Inc",
+      "caRegistry2026Id": "j2-global-canada-inc",
+      "caRegistry2026Name": "J2 Global Canada Inc.",
+      "reasons": [
+        "exact email privacy@ziffdavis.com",
+        "full name-token containment (J2 GLOBAL CANADA Inc / J2 Global Canada Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "listsonline_l_538f7e76",
+      "broker2025Name": "Listsonline",
+      "caRegistry2026Id": "listsonline-com-inc",
+      "caRegistry2026Name": "ListsOnline.com, Inc.",
+      "reasons": [
+        "street number + zip + name overlap",
+        "full name-token containment (Listsonline / ListsOnline.com, Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "liveintent_792ea661",
+      "broker2025Name": "Disqus, Inc.",
+      "caRegistry2026Id": "liveintent",
+      "caRegistry2026Name": "LiveIntent",
+      "reasons": [
+        "exact email privacy@zetaglobal.com"
+      ]
+    },
+    {
+      "broker2025Id": "liveintent_792ea661",
+      "broker2025Name": "Disqus, Inc.",
+      "caRegistry2026Id": "zeta-global",
+      "caRegistry2026Name": "Zeta Global",
+      "reasons": [
+        "exact email privacy@zetaglobal.com"
+      ]
+    },
+    {
+      "broker2025Id": "netwise_866af877",
+      "broker2025Name": "DUN & BRADSTREET Inc",
+      "caRegistry2026Id": "netwise-data-llc",
+      "caRegistry2026Name": "NetWise Data, LLC",
+      "reasons": [
+        "exact email privacyofficer@dnb.com"
+      ]
+    },
+    {
+      "broker2025Id": "nuwberinc_n_40125eca",
+      "broker2025Name": "NUWBER Inc",
+      "caRegistry2026Id": "nuwber-inc",
+      "caRegistry2026Name": "Nuwber Inc",
+      "reasons": [
+        "exact email support@nuwber.com",
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "peopleconnectin_p_451c7f62",
+      "broker2025Name": "Peopleconnect, Inc.",
+      "caRegistry2026Id": "truthfinder-llc",
+      "caRegistry2026Name": "TruthFinder, LLC",
+      "reasons": [
+        "exact email legal@peopleconnect.us"
+      ]
+    },
+    {
+      "broker2025Id": "predactiv_63b8088d",
+      "broker2025Name": "Predactiv",
+      "caRegistry2026Id": "predactiv",
+      "caRegistry2026Name": "Predactiv",
+      "reasons": [
+        "exact email privacy@predactiv.com",
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "pulsepointinc_p_caf95fcd",
+      "broker2025Name": "Pulsepoint, Inc.",
+      "caRegistry2026Id": "pulsepoint-inc",
+      "caRegistry2026Name": "PulsePoint, Inc.",
+      "reasons": [
+        "exact email dataprivacy@pulsepoint.com"
+      ]
+    },
+    {
+      "broker2025Id": "realeflowllc_r_cc492291",
+      "broker2025Name": "REALEFLOW LLC",
+      "caRegistry2026Id": "realeflow-llc",
+      "caRegistry2026Name": "Realeflow LLC",
+      "reasons": [
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "realintentinc_r_b15813df",
+      "broker2025Name": "REAL INTENT Inc.",
+      "caRegistry2026Id": "real-intent-inc",
+      "caRegistry2026Name": "REAL INTENT INC",
+      "reasons": [
+        "street number + zip + name overlap",
+        "full name-token containment (REAL INTENT Inc. / REAL INTENT INC)"
+      ]
+    },
+    {
+      "broker2025Id": "redmobllc_r_18c46f49",
+      "broker2025Name": "REDMOB LLC",
+      "caRegistry2026Id": "redmob-llc",
+      "caRegistry2026Name": "Redmob LLC",
+      "reasons": [
+        "exact email privacy@redmob.io",
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "roiqinc_359f0d46",
+      "broker2025Name": "Data Exchange",
+      "caRegistry2026Id": "connatix-native-exchange-inc",
+      "caRegistry2026Name": "Connatix Native Exchange Inc.",
+      "reasons": [
+        "full name-token containment (Data Exchange / Connatix Native Exchange Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "roiqinc_359f0d46",
+      "broker2025Name": "Data Exchange",
+      "caRegistry2026Id": "index-exchange-inc",
+      "caRegistry2026Name": "Index Exchange Inc.",
+      "reasons": [
+        "full name-token containment (Data Exchange / Index Exchange Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "roiqinc_359f0d46",
+      "broker2025Name": "Data Exchange",
+      "caRegistry2026Id": "place-exchange-inc",
+      "caRegistry2026Name": "Place Exchange, Inc.",
+      "reasons": [
+        "full name-token containment (Data Exchange / Place Exchange, Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "sabioinc_s_b374107a",
+      "broker2025Name": "Sabio, Inc.",
+      "caRegistry2026Id": "sabio-inc",
+      "caRegistry2026Name": "Sabio Inc",
+      "reasons": [
+        "exact email privacy@sabio.inc"
+      ]
+    },
+    {
+      "broker2025Id": "sambatvinc_s_00dc50cb",
+      "broker2025Name": "Free Stream Media Corp.",
+      "caRegistry2026Id": "samba-tv-inc",
+      "caRegistry2026Name": "Samba TV, Inc.",
+      "reasons": [
+        "exact email jagdip.sekhon@samba.tv"
+      ]
+    },
+    {
+      "broker2025Id": "schmermsllc_s_d7a166d9",
+      "broker2025Name": "DATE DETECTIVE Inc",
+      "caRegistry2026Id": "date-detective-inc",
+      "caRegistry2026Name": "Date Detective Inc",
+      "reasons": [
+        "street number + zip + name overlap",
+        "full name-token containment (DATE DETECTIVE Inc / Date Detective Inc)"
+      ]
+    },
+    {
+      "broker2025Id": "sharelocalmedia_s_79e591e3",
+      "broker2025Name": "SHARE LOCAL MEDIA Inc",
+      "caRegistry2026Id": "share-local-media-inc",
+      "caRegistry2026Name": "Share Local Media, Inc.",
+      "reasons": [
+        "street number + zip + name overlap",
+        "full name-token containment (SHARE LOCAL MEDIA Inc / Share Local Media, Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "statsocial_3c7dc71f",
+      "broker2025Name": "Statsocial",
+      "caRegistry2026Id": "statsocial",
+      "caRegistry2026Name": "StatSocial",
+      "reasons": [
+        "exact email privacy@statsocial.com",
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "stirista_s_6f26d7c4",
+      "broker2025Name": "STIRISTA",
+      "caRegistry2026Id": "stirista-llc",
+      "caRegistry2026Name": "Stirista, LLC",
+      "reasons": [
+        "exact email info@stirista.com"
+      ]
+    },
+    {
+      "broker2025Id": "strategicinform_f2ce1486",
+      "broker2025Name": "Strategic Information Resources",
+      "caRegistry2026Id": "information-data-resources-llc",
+      "caRegistry2026Name": "Information Data Resources, LLC",
+      "reasons": [
+        "full name-token containment (Strategic Information Resources / Information Data Resources, LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "subdirectllc_ce0c99b6",
+      "broker2025Name": "360 Media Direct",
+      "caRegistry2026Id": "subdirect-llc",
+      "caRegistry2026Name": "Subdirect LLC",
+      "reasons": [
+        "exact email privacy@360mediadirect.com"
+      ]
+    },
+    {
+      "broker2025Id": "swoopcominc_4b529e85",
+      "broker2025Name": "Swoop.Com, Inc.",
+      "caRegistry2026Id": "swoop-com-inc",
+      "caRegistry2026Name": "Swoop.com Inc",
+      "reasons": [
+        "street number + zip + name overlap",
+        "full name-token containment (Swoop.Com, Inc. / Swoop.com Inc)"
+      ]
+    },
+    {
+      "broker2025Id": "techtargetinc_t_e31d1801",
+      "broker2025Name": "Informa Business Media Inc",
+      "caRegistry2026Id": "techtarget-inc",
+      "caRegistry2026Name": "TechTarget, Inc",
+      "reasons": [
+        "exact email privacy@techtarget.com"
+      ]
+    },
+    {
+      "broker2025Id": "theleadcompanyi_t_e6783914",
+      "broker2025Name": "The Lead Company, Inc.",
+      "caRegistry2026Id": "lead-intelligence-inc",
+      "caRegistry2026Name": "Lead Intelligence Inc.",
+      "reasons": [
+        "full name-token containment (The Lead Company, Inc. / Lead Intelligence Inc.)"
+      ]
+    },
+    {
+      "broker2025Id": "theleadcompanyi_t_e6783914",
+      "broker2025Name": "The Lead Company, Inc.",
+      "caRegistry2026Id": "lead-me-media-llc",
+      "caRegistry2026Name": "Lead Me Media LLC",
+      "reasons": [
+        "full name-token containment (The Lead Company, Inc. / Lead Me Media LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "broker2025Name": "Ebureau, LLC",
+      "caRegistry2026Id": "datalink-services-inc",
+      "caRegistry2026Name": "Datalink Services, Inc",
+      "reasons": [
+        "exact email privacy@transunion.com"
+      ]
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "broker2025Name": "Ebureau, LLC",
+      "caRegistry2026Id": "drivers-history-information-sales-llc",
+      "caRegistry2026Name": "Drivers History Information Sales, LLC",
+      "reasons": [
+        "exact email privacy@transunion.com"
+      ]
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "broker2025Name": "Ebureau, LLC",
+      "caRegistry2026Id": "iovation-inc",
+      "caRegistry2026Name": "iovation Inc.",
+      "reasons": [
+        "exact email privacy@transunion.com"
+      ]
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "broker2025Name": "Ebureau, LLC",
+      "caRegistry2026Id": "trans-union-llc",
+      "caRegistry2026Name": "Trans Union LLC",
+      "reasons": [
+        "exact email privacy@transunion.com"
+      ]
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "broker2025Name": "Ebureau, LLC",
+      "caRegistry2026Id": "transunion-digital-llc",
+      "caRegistry2026Name": "TransUnion Digital LLC",
+      "reasons": [
+        "exact email privacy@transunion.com"
+      ]
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "broker2025Name": "Ebureau, LLC",
+      "caRegistry2026Id": "transunion-interactive-inc",
+      "caRegistry2026Name": "TransUnion Interactive, Inc.",
+      "reasons": [
+        "exact email privacy@transunion.com"
+      ]
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "broker2025Name": "Ebureau, LLC",
+      "caRegistry2026Id": "transunion-risk-and-alternative-data-solutions-inc",
+      "caRegistry2026Name": "TransUnion Risk and Alternative Data Solutions, Inc.",
+      "reasons": [
+        "exact email privacy@transunion.com"
+      ]
+    },
+    {
+      "broker2025Id": "tunnlllc_t_c782296e",
+      "broker2025Name": "Tunnl, LLC",
+      "caRegistry2026Id": "tunnl-llc",
+      "caRegistry2026Name": "Tunnl, LLC",
+      "reasons": [
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "unearthcampaign_u_0bd55301",
+      "broker2025Name": "UNEARTH CAMPAIGNS LLC",
+      "caRegistry2026Id": "unearth-campaigns-llc",
+      "caRegistry2026Name": "Unearth Campaigns LLC",
+      "reasons": [
+        "exact email privacy@unearthcampaigns.com",
+        "street number + zip + name overlap",
+        "full name-token containment (UNEARTH CAMPAIGNS LLC / Unearth Campaigns LLC)"
+      ]
+    },
+    {
+      "broker2025Id": "venntel_587e9de9",
+      "broker2025Name": "Venntel",
+      "caRegistry2026Id": "venntel-inc",
+      "caRegistry2026Name": "Venntel, Inc.",
+      "reasons": [
+        "exact email privacy@venntel.com"
+      ]
+    },
+    {
+      "broker2025Id": "wealthfeed_w_7fdddd08",
+      "broker2025Name": "WEALTHFEED",
+      "caRegistry2026Id": "wealthfeed-inc",
+      "caRegistry2026Name": "WealthFeed, Inc.",
+      "reasons": [
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "wizainc_cc30416e",
+      "broker2025Name": "Wiza, Inc.",
+      "caRegistry2026Id": "wiza-inc",
+      "caRegistry2026Name": "Wiza, Inc.",
+      "reasons": [
+        "street number + zip + name overlap"
+      ]
+    },
+    {
+      "broker2025Id": "yobiventuresllc_42f21d08",
+      "broker2025Name": "Yobi Ventures, LLC",
+      "caRegistry2026Id": "yobi-ventures-inc",
+      "caRegistry2026Name": "Yobi Ventures, Inc.",
+      "reasons": [
+        "street number + zip + name overlap",
+        "full name-token containment (Yobi Ventures, LLC / Yobi Ventures, Inc.)"
+      ]
+    }
+  ]
+}

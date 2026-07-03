@@ -34,7 +34,8 @@
     "qa": "pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm build:chrome",
     "qa:full": "pnpm qa && pnpm test:browser && pnpm test:e2e && pnpm build:firefox && pnpm build:edge",
     "db:baseline": "node scripts/db-baseline.mjs",
-    "intel:normalize": "node scripts/normalize-intelligence.mjs"
+    "intel:normalize": "node scripts/normalize-intelligence.mjs",
+    "intel:eval": "node scripts/eval-entity-resolution.mjs"
   },
   "dependencies": {
     "plasmo": "^0.90.5",

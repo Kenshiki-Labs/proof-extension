@@ -114,7 +114,10 @@ export const TrackerSourceFamilySchema = z.enum([
   "state_registry",
   // Kenshiki-authored defense registry (defense-registry.v3-harm) and
   // supply-chain research; first-party curated remediation intelligence.
-  "kenshiki_defense_registry"
+  "kenshiki_defense_registry",
+  // Kenshiki-authored identity join index across runtime DB records,
+  // normalized registries, and remediation/defense destinations.
+  "kenshiki_entity_index"
 ])
 
 export const TrackerSourceSchema = z.object({

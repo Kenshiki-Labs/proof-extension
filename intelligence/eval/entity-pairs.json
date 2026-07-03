@@ -1,0 +1,2970 @@
+{
+  "schemaVersion": 1,
+  "method": "Positives: exact privacy-email match, or street-number+zip address match with >=0.5 name-token overlap, between the 2025 five-state merge and CA 2026 registry. Negatives: deterministic stride sample sharing no email domain, address key, or name tokens. Signals are independent of the resolver (domains + name slugs). Frozen once committed; delete deliberately to relabel.",
+  "pairs": [
+    {
+      "broker2025Id": "01advertisingin_0_b87ca1b8",
+      "caRegistry2026Id": "01advertising-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@01advertising.com"
+    },
+    {
+      "broker2025Id": "33acrossinc_3_2a9457a6",
+      "caRegistry2026Id": "33across-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@33across.com"
+    },
+    {
+      "broker2025Id": "4cinsights_307ca1a0",
+      "caRegistry2026Id": "gigabite-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "5x5usllc_5_3cffd0e7",
+      "caRegistry2026Id": "5x5-us-llc",
+      "label": "match",
+      "evidence": "exact privacy email contact@join5x5.com"
+    },
+    {
+      "broker2025Id": "6senseinsightsi_6_72de61f6",
+      "caRegistry2026Id": "6sense-insights-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@6sense.com"
+    },
+    {
+      "broker2025Id": "accurateappendi_d2ffac05",
+      "caRegistry2026Id": "accurate-append-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Accurate Append Inc / Accurate Append Inc.)"
+    },
+    {
+      "broker2025Id": "acronymixllc_a_bd1bf506",
+      "caRegistry2026Id": "acronymix-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@acronymix.com"
+    },
+    {
+      "broker2025Id": "activimpactllc_a_5fffd0df",
+      "caRegistry2026Id": "activimpact-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@activimpact.ai"
+    },
+    {
+      "broker2025Id": "acutraqbackgrou_66017fb2",
+      "caRegistry2026Id": "01advertising-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "acxiomllc_a_37a6021d",
+      "caRegistry2026Id": "acxiom-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (ACXIOM LLC / Acxiom LLC)"
+    },
+    {
+      "broker2025Id": "addressclearing_a_60eb98ff",
+      "caRegistry2026Id": "ach-address-clearing-house",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (ACH ADDRESS CLEARING HOUSE LLC / ACH, Address Clearing House)"
+    },
+    {
+      "broker2025Id": "adeptidinc_a_2ad27a1b",
+      "caRegistry2026Id": "adeptid-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@adept-id.com"
+    },
+    {
+      "broker2025Id": "adsquaregmbh_a_85a73299",
+      "caRegistry2026Id": "adsquare-gmbh",
+      "label": "match",
+      "evidence": "exact privacy email privacy@adsquare.com"
+    },
+    {
+      "broker2025Id": "advantagecredit_a_b4d0c305",
+      "caRegistry2026Id": "dun-and-bradstreet-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "advisortargetll_4a4c7649",
+      "caRegistry2026Id": "advisortarget-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@broadridge.com"
+    },
+    {
+      "broker2025Id": "affinityanswers_a_e059cf6f",
+      "caRegistry2026Id": "affinity-answers-corporation",
+      "label": "match",
+      "evidence": "exact privacy email dataprivacy@affinityanswers.com"
+    },
+    {
+      "broker2025Id": "affinityanswers_a_e059cf6f",
+      "caRegistry2026Id": "podible-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "affinitysolutio_a_162f6211",
+      "caRegistry2026Id": "affinity-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@affinitysolutions.com"
+    },
+    {
+      "broker2025Id": "agrmarketingsol_894fd0b8",
+      "caRegistry2026Id": "agr-marketing-solutions-llc",
+      "label": "match",
+      "evidence": "exact privacy email stephen@agrmarketingsolutions.com"
+    },
+    {
+      "broker2025Id": "aidentifiedllc_a_2599c8a6",
+      "caRegistry2026Id": "aidentified-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@aidentified.com"
+    },
+    {
+      "broker2025Id": "alcllc_32ba3bf2",
+      "caRegistry2026Id": "adstra-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy.officer@adstradata.com"
+    },
+    {
+      "broker2025Id": "alcllc_32ba3bf2",
+      "caRegistry2026Id": "belardi-ostroy-alc-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy.officer@belardiwong.com"
+    },
+    {
+      "broker2025Id": "allgoodmedia_a_77ca0bc7",
+      "caRegistry2026Id": "attribits",
+      "label": "match",
+      "evidence": "exact privacy email compliance@allgoodmediagroup.com"
+    },
+    {
+      "broker2025Id": "alliantcooperat_a_5580fe61",
+      "caRegistry2026Id": "alliant-cooperative-data-solutions-llc",
+      "label": "match",
+      "evidence": "exact privacy email compliance@alliantdata.com"
+    },
+    {
+      "broker2025Id": "alphonsoinc_a_585417c9",
+      "caRegistry2026Id": "alphonso-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Alphonso Inc. / Alphonso Inc.)"
+    },
+    {
+      "broker2025Id": "altairdataresou_a_6d2a1b1b",
+      "caRegistry2026Id": "altair-data-resources-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (ALTAIR DATA RESOURCES Inc / Altair Data Resources, Inc)"
+    },
+    {
+      "broker2025Id": "analyticsiq_cb81e244",
+      "caRegistry2026Id": "analyticsiq-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@analyticsiq.com"
+    },
+    {
+      "broker2025Id": "anexinetcorp_71e163cc",
+      "caRegistry2026Id": "consumerbase-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "annelewisstrate_a_c5c64575",
+      "caRegistry2026Id": "anne-lewis-strategies-llc",
+      "label": "match",
+      "evidence": "exact privacy email info@missionwired.com"
+    },
+    {
+      "broker2025Id": "anteriad_e372c099",
+      "caRegistry2026Id": "anteriad-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@anteriad.com"
+    },
+    {
+      "broker2025Id": "apihubinc_fa8d752e",
+      "caRegistry2026Id": "minerva-bi-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "apollointeracti_a_97a18ff1",
+      "caRegistry2026Id": "apollo-interactive-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (APOLLO INTERACTIVE LLC / Apollo Interactive, LLC)"
+    },
+    {
+      "broker2025Id": "appscience_a_b5e58f15",
+      "caRegistry2026Id": "app-science-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@appscience.inc"
+    },
+    {
+      "broker2025Id": "aristotleintern_a_2ae9f639",
+      "caRegistry2026Id": "aristotle-international-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (ARISTOTLE INTERNATIONAL Inc / Aristotle International, Inc.)"
+    },
+    {
+      "broker2025Id": "assetinternatio_adad2534",
+      "caRegistry2026Id": "asset-international-inc",
+      "label": "match",
+      "evidence": "exact privacy email dataprotectionofficer@iss-stoxx.com"
+    },
+    {
+      "broker2025Id": "assetinternatio_adad2534",
+      "caRegistry2026Id": "institutional-shareholder-services-inc",
+      "label": "match",
+      "evidence": "exact privacy email dataprotectionofficer@issgovernance.com"
+    },
+    {
+      "broker2025Id": "astoriacompanym_4f4dd8df",
+      "caRegistry2026Id": "astoria-company",
+      "label": "match",
+      "evidence": "exact privacy email bizdev@astoriacompany.com"
+    },
+    {
+      "broker2025Id": "atdatallc_a_64ff6929",
+      "caRegistry2026Id": "atdata-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (ATDATA LLC / AtData, LLC)"
+    },
+    {
+      "broker2025Id": "audienceacuityl_a_15e0abd8",
+      "caRegistry2026Id": "audience-acuity-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@audienceacuity.com"
+    },
+    {
+      "broker2025Id": "audigent_227d2ea5",
+      "caRegistry2026Id": "predictive-pop-inc",
+      "label": "match",
+      "evidence": "exact privacy email yourprivacyrights@audigent.com"
+    },
+    {
+      "broker2025Id": "autowebinc_a_2cb7e13a",
+      "caRegistry2026Id": "autoweb-inc",
+      "label": "match",
+      "evidence": "exact privacy email autolegal@autoweb.com"
+    },
+    {
+      "broker2025Id": "awlinc_bcb11532",
+      "caRegistry2026Id": "awl-holdings-llc",
+      "label": "match",
+      "evidence": "exact privacy email onlineops@awl.com"
+    },
+    {
+      "broker2025Id": "azarllc_1326078d",
+      "caRegistry2026Id": "beeswax",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "azerionusinc_a_7f0044dd",
+      "caRegistry2026Id": "azerion-us-inc",
+      "label": "match",
+      "evidence": "exact privacy email dpo_hybridtheory@azerion.com"
+    },
+    {
+      "broker2025Id": "azira_8449385a",
+      "caRegistry2026Id": "azira-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@azira.com"
+    },
+    {
+      "broker2025Id": "backgroundinfor_81f78d7b",
+      "caRegistry2026Id": "juicebox-app-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "bdexllc_b33cb0cb",
+      "caRegistry2026Id": "bdex-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@bdex.com"
+    },
+    {
+      "broker2025Id": "bdousallp_b_0352b12b",
+      "caRegistry2026Id": "bdo-gci-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@bdo-gci.com"
+    },
+    {
+      "broker2025Id": "beeswax_ba01913a",
+      "caRegistry2026Id": "beeswax",
+      "label": "match",
+      "evidence": "exact privacy email privacy@beeswax.com"
+    },
+    {
+      "broker2025Id": "bigdbm_b_1295575c",
+      "caRegistry2026Id": "bigdbm",
+      "label": "match",
+      "evidence": "exact privacy email privacy@bigdbm.com"
+    },
+    {
+      "broker2025Id": "biointellicorpo_c887bc62",
+      "caRegistry2026Id": "biointelli-corporation",
+      "label": "match",
+      "evidence": "exact privacy email privacy@biointelli.net"
+    },
+    {
+      "broker2025Id": "biscred_aaeaeb81",
+      "caRegistry2026Id": "biscred",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Biscred / Biscred)"
+    },
+    {
+      "broker2025Id": "blackbaudinc_b_809b5053",
+      "caRegistry2026Id": "blackbaud-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@blackbaud.com"
+    },
+    {
+      "broker2025Id": "blisusainc_e00ad494",
+      "caRegistry2026Id": "blis-global-ltd",
+      "label": "match",
+      "evidence": "exact privacy email privacy@blis.com"
+    },
+    {
+      "broker2025Id": "blueaction_2ce5e15f",
+      "caRegistry2026Id": "blue-action-inc",
+      "label": "match",
+      "evidence": "exact privacy email info@blueaction.io"
+    },
+    {
+      "broker2025Id": "bluehillmarketi_6547c7a6",
+      "caRegistry2026Id": "blue-hill-marketing-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email dataprivacy@liftbasedata.com"
+    },
+    {
+      "broker2025Id": "boardex_b_77d61064",
+      "caRegistry2026Id": "altrata-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@altrata.com"
+    },
+    {
+      "broker2025Id": "bomborainc_7513a182",
+      "caRegistry2026Id": "bombora-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@bombora.com"
+    },
+    {
+      "broker2025Id": "bookyourdata_e9749fb3",
+      "caRegistry2026Id": "a-direct-marketing-inc",
+      "label": "match",
+      "evidence": "exact privacy email mark@bookyourdata.com"
+    },
+    {
+      "broker2025Id": "bridge_a0e1d35a",
+      "caRegistry2026Id": "owmn-ltd",
+      "label": "match",
+      "evidence": "exact privacy email privacy@thebridgecorp.com"
+    },
+    {
+      "broker2025Id": "bridgevineinc_5045b67a",
+      "caRegistry2026Id": "growing-libraries-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "brooksintegrate_b_b432404e",
+      "caRegistry2026Id": "brooks-integrated-marketing-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@brooksim.com"
+    },
+    {
+      "broker2025Id": "buildertrendsol_b_9e9c4591",
+      "caRegistry2026Id": "buildertrend-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@buildertrend.com"
+    },
+    {
+      "broker2025Id": "buxtoncompanyll_b_cad6c965",
+      "caRegistry2026Id": "buxton-company-llc",
+      "label": "match",
+      "evidence": "exact privacy email consumerprivacy@buxtonco.com"
+    },
+    {
+      "broker2025Id": "buyerlinkinc_b_97ab5190",
+      "caRegistry2026Id": "buyerlink-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@buyerlink.com"
+    },
+    {
+      "broker2025Id": "bvinsightsllc_0229df00",
+      "caRegistry2026Id": "bv-insights-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (BV Insights LLC / BV Insights LLC)"
+    },
+    {
+      "broker2025Id": "cadentllc_c_fd24816e",
+      "caRegistry2026Id": "cadent-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@cadent.tv"
+    },
+    {
+      "broker2025Id": "cardlyticsinc_c_9b818e76",
+      "caRegistry2026Id": "bridg-a-division-of-cardlytics-inc",
+      "label": "match",
+      "evidence": "exact privacy email legalnotices@cardlytics.com"
+    },
+    {
+      "broker2025Id": "careerbuilderem_65edf80e",
+      "caRegistry2026Id": "accudata-integrated-marketing-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "carrytechnologi_c_c16cdaa7",
+      "caRegistry2026Id": "carry-technologies-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@hightouch.com"
+    },
+    {
+      "broker2025Id": "catalina_ad757aaf",
+      "caRegistry2026Id": "catalina-marketing-corporation",
+      "label": "match",
+      "evidence": "exact privacy email privacyteam@catalina.com"
+    },
+    {
+      "broker2025Id": "catalistllc_c_c2491a93",
+      "caRegistry2026Id": "catalist-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@catalist.us"
+    },
+    {
+      "broker2025Id": "cdkgloballlc_c_18a15714",
+      "caRegistry2026Id": "cdk-global-llc",
+      "label": "match",
+      "evidence": "exact privacy email james.kinzer@cdk.com"
+    },
+    {
+      "broker2025Id": "censia_60dbeba7",
+      "caRegistry2026Id": "censia-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Censia / Censia, Inc.)"
+    },
+    {
+      "broker2025Id": "censia_60dbeba7",
+      "caRegistry2026Id": "electronic-voice-services-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "checkpeoplellc_d26cb8f0",
+      "caRegistry2026Id": "checkpeople-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Checkpeople, LLC / CHECKPEOPLE, LLC)"
+    },
+    {
+      "broker2025Id": "choreographllc_c_f204279e",
+      "caRegistry2026Id": "choreograph-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (CHOREOGRAPH LLC / Choreograph LLC)"
+    },
+    {
+      "broker2025Id": "choreographllc_c_f204279e",
+      "caRegistry2026Id": "predictive-pop-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "cisionusinc_c_5d2f0ea2",
+      "caRegistry2026Id": "cision",
+      "label": "match",
+      "evidence": "exact privacy email dpo@cision.com"
+    },
+    {
+      "broker2025Id": "cisionusinc_c_5d2f0ea2",
+      "caRegistry2026Id": "crimson-hexagon",
+      "label": "match",
+      "evidence": "exact privacy email dpo@cision.com"
+    },
+    {
+      "broker2025Id": "citydatainc_a665a1e1",
+      "caRegistry2026Id": "citydata-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (CITYDATA Inc. / CITYDATA Inc.)"
+    },
+    {
+      "broker2025Id": "civildataresear_a8995953",
+      "caRegistry2026Id": "civil-data-research-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacyinfo@searchpublicrecords.com"
+    },
+    {
+      "broker2025Id": "civisanalyticsi_c_fc68398d",
+      "caRegistry2026Id": "civis-analytics-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (CIVIS ANALYTICS Inc / Civis Analytics, Inc.)"
+    },
+    {
+      "broker2025Id": "claritas_b5d5bf33",
+      "caRegistry2026Id": "claritas-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (CLARITAS LLC / Claritas LLC)"
+    },
+    {
+      "broker2025Id": "claylabsllc_c_65b79bf4",
+      "caRegistry2026Id": "clay-labs-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@clay.com"
+    },
+    {
+      "broker2025Id": "clearcompanyllc_c_53819866",
+      "caRegistry2026Id": "clearcompany-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@clearcompany.com"
+    },
+    {
+      "broker2025Id": "clickagy_c_32f405e8",
+      "caRegistry2026Id": "clickagy-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@clickagy.com"
+    },
+    {
+      "broker2025Id": "clickagy_c_32f405e8",
+      "caRegistry2026Id": "datanyze-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@datanyze.com"
+    },
+    {
+      "broker2025Id": "clickagy_c_32f405e8",
+      "caRegistry2026Id": "zoominfo-technologies-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@zoominfo.com"
+    },
+    {
+      "broker2025Id": "cognism_799ce1ee",
+      "caRegistry2026Id": "cognism",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (COGNISM Inc / Cognism)"
+    },
+    {
+      "broker2025Id": "collectivedatas_a19eacad",
+      "caRegistry2026Id": "collective-data-solutions-llc",
+      "label": "match",
+      "evidence": "exact privacy email legal@collectivedata.io"
+    },
+    {
+      "broker2025Id": "commandprecisio_33a02a13",
+      "caRegistry2026Id": "command-precision-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@persistent.id"
+    },
+    {
+      "broker2025Id": "complementics_b441e188",
+      "caRegistry2026Id": "criteo-corp",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "completemailing_78bac59c",
+      "caRegistry2026Id": "complete-mailing-lists-llc",
+      "label": "match",
+      "evidence": "exact privacy email ewoolf@completemailinglists.com"
+    },
+    {
+      "broker2025Id": "completemedical_c_ca557b5e",
+      "caRegistry2026Id": "complete-medical-lists-inc",
+      "label": "match",
+      "evidence": "exact privacy email tburnell@completemedicallists.com"
+    },
+    {
+      "broker2025Id": "comscoreinc_c_f1d54b84",
+      "caRegistry2026Id": "comscore-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@comscore.com"
+    },
+    {
+      "broker2025Id": "comscoreinc_c_f1d54b84",
+      "caRegistry2026Id": "moody-s-corporation",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "confichekinc_efd9d82d",
+      "caRegistry2026Id": "peoplefinders-llc",
+      "label": "match",
+      "evidence": "exact privacy email customercare@peoplefinders.com"
+    },
+    {
+      "broker2025Id": "connectedinvest_c7e2404a",
+      "caRegistry2026Id": "connected-investors-llc",
+      "label": "match",
+      "evidence": "exact privacy email dataprivacy@connectedinvestors.com"
+    },
+    {
+      "broker2025Id": "consumercanvasl_c_83a54741",
+      "caRegistry2026Id": "consumer-canvas-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@consumercanvas.net"
+    },
+    {
+      "broker2025Id": "contactout_c7eb437b",
+      "caRegistry2026Id": "contactout-limited",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Contactout / ContactOut Limited)"
+    },
+    {
+      "broker2025Id": "convergedirectl_4c429e06",
+      "caRegistry2026Id": "converge-marketing-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (CONVERGE DIRECT LLC / Converge Marketing LLC)"
+    },
+    {
+      "broker2025Id": "convexlabsllc_c_6432d516",
+      "caRegistry2026Id": "convex-labs-llc",
+      "label": "match",
+      "evidence": "exact privacy email support@convexlabs.io"
+    },
+    {
+      "broker2025Id": "corterainc_c_ceb06512",
+      "caRegistry2026Id": "moody-s-corporation",
+      "label": "match",
+      "evidence": "exact privacy email privacy@moodys.com"
+    },
+    {
+      "broker2025Id": "costargroup_4147c9f4",
+      "caRegistry2026Id": "costar-realty-information-inc",
+      "label": "match",
+      "evidence": "exact privacy email globalprivacyinbox@costar.com"
+    },
+    {
+      "broker2025Id": "crisilirvenausl_c_06f3f010",
+      "caRegistry2026Id": "crisil-irvena-us-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy1@crisil.com"
+    },
+    {
+      "broker2025Id": "crosswalktechno_c_3c309a68",
+      "caRegistry2026Id": "black-pearl-group-limited",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "crunchbase_b9ef33c7",
+      "caRegistry2026Id": "crunchbase-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Crunchbase / Crunchbase, Inc.)"
+    },
+    {
+      "broker2025Id": "ctamleadshareco_c_06af2a83",
+      "caRegistry2026Id": "ctam-leadshare-corp",
+      "label": "match",
+      "evidence": "exact privacy email compliance@ctam.com"
+    },
+    {
+      "broker2025Id": "cuebiq_1dc94f6d",
+      "caRegistry2026Id": "cuebiq-group-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (CUEBIQ GROUP LLC / Cuebiq Group, LLC)"
+    },
+    {
+      "broker2025Id": "cuebiq_1dc94f6d",
+      "caRegistry2026Id": "knowledge-works-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "cybbainc_c_78824b98",
+      "caRegistry2026Id": "cybba-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@cybba.com"
+    },
+    {
+      "broker2025Id": "dataaxleinc_d_89386907",
+      "caRegistry2026Id": "data-axle-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacyteam@data-axle.com"
+    },
+    {
+      "broker2025Id": "dataaxleinc_d_89386907",
+      "caRegistry2026Id": "donorbase-inc",
+      "label": "match",
+      "evidence": "exact privacy email doba_privacy@donorbase.com"
+    },
+    {
+      "broker2025Id": "datadecisionsgr_f8745a31",
+      "caRegistry2026Id": "data-decisions-group",
+      "label": "match",
+      "evidence": "exact privacy email privacy@datadecisionsgroup.com"
+    },
+    {
+      "broker2025Id": "datadeliversllc_d_a3af2827",
+      "caRegistry2026Id": "datadelivers-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@datadelivers.com"
+    },
+    {
+      "broker2025Id": "datafyllc_95d804ea",
+      "caRegistry2026Id": "datafy-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Datafy LLC / Datafy, LLC)"
+    },
+    {
+      "broker2025Id": "dataline_d_004022d5",
+      "caRegistry2026Id": "dataline-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy.officer@datalinedata.com"
+    },
+    {
+      "broker2025Id": "datamentorsllc_d_c1b978f6",
+      "caRegistry2026Id": "datamentors-llc",
+      "label": "match",
+      "evidence": "exact privacy email lchiodo@porchgroupmedia.com"
+    },
+    {
+      "broker2025Id": "datapartnersinc_d_fef3f276",
+      "caRegistry2026Id": "data-partners-inc",
+      "label": "match",
+      "evidence": "exact privacy email info@datapartners.com"
+    },
+    {
+      "broker2025Id": "dataskip_dbf30c94",
+      "caRegistry2026Id": "adeptid-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "datasysgroupinc_d_f2b0d596",
+      "caRegistry2026Id": "datasys-group-inc",
+      "label": "match",
+      "evidence": "exact privacy email seth.lubin@datasys.com"
+    },
+    {
+      "broker2025Id": "dataxltd_50a7cc61",
+      "caRegistry2026Id": "austin-consolidated-holdings-inc",
+      "label": "match",
+      "evidence": "exact privacy email usprivacy@equifax.com"
+    },
+    {
+      "broker2025Id": "dataxltd_50a7cc61",
+      "caRegistry2026Id": "equifax-information-services-llc",
+      "label": "match",
+      "evidence": "exact privacy email usprivacy@equifax.com"
+    },
+    {
+      "broker2025Id": "dataxltd_50a7cc61",
+      "caRegistry2026Id": "equifax-workforce-solutions-llc",
+      "label": "match",
+      "evidence": "exact privacy email usprivacy@equifax.com"
+    },
+    {
+      "broker2025Id": "dataxltd_50a7cc61",
+      "caRegistry2026Id": "ixi-corporation",
+      "label": "match",
+      "evidence": "exact privacy email usprivacy@equifax.com"
+    },
+    {
+      "broker2025Id": "dataxltd_50a7cc61",
+      "caRegistry2026Id": "knowledge-works-inc",
+      "label": "match",
+      "evidence": "exact privacy email usprivacy@equifax.com"
+    },
+    {
+      "broker2025Id": "datonicsllc_d_7487e834",
+      "caRegistry2026Id": "datonics-llc",
+      "label": "match",
+      "evidence": "exact privacy email accounting@datonics.com"
+    },
+    {
+      "broker2025Id": "datonicsllc_d_7487e834",
+      "caRegistry2026Id": "healthwise-data",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "dealerdirectllc_d_46948cf0",
+      "caRegistry2026Id": "dealerdirect-llc",
+      "label": "match",
+      "evidence": "exact privacy email dprivacy@forddirect.com"
+    },
+    {
+      "broker2025Id": "dealersocketllc_50fbe95b",
+      "caRegistry2026Id": "dealersocket-llc-us",
+      "label": "match",
+      "evidence": "exact privacy email privacy@solera.com"
+    },
+    {
+      "broker2025Id": "decidetechnolog_d_a9e9ebd6",
+      "caRegistry2026Id": "decide-technologies-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@decide.co"
+    },
+    {
+      "broker2025Id": "decisionlinks_d_1de93763",
+      "caRegistry2026Id": "decisionlinks-llc",
+      "label": "match",
+      "evidence": "exact privacy email support@decisionlinks.com"
+    },
+    {
+      "broker2025Id": "deloitteconsult_d_1b9c9811",
+      "caRegistry2026Id": "deloitte-consulting-llp",
+      "label": "match",
+      "evidence": "exact privacy email usprivacyquestions@deloitte.com"
+    },
+    {
+      "broker2025Id": "deloitteconsult_d_1b9c9811",
+      "caRegistry2026Id": "deloitte-financial-advisory-services-llp",
+      "label": "match",
+      "evidence": "exact privacy email usprivacyquestions@deloitte.com"
+    },
+    {
+      "broker2025Id": "demandbase_d_223bdef3",
+      "caRegistry2026Id": "demandbase-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@demandbase.com"
+    },
+    {
+      "broker2025Id": "dicecareersolut_d_8fda23fa",
+      "caRegistry2026Id": "dice-career-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email support@dice.com"
+    },
+    {
+      "broker2025Id": "digitalsafetypr_0687a3ee",
+      "caRegistry2026Id": "digital-safety-products-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacyinfo@spyfly.com"
+    },
+    {
+      "broker2025Id": "digitalvikingme_a39a972e",
+      "caRegistry2026Id": "digital-viking-media-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (DIGITAL VIKING MEDIA Inc / Digital Viking Media Inc)"
+    },
+    {
+      "broker2025Id": "discotechnology_d_0d1dafaa",
+      "caRegistry2026Id": "disco-technology-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@disconetwork.com"
+    },
+    {
+      "broker2025Id": "discotechnology_d_0d1dafaa",
+      "caRegistry2026Id": "epsilon-data-management-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "dresdendirect_e6a4df82",
+      "caRegistry2026Id": "dresden-direct-inc",
+      "label": "match",
+      "evidence": "exact privacy email phil@dresdendirect.com"
+    },
+    {
+      "broker2025Id": "dspoliticalllc_ac695beb",
+      "caRegistry2026Id": "dspolitical-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Dspolitical, LLC / DSPolitical, LLC)"
+    },
+    {
+      "broker2025Id": "dstilleryinc_d_218b1010",
+      "caRegistry2026Id": "dstillery-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@dstillery.com"
+    },
+    {
+      "broker2025Id": "dtclientservice_d_e071fdde",
+      "caRegistry2026Id": "dt-client-services-llc",
+      "label": "match",
+      "evidence": "exact privacy email info@thedatatrust.com"
+    },
+    {
+      "broker2025Id": "dtnllc_d_adc85d1e",
+      "caRegistry2026Id": "dtn-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (DTN LLC / DTN, LLC)"
+    },
+    {
+      "broker2025Id": "economicmodelin_e_dcc6f277",
+      "caRegistry2026Id": "lightcast-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@lightcast.io"
+    },
+    {
+      "broker2025Id": "edvisorsfasinc_41e6c6a4",
+      "caRegistry2026Id": "edvisors-network-inc",
+      "label": "match",
+      "evidence": "exact privacy email customerservice@edvisors.com"
+    },
+    {
+      "broker2025Id": "effyisinc_e_c274b10d",
+      "caRegistry2026Id": "effyis-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Effyis Inc. / Effyis, Inc.)"
+    },
+    {
+      "broker2025Id": "electronicvoice_e_1e53812e",
+      "caRegistry2026Id": "electronic-voice-services-inc",
+      "label": "match",
+      "evidence": "exact privacy email richard@evs7.com"
+    },
+    {
+      "broker2025Id": "eltorocomllc_e_18932586",
+      "caRegistry2026Id": "el-toro-com-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@eltoro.com"
+    },
+    {
+      "broker2025Id": "emergescom_e_38aa442c",
+      "caRegistry2026Id": "data-decisions-group",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "endgamelabsinc_23f31a21",
+      "caRegistry2026Id": "endgame-labs-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Endgame Labs, Inc / Endgame Labs, Inc.)"
+    },
+    {
+      "broker2025Id": "enformion_c588c12c",
+      "caRegistry2026Id": "enformion-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (ENFORMION LLC / Enformion, LLC)"
+    },
+    {
+      "broker2025Id": "enigmatechnolog_e_5d8985c2",
+      "caRegistry2026Id": "enigma-technologies-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@enigma.com"
+    },
+    {
+      "broker2025Id": "enigmatechnolog_e_5d8985c2",
+      "caRegistry2026Id": "neptune-ops-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "epsilondatamana_e_6580b40e",
+      "caRegistry2026Id": "epsilon-data-management-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@epsilon.com"
+    },
+    {
+      "broker2025Id": "equimine_e_309fcda5",
+      "caRegistry2026Id": "equimine-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Equimine / EquiMine Inc.)"
+    },
+    {
+      "broker2025Id": "erepublicllc_e_90fc9c9a",
+      "caRegistry2026Id": "e-republic-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@erepublic.com"
+    },
+    {
+      "broker2025Id": "evorraltd_49806ba1",
+      "caRegistry2026Id": "evorra-ltd",
+      "label": "match",
+      "evidence": "exact privacy email privacy@evorra.com"
+    },
+    {
+      "broker2025Id": "exactdata_8ed23405",
+      "caRegistry2026Id": "consumerbase-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@exactdata.com"
+    },
+    {
+      "broker2025Id": "exelateinc_e_538a479b",
+      "caRegistry2026Id": "exelate-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy.department@nielsen.com"
+    },
+    {
+      "broker2025Id": "exploriuminc_e_c05b3a01",
+      "caRegistry2026Id": "explorium-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (EXPLORIUM Inc / Explorium Inc.)"
+    },
+    {
+      "broker2025Id": "eyeotapteltd_e_51d2a77c",
+      "caRegistry2026Id": "eyeota-pte-ltd",
+      "label": "match",
+      "evidence": "exact privacy email privacy@eyeota.com"
+    },
+    {
+      "broker2025Id": "familytreenowll_f_b3bdbd28",
+      "caRegistry2026Id": "mississippi-tornado-alley-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@mtalley.zendesk.com"
+    },
+    {
+      "broker2025Id": "famousbirthdays_d1754f8a",
+      "caRegistry2026Id": "famous-birthdays-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Famous Birthdays LLC / Famous Birthdays LLC)"
+    },
+    {
+      "broker2025Id": "faradayinc_3b60a9c2",
+      "caRegistry2026Id": "faraday-inc",
+      "label": "match",
+      "evidence": "exact privacy email ccpa@faraday.io"
+    },
+    {
+      "broker2025Id": "fideointelligen_f_99235552",
+      "caRegistry2026Id": "fideo-intelligence-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (FIDEO INTELLIGENCE Inc / Fideo Intelligence, Inc.)"
+    },
+    {
+      "broker2025Id": "fiftytechnology_791bbfcd",
+      "caRegistry2026Id": "bridg-a-division-of-cardlytics-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "fiftytechnology_791bbfcd",
+      "caRegistry2026Id": "fifty-technology-ltd",
+      "label": "match",
+      "evidence": "exact privacy email privacy@fifty.io"
+    },
+    {
+      "broker2025Id": "findeminc_f_800feed2",
+      "caRegistry2026Id": "findem-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@findem.ai"
+    },
+    {
+      "broker2025Id": "firstdirectinc_f_9a24b3ee",
+      "caRegistry2026Id": "first-direct-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@firstdirectmarketing.com"
+    },
+    {
+      "broker2025Id": "firstdirectinc_f_9a24b3ee",
+      "caRegistry2026Id": "lead-me-media-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "firstorion_562b91b5",
+      "caRegistry2026Id": "first-orion-corp",
+      "label": "match",
+      "evidence": "exact privacy email cdenton@firstorion.com"
+    },
+    {
+      "broker2025Id": "foomonkllc_f_97df7c35",
+      "caRegistry2026Id": "foo-monk-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@instantly.ai"
+    },
+    {
+      "broker2025Id": "forageraillc_f_1ea827d8",
+      "caRegistry2026Id": "forager-ai-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (FORAGER.AI LLC / Forager.ai, LLC)"
+    },
+    {
+      "broker2025Id": "fourleafllc_f_62219474",
+      "caRegistry2026Id": "fourleaf-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@fourleafdata.com"
+    },
+    {
+      "broker2025Id": "fourthwallmedia_f_ae47ed79",
+      "caRegistry2026Id": "fourthwall-media-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Fourthwall Media, Inc. / FourthWall Media, Inc.)"
+    },
+    {
+      "broker2025Id": "fraiserllc_f_ee257d85",
+      "caRegistry2026Id": "fraiser-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@fraiser.org"
+    },
+    {
+      "broker2025Id": "freedataservice_f_8b6e8f78",
+      "caRegistry2026Id": "free-data-services-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@truepeoplesearch.com"
+    },
+    {
+      "broker2025Id": "freepeoplesearc_24b766ec",
+      "caRegistry2026Id": "freepeoplesearch-com-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Freepeoplesearch.Com, LLC / FREEPEOPLESEARCH.COM, LLC)"
+    },
+    {
+      "broker2025Id": "freewheelmediai_03896f35",
+      "caRegistry2026Id": "freewheel-media-inc",
+      "label": "match",
+      "evidence": "exact privacy email legalnotices@freewheel.com"
+    },
+    {
+      "broker2025Id": "fullcontact_83454911",
+      "caRegistry2026Id": "j2-martech-corp",
+      "label": "match",
+      "evidence": "exact privacy email privacy@fullcontact.com"
+    },
+    {
+      "broker2025Id": "fushiamediallc_1431f670",
+      "caRegistry2026Id": "affinity-answers-corporation",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "fushiamediallc_1431f670",
+      "caRegistry2026Id": "fushia-media-llc",
+      "label": "match",
+      "evidence": "exact privacy email lgold@fushiamedia.com"
+    },
+    {
+      "broker2025Id": "gale_g_dced03f8",
+      "caRegistry2026Id": "huge-legal-technology-company-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "getemailsllc_g_218bedbc",
+      "caRegistry2026Id": "getemails-llc",
+      "label": "match",
+      "evidence": "exact privacy email support@retention.com"
+    },
+    {
+      "broker2025Id": "giantpartners_g_3440f352",
+      "caRegistry2026Id": "giant-partners-inc",
+      "label": "match",
+      "evidence": "exact privacy email nikki@giantpartners.com"
+    },
+    {
+      "broker2025Id": "grassrootsanaly_g_9116a790",
+      "caRegistry2026Id": "grassroots-analytics",
+      "label": "match",
+      "evidence": "exact privacy email operations@grassrootsanalytics.com"
+    },
+    {
+      "broker2025Id": "grayhairsoftwar_925abc41",
+      "caRegistry2026Id": "grayhair-software-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@grayhairsoftware.com"
+    },
+    {
+      "broker2025Id": "greatlakeslisti_g_192617e8",
+      "caRegistry2026Id": "great-lakes-list-inc",
+      "label": "match",
+      "evidence": "exact privacy email ccpa@greatlakeslists.com"
+    },
+    {
+      "broker2025Id": "guidestardirect_g_57add25c",
+      "caRegistry2026Id": "guidestar-direct-corp",
+      "label": "match",
+      "evidence": "exact privacy email privacy@carneydirect.com"
+    },
+    {
+      "broker2025Id": "h1insightsinc_0065b6e6",
+      "caRegistry2026Id": "h1-insights-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (H1 Insights Inc. / H1 Insights, Inc.)"
+    },
+    {
+      "broker2025Id": "hdinformationll_38f637d4",
+      "caRegistry2026Id": "equifax-information-services-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (HD INFORMATION LLC / Equifax Information Services LLC)"
+    },
+    {
+      "broker2025Id": "healthcarecom_h_73828d95",
+      "caRegistry2026Id": "healthcare-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Healthcare, Inc / Healthcare Inc)"
+    },
+    {
+      "broker2025Id": "healthlinkdimen_h_29185442",
+      "caRegistry2026Id": "healthlink-dimensions",
+      "label": "match",
+      "evidence": "exact privacy email privacy@healthlinkdimensions.com"
+    },
+    {
+      "broker2025Id": "healthwisedata_h_16367fdf",
+      "caRegistry2026Id": "healthwise-data",
+      "label": "match",
+      "evidence": "exact privacy email tgibson@healthwisedata.com"
+    },
+    {
+      "broker2025Id": "heartbeataiinc_h_6c4fceb4",
+      "caRegistry2026Id": "heartbeat-ai-inc",
+      "label": "match",
+      "evidence": "exact privacy email contact@heartbeat.ai"
+    },
+    {
+      "broker2025Id": "heartbeataiinc_h_6c4fceb4",
+      "caRegistry2026Id": "swordfish-ai-inc",
+      "label": "match",
+      "evidence": "exact privacy email contact@swordfish.ai"
+    },
+    {
+      "broker2025Id": "helixcampaignsl_445b84b7",
+      "caRegistry2026Id": "helix-campaigns-llc",
+      "label": "match",
+      "evidence": "exact privacy email info@helixcampaigns.com"
+    },
+    {
+      "broker2025Id": "hireteammateinc_h_8c3398b6",
+      "caRegistry2026Id": "hireteammate-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@hireez.com"
+    },
+    {
+      "broker2025Id": "hivestackinc_a9062111",
+      "caRegistry2026Id": "hivestack-technologies-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@hivestack.com"
+    },
+    {
+      "broker2025Id": "homedata_h_6c4cb3b4",
+      "caRegistry2026Id": "accudata-integrated-marketing-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (ACCUDATA INTEGRATED Marketing, Inc. / Accudata Integrated Marketing, LLC)"
+    },
+    {
+      "broker2025Id": "homedata_h_6c4cb3b4",
+      "caRegistry2026Id": "compact-information-systems-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy.compliance@deepsync.com"
+    },
+    {
+      "broker2025Id": "hubspotinc_9fd6e38f",
+      "caRegistry2026Id": "hubspot-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@hubspot.com"
+    },
+    {
+      "broker2025Id": "huntclubinc_ead4d686",
+      "caRegistry2026Id": "hunt-club-inc",
+      "label": "match",
+      "evidence": "exact privacy email scott@huntclub.com"
+    },
+    {
+      "broker2025Id": "i360llc_i_81b84480",
+      "caRegistry2026Id": "exact-match-marketing-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "i360llc_i_81b84480",
+      "caRegistry2026Id": "i360-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@i-360.com"
+    },
+    {
+      "broker2025Id": "id5technology_3cc0bc5d",
+      "caRegistry2026Id": "id5-technology-ltd",
+      "label": "match",
+      "evidence": "exact privacy email privacy@id5.io"
+    },
+    {
+      "broker2025Id": "idminc_7896e8f7",
+      "caRegistry2026Id": "integrated-direct-marketing-llc",
+      "label": "match",
+      "evidence": "exact privacy email ccpa@idm.us.com"
+    },
+    {
+      "broker2025Id": "ileadscomllc_ea397860",
+      "caRegistry2026Id": "ileads-com-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Ileads.Com, LLC / iLeads.com, LLC)"
+    },
+    {
+      "broker2025Id": "illumininc_2162831f",
+      "caRegistry2026Id": "dataman-group-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "inboundinsightl_i_49aaa9f8",
+      "caRegistry2026Id": "inbound-insight-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@inboundinsight.com"
+    },
+    {
+      "broker2025Id": "inboxcreditinno_i_85706c39",
+      "caRegistry2026Id": "nexxen-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "infinitemediaco_i_bb401112",
+      "caRegistry2026Id": "infinite-media-concepts-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Infinite Media Concepts Inc / Infinite Media Concepts, Inc.)"
+    },
+    {
+      "broker2025Id": "infomaticsllc_i_6533e068",
+      "caRegistry2026Id": "infomatics-llc",
+      "label": "match",
+      "evidence": "exact privacy email support@privatereports.com"
+    },
+    {
+      "broker2025Id": "infopayinc_i_caf53269",
+      "caRegistry2026Id": "infopay-inc",
+      "label": "match",
+      "evidence": "exact privacy email compliance@infopay.com"
+    },
+    {
+      "broker2025Id": "informationcoml_5e10d5e3",
+      "caRegistry2026Id": "information-com-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Information.Com, LLC / INFORMATION.COM, LLC)"
+    },
+    {
+      "broker2025Id": "informationdata_3ca35774",
+      "caRegistry2026Id": "information-data-resources-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacyinfo@publicinfoservices.com"
+    },
+    {
+      "broker2025Id": "inmarketmediall_7c0d97f1",
+      "caRegistry2026Id": "inmarket-media-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Inmarket Media LLC / InMarket Media, LLC)"
+    },
+    {
+      "broker2025Id": "innovativedatab_i_a2d5e622",
+      "caRegistry2026Id": "innovative-database-solutions-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Innovative Database Solutions, Inc. / Innovative Database Solutions, Inc.)"
+    },
+    {
+      "broker2025Id": "insightbridgell_0145ab6e",
+      "caRegistry2026Id": "bv-insights-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "insightbridgell_0145ab6e",
+      "caRegistry2026Id": "insightbridge-llc",
+      "label": "match",
+      "evidence": "exact privacy email membersupport@mylife.com"
+    },
+    {
+      "broker2025Id": "instantcheckmat_i_84e38ee5",
+      "caRegistry2026Id": "instant-checkmate-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (INSTANT CHECKMATE LLC / Instant Checkmate LLC)"
+    },
+    {
+      "broker2025Id": "intalyticsinc_i_1a0372ee",
+      "caRegistry2026Id": "intalytics-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@kalibrate.com"
+    },
+    {
+      "broker2025Id": "integratedmedic_7c974668",
+      "caRegistry2026Id": "leidos-digital-solutions-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "inteliusllc_i_58ce4913",
+      "caRegistry2026Id": "intelius-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (INTELIUS LLC / Intelius, LLC)"
+    },
+    {
+      "broker2025Id": "intentiqllc_i_8d09960f",
+      "caRegistry2026Id": "intent-iq-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@intentiq.com"
+    },
+    {
+      "broker2025Id": "intentsifyllc_i_19a24973",
+      "caRegistry2026Id": "intentsify-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (INTENTSIFY LLC / Intentsify, LLC)"
+    },
+    {
+      "broker2025Id": "interactivedata_i_0d60f0a9",
+      "caRegistry2026Id": "interactive-data-llc",
+      "label": "match",
+      "evidence": "exact privacy email statebasedprivacy@ididata.com"
+    },
+    {
+      "broker2025Id": "iqviainc_i_df43da4b",
+      "caRegistry2026Id": "iqvia-digital-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacyofficer@iqvia.com"
+    },
+    {
+      "broker2025Id": "irys_i_7b17311f",
+      "caRegistry2026Id": "irys-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@irys.us"
+    },
+    {
+      "broker2025Id": "isoservicesinc_i_da7c5f32",
+      "caRegistry2026Id": "lead-intelligence-inc",
+      "label": "match",
+      "evidence": "exact privacy email vmsprivacy@verisk.com"
+    },
+    {
+      "broker2025Id": "ispottv_a6d40d55",
+      "caRegistry2026Id": "ispot-tv-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@ispot.tv"
+    },
+    {
+      "broker2025Id": "iwave_d640383d",
+      "caRegistry2026Id": "iwave-information-systems",
+      "label": "match",
+      "evidence": "exact privacy email privacy+california@iwave.com"
+    },
+    {
+      "broker2025Id": "j2martechcorp_j_f35cd1bd",
+      "caRegistry2026Id": "j2-global-canada-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@ziffdavis.com"
+    },
+    {
+      "broker2025Id": "jdmlistservices_j_4a778a9b",
+      "caRegistry2026Id": "jdm-list-services",
+      "label": "match",
+      "evidence": "exact privacy email chrissy@jdmlistservices.com"
+    },
+    {
+      "broker2025Id": "jdpower_j_13235336",
+      "caRegistry2026Id": "alikeaudience-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "jdpower_j_13235336",
+      "caRegistry2026Id": "autodata-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email jdpowerprivacy@jdpa.com"
+    },
+    {
+      "broker2025Id": "jdpower_j_13235336",
+      "caRegistry2026Id": "j-d-power",
+      "label": "match",
+      "evidence": "exact privacy email jdpowerprivacy@jdpa.com"
+    },
+    {
+      "broker2025Id": "jmrmediaconsult_j_85b83c41",
+      "caRegistry2026Id": "jmr-media-consulting-inc",
+      "label": "match",
+      "evidence": "exact privacy email jon@jmr-media.com"
+    },
+    {
+      "broker2025Id": "jungroupproduct_j_cd1771a3",
+      "caRegistry2026Id": "illumin-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "jungroupproduct_j_cd1771a3",
+      "caRegistry2026Id": "jun-group-productions-llc",
+      "label": "match",
+      "evidence": "exact privacy email ccpa@jungroup.com"
+    },
+    {
+      "broker2025Id": "kargogloballlc_94a31260",
+      "caRegistry2026Id": "kargo-global-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Kargo Global LLC / Kargo Global LLC)"
+    },
+    {
+      "broker2025Id": "kbsynergyinc_k_59856fa8",
+      "caRegistry2026Id": "kb-synergy-inc",
+      "label": "match",
+      "evidence": "exact privacy email info@kbsynergy.com"
+    },
+    {
+      "broker2025Id": "keymarketingadv_k_e5675393",
+      "caRegistry2026Id": "key-marketing-advantage",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (KEY MARKETING ADVANTAGE LLC / Key Marketing Advantage)"
+    },
+    {
+      "broker2025Id": "kloudendinc_k_857dd477",
+      "caRegistry2026Id": "kloudend-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@kloudend.com"
+    },
+    {
+      "broker2025Id": "koddiinc_e78fe585",
+      "caRegistry2026Id": "koddi-inc",
+      "label": "match",
+      "evidence": "exact privacy email dataprivacy@koddi.com"
+    },
+    {
+      "broker2025Id": "komodohealthinc_k_0524ecbc",
+      "caRegistry2026Id": "komodo-health-inc",
+      "label": "match",
+      "evidence": "exact privacy email trust-and-safety@komodohealth.com"
+    },
+    {
+      "broker2025Id": "kontext_4c67ef67",
+      "caRegistry2026Id": "kontext-data",
+      "label": "match",
+      "evidence": "exact privacy email info@kontextdata.com"
+    },
+    {
+      "broker2025Id": "lead411corporat_l_6e7b479f",
+      "caRegistry2026Id": "lead411-corporation",
+      "label": "match",
+      "evidence": "exact privacy email tom@lead411.io"
+    },
+    {
+      "broker2025Id": "leadcrunch_l_ae72fbc5",
+      "caRegistry2026Id": "leadcrunch",
+      "label": "match",
+      "evidence": "exact privacy email privacy@getrev.ai"
+    },
+    {
+      "broker2025Id": "leadiqinc_l_478b6d68",
+      "caRegistry2026Id": "leadiq-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@leadiq.com"
+    },
+    {
+      "broker2025Id": "leadloftinc_faa82efb",
+      "caRegistry2026Id": "eyeota-pte-ltd",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "leadmemedia_06d729e4",
+      "caRegistry2026Id": "lead-me-media-llc",
+      "label": "match",
+      "evidence": "exact privacy email californiaregistry@leadmemedia.com"
+    },
+    {
+      "broker2025Id": "leadpostllc_l_50f78f40",
+      "caRegistry2026Id": "leadpost-llc",
+      "label": "match",
+      "evidence": "exact privacy email amanda@leadpost.com"
+    },
+    {
+      "broker2025Id": "leadspaceinc_l_f565788a",
+      "caRegistry2026Id": "leadspace-inc",
+      "label": "match",
+      "evidence": "exact privacy email compliance_privacy@leadspace.com"
+    },
+    {
+      "broker2025Id": "leidosdigitalso_l_10d0333b",
+      "caRegistry2026Id": "leidos-digital-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@leidos.com"
+    },
+    {
+      "broker2025Id": "lenschenker_39c57b47",
+      "caRegistry2026Id": "anchor-computer-inc",
+      "label": "match",
+      "evidence": "exact privacy email hkhan@anchorcomputer.com"
+    },
+    {
+      "broker2025Id": "lightboxparentl_becf5283",
+      "caRegistry2026Id": "lightbox-parent-l-p",
+      "label": "match",
+      "evidence": "exact privacy email jfranks@lightboxre.com"
+    },
+    {
+      "broker2025Id": "lionsharemarket_l_8ce9d885",
+      "caRegistry2026Id": "lionshare-marketing-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (LIONSHARE MARKETING Inc / LionShare Marketing, Inc)"
+    },
+    {
+      "broker2025Id": "listsonline_l_538f7e76",
+      "caRegistry2026Id": "listsonline-com-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Listsonline / ListsOnline.com, Inc.)"
+    },
+    {
+      "broker2025Id": "livedatatechnol_b5968cd7",
+      "caRegistry2026Id": "live-data-technologies-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Live Data Technologies Inc. / Live Data Technologies, Inc.)"
+    },
+    {
+      "broker2025Id": "liveintent_792ea661",
+      "caRegistry2026Id": "disqus",
+      "label": "match",
+      "evidence": "exact privacy email privacy@disqus.com"
+    },
+    {
+      "broker2025Id": "liveintent_792ea661",
+      "caRegistry2026Id": "liveintent",
+      "label": "match",
+      "evidence": "exact privacy email privacy@zetaglobal.com"
+    },
+    {
+      "broker2025Id": "liveintent_792ea661",
+      "caRegistry2026Id": "zeta-global",
+      "label": "match",
+      "evidence": "exact privacy email privacy@zetaglobal.com"
+    },
+    {
+      "broker2025Id": "liverampinc_l_5e5ce484",
+      "caRegistry2026Id": "liveramp-holdings-inc",
+      "label": "match",
+      "evidence": "exact privacy email consumercare@liveramp.com"
+    },
+    {
+      "broker2025Id": "lizdevinc_l_30bf6e3f",
+      "caRegistry2026Id": "lizdev-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacyanddatacompliancereview@lizdev.com"
+    },
+    {
+      "broker2025Id": "logiqinc_l_e1145824",
+      "caRegistry2026Id": "dealersocket-llc-us",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "lookify_a649b97b",
+      "caRegistry2026Id": "lookify-io",
+      "label": "match",
+      "evidence": "exact privacy email support@lookify.io"
+    },
+    {
+      "broker2025Id": "loopmeltd_l_abcc38d3",
+      "caRegistry2026Id": "loopme-limited",
+      "label": "match",
+      "evidence": "exact privacy email legal@loopme.com"
+    },
+    {
+      "broker2025Id": "lotadatainc_60cb47f2",
+      "caRegistry2026Id": "onaudience-ltd",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "lushasystemsinc_l_3a04c546",
+      "caRegistry2026Id": "lusha-systems-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@lusha.com"
+    },
+    {
+      "broker2025Id": "m1dataanalytics_m_6d09a745",
+      "caRegistry2026Id": "m1-data-analytics-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (M1 Data & Analytics, LLC / M1 Data & Analytics, LLC)"
+    },
+    {
+      "broker2025Id": "madhiveinc_m_9a55da18",
+      "caRegistry2026Id": "madhive-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@madhive.com"
+    },
+    {
+      "broker2025Id": "magniteinc_m_e12daa9b",
+      "caRegistry2026Id": "magnite-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@magnite.com"
+    },
+    {
+      "broker2025Id": "malvernmediainc_m_5e5d9365",
+      "caRegistry2026Id": "malvern-media-inc",
+      "label": "match",
+      "evidence": "exact privacy email info@malvernmedia.com"
+    },
+    {
+      "broker2025Id": "marketops_31bace24",
+      "caRegistry2026Id": "marketops-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@marketops.com"
+    },
+    {
+      "broker2025Id": "marriottinterna_26098ce6",
+      "caRegistry2026Id": "marriott-international-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@marriott.com"
+    },
+    {
+      "broker2025Id": "matchbookdatall_m_f17f2236",
+      "caRegistry2026Id": "matchbook-data-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@matchbookdata.com"
+    },
+    {
+      "broker2025Id": "maxmindinc_m_fd4b2874",
+      "caRegistry2026Id": "cdk-global-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "maxmindinc_m_fd4b2874",
+      "caRegistry2026Id": "maxmind-inc",
+      "label": "match",
+      "evidence": "exact privacy email tgonzalez@maxmind.com"
+    },
+    {
+      "broker2025Id": "mediamathinc_52e9a382",
+      "caRegistry2026Id": "live-data-technologies-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "medianetadverti_aa660e1e",
+      "caRegistry2026Id": "media-net-advertising-fz-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@media.net"
+    },
+    {
+      "broker2025Id": "mediawallahinc_m_0d8d7319",
+      "caRegistry2026Id": "mediawallah-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@mediawallah.com"
+    },
+    {
+      "broker2025Id": "medprosystems_eb24a759",
+      "caRegistry2026Id": "medpro-systems-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@medprosystems.com"
+    },
+    {
+      "broker2025Id": "melissacorporat_62d769d6",
+      "caRegistry2026Id": "melissa-data-corporation",
+      "label": "match",
+      "evidence": "exact privacy email compliance@melissa.com"
+    },
+    {
+      "broker2025Id": "meltwaternewsus_9f1a6882",
+      "caRegistry2026Id": "meltwater-news-us-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@meltwater.com"
+    },
+    {
+      "broker2025Id": "merkleinc_m_f0b3a0e3",
+      "caRegistry2026Id": "merkle-inc",
+      "label": "match",
+      "evidence": "exact privacy email americas.dpo@dentsu.com"
+    },
+    {
+      "broker2025Id": "messagedigitall_m_7d65e3b3",
+      "caRegistry2026Id": "message-digital-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@messagedigital.com"
+    },
+    {
+      "broker2025Id": "mhsubillc_m_769d633d",
+      "caRegistry2026Id": "mh-sub-i-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@internetbrands.com"
+    },
+    {
+      "broker2025Id": "milestonemarket_m_04e6b2ac",
+      "caRegistry2026Id": "milestone-marketing-solutions",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (MILESTONE MARKETING SOLUTIONS / Milestone Marketing Solutions)"
+    },
+    {
+      "broker2025Id": "minervabiinc_m_f0ee9f5b",
+      "caRegistry2026Id": "minerva-bi-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (MINERVA BI Inc / Minerva BI Inc)"
+    },
+    {
+      "broker2025Id": "mobilewallainc_m_c64a151e",
+      "caRegistry2026Id": "mobilewalla-inc",
+      "label": "match",
+      "evidence": "exact privacy email jclark@mobilewalla.com"
+    },
+    {
+      "broker2025Id": "modernizeinc_m_d6dc55de",
+      "caRegistry2026Id": "anchor-computer-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "modfxlabspvtltd_d946f782",
+      "caRegistry2026Id": "modfx-labs-pvt-ltd",
+      "label": "match",
+      "evidence": "exact privacy email mandeep@modfxlabs.com"
+    },
+    {
+      "broker2025Id": "modigieinc_9322ac66",
+      "caRegistry2026Id": "modigie-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Modigie Inc. / Modigie Inc)"
+    },
+    {
+      "broker2025Id": "mogeaninc_3404a7d3",
+      "caRegistry2026Id": "information-com-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "monocl_m_c2684e46",
+      "caRegistry2026Id": "definitive-healthcare-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@definitivehc.com"
+    },
+    {
+      "broker2025Id": "mrstrategicserv_m_0e7ef95e",
+      "caRegistry2026Id": "m-r-strategic-services-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@mrss.com"
+    },
+    {
+      "broker2025Id": "multimedialists_m_480c1b2e",
+      "caRegistry2026Id": "multimedia-lists-inc",
+      "label": "match",
+      "evidence": "exact privacy email daniel@multimedialists.com"
+    },
+    {
+      "broker2025Id": "narvarinc_n_29692272",
+      "caRegistry2026Id": "narvar-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@narvar.com"
+    },
+    {
+      "broker2025Id": "nationaldataana_183a784a",
+      "caRegistry2026Id": "national-data-analytics-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacyinfo@publicdatacheck.com"
+    },
+    {
+      "broker2025Id": "nationalopinion_94d7a698",
+      "caRegistry2026Id": "national-opinion-institute-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@nationalopinioninstitute.com"
+    },
+    {
+      "broker2025Id": "netwise_866af877",
+      "caRegistry2026Id": "dun-and-bradstreet-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacyofficer@dnb.com"
+    },
+    {
+      "broker2025Id": "netwise_866af877",
+      "caRegistry2026Id": "netwise-data-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacyofficer@dnb.com"
+    },
+    {
+      "broker2025Id": "newgoldventures_d2759fef",
+      "caRegistry2026Id": "think-data-group-inc",
+      "label": "match",
+      "evidence": "exact privacy email barry.gold@thinkdatagroup.com"
+    },
+    {
+      "broker2025Id": "nextrollinc_672192ca",
+      "caRegistry2026Id": "nextroll-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@nextroll.com"
+    },
+    {
+      "broker2025Id": "nextwavemarketi_n_83e89a7e",
+      "caRegistry2026Id": "fifty-technology-ltd",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "nextwavemarketi_n_83e89a7e",
+      "caRegistry2026Id": "next-wave-marketing-strategies-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Next Wave Marketing Strategies, Inc / NEXT WAVE MARKETING STRATEGIES, INC)"
+    },
+    {
+      "broker2025Id": "nexxeninc_n_14a68610",
+      "caRegistry2026Id": "nexxen-inc",
+      "label": "match",
+      "evidence": "exact privacy email compliance@nexxen.com"
+    },
+    {
+      "broker2025Id": "nfocusconsultin_n_7c0b021b",
+      "caRegistry2026Id": "nfocus-consulting-inc",
+      "label": "match",
+      "evidence": "exact privacy email consumer@n-focus.com"
+    },
+    {
+      "broker2025Id": "nuwberinc_n_40125eca",
+      "caRegistry2026Id": "nuwber-inc",
+      "label": "match",
+      "evidence": "exact privacy email support@nuwber.com"
+    },
+    {
+      "broker2025Id": "onaudienceltd_o_d8eece5e",
+      "caRegistry2026Id": "onaudience-ltd",
+      "label": "match",
+      "evidence": "exact privacy email privacy@onaudience.com"
+    },
+    {
+      "broker2025Id": "onlineadvertisi_o_693605bd",
+      "caRegistry2026Id": "online-advertising-network-sp-z-o-o",
+      "label": "match",
+      "evidence": "exact privacy email privacy@oan.pl"
+    },
+    {
+      "broker2025Id": "onlinemediagrou_7db09008",
+      "caRegistry2026Id": "online-media-group-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@omginc.xyz"
+    },
+    {
+      "broker2025Id": "opensendinc_462ac616",
+      "caRegistry2026Id": "opensend-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@opensend.com"
+    },
+    {
+      "broker2025Id": "openxtechnologi_o_10d3c24b",
+      "caRegistry2026Id": "openx-technologies-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@openx.com"
+    },
+    {
+      "broker2025Id": "orgioinc_o_c7f44712",
+      "caRegistry2026Id": "orgio-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@theorg.com"
+    },
+    {
+      "broker2025Id": "outlogicllc_o_52c9da9c",
+      "caRegistry2026Id": "outlogic-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@outlogic.io"
+    },
+    {
+      "broker2025Id": "outwardmediainc_o_ee67833b",
+      "caRegistry2026Id": "definitive-healthcare-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "outwardmediainc_o_ee67833b",
+      "caRegistry2026Id": "outward-media-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@outwardmedia.com"
+    },
+    {
+      "broker2025Id": "owncollc_o_8d11dffb",
+      "caRegistry2026Id": "ownco-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@monitorbase.com"
+    },
+    {
+      "broker2025Id": "pacificeastrese_ad3f65b8",
+      "caRegistry2026Id": "pacific-east-research-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@pacificeast.com"
+    },
+    {
+      "broker2025Id": "paedaeinc_p_8f51e147",
+      "caRegistry2026Id": "paedae-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@infillion.com"
+    },
+    {
+      "broker2025Id": "paramountlistsi_p_27dcb33b",
+      "caRegistry2026Id": "paramount-lists-inc",
+      "label": "match",
+      "evidence": "exact privacy email ccpa@paramountdirectmarketing.com"
+    },
+    {
+      "broker2025Id": "path2response_dbde7f77",
+      "caRegistry2026Id": "path2response-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacyinfo@path2response.com"
+    },
+    {
+      "broker2025Id": "peopleconnectin_p_451c7f62",
+      "caRegistry2026Id": "truthfinder-llc",
+      "label": "match",
+      "evidence": "exact privacy email legal@peopleconnect.us"
+    },
+    {
+      "broker2025Id": "peopledatalabs_p_15ca0406",
+      "caRegistry2026Id": "people-data-labs",
+      "label": "match",
+      "evidence": "exact privacy email privacy@peopledatalabs.com"
+    },
+    {
+      "broker2025Id": "peoplefindersda_p_814b64bd",
+      "caRegistry2026Id": "peoplefindersdaas",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Peoplefindersdaas / PeoplefindersDaaS)"
+    },
+    {
+      "broker2025Id": "peoplewhiz_a8a2b69f",
+      "caRegistry2026Id": "peoplewhiz-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Peoplewhiz / Peoplewhiz, Inc)"
+    },
+    {
+      "broker2025Id": "piplinc_p_cfd7c02e",
+      "caRegistry2026Id": "pipl-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@pipl.com"
+    },
+    {
+      "broker2025Id": "pitchbookdatain_ac60a7c4",
+      "caRegistry2026Id": "pitchbook-data-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@pitchbook.com"
+    },
+    {
+      "broker2025Id": "placeexchangein_a511f50c",
+      "caRegistry2026Id": "outlogic-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "placeexchangein_a511f50c",
+      "caRegistry2026Id": "place-exchange-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@placeexchange.com"
+    },
+    {
+      "broker2025Id": "placeiqinc_p_29cc075a",
+      "caRegistry2026Id": "placeiq-inc",
+      "label": "match",
+      "evidence": "exact privacy email placeiq.privacy@precisely.com"
+    },
+    {
+      "broker2025Id": "placeiqinc_p_29cc075a",
+      "caRegistry2026Id": "precisely-software-incorporated",
+      "label": "match",
+      "evidence": "exact privacy email privacy@precisely.com"
+    },
+    {
+      "broker2025Id": "plexussinc_774a529e",
+      "caRegistry2026Id": "civil-data-research-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "plungellc_p_f46316fe",
+      "caRegistry2026Id": "plunge-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@plungedigital.com"
+    },
+    {
+      "broker2025Id": "pmgworldwidellc_23704b3d",
+      "caRegistry2026Id": "lusha-systems-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "pmgworldwidellc_23704b3d",
+      "caRegistry2026Id": "pmg-worldwide-llc",
+      "label": "match",
+      "evidence": "exact privacy email dataprivacy@pmg.com"
+    },
+    {
+      "broker2025Id": "popactamediallc_8aceeed8",
+      "caRegistry2026Id": "pop-acta-media-llc",
+      "label": "match",
+      "evidence": "exact privacy email legal@popacta.com"
+    },
+    {
+      "broker2025Id": "possiblenowinc_p_975dbafb",
+      "caRegistry2026Id": "possiblenow-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (POSSIBLENOW Inc / PossibleNOW, Inc.)"
+    },
+    {
+      "broker2025Id": "postie_ded2da1c",
+      "caRegistry2026Id": "postie-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@postie.com"
+    },
+    {
+      "broker2025Id": "postpilotinc_p_e2b66ac8",
+      "caRegistry2026Id": "postpilot-inc",
+      "label": "match",
+      "evidence": "exact privacy email operations@postpilot.com"
+    },
+    {
+      "broker2025Id": "predactiv_63b8088d",
+      "caRegistry2026Id": "predactiv",
+      "label": "match",
+      "evidence": "exact privacy email privacy@predactiv.com"
+    },
+    {
+      "broker2025Id": "privaterecordsl_p_1832974b",
+      "caRegistry2026Id": "private-records-llc",
+      "label": "match",
+      "evidence": "exact privacy email support@privaterecords.net"
+    },
+    {
+      "broker2025Id": "privcomediallc_p_f7db0c0a",
+      "caRegistry2026Id": "privco-holding-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@privco.com"
+    },
+    {
+      "broker2025Id": "propertyradarin_p_59266814",
+      "caRegistry2026Id": "propertyradar-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@propertyradar.com"
+    },
+    {
+      "broker2025Id": "propertyreachlp_p_13682968",
+      "caRegistry2026Id": "property-reach-l-p",
+      "label": "match",
+      "evidence": "exact privacy email compliance@propertyreach.com"
+    },
+    {
+      "broker2025Id": "pubmaticinc_p_884b0758",
+      "caRegistry2026Id": "pubmatic-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@pubmatic.com"
+    },
+    {
+      "broker2025Id": "pulsepointinc_p_caf95fcd",
+      "caRegistry2026Id": "pulsepoint-inc",
+      "label": "match",
+      "evidence": "exact privacy email dataprivacy@pulsepoint.com"
+    },
+    {
+      "broker2025Id": "purecarstechnol_c24e48b6",
+      "caRegistry2026Id": "asl-marketing",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "quadgraphicsinc_q_aa906471",
+      "caRegistry2026Id": "quad-graphics-inc",
+      "label": "match",
+      "evidence": "exact privacy email databroker@quad.com"
+    },
+    {
+      "broker2025Id": "quadrantglobalp_ce6754c1",
+      "caRegistry2026Id": "insightbridge-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "quadrantglobalp_ce6754c1",
+      "caRegistry2026Id": "quadrant-global-pte-ltd",
+      "label": "match",
+      "evidence": "exact privacy email privacy@quadrant.io"
+    },
+    {
+      "broker2025Id": "qualfon_q_27b13d1b",
+      "caRegistry2026Id": "qualfon",
+      "label": "match",
+      "evidence": "exact privacy email consumerprivacy@qualfon.com"
+    },
+    {
+      "broker2025Id": "rampedup_r_e9e2af63",
+      "caRegistry2026Id": "rampedup",
+      "label": "match",
+      "evidence": "exact privacy email privacy@rampedup.io"
+    },
+    {
+      "broker2025Id": "raycdpinc_r_8f8e0321",
+      "caRegistry2026Id": "ray-cdp-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Ray CDP Inc / Ray CDP, Inc.)"
+    },
+    {
+      "broker2025Id": "realeflowllc_r_cc492291",
+      "caRegistry2026Id": "realeflow-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (REALEFLOW LLC / Realeflow LLC)"
+    },
+    {
+      "broker2025Id": "realintentinc_r_b15813df",
+      "caRegistry2026Id": "real-intent-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (REAL INTENT Inc. / REAL INTENT INC)"
+    },
+    {
+      "broker2025Id": "realsourceinc_r_e8e5af0d",
+      "caRegistry2026Id": "realsource-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@realsourcedata.com"
+    },
+    {
+      "broker2025Id": "recruitbotinc_r_09e11691",
+      "caRegistry2026Id": "recruitbot",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Recruitbot, Inc. / RecruitBot)"
+    },
+    {
+      "broker2025Id": "redidatainc_r_74c529e0",
+      "caRegistry2026Id": "redi-data-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@redidata.com"
+    },
+    {
+      "broker2025Id": "redmobllc_r_18c46f49",
+      "caRegistry2026Id": "redmob-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@redmob.io"
+    },
+    {
+      "broker2025Id": "relproinc_r_45587147",
+      "caRegistry2026Id": "relpro-inc",
+      "label": "match",
+      "evidence": "exact privacy email info@relpro.com"
+    },
+    {
+      "broker2025Id": "relxinc_r_6121712d",
+      "caRegistry2026Id": "forager-ai-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "relxinc_r_6121712d",
+      "caRegistry2026Id": "lexisnexis-risk-solutions-fl-inc",
+      "label": "match",
+      "evidence": "exact privacy email consumer.documents@lexisnexisrisk.com"
+    },
+    {
+      "broker2025Id": "relxinc_r_6121712d",
+      "caRegistry2026Id": "relx-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy.inquiries@lexisnexis.com"
+    },
+    {
+      "broker2025Id": "resonate_r_3d24d569",
+      "caRegistry2026Id": "resonate",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (RESONATE Networks, Inc. / Resonate)"
+    },
+    {
+      "broker2025Id": "revcontent_c5e9622f",
+      "caRegistry2026Id": "revcontent-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@revcontent.com"
+    },
+    {
+      "broker2025Id": "revealmobile_r_88d771cd",
+      "caRegistry2026Id": "reveal-mobile-inc",
+      "label": "match",
+      "evidence": "exact privacy email info@revealmobile.com"
+    },
+    {
+      "broker2025Id": "reveliolabsinc_22ec2d59",
+      "caRegistry2026Id": "revelio-labs-inc",
+      "label": "match",
+      "evidence": "exact privacy email hannah@reveliolabs.com"
+    },
+    {
+      "broker2025Id": "revenuebaseinc_55a485a9",
+      "caRegistry2026Id": "revenuebase-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@revenuebase.ai"
+    },
+    {
+      "broker2025Id": "revoptimalllc_r_7e22da4b",
+      "caRegistry2026Id": "revoptimal-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@revoptimal.com"
+    },
+    {
+      "broker2025Id": "richmediallc_r_5541b727",
+      "caRegistry2026Id": "rich-media-llc",
+      "label": "match",
+      "evidence": "exact privacy email jeff@richmediallc.com"
+    },
+    {
+      "broker2025Id": "rocketreachllc_r_69c90c76",
+      "caRegistry2026Id": "rocketreach-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@rocketreach.co"
+    },
+    {
+      "broker2025Id": "roiqinc_359f0d46",
+      "caRegistry2026Id": "dealerx-partners-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@dealerx.com"
+    },
+    {
+      "broker2025Id": "roqadinc_r_00d0bf0c",
+      "caRegistry2026Id": "roq-ad-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Roq.Ad Inc / Roq.ad Inc.)"
+    },
+    {
+      "broker2025Id": "roundskyinc_r_1d4d3b75",
+      "caRegistry2026Id": "round-sky-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@roundsky.com"
+    },
+    {
+      "broker2025Id": "rpmdirectllc_ecdd2d71",
+      "caRegistry2026Id": "exlservice-com-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@exlservice.com"
+    },
+    {
+      "broker2025Id": "sabioinc_s_b374107a",
+      "caRegistry2026Id": "sabio-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@sabio.inc"
+    },
+    {
+      "broker2025Id": "saferentsolutio_s_b3e2bf04",
+      "caRegistry2026Id": "digital-safety-products-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "salesintelresea_s_b6534272",
+      "caRegistry2026Id": "path2response-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "salutarydatallc_s_f8db1337",
+      "caRegistry2026Id": "salutary-data-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@salutarydata.com"
+    },
+    {
+      "broker2025Id": "sambatvinc_s_00dc50cb",
+      "caRegistry2026Id": "samba-tv-inc",
+      "label": "match",
+      "evidence": "exact privacy email jagdip.sekhon@samba.tv"
+    },
+    {
+      "broker2025Id": "sbfellc_s_8cc41e83",
+      "caRegistry2026Id": "sbfe-llc",
+      "label": "match",
+      "evidence": "exact privacy email info@sbfe.org"
+    },
+    {
+      "broker2025Id": "scalablecommerc_269fb6ee",
+      "caRegistry2026Id": "scalable-commerce-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacyinfo@kidslivesafe.com"
+    },
+    {
+      "broker2025Id": "schmermsllc_s_d7a166d9",
+      "caRegistry2026Id": "date-detective-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (DATE DETECTIVE Inc / Date Detective Inc)"
+    },
+    {
+      "broker2025Id": "scileads_99fda6c1",
+      "caRegistry2026Id": "scileads-ltd",
+      "label": "match",
+      "evidence": "exact privacy email privacy@scileads.com"
+    },
+    {
+      "broker2025Id": "seamlesscontact_s_f05cfe8e",
+      "caRegistry2026Id": "seamless-contacts-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@seamlessleads.com"
+    },
+    {
+      "broker2025Id": "semasioinc_s_3cfc0ebc",
+      "caRegistry2026Id": "semasio-gmbh",
+      "label": "match",
+      "evidence": "exact privacy email info@semasio.com"
+    },
+    {
+      "broker2025Id": "semcastingcom_14c108b4",
+      "caRegistry2026Id": "semcasting-inc",
+      "label": "match",
+      "evidence": "exact privacy email jgreer@semcasting.com"
+    },
+    {
+      "broker2025Id": "sharelocalmedia_s_79e591e3",
+      "caRegistry2026Id": "clickagy-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "sharelocalmedia_s_79e591e3",
+      "caRegistry2026Id": "share-local-media-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (SHARE LOCAL MEDIA Inc / Share Local Media, Inc.)"
+    },
+    {
+      "broker2025Id": "sharethroughinc_s_60b30b83",
+      "caRegistry2026Id": "sharethrough",
+      "label": "match",
+      "evidence": "exact privacy email dataprotection@sharethrough.com"
+    },
+    {
+      "broker2025Id": "sheeridinc_s_81cf7806",
+      "caRegistry2026Id": "sheerid-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@sheerid.com"
+    },
+    {
+      "broker2025Id": "similarwebltd_s_29dbddc9",
+      "caRegistry2026Id": "marketops-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "similarwebltd_s_29dbddc9",
+      "caRegistry2026Id": "similarweb-ltd",
+      "label": "match",
+      "evidence": "exact privacy email legal@similarweb.com"
+    },
+    {
+      "broker2025Id": "simiocloudllc_s_26cbf0f2",
+      "caRegistry2026Id": "simio-cloud-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@simiocloud.com"
+    },
+    {
+      "broker2025Id": "siteimpact_3891dab4",
+      "caRegistry2026Id": "site-impact-llc",
+      "label": "match",
+      "evidence": "exact privacy email dataprivacy@siteimpact.com"
+    },
+    {
+      "broker2025Id": "slashdotmediall_s_db1a619b",
+      "caRegistry2026Id": "slashdot-media-llc",
+      "label": "match",
+      "evidence": "exact privacy email roger.abbott@slashdotmedia.com"
+    },
+    {
+      "broker2025Id": "snovioinc_s_703e9561",
+      "caRegistry2026Id": "snovio-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (SNOVIO Inc / Snovio Inc)"
+    },
+    {
+      "broker2025Id": "solarexperts_s_585b34a3",
+      "caRegistry2026Id": "exact-opco-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (EXACT OPCO LLC / Exact Opco, LLC)"
+    },
+    {
+      "broker2025Id": "sourcepathdigit_8040eacf",
+      "caRegistry2026Id": "source-path-digital",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Source Path Digital / Source Path Digital)"
+    },
+    {
+      "broker2025Id": "sovrninc_s_4bd8b844",
+      "caRegistry2026Id": "sovrn-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@sovrn.com"
+    },
+    {
+      "broker2025Id": "specialistsmark_s_a8f34954",
+      "caRegistry2026Id": "specialists-marketing-services-inc",
+      "label": "match",
+      "evidence": "exact privacy email dataprivacyteam@sms-inc.com"
+    },
+    {
+      "broker2025Id": "speedeondatallc_s_b193deff",
+      "caRegistry2026Id": "speedeon-data-llc",
+      "label": "match",
+      "evidence": "exact privacy email accounting@speedeondata.com"
+    },
+    {
+      "broker2025Id": "spglobalinc_s_65f188c6",
+      "caRegistry2026Id": "s-p-global-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@spglobal.com"
+    },
+    {
+      "broker2025Id": "spokeoinc_s_a6e9df8e",
+      "caRegistry2026Id": "spokeo-inc",
+      "label": "match",
+      "evidence": "exact privacy email jmatthes@spokeo.com"
+    },
+    {
+      "broker2025Id": "spycloudinc_s_f7aba331",
+      "caRegistry2026Id": "austin-consolidated-holdings-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "spycloudinc_s_f7aba331",
+      "caRegistry2026Id": "spycloud-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@spycloud.com"
+    },
+    {
+      "broker2025Id": "spydialerinc_s_6a69e602",
+      "caRegistry2026Id": "spy-labs-adco-llc",
+      "label": "match",
+      "evidence": "exact privacy email info@spydialer.com"
+    },
+    {
+      "broker2025Id": "staircaseinc_s_d3bd9915",
+      "caRegistry2026Id": "intentsify-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "statarasolution_s_d8c2efed",
+      "caRegistry2026Id": "statara-solutions-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@statara.com"
+    },
+    {
+      "broker2025Id": "statsocial_3c7dc71f",
+      "caRegistry2026Id": "statsocial",
+      "label": "match",
+      "evidence": "exact privacy email privacy@statsocial.com"
+    },
+    {
+      "broker2025Id": "steppingblocksi_s_bd96c76f",
+      "caRegistry2026Id": "steppingblocks-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@steppingblocks.com"
+    },
+    {
+      "broker2025Id": "sterlingdatallc_0c16f583",
+      "caRegistry2026Id": "sterling-data-company-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@sterling.ai"
+    },
+    {
+      "broker2025Id": "stirista_s_6f26d7c4",
+      "caRegistry2026Id": "stirista-llc",
+      "label": "match",
+      "evidence": "exact privacy email info@stirista.com"
+    },
+    {
+      "broker2025Id": "strategicdatain_80166697",
+      "caRegistry2026Id": "strategic-data-intelligence-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Strategic Data Intelligence / Strategic Data Intelligence, LLC)"
+    },
+    {
+      "broker2025Id": "stuartmcnair_37c98cb8",
+      "caRegistry2026Id": "randall-reilly-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Randall-Reilly, LLC / Randall-Reilly, LLC)"
+    },
+    {
+      "broker2025Id": "subdirectllc_ce0c99b6",
+      "caRegistry2026Id": "subdirect-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@360mediadirect.com"
+    },
+    {
+      "broker2025Id": "summitresources_s_c973f309",
+      "caRegistry2026Id": "summit-resources-llc",
+      "label": "match",
+      "evidence": "exact privacy email legal@clientcommand.com"
+    },
+    {
+      "broker2025Id": "swoopcominc_4b529e85",
+      "caRegistry2026Id": "swoop-com-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Swoop.Com, Inc. / Swoop.com Inc)"
+    },
+    {
+      "broker2025Id": "taboolainc_t_55b9ecd2",
+      "caRegistry2026Id": "taboola-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@taboola.com"
+    },
+    {
+      "broker2025Id": "tapadinc_t_d0ca1f3d",
+      "caRegistry2026Id": "freepeoplesearch-com-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "targetsmartcomm_t_d877cc09",
+      "caRegistry2026Id": "targetsmart-communications-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@targetsmart.com"
+    },
+    {
+      "broker2025Id": "taskgenieinc_t_477e78ab",
+      "caRegistry2026Id": "task-genie-inc",
+      "label": "match",
+      "evidence": "exact privacy email admin@datalane.com"
+    },
+    {
+      "broker2025Id": "techtargetinc_t_e31d1801",
+      "caRegistry2026Id": "informa-group-limited",
+      "label": "match",
+      "evidence": "exact privacy email groupdpo@informa.com"
+    },
+    {
+      "broker2025Id": "techtargetinc_t_e31d1801",
+      "caRegistry2026Id": "techtarget-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@techtarget.com"
+    },
+    {
+      "broker2025Id": "telesigncorpora_87034f83",
+      "caRegistry2026Id": "telesign-corporation",
+      "label": "match",
+      "evidence": "exact privacy email california-opt-out@telesign.com"
+    },
+    {
+      "broker2025Id": "thealescogroupl_t_2ac161c0",
+      "caRegistry2026Id": "the-alesco-group-llc",
+      "label": "match",
+      "evidence": "exact privacy email legal@alescodata.com"
+    },
+    {
+      "broker2025Id": "thepeoplesearch_t_b7a746e3",
+      "caRegistry2026Id": "the-people-searchers-llc",
+      "label": "match",
+      "evidence": "exact privacy email support@peoplesearcher.com"
+    },
+    {
+      "broker2025Id": "tmobileusainc_t_95d550a2",
+      "caRegistry2026Id": "t-mobile-usa-inc",
+      "label": "match",
+      "evidence": "exact privacy email mmp-privacy@t-mobile.com"
+    },
+    {
+      "broker2025Id": "traackrinc_t_3adb30ca",
+      "caRegistry2026Id": "traackr-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@traackr.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "datalink-services-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "drivers-history-information-sales-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "iovation-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "trans-union-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "transunion-digital-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "transunion-interactive-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "transunion_8b9db530",
+      "caRegistry2026Id": "transunion-risk-and-alternative-data-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@transunion.com"
+    },
+    {
+      "broker2025Id": "trestlesolution_t_2117ba3d",
+      "caRegistry2026Id": "trestle-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@trestleiq.com"
+    },
+    {
+      "broker2025Id": "tripleliftinc_c2328e31",
+      "caRegistry2026Id": "draup-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "tripleliftinc_c2328e31",
+      "caRegistry2026Id": "triplelift-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@triplelift.com"
+    },
+    {
+      "broker2025Id": "trueblueanalyti_b4b2ee9c",
+      "caRegistry2026Id": "true-blue-analytics-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@trueblueanalytics.org"
+    },
+    {
+      "broker2025Id": "truedatasolutio_t_dc45eda5",
+      "caRegistry2026Id": "truedata-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@truedata.co"
+    },
+    {
+      "broker2025Id": "trueopulencecor_6fd41697",
+      "caRegistry2026Id": "pitchbook-data-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "truthfinderllc_t_fe4805f4",
+      "caRegistry2026Id": "truthfinder-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Truthfinder LLC / TruthFinder, LLC)"
+    },
+    {
+      "broker2025Id": "truthnowllc_t_538e3b5f",
+      "caRegistry2026Id": "truth-now-llc",
+      "label": "match",
+      "evidence": "exact privacy email support@checksecrets.com"
+    },
+    {
+      "broker2025Id": "tsgholdcollc_t_f9a12392",
+      "caRegistry2026Id": "finthrive-healthcare-inc",
+      "label": "match",
+      "evidence": "exact privacy email tuhc@finthrive.com"
+    },
+    {
+      "broker2025Id": "tsgholdcollc_t_f9a12392",
+      "caRegistry2026Id": "tsg-holdco-llc",
+      "label": "match",
+      "evidence": "exact privacy email tsg@finthrive.com"
+    },
+    {
+      "broker2025Id": "tunnlllc_t_c782296e",
+      "caRegistry2026Id": "tunnl-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Tunnl, LLC / Tunnl, LLC)"
+    },
+    {
+      "broker2025Id": "unacastinc_u_b16d0d44",
+      "caRegistry2026Id": "unacast-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@unacast.com"
+    },
+    {
+      "broker2025Id": "unearthcampaign_u_0bd55301",
+      "caRegistry2026Id": "unearth-campaigns-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@unearthcampaigns.com"
+    },
+    {
+      "broker2025Id": "unmaskllc_1c873179",
+      "caRegistry2026Id": "unmask-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Unmask, LLC / UNMASK, LLC)"
+    },
+    {
+      "broker2025Id": "uplead_u_359b3254",
+      "caRegistry2026Id": "uplead-llc",
+      "label": "match",
+      "evidence": "exact privacy email techteam@uplead.com"
+    },
+    {
+      "broker2025Id": "upscapitalcorpo_u_76e52086",
+      "caRegistry2026Id": "ups-capital-corporation",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (UPS Capital Corporation / UPS Capital Corporation)"
+    },
+    {
+      "broker2025Id": "usadatainc_u_a2e2d779",
+      "caRegistry2026Id": "usadata-inc",
+      "label": "match",
+      "evidence": "exact privacy email support@usadata.com"
+    },
+    {
+      "broker2025Id": "usdatacorporati_u_32a310f4",
+      "caRegistry2026Id": "us-data-corporation",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (US DATA CORPORATION / US Data Corporation)"
+    },
+    {
+      "broker2025Id": "usmarketinggrou_afd77db4",
+      "caRegistry2026Id": "bh-marketing-group-llc",
+      "label": "match",
+      "evidence": "exact privacy email arash@usmarketinggrp.com"
+    },
+    {
+      "broker2025Id": "uspeoplesearchc_8a4b7a26",
+      "caRegistry2026Id": "uspeoplesearch-com-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Uspeoplesearch.Com, LLC / USPeopleSearch.com, LLC)"
+    },
+    {
+      "broker2025Id": "v12_d55cf93c",
+      "caRegistry2026Id": "complete-mailing-lists-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "v12_d55cf93c",
+      "caRegistry2026Id": "datamentors-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Datamentors LLC / Datamentors LLC)"
+    },
+    {
+      "broker2025Id": "valassisdirectm_08980907",
+      "caRegistry2026Id": "valassis-communications-inc",
+      "label": "match",
+      "evidence": "exact privacy email valassisprivacy.request@rrd.com"
+    },
+    {
+      "broker2025Id": "veevasystemsinc_v_e6ced338",
+      "caRegistry2026Id": "veeva-systems-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@veeva.com"
+    },
+    {
+      "broker2025Id": "vendelux_62e821c2",
+      "caRegistry2026Id": "medpro-systems-llc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "vendelux_62e821c2",
+      "caRegistry2026Id": "vendelux-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Vendelux / Vendelux, Inc.)"
+    },
+    {
+      "broker2025Id": "venntel_587e9de9",
+      "caRegistry2026Id": "venntel-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@venntel.com"
+    },
+    {
+      "broker2025Id": "ventiveiqllc_v_f3b9e14e",
+      "caRegistry2026Id": "ventiveiq-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@ventiveiq.com"
+    },
+    {
+      "broker2025Id": "veraset_v_83a5f5fc",
+      "caRegistry2026Id": "veraset-llc",
+      "label": "match",
+      "evidence": "exact privacy email tax@veraset.com"
+    },
+    {
+      "broker2025Id": "versium_v_19a67ab6",
+      "caRegistry2026Id": "versar-data-solutions-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@versium.com"
+    },
+    {
+      "broker2025Id": "viantusllc_v_7563c40d",
+      "caRegistry2026Id": "viant-us-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@viantinc.com"
+    },
+    {
+      "broker2025Id": "videoampinc_v_bc90a9e3",
+      "caRegistry2026Id": "videoamp-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@videoamp.com"
+    },
+    {
+      "broker2025Id": "virtualmarketin_v_71757465",
+      "caRegistry2026Id": "virtual-marketing-llc",
+      "label": "match",
+      "evidence": "exact privacy email databroker@fusion92.com"
+    },
+    {
+      "broker2025Id": "visitiqio_b65e818e",
+      "caRegistry2026Id": "visitiq-llc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Visitiq.Io / VisitIQ LLC)"
+    },
+    {
+      "broker2025Id": "vistarmediainc_640a8bb9",
+      "caRegistry2026Id": "vistar-media-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@vistarmedia.com"
+    },
+    {
+      "broker2025Id": "visualvisitorll_v_3d7009e0",
+      "caRegistry2026Id": "visual-visitor-l-l-c",
+      "label": "match",
+      "evidence": "exact privacy email privacy@visualvisitor.com"
+    },
+    {
+      "broker2025Id": "vrtcalmarketsin_ce85b9bb",
+      "caRegistry2026Id": "vrtcal-markets-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@vrtcal.com"
+    },
+    {
+      "broker2025Id": "wealthfeed_w_7fdddd08",
+      "caRegistry2026Id": "wealthfeed-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (WEALTHFEED / WealthFeed, Inc.)"
+    },
+    {
+      "broker2025Id": "weinformllc_w_81c64470",
+      "caRegistry2026Id": "bachmanity-inc",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "weinformllc_w_81c64470",
+      "caRegistry2026Id": "we-inform-llc",
+      "label": "match",
+      "evidence": "exact privacy email support@weinform.org"
+    },
+    {
+      "broker2025Id": "westpublisingco_w_64723637",
+      "caRegistry2026Id": "west-publishing-corp",
+      "label": "match",
+      "evidence": "exact privacy email privacy.enquiries@thomsonreuters.com"
+    },
+    {
+      "broker2025Id": "whitepagesinc_w_db8591d8",
+      "caRegistry2026Id": "whitepages-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@whitepages.com"
+    },
+    {
+      "broker2025Id": "wholesalemail_9699a802",
+      "caRegistry2026Id": "iwave-information-systems",
+      "label": "non_match",
+      "evidence": "no shared email domain, address, or name tokens"
+    },
+    {
+      "broker2025Id": "wilandinc_w_f566ef0e",
+      "caRegistry2026Id": "wiland-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@wiland.com"
+    },
+    {
+      "broker2025Id": "windfalldatainc_w_1d1edf5a",
+      "caRegistry2026Id": "windfall-data-inc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@windfall.com"
+    },
+    {
+      "broker2025Id": "wizainc_cc30416e",
+      "caRegistry2026Id": "wiza-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Wiza, Inc. / Wiza, Inc.)"
+    },
+    {
+      "broker2025Id": "wunderkindcorpo_dfcfb9b2",
+      "caRegistry2026Id": "wunderkind-corporation",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Wunderkind Corporation / Wunderkind Corporation)"
+    },
+    {
+      "broker2025Id": "xadinc_x_da067898",
+      "caRegistry2026Id": "xad-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@groundtruth.com"
+    },
+    {
+      "broker2025Id": "xcelerateddatal_x_4fc7d542",
+      "caRegistry2026Id": "xcelerated-data-llc",
+      "label": "match",
+      "evidence": "exact privacy email privacy@xcelerated.com"
+    },
+    {
+      "broker2025Id": "yobiventuresllc_42f21d08",
+      "caRegistry2026Id": "yobi-ventures-inc",
+      "label": "match",
+      "evidence": "street number + zip match with name overlap (Yobi Ventures, LLC / Yobi Ventures, Inc.)"
+    },
+    {
+      "broker2025Id": "youvisitllc_y_ea39bae4",
+      "caRegistry2026Id": "eab-global-inc",
+      "label": "match",
+      "evidence": "exact privacy email legal@eab.com"
+    },
+    {
+      "broker2025Id": "zsassociatesinc_z_18f41600",
+      "caRegistry2026Id": "zs-associates-inc",
+      "label": "match",
+      "evidence": "exact privacy email dataprivacy@zs.com"
+    }
+  ]
+}

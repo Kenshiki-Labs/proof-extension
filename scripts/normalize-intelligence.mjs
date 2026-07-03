@@ -423,27 +423,35 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
   const byDomain = new Map()
   const bySlug = new Map()
 
-  function resolveEntity(name, domains) {
+  // Match strength order: domain (strongest) → exact name slug → alias/DBA
+  // slug (weakest). The method is recorded per joined facet so downstream
+  // consumers can weigh joins the way the extension weighs evidence.
+  function resolveEntity(name, domains, aliasNames = []) {
     for (const domain of domains) {
       const existing = byDomain.get(domain)
-      if (existing) return existing
+      if (existing) return { entity: existing, method: "domain" }
     }
     const slug = slugify(name)
-    if (slug && bySlug.has(slug)) return bySlug.get(slug)
+    if (slug && bySlug.has(slug)) return { entity: bySlug.get(slug), method: "name" }
+    for (const aliasName of aliasNames) {
+      const aliasSlug = slugify(aliasName ?? "")
+      if (aliasSlug && bySlug.has(aliasSlug)) return { entity: bySlug.get(aliasSlug), method: "alias" }
+    }
 
     const entity = {
       id: slug || `entity-${entities.size + 1}`,
       canonicalName: name,
       aliases: [],
       domains: [],
-      facets: { companyIds: [], trackerIds: [], broker2025Ids: [], caRegistry2026Ids: [], defenseDestinationIds: [] }
+      facets: { companyIds: [], trackerIds: [], broker2025Ids: [], caRegistry2026Ids: [], defenseDestinationIds: [] },
+      joins: []
     }
     // Domain collisions can leave two entities wanting one slug (e.g. a DBA
     // and its parent). Suffix deterministically instead of merging by name.
     while (entities.has(entity.id)) entity.id = `${entity.id}-x`
     entities.set(entity.id, entity)
     if (slug && !bySlug.has(slug)) bySlug.set(slug, entity)
-    return entity
+    return { entity, method: "anchor" }
   }
 
   function attach(entity, { name, domains, alias }) {
@@ -454,6 +462,13 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
       if (byDomain.get(domain) === entity && !entity.domains.includes(domain)) entity.domains.push(domain)
     }
     if (alias && alias !== entity.canonicalName && !entity.aliases.includes(alias)) entity.aliases.push(alias)
+    // Aliases become resolution keys too (first claim wins) so a broker
+    // filing under its DBA in one registry and its legal name in another
+    // still resolves to one entity.
+    for (const aliasName of [name, alias]) {
+      const aliasSlug = slugify(aliasName ?? "")
+      if (aliasSlug && !bySlug.has(aliasSlug)) bySlug.set(aliasSlug, entity)
+    }
     if (!entity.canonicalName) entity.canonicalName = name
   }
 
@@ -461,30 +476,34 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
   // extension already uses), then richest-to-broadest external sources.
   for (const company of companies) {
     const domains = uniqueSorted(trackerDomainsByCompany.get(company.id) ?? [])
-    const entity = resolveEntity(company.name, domains)
+    const { entity, method } = resolveEntity(company.name, domains)
     entity.facets.companyIds.push(company.id)
+    entity.joins.push({ key: `company:${company.id}`, method })
     for (const tracker of trackers.filter((item) => item.companyId === company.id)) entity.facets.trackerIds.push(tracker.id)
     attach(entity, { name: company.name, domains, alias: company.parentCompany })
   }
 
   for (const destination of destinations.records) {
     const domains = [registrableDomain(destination.url)].filter(Boolean)
-    const entity = resolveEntity(destination.companyName, domains)
+    const { entity, method } = resolveEntity(destination.companyName, domains, [destination.displayName])
     entity.facets.defenseDestinationIds.push(destination.id)
+    entity.joins.push({ key: `defense:${destination.id}`, method })
     attach(entity, { name: destination.companyName, domains, alias: destination.displayName })
   }
 
   for (const broker of californiaBrokers.records) {
     const domains = [registrableDomain(broker.websiteUrl), registrableDomain(broker.privacyRightsUrl)].filter(Boolean)
-    const entity = resolveEntity(broker.name, domains)
+    const { entity, method } = resolveEntity(broker.name, domains, [broker.dba])
     entity.facets.caRegistry2026Ids.push(broker.id)
+    entity.joins.push({ key: `ca2026:${broker.id}`, method })
     attach(entity, { name: broker.name, domains, alias: broker.dba })
   }
 
   for (const broker of brokers.records) {
     const domains = uniqueSorted(broker.websiteUrls.map((url) => registrableDomain(url)).filter(Boolean))
-    const entity = resolveEntity(broker.name, domains)
+    const { entity, method } = resolveEntity(broker.name, domains)
     entity.facets.broker2025Ids.push(broker.id)
+    entity.joins.push({ key: `broker2025:${broker.id}`, method })
     attach(entity, { name: broker.name, domains, alias: null })
   }
 
@@ -499,7 +518,8 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
         broker2025Ids: uniqueSorted(entity.facets.broker2025Ids),
         caRegistry2026Ids: uniqueSorted(entity.facets.caRegistry2026Ids),
         defenseDestinationIds: uniqueSorted(entity.facets.defenseDestinationIds)
-      }
+      },
+      joins: [...entity.joins].sort((a, b) => a.key.localeCompare(b.key))
     }))
     .sort((left, right) => left.id.localeCompare(right.id))
 
@@ -509,13 +529,13 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
     schemaVersion: 1,
     sources: [
       {
-        family: "kenshiki_defense_registry",
+        family: "kenshiki_entity_index",
         name: "Kenshiki entity resolution over runtime DB, state registries (2025 merge, CA 2026), and defense destinations",
         version: "1",
         retrieved_at: RETRIEVED_AT,
         license: "Derived index; per-facet licensing follows each source file.",
         transform_notes:
-          "Entities resolved by registrable domain first, then exact name slug; no fuzzy matching. Facts remain in per-source normalized files — entities.json only records identity joins. See scripts/normalize-intelligence.mjs."
+          "Entities resolved by PSL registrable domain first, then exact name slug, then DBA/alias slug; no fuzzy matching. Each join records its method (domain/name/alias/anchor) as match confidence. Facts remain in per-source normalized files — entities.json only records identity joins. Measured by pnpm intel:eval against intelligence/eval/entity-pairs.json. See scripts/normalize-intelligence.mjs."
       }
     ],
     review: {

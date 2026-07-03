@@ -151,7 +151,16 @@ export const EntityRecordSchema = z.object({
     broker2025Ids: z.array(z.string().min(1)),
     caRegistry2026Ids: z.array(z.string().min(1)),
     defenseDestinationIds: z.array(z.string().min(1))
-  })
+  }),
+  // Per-facet match confidence: how each source record joined this entity.
+  // domain > name > alias in evidence strength; anchor is the facet that
+  // created the entity.
+  joins: z.array(
+    z.object({
+      key: z.string().min(1),
+      method: z.enum(["anchor", "domain", "name", "alias"])
+    })
+  )
 })
 
 export const NormalizedEntitiesSchema = z.object({
