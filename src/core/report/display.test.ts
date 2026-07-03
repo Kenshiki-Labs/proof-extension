@@ -48,7 +48,7 @@ describe("buildAtomicSignalRows", () => {
 
     expect(rows).toMatchObject([
       { signal: "webgl_query", count: 1, latestEvidence: "WebGL queried." },
-      { signal: "canvas_read", count: 2, capability: "Observed; mitigation possible" }
+      { signal: "canvas_read", count: 2, capability: "Seen — it can be limited" }
     ])
   })
 
@@ -63,7 +63,7 @@ describe("buildAtomicSignalRows", () => {
       signal: "canvas_read",
       status: "mitigated",
       blockability: "content_mitigatable",
-      capability: "Observed and mitigated",
+      capability: "Seen, and limited",
       count: 2,
       latestEvidence: "Mitigated canvas read."
     })
@@ -152,39 +152,39 @@ describe("display formatting helpers", () => {
   })
 
   it("summarizes each event type in factual language", () => {
-    expect(eventSummary(event({ eventType: "canvas_read" }))).toBe("Canvas data was read by page script.")
-    expect(eventSummary(event({ eventType: "webgl_query" }))).toBe("WebGL rendering details were queried.")
-    expect(eventSummary(event({ eventType: "audio_fingerprint" }))).toBe("Audio rendering behavior was sampled.")
-    expect(eventSummary(event({ eventType: "font_enumeration" }))).toBe("Font surface was enumerated.")
-    expect(eventSummary(event({ eventType: "request_blocked" }))).toBe("A tracker network request was blocked.")
-    expect(eventSummary(event({ eventType: "request_seen" }))).toBe("A tracker network request was observed.")
-    expect(eventSummary(event({ eventType: "script_injected" }))).toBe("A script was inserted into the page after load.")
-    expect(eventSummary(event({ eventType: "sdk_detected" }))).toBe("A tracking SDK was initialized inside the page.")
-    expect(eventSummary(event({ eventType: "extension_diagnostic" }))).toBe("Extension self-check.")
+    expect(eventSummary(event({ eventType: "canvas_read" }))).toBe("The page read image data that can identify your device.")
+    expect(eventSummary(event({ eventType: "webgl_query" }))).toBe("The page asked for graphics-card details that can identify your device.")
+    expect(eventSummary(event({ eventType: "audio_fingerprint" }))).toBe("The page tested audio processing in a way that can identify your device.")
+    expect(eventSummary(event({ eventType: "font_enumeration" }))).toBe("The page checked which fonts you have installed.")
+    expect(eventSummary(event({ eventType: "request_blocked" }))).toBe("A tracking request was stopped before it left your browser.")
+    expect(eventSummary(event({ eventType: "request_seen" }))).toBe("A tracking request left your browser.")
+    expect(eventSummary(event({ eventType: "script_injected" }))).toBe("A new script was added to this page after it loaded.")
+    expect(eventSummary(event({ eventType: "sdk_detected" }))).toBe("A tracking company's software is running inside this page.")
+    expect(eventSummary(event({ eventType: "extension_diagnostic" }))).toBe("A routine self-check by this extension — not something the page did.")
     expect(eventSummary(event({ eventType: "browser_surface" }))).toBe(
-      "Browser surface fields were readable by local JavaScript."
+      "Basic facts about your device (screen size, time zone, language) were readable by this page."
     )
-    expect(eventSummary(event({ eventType: "cookie_sync" }))).toBe("User identifiers were synced between tracking companies.")
+    expect(eventSummary(event({ eventType: "cookie_sync" }))).toBe("Two tracking companies swapped IDs so they can combine what they know about you.")
   })
 
   it("describes capability for every blockability class without overclaiming", () => {
-    expect(blockabilitySummary({ blockability: "network_blockable", status: "blocked" })).toBe("Observed and blocked")
+    expect(blockabilitySummary({ blockability: "network_blockable", status: "blocked" })).toBe("Seen, then blocked")
     expect(blockabilitySummary({ blockability: "network_blockable", status: "active" })).toBe(
-      "Observed; network block available"
+      "Seen — you can block it"
     )
-    expect(blockabilitySummary({ blockability: "content_mitigatable", status: "mitigated" })).toBe("Observed and mitigated")
+    expect(blockabilitySummary({ blockability: "content_mitigatable", status: "mitigated" })).toBe("Seen, and limited")
     expect(blockabilitySummary({ blockability: "content_mitigatable", status: "active" })).toBe(
-      "Observed; mitigation possible"
+      "Seen — it can be limited"
     )
-    expect(blockabilitySummary({ blockability: "observable_only", status: "active" })).toBe("Observed only")
+    expect(blockabilitySummary({ blockability: "observable_only", status: "active" })).toBe("Seen — can be watched but not stopped")
     expect(blockabilitySummary({ blockability: "pre_request_unblockable", status: "cannot_block" })).toBe(
-      "Observed after browser already sent it"
+      "Sent before this extension could act"
     )
     expect(blockabilitySummary({ blockability: "server_side_unblockable", status: "cannot_block" })).toBe(
-      "Visible to the server, not blockable here"
+      "Happens on the company's servers — no extension can stop it"
     )
     expect(blockabilitySummary({ blockability: "user_action_required", status: "active" })).toBe(
-      "Requires source-level action"
+      "Only fixable at the source — see Stop at source"
     )
   })
 

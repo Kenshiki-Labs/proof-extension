@@ -135,28 +135,32 @@ export function compactPageErrors(pageErrors: PageError[]): DisplayPageError[] {
   return [...grouped.values()].sort((left, right) => right.pageError.observedAt - left.pageError.observedAt)
 }
 
+// One plain sentence per signal, written for a reader with no technical
+// background: concrete things (screen size, fonts, graphics card), not
+// mechanisms (API, surface, SDK). Honesty rules still apply — factual,
+// no reassurance, no fear copy.
 export function eventSummary(event: ObserverEvent) {
-  if (event.eventType === "canvas_read") return "Canvas data was read by page script."
-  if (event.eventType === "webgl_query") return "WebGL rendering details were queried."
-  if (event.eventType === "audio_fingerprint") return "Audio rendering behavior was sampled."
-  if (event.eventType === "font_enumeration") return "Font surface was enumerated."
-  if (event.eventType === "request_blocked") return "A tracker network request was blocked."
-  if (event.eventType === "request_seen") return "A tracker network request was observed."
-  if (event.eventType === "script_injected") return "A script was inserted into the page after load."
-  if (event.eventType === "sdk_detected") return "A tracking SDK was initialized inside the page."
-  if (event.eventType === "cookie_sync") return "User identifiers were synced between tracking companies."
-  if (event.eventType === "extension_diagnostic") return "Extension self-check."
-  if (event.eventType === "browser_surface") return "Browser surface fields were readable by local JavaScript."
+  if (event.eventType === "canvas_read") return "The page read image data that can identify your device."
+  if (event.eventType === "webgl_query") return "The page asked for graphics-card details that can identify your device."
+  if (event.eventType === "audio_fingerprint") return "The page tested audio processing in a way that can identify your device."
+  if (event.eventType === "font_enumeration") return "The page checked which fonts you have installed."
+  if (event.eventType === "request_blocked") return "A tracking request was stopped before it left your browser."
+  if (event.eventType === "request_seen") return "A tracking request left your browser."
+  if (event.eventType === "script_injected") return "A new script was added to this page after it loaded."
+  if (event.eventType === "sdk_detected") return "A tracking company's software is running inside this page."
+  if (event.eventType === "cookie_sync") return "Two tracking companies swapped IDs so they can combine what they know about you."
+  if (event.eventType === "extension_diagnostic") return "A routine self-check by this extension — not something the page did."
+  if (event.eventType === "browser_surface") return "Basic facts about your device (screen size, time zone, language) were readable by this page."
   return `${titleCase(event.eventType)} observed.`
 }
 
 export function blockabilitySummary(event: Pick<ObserverEvent, "blockability" | "status">) {
-  if (event.blockability === "network_blockable") return event.status === "blocked" ? "Observed and blocked" : "Observed; network block available"
-  if (event.blockability === "content_mitigatable") return event.status === "mitigated" ? "Observed and mitigated" : "Observed; mitigation possible"
-  if (event.blockability === "observable_only") return "Observed only"
-  if (event.blockability === "pre_request_unblockable") return "Observed after browser already sent it"
-  if (event.blockability === "server_side_unblockable") return "Visible to the server, not blockable here"
-  return "Requires source-level action"
+  if (event.blockability === "network_blockable") return event.status === "blocked" ? "Seen, then blocked" : "Seen — you can block it"
+  if (event.blockability === "content_mitigatable") return event.status === "mitigated" ? "Seen, and limited" : "Seen — it can be limited"
+  if (event.blockability === "observable_only") return "Seen — can be watched but not stopped"
+  if (event.blockability === "pre_request_unblockable") return "Sent before this extension could act"
+  if (event.blockability === "server_side_unblockable") return "Happens on the company's servers — no extension can stop it"
+  return "Only fixable at the source — see Stop at source"
 }
 
 export function formatDetailKey(value: string) {

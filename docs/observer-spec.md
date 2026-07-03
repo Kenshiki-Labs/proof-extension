@@ -802,6 +802,7 @@ Each failure state must use factual copy and must not imply complete protection.
 
 ### Tone rules
 
+- Write for a reader with no technical background. Name concrete things (screen size, time zone, fonts, your internet address), never mechanisms (API, surface, SDK, DNR, TLS). If a term needs a glossary, rewrite the sentence.
 - No fear copy.
 - No gamified badges.
 - No `you are safe` language.

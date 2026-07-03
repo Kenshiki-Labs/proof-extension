@@ -25,7 +25,7 @@ import {
 import { blockingGuidance } from "~core/domain/blocking-policy"
 import { formatUsd, formatUsdRange, getTrackerValuation, rollupObservedValuations } from "~core/domain/valuation"
 import { isDiagnosticEvent } from "~core/state/summaries"
-import type { ObserverEvent, SiteSummary, UserSettings } from "~core/domain/types"
+import type { ObserverEvent, RollingValuationSummary, SiteSummary, UserSettings, ValuationPeriod } from "~core/domain/types"
 import Button from "~components/system/Button"
 import SiteLogo from "~components/system/SiteLogo"
 import { TYPE, UI } from "~components/system/tokens"
@@ -267,6 +267,66 @@ function ValueSection({ events }: { events: ObserverEvent[] }) {
   )
 }
 
+const ROLLING_PERIODS: Array<{ label: string; value: ValuationPeriod }> = [
+  { label: "Today", value: "day" },
+  { label: "7 days", value: "week" },
+  { label: "30 days", value: "month" }
+]
+
+function RollingValueSection({
+  onPeriodChange,
+  period,
+  rollup
+}: {
+  onPeriodChange: (period: ValuationPeriod) => void
+  period: ValuationPeriod
+  rollup: RollingValuationSummary | null
+}) {
+  if (!rollup || rollup.trackerCount === 0) return null
+
+  return (
+    <section className="mt-4">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className={TYPE.label}>Rolling local value</h2>
+        <div className="flex gap-1">
+          {ROLLING_PERIODS.map((item) => (
+            <button
+              className={`border px-2 py-1 text-[0.625rem] uppercase ${period === item.value ? "border-foreground text-foreground" : "border-border text-muted-foreground"}`}
+              key={item.value}
+              onClick={() => onPeriodChange(item.value)}
+              type="button">
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className={`mt-2.5 ${UI.subtlePanel} p-3`}>
+        <dl className="grid grid-cols-[128px_1fr] gap-1.5">
+          <dt className={TYPE.small}>Sites</dt>
+          <dd className={TYPE.body}>{rollup.siteCount}</dd>
+          <dt className={TYPE.small}>Trackers</dt>
+          <dd className={TYPE.body}>{rollup.trackerCount}</dd>
+          <dt className={TYPE.small}>This period</dt>
+          <dd className={TYPE.body}>{formatUsd(rollup.thisPeriodVisitUsd)} observed presence estimate</dd>
+          {rollup.revenueTrackerCount > 0 ? (
+            <>
+              <dt className={TYPE.small}>Ad value/yr</dt>
+              <dd className={TYPE.body}>{formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)}</dd>
+            </>
+          ) : null}
+          {rollup.costTrackerCount > 0 ? (
+            <>
+              <dt className={TYPE.small}>Site tooling/yr</dt>
+              <dd className={TYPE.body}>{formatUsdRange(rollup.annualOperatorCostLowUsd, rollup.annualOperatorCostHighUsd)}</dd>
+            </>
+          ) : null}
+        </dl>
+        <p className={`${TYPE.small} mt-2`}>Local estimates from observed tracker presence. Not revenue measurements.</p>
+      </div>
+    </section>
+  )
+}
+
 function DiagnosticsSection({ diagnostics, summary }: { diagnostics: ObserverEvent[]; summary: SiteSummary }) {
   const latestDiagnostics = diagnostics.slice(-4).reverse()
 
@@ -338,6 +398,8 @@ function IndexPopup() {
   const [loadError, setLoadError] = useState<string | null>(null)
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle")
   const [showReportConfirm, setShowReportConfirm] = useState(false)
+  const [valuationPeriod, setValuationPeriod] = useState<ValuationPeriod>("day")
+  const [valuationRollup, setValuationRollup] = useState<RollingValuationSummary | null>(null)
 
   useEffect(() => {
     async function loadSummary() {
@@ -376,6 +438,16 @@ function IndexPopup() {
     })
     loadSettings().catch(() => undefined)
   }, [])
+
+  useEffect(() => {
+    async function loadValuationRollup() {
+      const response = await browser.runtime.sendMessage({ type: "GET_VALUATION_ROLLUP", period: valuationPeriod })
+      const parsed = RuntimeMessageSchema.safeParse(response)
+      if (parsed.success && parsed.data.type === "VALUATION_ROLLUP") setValuationRollup(parsed.data.payload)
+    }
+
+    loadValuationRollup().catch(() => setValuationRollup(null))
+  }, [valuationPeriod])
 
   async function toggleTrackerBlocking(trackerId: string, blocked: boolean) {
     const blockedTrackerIds = blocked
@@ -521,6 +593,7 @@ function IndexPopup() {
       </details>
 
       <ValueSection events={summary.events} />
+      <RollingValueSection onPeriodChange={setValuationPeriod} period={valuationPeriod} rollup={valuationRollup} />
 
       <section className="mt-4">
         <h2 className={TYPE.label}>Recent observations</h2>
@@ -541,14 +614,14 @@ function IndexPopup() {
         <h2 className={TYPE.label}>Cannot block</h2>
         <div className={`mt-2.5 ${UI.subtlePanel} p-3`}>
           <dl className="grid grid-cols-[128px_1fr] gap-1.5">
-            <dt className={TYPE.small}>IP address</dt>
-            <dd className={TYPE.body}>The destination server sees your IP on every request.</dd>
-            <dt className={TYPE.small}>TLS fingerprint</dt>
-            <dd className={TYPE.body}>Connection characteristics are visible before any content runs.</dd>
-            <dt className={TYPE.small}>Server-side logs</dt>
-            <dd className={TYPE.body}>What the server records about your visit is outside the browser.</dd>
-            <dt className={TYPE.small}>Request headers</dt>
-            <dd className={TYPE.body}>Headers sent before content hooks run cannot be intercepted.</dd>
+            <dt className={TYPE.small}>Your address</dt>
+            <dd className={TYPE.body}>Every website you visit sees your internet address (IP). No extension can hide it.</dd>
+            <dt className={TYPE.small}>Connection style</dt>
+            <dd className={TYPE.body}>How your browser connects has a recognizable shape, visible before any page loads.</dd>
+            <dt className={TYPE.small}>Their records</dt>
+            <dd className={TYPE.body}>What a company writes down on its own servers about your visit is beyond any browser tool.</dd>
+            <dt className={TYPE.small}>First contact</dt>
+            <dd className={TYPE.body}>Some information travels in the very first message to a site, before this extension can act.</dd>
           </dl>
           <p className={`${TYPE.small} mt-2.5`}>
             This extension cannot prevent the destination server from seeing your IP address or request headers.
