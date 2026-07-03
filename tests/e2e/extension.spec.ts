@@ -1,103 +1,41 @@
-import { chromium, expect, test } from "@playwright/test"
-import { rm } from "node:fs/promises"
-import http from "node:http"
-import path from "node:path"
+import { expect, test } from "@playwright/test"
 
-import { MAIN_WORLD_SCRIPT_ID } from "../../src/core/domain/constants"
-
-async function withFixtureServer(html: string, run: (url: string) => Promise<void>) {
-  const server = http.createServer((_request, response) => {
-    response.writeHead(200, { "content-type": "text/html; charset=utf-8" })
-    response.end(html)
-  })
-
-  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve))
-  const address = server.address()
-  if (!address || typeof address === "string") throw new Error("Fixture server did not expose a port")
-
-  try {
-    await run(`http://127.0.0.1:${address.port}/`)
-  } finally {
-    await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())))
-  }
-}
+import { PLAIN_FIXTURE_HTML, readAllEvents, readSummaries, withExtensionContext, withFixtureServer } from "./fixtures"
 
 test("loads the built Chromium extension popup", async () => {
-  const extensionPath = path.resolve("build/chrome-mv3-prod")
-  const userDataDir = path.resolve(".playwright/user-data/chromium-extension")
-  await rm(userDataDir, { force: true, recursive: true })
-
-  const context = await chromium.launchPersistentContext(userDataDir, {
-    args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
-    headless: false
-  })
-
-  try {
-    let [serviceWorker] = context.serviceWorkers()
-    serviceWorker ??= await context.waitForEvent("serviceworker")
-    const extensionId = serviceWorker.url().split("/")[2]
-
+  await withExtensionContext("chromium-extension", async (context, _worker, extensionId) => {
     const page = await context.newPage()
     await page.goto(`chrome-extension://${extensionId}/popup.html`)
-    await expect(page.getByRole("heading", { name: "Pulse Observer" })).toBeVisible()
-  } finally {
-    await context.close()
-  }
+    await expect(page.getByText("Pulse Observer")).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Watching now" })).toBeVisible()
+  })
 })
 
-test("records canvas reads from page scripts", async () => {
-  const extensionPath = path.resolve("build/chrome-mv3-prod")
-  const userDataDir = path.resolve(".playwright/user-data/chromium-canvas")
-  await rm(userDataDir, { force: true, recursive: true })
-
-  const context = await chromium.launchPersistentContext(userDataDir, {
-    args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
-    headless: false
-  })
-
-  try {
-    let [serviceWorker] = context.serviceWorkers()
-    serviceWorker ??= await context.waitForEvent("serviceworker")
-    const worker = serviceWorker
-
+// Main-world hooks are opt-in diagnostics now (spec Phase 2), so page load
+// must attach the observer bridge without emitting page observations or
+// breaking the page.
+test("main-world observer attaches without breaking the page", async () => {
+  await withExtensionContext("chromium-observer", async (context, worker) => {
     const page = await context.newPage()
-    await expect
-      .poll(async () => {
-        return await worker.evaluate(async (scriptId) => {
-          const scripts = await chrome.scripting.getRegisteredContentScripts({ ids: [scriptId] })
-          return scripts.length
-        }, MAIN_WORLD_SCRIPT_ID)
-      })
-      .toBe(1)
 
-    await withFixtureServer(
-      `
-        <canvas id="fingerprint" width="16" height="16" style="display: none"></canvas>
-        <script>
-          const canvas = document.getElementById("fingerprint")
-          const ctx = canvas.getContext("2d")
-          ctx.fillText("proof", 1, 12)
-          canvas.toDataURL()
-        </script>
-      `,
-      async (url) => {
-        await page.goto(url)
-      }
-    )
+    await withFixtureServer(PLAIN_FIXTURE_HTML, async (baseUrl) => {
+      await page.goto(`${baseUrl}/`)
+      await expect(page.getByRole("heading", { name: "Plain fixture" })).toBeVisible()
 
-    await expect
-      .poll(async () => {
-        return await worker.evaluate(async () => {
-          const stored = await chrome.storage.local.get("siteSummaries")
-          const summaries = Object.values(stored.siteSummaries ?? {}) as Array<{ events?: Array<{ eventType: string }> }>
-          return summaries.reduce(
-            (count, summary) => count + (summary.events?.filter((event) => event.eventType === "canvas_read").length ?? 0),
-            0
-          )
-        })
-      })
-      .toBe(1)
-  } finally {
-    await context.close()
-  }
+      // The bridge reports itself as a diagnostic, never as page behavior.
+      await expect
+        .poll(async () => {
+          const events = await readAllEvents(worker)
+          return events.some((event) => event.eventType === "extension_diagnostic")
+        }, { timeout: 15_000 })
+        .toBe(true)
+
+      const summaries = await readSummaries(worker)
+      const summary = summaries.find((item) => item.origin === new URL(baseUrl).origin)
+      const pageActivity = (summary?.events ?? []).filter(
+        (event) => event.eventType !== "extension_diagnostic" && event.source !== "extension-scan"
+      )
+      expect(pageActivity).toEqual([])
+    })
+  })
 })
