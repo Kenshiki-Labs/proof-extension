@@ -142,3 +142,28 @@ describe("entity SSOT index", () => {
     }
   })
 })
+
+describe("entity ID stability ledger", () => {
+  const ledger = JSON.parse(readFileSync(resolve(root, "intelligence/entity-ledger.json"), "utf8"))
+  const entities = NormalizedEntitiesSchema.parse(entitiesRaw)
+
+  it("assigns every facet of every entity to that entity's id", () => {
+    const map = ledger.facetKeyToEntityId as Record<string, string>
+    for (const entity of entities.records) {
+      const keys = [
+        ...entity.facets.companyIds.map((id) => `company:${id}`),
+        ...entity.facets.broker2025Ids.map((id) => `broker2025:${id}`),
+        ...entity.facets.caRegistry2026Ids.map((id) => `ca2026:${id}`),
+        ...entity.facets.defenseDestinationIds.map((id) => `defense:${id}`)
+      ]
+      for (const key of keys) expect(map[key], key).toBe(entity.id)
+    }
+  })
+
+  it("contains no ids that point at nonexistent entities", () => {
+    const ids = new Set(entities.records.map((record) => record.id))
+    for (const id of Object.values(ledger.facetKeyToEntityId as Record<string, string>)) {
+      expect(ids).toContain(id)
+    }
+  })
+})

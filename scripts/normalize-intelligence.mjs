@@ -5,7 +5,8 @@
 // Governance (docs/intelligence-standards.md): these outputs are import
 // artifacts. They must not affect runtime blocking or popup claims until a
 // reviewed join promotes specific records into src/core/db/*.
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs"
+import { getDomain } from "tldts"
 
 const SOURCE_DIR = "intelligence/source/defense-ai"
 const OUT_DIR = "intelligence/normalized"
@@ -394,14 +395,15 @@ function normalizeCaliforniaRegistry() {
 // destinations) refer to the same real-world organization. Resolution is by
 // registrable domain first, then by name slug — deterministic, no fuzzing.
 
+// Public-Suffix-List-backed (tldts): "shop.example.co.uk" → "example.co.uk".
+// A naive last-two-labels rule would collapse every co.uk broker into one
+// entity; the PSL is the only correct boundary for registrable domains.
 function registrableDomain(url) {
   const trimmed = clean(url)
   if (!trimmed) return null
   try {
-    const host = new URL(trimmed.includes("://") ? trimmed : `https://${trimmed}`).hostname.toLowerCase().replace(/^www\./, "")
-    const labels = host.split(".").filter(Boolean)
-    if (labels.length < 2) return null
-    return labels.slice(-2).join(".")
+    const host = new URL(trimmed.includes("://") ? trimmed : `https://${trimmed}`).hostname
+    return getDomain(host) ?? null
   } catch {
     return null
   }
@@ -486,7 +488,7 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
     attach(entity, { name: broker.name, domains, alias: null })
   }
 
-  const records = [...entities.values()]
+  let records = [...entities.values()]
     .map((entity) => ({
       ...entity,
       aliases: uniqueSorted(entity.aliases),
@@ -500,6 +502,8 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
       }
     }))
     .sort((left, right) => left.id.localeCompare(right.id))
+
+  records = applyEntityLedger(records)
 
   return {
     schemaVersion: 1,
@@ -522,6 +526,57 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
     },
     records
   }
+}
+
+// --- Entity ID stability ledger ---------------------------------------------
+//
+// Entity ids must survive regeneration: adding a source next month must not
+// silently rename entities that other artifacts or reviews reference. The
+// committed ledger maps every stable per-source record key ("broker2025:x",
+// "ca2026:y", …) to the entity id it was first assigned. On each run, an
+// entity reclaims the id its members held before; only genuinely new
+// entities mint new ids.
+
+const LEDGER_PATH = "intelligence/entity-ledger.json"
+
+function entityFacetKeys(entity) {
+  return [
+    ...entity.facets.companyIds.map((id) => `company:${id}`),
+    ...entity.facets.broker2025Ids.map((id) => `broker2025:${id}`),
+    ...entity.facets.caRegistry2026Ids.map((id) => `ca2026:${id}`),
+    ...entity.facets.defenseDestinationIds.map((id) => `defense:${id}`)
+  ].sort()
+}
+
+function applyEntityLedger(records) {
+  const ledger = existsSync(LEDGER_PATH) ? JSON.parse(readFileSync(LEDGER_PATH, "utf8")).facetKeyToEntityId : {}
+
+  const assigned = new Set()
+  const withStableIds = records.map((entity) => {
+    const keys = entityFacetKeys(entity)
+    // Vote among prior assignments of this entity's members; ties break
+    // lexicographically so the outcome never depends on object order.
+    const votes = new Map()
+    for (const key of keys) {
+      const prior = ledger[key]
+      if (prior) votes.set(prior, (votes.get(prior) ?? 0) + 1)
+    }
+    const candidates = [...votes.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([id]) => id)
+    let id = candidates.find((candidate) => !assigned.has(candidate)) ?? entity.id
+    // A split entity (or slug collision with a reclaimed id) mints a fresh
+    // deterministic suffix rather than stealing another entity's id.
+    let suffix = 2
+    while (assigned.has(id)) id = `${entity.id}-${suffix++}`
+    assigned.add(id)
+    return { ...entity, id }
+  })
+
+  const sorted = withStableIds.sort((left, right) => left.id.localeCompare(right.id))
+  const facetKeyToEntityId = {}
+  for (const entity of sorted) for (const key of entityFacetKeys(entity)) facetKeyToEntityId[key] = entity.id
+  const orderedLedger = Object.fromEntries(Object.entries(facetKeyToEntityId).sort(([a], [b]) => a.localeCompare(b)))
+  writeFileSync(LEDGER_PATH, JSON.stringify({ schemaVersion: 1, facetKeyToEntityId: orderedLedger }, null, 2) + "\n")
+  return sorted
 }
 
 mkdirSync(OUT_DIR, { recursive: true })
