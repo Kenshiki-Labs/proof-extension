@@ -36,6 +36,7 @@ export const ObserverEventSchema = z.object({
     "request_seen",
     "request_blocked",
     "script_injected",
+    "sdk_detected",
     "extension_diagnostic",
     "browser_surface",
     "canvas_read",

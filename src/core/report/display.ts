@@ -142,6 +142,7 @@ export function eventSummary(event: ObserverEvent) {
   if (event.eventType === "request_blocked") return "A tracker network request was blocked."
   if (event.eventType === "request_seen") return "A tracker network request was observed."
   if (event.eventType === "script_injected") return "A script was inserted into the page after load."
+  if (event.eventType === "sdk_detected") return "A tracking SDK was initialized inside the page."
   if (event.eventType === "extension_diagnostic") return "Extension self-check."
   if (event.eventType === "browser_surface") return "Browser surface fields were readable by local JavaScript."
   return `${titleCase(event.eventType)} observed.`

@@ -6,6 +6,7 @@ import { getDynamicBlockRuleMetadata, installDynamicBlockRules, uninstallDynamic
 import { validateTrackerDatabase } from "~core/db/validate"
 import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
 import { matchTrackerRequest } from "~core/domain/network-match"
+import { enrichSdkDetection } from "~core/signals/sdk-globals"
 import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, upsertEvent } from "~core/state/summaries"
 import type { ObserverEvent, PageError, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
 
@@ -365,7 +366,7 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
       const event = { ...message.payload, tabId: sender.tab?.id ?? message.payload.tabId } as ObserverEvent
       if (!originMatchesSender(event, sender)) return { ok: false, error: "origin_mismatch" }
 
-      await recordEvent(enrichScriptInjection(event))
+      await recordEvent(enrichSdkDetection(enrichScriptInjection(event), trackers))
       return { ok: true }
     }
 

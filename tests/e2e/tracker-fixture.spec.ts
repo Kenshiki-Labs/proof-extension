@@ -7,6 +7,7 @@ import {
   INJECTOR_FIXTURE_HTML,
   META_PIXEL_FIXTURE_HTML,
   PLAIN_FIXTURE_HTML,
+  SDK_GLOBAL_FIXTURE_HTML,
   TRACKER_FIXTURE_HTML,
   readAllEvents,
   readSummaries,
@@ -107,6 +108,35 @@ test("first-party exposure fixture produces extension-scan browser surface evide
           }
         }, { timeout: 15_000 })
         .toEqual({ origin: new URL(baseUrl).origin, hasEvidence: true })
+    })
+  })
+})
+
+test("SDK globals are detected and attributed without any network request", async () => {
+  await withExtensionContext("fixture-sdk-globals", async (context, worker) => {
+    await withFixtureServer(SDK_GLOBAL_FIXTURE_HTML, async (baseUrl) => {
+      const page = await context.newPage()
+      await page.goto(`${baseUrl}/`)
+
+      await expect
+        .poll(async () => {
+          const events = await readAllEvents(worker)
+          const sdkEvents = events.filter((event) => event.eventType === "sdk_detected")
+          return {
+            trackers: [...new Set(sdkEvents.map((event) => event.trackerId).filter(Boolean))].sort(),
+            inventedForOwnGlobal: sdkEvents.some((event) => event.details?.global === "myOwnAppGlobal"),
+            metaEvidenceIsFactual: sdkEvents.some(
+              (event) =>
+                event.trackerId === "meta-pixel" &&
+                event.evidence.some((line) => line.includes("Global variable fbq characteristic of Meta Pixel"))
+            )
+          }
+        }, { timeout: 15_000 })
+        .toEqual({
+          trackers: ["fullstory", "meta-pixel"],
+          inventedForOwnGlobal: false,
+          metaEvidenceIsFactual: true
+        })
     })
   })
 })

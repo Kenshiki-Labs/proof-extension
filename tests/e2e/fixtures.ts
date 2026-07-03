@@ -176,6 +176,21 @@ export const FULLSTORY_FIXTURE_HTML = `
   </script>
 `
 
+/**
+ * Page that defines vendor SDK globals without any network request —
+ * simulates a cached, proxied, or CNAME-cloaked tracker whose only
+ * browser-visible trace is its main-world global. Also defines a
+ * non-signature global to assert nothing is invented for it.
+ */
+export const SDK_GLOBAL_FIXTURE_HTML = `
+  <h1>SDK global fixture</h1>
+  <script>
+    window.fbq = function () {};
+    window.FS = { identify: function () {} };
+    window.myOwnAppGlobal = { notATracker: true };
+  </script>
+`
+
 /** First-party fixture used to assert extension-run passive exposure scan events. */
 export const FIRST_PARTY_EXPOSURE_FIXTURE_HTML = `
   <h1>First-party exposure fixture</h1>

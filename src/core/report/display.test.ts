@@ -159,6 +159,7 @@ describe("display formatting helpers", () => {
     expect(eventSummary(event({ eventType: "request_blocked" }))).toBe("A tracker network request was blocked.")
     expect(eventSummary(event({ eventType: "request_seen" }))).toBe("A tracker network request was observed.")
     expect(eventSummary(event({ eventType: "script_injected" }))).toBe("A script was inserted into the page after load.")
+    expect(eventSummary(event({ eventType: "sdk_detected" }))).toBe("A tracking SDK was initialized inside the page.")
     expect(eventSummary(event({ eventType: "extension_diagnostic" }))).toBe("Extension self-check.")
     expect(eventSummary(event({ eventType: "browser_surface" }))).toBe(
       "Browser surface fields were readable by local JavaScript."

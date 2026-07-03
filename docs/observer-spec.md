@@ -65,6 +65,16 @@ The differentiated product is not another tracker blocker. It is browser-local o
 
 The extension should feel closer to a privacy inspector and remediation console than an ad blocker. It should tell the user what happened, what changed, what did not change, and what must be handled at the source.
 
+### Feature doctrine
+
+Pulse does not compete with generic blockers on rule count. Every feature must clear all three bars, in this order:
+
+1. **More observation**: it surfaces evidence competitors cannot or do not show (first-party behavior, cached/proxied/cloaked trackers, exposure surfaces).
+2. **Description of the thing observed**: the observation names who is observing, what they collect, and what it is monetized for — in plain factual language backed by evidence strings.
+3. **Action from the observation**: the observation routes to something the user can do — a block toggle, a mitigation setting, or a source-level remediation path — or states plainly why no action exists.
+
+A feature that only widens blocking makes Pulse a slightly bigger blocker; a feature that clears all three bars makes it a better observer. Prefer the latter.
+
 ## Product Roadmap
 
 ### Phase 0: Trustworthy foundation
@@ -565,6 +575,7 @@ Separate evidence families are required:
 Default observation may include:
 
 - dynamic `<script>` insertion after page load
+- vendor SDK globals present in the main world (for example `window.fbq`, `window.FS`). The main-world observer reports only the raw global name; the privileged side joins it to the tracker DB, so pages cannot forge vendor attribution. This catches trackers whose network requests were cached, first-party proxied, or CNAME-cloaked.
 - passive browser surface fields such as viewport, screen, timezone, locale, hardware concurrency, device memory, touch points, color scheme, reduced motion, webdriver, plugin count, cookie setting, and Do Not Track
 - network request observation and tracker DB matching
 
@@ -1006,6 +1017,7 @@ export type ObserverEvent = {
     | "request_seen"
     | "request_blocked"
     | "script_injected"
+    | "sdk_detected"
     | "extension_diagnostic"
     | "browser_surface"
     | "canvas_read"

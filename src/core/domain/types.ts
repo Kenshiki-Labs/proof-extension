@@ -33,6 +33,10 @@ export type ObserverEvent = {
     | "request_seen"
     | "request_blocked"
     | "script_injected"
+    // A vendor SDK global (window.fbq, window.FS, …) present in the page.
+    // Catches trackers whose network requests were cached, first-party
+    // proxied, or CNAME-cloaked and therefore invisible to request matching.
+    | "sdk_detected"
     // The extension reporting on itself (bridge ready, hooks installed, scan
     // attempts) — never an observation of page behavior. Kept separate so
     // script_injected stays reserved for real dynamic-script detection.
