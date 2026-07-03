@@ -164,7 +164,7 @@ describe("display formatting helpers", () => {
     expect(eventSummary(event({ eventType: "browser_surface" }))).toBe(
       "Browser surface fields were readable by local JavaScript."
     )
-    expect(eventSummary(event({ eventType: "cookie_sync" }))).toBe("Cookie Sync observed.")
+    expect(eventSummary(event({ eventType: "cookie_sync" }))).toBe("User identifiers were synced between tracking companies.")
   })
 
   it("describes capability for every blockability class without overclaiming", () => {

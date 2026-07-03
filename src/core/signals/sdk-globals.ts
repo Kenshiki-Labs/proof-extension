@@ -39,6 +39,11 @@ export const SDK_GLOBAL_SIGNATURES: SdkGlobalSignature[] = [
   { global: "obApi", trackerId: "outbrain", sdkName: "Outbrain", confidence: "confirmed" },
   { global: "_qevents", trackerId: "quantcast", sdkName: "Quantcast Measure", confidence: "confirmed" },
   { global: "appboy", trackerId: "braze", sdkName: "Braze (Appboy)", confidence: "confirmed" },
+  { global: "_hsq", trackerId: "hubspot", sdkName: "HubSpot analytics queue", confidence: "confirmed" },
+  { global: "uetq", trackerId: "microsoft-ads", sdkName: "Microsoft Advertising UET queue", confidence: "confirmed" },
+  { global: "rdt", trackerId: "reddit-pixel", sdkName: "Reddit Pixel", confidence: "confirmed" },
+  { global: "TTDUniversalPixelApi", trackerId: "the-trade-desk", sdkName: "The Trade Desk Universal Pixel", confidence: "confirmed" },
+  { global: "apstag", trackerId: "amazon-ads", sdkName: "Amazon Publisher Services (apstag)", confidence: "confirmed" },
   // Set by the site's own inline config snippet before (and regardless of
   // whether) the Insight Tag script actually loads — proves intent to load
   // LinkedIn tooling, not that the SDK ran. Same reasoning as dataLayer.

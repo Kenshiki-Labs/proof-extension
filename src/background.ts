@@ -6,6 +6,7 @@ import { getDynamicBlockRuleMetadata, installDynamicBlockRules, uninstallDynamic
 import { validateTrackerDatabase } from "~core/db/validate"
 import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
 import { matchTrackerRequest } from "~core/domain/network-match"
+import { detectCookieSync } from "~core/signals/cookie-sync"
 import { enrichSdkDetection } from "~core/signals/sdk-globals"
 import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, upsertEvent } from "~core/state/summaries"
 import type { ObserverEvent, PageError, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
@@ -263,6 +264,30 @@ function registerNetworkObserver() {
           evidence: match.evidence,
           details: requestDetails(details.url, details.type, details.requestId)
         }).catch((error: unknown) => console.warn("Failed to record network observer event", error))
+
+        // ID-sync detection rides the same match: a sync-shaped request is
+        // recorded as its own cookie_sync observation so the report can say
+        // "these companies merged their profiles of you" with URL evidence.
+        const sync = detectCookieSync(details.url, match.tracker, trackers)
+        if (sync) {
+          recordEvent({
+            id: requestEventId("cookie_sync", details.tabId, details.requestId, match.tracker.id),
+            tabId: details.tabId,
+            frameId: details.frameId,
+            origin: requestOrigin(details),
+            observedAt: Math.round(details.timeStamp),
+            source: "network",
+            trackerId: match.tracker.id,
+            companyId: match.tracker.companyId,
+            firstParty: false,
+            eventType: "cookie_sync",
+            blockability: match.tracker.browserAction.blockability,
+            status: "active",
+            confidence: sync.confidence,
+            evidence: sync.evidence,
+            details: { ...requestDetails(details.url, details.type, details.requestId), syncIndicators: sync.indicators.join(", ") }
+          }).catch((error: unknown) => console.warn("Failed to record cookie sync event", error))
+        }
       }
     },
     { urls: ["<all_urls>"] }

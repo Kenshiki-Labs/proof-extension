@@ -85,7 +85,7 @@ export async function withExtensionContext(
   }
 }
 
-export const TRACKER_HOSTS = /(connect\.facebook\.net|facebook\.com|google-analytics\.com|googletagmanager\.com|doubleclick\.net|googleadservices\.com|googlesyndication\.com|fullstory\.com)/
+export const TRACKER_HOSTS = /(connect\.facebook\.net|facebook\.com|google-analytics\.com|googletagmanager\.com|doubleclick\.net|googleadservices\.com|googlesyndication\.com|fullstory\.com|rlcdn\.com|crwdcntrl\.net)/
 
 /**
  * Intercepts all tracker-host requests and fulfills them locally so no real
@@ -188,6 +188,21 @@ export const SDK_GLOBAL_FIXTURE_HTML = `
     window.fbq = function () {};
     window.FS = { identify: function () {} };
     window.myOwnAppGlobal = { notATracker: true };
+  </script>
+`
+
+/**
+ * Page firing identifier-sync-shaped requests between known trackers —
+ * a handoff parameter on LiveRamp and a Lotame redirect pointing at
+ * LiveRamp. Exercises cookie_sync detection with URL-level evidence.
+ */
+export const COOKIE_SYNC_FIXTURE_HTML = `
+  <h1>Cookie sync fixture</h1>
+  <script>
+    addEventListener("DOMContentLoaded", () => {
+      fetch("https://rlcdn.com/365868.gif?partner_uid=abc1234567890", { mode: "no-cors" }).catch(() => undefined)
+      fetch("https://crwdcntrl.net/sync?redir=" + encodeURIComponent("https://rlcdn.com/sync?uid=xyz"), { mode: "no-cors" }).catch(() => undefined)
+    })
   </script>
 `
 

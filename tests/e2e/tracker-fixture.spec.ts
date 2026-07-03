@@ -6,6 +6,7 @@ import {
   GOOGLE_ANALYTICS_ADS_FIXTURE_HTML,
   INJECTOR_FIXTURE_HTML,
   META_PIXEL_FIXTURE_HTML,
+  COOKIE_SYNC_FIXTURE_HTML,
   PLAIN_FIXTURE_HTML,
   SDK_GLOBAL_FIXTURE_HTML,
   TRACKER_FIXTURE_HTML,
@@ -137,6 +138,34 @@ test("SDK globals are detected and attributed without any network request", asyn
           inventedForOwnGlobal: false,
           metaEvidenceIsFactual: true
         })
+    })
+  })
+})
+
+test("identifier sync requests produce cookie_sync observations with handoff evidence", async () => {
+  await withExtensionContext("fixture-cookie-sync", async (context, worker) => {
+    await stubTrackerRoutes(context)
+
+    await withFixtureServer(COOKIE_SYNC_FIXTURE_HTML, async (baseUrl) => {
+      const page = await context.newPage()
+      await page.goto(`${baseUrl}/`)
+
+      await expect
+        .poll(async () => {
+          const events = await readAllEvents(worker)
+          const syncs = events.filter((event) => event.eventType === "cookie_sync")
+          return {
+            trackers: [...new Set(syncs.map((event) => event.trackerId))].sort(),
+            confirmedRedirect: syncs.some(
+              (event) =>
+                event.trackerId === "lotame" &&
+                event.confidence === "confirmed" &&
+                event.evidence.some((line) => line.includes("cross-company identifier handoff"))
+            ),
+            explainsWhy: syncs.every((event) => event.evidence.some((line) => line.includes("merge their profiles")))
+          }
+        }, { timeout: 15_000 })
+        .toEqual({ trackers: ["liveramp", "lotame"], confirmedRedirect: true, explainsWhy: true })
     })
   })
 })
