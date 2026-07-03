@@ -497,12 +497,28 @@ function IndexPopup() {
       </section>
 
       <section aria-label="Observation summary" className="mt-2.5 grid grid-cols-5 gap-2">
-        <Metric label="Types" title="Distinct observation types after grouping repeats (one row per observer + signal)" value={displayEvents.length} />
-        <Metric label="Raw" title="Every stored event for this tab, before grouping (capped by your retention settings)" value={summary.events.length} />
-        <Metric label="Active" title="Companies observed on this tab whose collection is still happening" value={summary.activeCompanies.length} />
-        <Metric label="Blocked" title="Companies whose requests were actually blocked by a rule you enabled — nothing blocks by default" value={summary.blockedCompanies.length} />
-        <Metric label="Cannot" title="Signals the browser cannot block (visible before the extension can act, or server-side)" value={summary.cannotBlockSignals.length} />
+        <Metric label="Signals" title="Distinct observations after grouping repeats — one per observer and signal type" value={displayEvents.length} />
+        <Metric label="Events" title="Every raw event recorded on this tab before grouping" value={summary.events.length} />
+        <Metric label="Watching" title="Companies whose collection on this tab is still happening" value={summary.activeCompanies.length} />
+        <Metric label="Blocked" title="Companies actually blocked by a rule you enabled — nothing blocks by default" value={summary.blockedCompanies.length} />
+        <Metric label="Unblockable" title="Signals the browser cannot block at all" value={summary.cannotBlockSignals.length} />
       </section>
+
+      <details className="mt-1.5">
+        <summary className={`${TYPE.small} cursor-pointer select-none text-muted-foreground`}>What do these numbers mean?</summary>
+        <dl className={`mt-2 ${UI.subtlePanel} grid grid-cols-[92px_1fr] gap-1.5 p-3`}>
+          <dt className={TYPE.small}>Signals</dt>
+          <dd className={TYPE.small}>Distinct observations, grouped — one line per observer and signal type. 20 pings from one pixel count once here.</dd>
+          <dt className={TYPE.small}>Events</dt>
+          <dd className={TYPE.small}>Every raw event recorded on this tab before grouping.</dd>
+          <dt className={TYPE.small}>Watching</dt>
+          <dd className={TYPE.small}>Companies whose collection is still happening — observed, not blocked, not mitigated.</dd>
+          <dt className={TYPE.small}>Blocked</dt>
+          <dd className={TYPE.small}>Companies whose requests a rule actually stopped. Rules exist only where you clicked Block; nothing blocks by default.</dd>
+          <dt className={TYPE.small}>Unblockable</dt>
+          <dd className={TYPE.small}>Signals no extension can block: your IP address, connection fingerprint, and anything the server records on its side.</dd>
+        </dl>
+      </details>
 
       <ValueSection events={summary.events} />
 
