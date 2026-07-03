@@ -57,6 +57,28 @@ const tracker = {
     last_reviewed_at: "2026-07-02",
     reviewer: "Kenshiki",
     notes: "Seed record pending source-backed import review."
+  },
+  perPersonValue: {
+    schemaVersion: 1,
+    currency: "USD",
+    geography: "US",
+    userProfile: "average_adult_internet_user",
+    valueType: "cost",
+    monetizationFlow: "operator_saas",
+    perVisit: {
+      microdollars: 40,
+      dollars: 0.00004,
+      basis: "operator SaaS pricing divided by tracked users"
+    },
+    annual: {
+      low_usd: 0.5,
+      high_usd: 5,
+      midpoint_usd: 2.75
+    },
+    valueNote: "Enterprise session replay cost paid by the site.",
+    sourceNote: "Vendor pricing tiers",
+    lastUpdated: "2026-07-03",
+    confidence: "estimated"
   }
 }
 
@@ -171,5 +193,33 @@ describe("validateTrackerDatabase", () => {
       "v2 requires displayName"
     )
     expect(() => validateTrackerDatabaseRecords([{ ...tracker, schemaVersion: 2, ...highFidelityFields }], [company], [remediation])).not.toThrow()
+  })
+
+  it("rejects inconsistent valuation math and mislabeled sourced valuation notes", () => {
+    expect(() => validateTrackerDatabaseRecords([
+      { ...tracker, perPersonValue: { ...tracker.perPersonValue, perVisit: { ...tracker.perPersonValue.perVisit, dollars: 1 } } }
+    ], [company], [remediation])).toThrow("inconsistent per-visit valuation math")
+
+    expect(() => validateTrackerDatabaseRecords([
+      { ...tracker, perPersonValue: { ...tracker.perPersonValue, annual: { low_usd: 5, high_usd: 1, midpoint_usd: 3 } } }
+    ], [company], [remediation])).toThrow("inconsistent annual valuation range")
+
+    expect(() => validateTrackerDatabaseRecords([
+      { ...tracker, perPersonValue: { ...tracker.perPersonValue, confidence: "sourced", sourceNote: "Vendor pricing tiers" } }
+    ], [company], [remediation])).toThrow("generic sourceNote")
+  })
+
+  it("rejects network blocking language that omits deletion limits", () => {
+    expect(() => validateTrackerDatabaseRecords([
+      {
+        ...tracker,
+        schemaVersion: 2,
+        ...highFidelityFields,
+        browserAction: {
+          ...highFidelityFields.browserAction,
+          whatBlockingDoesNotChange: ["Server-side events may still happen."]
+        }
+      }
+    ], [company], [remediation])).toThrow("blocking does not delete prior records")
   })
 })

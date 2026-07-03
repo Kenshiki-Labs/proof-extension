@@ -85,6 +85,41 @@ function assertHighFidelityTracker(tracker: TrackerRecord) {
   }
 }
 
+function assertTrackerValuation(tracker: TrackerRecord) {
+  const value = tracker.perPersonValue
+  const expectedDollars = value.perVisit.microdollars / 1_000_000
+  if (Math.abs(value.perVisit.dollars - expectedDollars) > 1e-12) {
+    throw new Error(`Tracker ${tracker.id} has inconsistent per-visit valuation math`)
+  }
+
+  const expectedMidpoint = (value.annual.low_usd + value.annual.high_usd) / 2
+  if (value.annual.high_usd < value.annual.low_usd || Math.abs(value.annual.midpoint_usd - expectedMidpoint) > 1e-9) {
+    throw new Error(`Tracker ${tracker.id} has inconsistent annual valuation range`)
+  }
+
+  if (value.valueType === "cost" && value.monetizationFlow !== "operator_saas") {
+    throw new Error(`Tracker ${tracker.id} cost valuation must use operator_saas flow`)
+  }
+
+  if (value.valueType === "revenue" && value.monetizationFlow === "operator_saas") {
+    throw new Error(`Tracker ${tracker.id} revenue valuation cannot use operator_saas flow`)
+  }
+
+  if (value.confidence === "sourced" && /vendor pricing|vendor docs|baseline|estimated/i.test(value.sourceNote)) {
+    throw new Error(`Tracker ${tracker.id} sourced valuation has generic sourceNote`)
+  }
+}
+
+function assertBlockingLimitLanguage(tracker: TrackerRecord) {
+  if (tracker.schemaVersion < 2) return
+  if (tracker.browserAction.blockability !== "network_blockable") return
+
+  const limits = tracker.browserAction.whatBlockingDoesNotChange.join(" ")
+  if (!/does not delete/i.test(limits)) {
+    throw new Error(`Tracker ${tracker.id} blocking limits must state that blocking does not delete prior records`)
+  }
+}
+
 export function validateTrackerDatabaseRecords(rawTrackers: unknown, rawCompanies: unknown, rawRemediation: unknown) {
   const parsedTrackers = TrackerDatabaseSchema.parse(rawTrackers)
   const parsedCompanies = CompanyDatabaseSchema.parse(rawCompanies)
@@ -105,6 +140,8 @@ export function validateTrackerDatabaseRecords(rawTrackers: unknown, rawCompanie
     assertSafeTrackerMatch(tracker)
     assertTrackerProvenance(tracker)
     assertHighFidelityTracker(tracker)
+    assertTrackerValuation(tracker)
+    assertBlockingLimitLanguage(tracker)
   }
 
   return {

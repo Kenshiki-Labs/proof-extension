@@ -1,4 +1,5 @@
 import { validateTrackerDatabase } from "~core/db/validate"
+import { getTrackerExplanation, type TrackerExplanation } from "~core/domain/tracker-explanation"
 import type { ObserverEvent } from "~core/domain/types"
 
 export type ObserverRemediation = {
@@ -16,6 +17,7 @@ export type ObserverRemediation = {
   notes: string
   jurisdictionNotes: string
   privacyContact?: string | undefined
+  explanation: TrackerExplanation
 }
 
 export function getObserverRemediation(event: ObserverEvent): ObserverRemediation | null {
@@ -44,6 +46,7 @@ export function getObserverRemediation(event: ObserverEvent): ObserverRemediatio
     frictionClass: remediationRecord.friction_class,
     notes: remediationRecord.notes,
     jurisdictionNotes: remediationRecord.jurisdiction_notes,
-    privacyContact: company.privacyContact
+    privacyContact: company.privacyContact,
+    explanation: getTrackerExplanation(tracker)
   }
 }

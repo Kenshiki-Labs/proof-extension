@@ -31,6 +31,9 @@ describe("getObserverRemediation", () => {
     expect(details?.collects).toContain("scrolls")
     expect(details?.futureCollectionUrl).toContain("fullstory.com")
     expect(details?.deletionUrl).toContain("fullstory.com")
+    expect(details?.explanation.displayName).toBe("FullStory")
+    expect(details?.explanation.observedData.length).toBeGreaterThan(0)
+    expect(details?.explanation.whatBlockingDoesNotChange.join(" ")).toMatch(/does not delete/i)
   })
 
   it("returns null when an event is not backed by a known tracker", () => {

@@ -7,7 +7,7 @@ lastReviewed: 2026-07-03
 status: generated
 ---
 
-> Generated from commit `bb8ce55` by `pnpm db:baseline`. Do not hand-edit.
+> Generated from commit `ebe811e` by `pnpm db:baseline`. Do not hand-edit.
 
 ## Summary
 
@@ -16,6 +16,9 @@ status: generated
 - SDK-global signatures: **24/42** trackers covered
 - Provenance: **42** seed / **0** source-backed
 - Remediation: deletion link **42/42**, opt-out link **42/42**
+- Explanation coverage: **42/42**
+- Blocking-limit coverage: **42/42**
+- Not-visible-to-extension coverage: **42/42**
 - Blockability classes in use: `network_blockable` (42)
 
 ### By category
@@ -89,4 +92,7 @@ status: generated
 - **No SDK-global signature** (18): google-ads, segment, adobe-analytics, the-trade-desk, pubmatic, magnite, openx, index-exchange, lotame, liveramp, id5, 33across, tapad, 6sense, hubspot, microsoft-ads, amazon-ads, reddit-pixel.
 - **Unknown remediation friction** (6): tiktok-pixel, braze, drift, optimizely, crazyegg, datadog-rum.
 - **Missing privacy contact** (13): tiktok-pixel, linkedin-insight, segment, braze, drift, optimizely, crazyegg, pinterest-tag, twitter-pixel, yandex-metrica, datadog-rum, amazon-ads, reddit-pixel.
+- **Missing explanation coverage** (0): none.
+- **Missing blocking-limit coverage** (0): none.
+- **Missing not-visible-to-extension coverage** (0): none.
 - **Shared remediation records**: `google-default` used by 3 trackers.

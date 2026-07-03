@@ -67,6 +67,14 @@ function CompactList({ emptyLabel, items }: { emptyLabel: string; items: string[
   return <span>{items.join(", ")}</span>
 }
 
+function ExplanationBullets({ items, limit }: { items: string[]; limit: number }) {
+  return (
+    <ul className={`${TYPE.small} mt-1.5 list-disc pl-4`}>
+      {items.slice(0, limit).map((item) => <li key={item}>{item}</li>)}
+    </ul>
+  )
+}
+
 function ObserverCard({
   count,
   event,
@@ -162,16 +170,33 @@ function ObserverCard({
       {remediation ? (
         <section className="mt-3 border-t border-border pt-3">
           <h3 className={TYPE.label}>Stop at source</h3>
+          <p className={`${TYPE.body} mt-2`}>{remediation.explanation.plainSummary}</p>
           <dl className="mt-2 grid grid-cols-[104px_1fr] gap-1.5">
             <dt className={TYPE.small}>Collects</dt>
             <dd className={TYPE.body}>{remediation.collects.join(", ")}</dd>
             <dt className={TYPE.small}>Used for</dt>
             <dd className={TYPE.body}>{remediation.monetization.join(", ")}</dd>
+            <dt className={TYPE.small}>Risk</dt>
+            <dd className={TYPE.body}>{titleCase(remediation.explanation.riskLevel)} · {remediation.explanation.riskReasons.join(", ")}</dd>
             <dt className={TYPE.small}>Friction</dt>
             <dd className={TYPE.body}>{titleCase(remediation.frictionClass)} · about {remediation.estimatedTimeMinutes} min</dd>
             <dt className={TYPE.small}>Verify ID</dt>
             <dd className={TYPE.body}>{remediation.identityVerificationRequired ? "Required" : "Not required"}</dd>
           </dl>
+          <div className="mt-3 grid gap-3">
+            <div>
+              <h4 className={TYPE.label}>Why it matters</h4>
+              <ExplanationBullets items={remediation.explanation.whyItMatters} limit={2} />
+            </div>
+            <div>
+              <h4 className={TYPE.label}>Blocking changes</h4>
+              <ExplanationBullets items={remediation.explanation.whatBlockingChanges} limit={2} />
+            </div>
+            <div>
+              <h4 className={TYPE.label}>Blocking does not change</h4>
+              <ExplanationBullets items={remediation.explanation.whatBlockingDoesNotChange} limit={2} />
+            </div>
+          </div>
           <div className="mt-3 flex flex-wrap gap-2">
             <a className={`${TYPE.label} underline`} href={remediation.futureCollectionUrl} rel="noreferrer" target="_blank">
               Opt out

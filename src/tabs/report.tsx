@@ -25,6 +25,7 @@ import {
   titleCase,
   visibleSignals
 } from "~core/report/display"
+import { formatUsd, formatUsdRange, MONETIZATION_FLOW_LABELS, rollupObservedValuations } from "~core/domain/valuation"
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import type { UserSettings } from "~core/domain/types"
 import Button from "~components/system/Button"
@@ -41,7 +42,7 @@ const EMPTY_SETTINGS: UserSettings = {
   skipReportOpenConfirm: false
 }
 
-function Metric({ label, value }: { label: string; value: number }) {
+function Metric({ label, value }: { label: string; value: number | string }) {
   return (
     <div className={`${UI.panel} p-4`}>
       <div className={TYPE.label}>{label}</div>
@@ -52,6 +53,11 @@ function Metric({ label, value }: { label: string; value: number }) {
 
 function StatusChip({ status }: { status: ObserverEvent["status"] }) {
   return <span className="inline-flex border border-border bg-background/70 px-2 py-0.5 font-mono text-[0.6875rem] uppercase text-muted-foreground">{titleCase(status)}</span>
+}
+
+function BulletList({ items }: { items: string[] }) {
+  if (items.length === 0) return <p className={TYPE.body}>None stated.</p>
+  return <ul className={`${TYPE.body} list-disc pl-5`}>{items.map((item) => <li key={item}>{item}</li>)}</ul>
 }
 
 function SectionTitle({ number, title }: { number: string; title: string }) {
@@ -142,6 +148,60 @@ function ExposureScanSection({ events }: { events: ObserverEvent[] }) {
             </ul>
           </article>
         ))}
+      </div>
+    </section>
+  )
+}
+
+// What the observed companies earn from one person (docs/TRACKER_VALUE_SPEC.md).
+// Revenue and operator cost are shown separately and every figure is labeled
+// as an estimate — no false certainty, no single conflated number.
+function ValuationSection({ events }: { events: ObserverEvent[] }) {
+  const rollup = rollupObservedValuations(events)
+  if (rollup.perTracker.length === 0) return null
+
+  return (
+    <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
+      <SectionTitle number="03b" title="What you are worth" />
+      <p className={`${TYPE.small} mt-2`}>{rollup.disclaimer}</p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <Metric label="This visit" value={formatUsd(rollup.thisVisitUsd)} />
+        <Metric
+          label={`Your value/yr (${rollup.revenueTrackerCount} ${rollup.revenueTrackerCount === 1 ? "company" : "companies"})`}
+          value={formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)}
+        />
+        <Metric
+          label={`Site pays/yr (${rollup.costTrackerCount} ${rollup.costTrackerCount === 1 ? "tool" : "tools"})`}
+          value={formatUsdRange(rollup.annualOperatorCostLowUsd, rollup.annualOperatorCostHighUsd)}
+        />
+      </div>
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full min-w-[560px] text-left">
+          <thead>
+            <tr className={TYPE.small}>
+              <th className="p-2">Tracker</th>
+              <th className="p-2">Model</th>
+              <th className="p-2">Per year</th>
+              <th className="p-2">This visit</th>
+              <th className="p-2">Basis</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rollup.perTracker.map(({ trackerId, value }) => (
+              <tr className="border-t border-border align-top" key={trackerId}>
+                <td className={`${TYPE.body} p-2`}>{trackerId}</td>
+                <td className={`${TYPE.small} p-2`}>{MONETIZATION_FLOW_LABELS[value.monetizationFlow]}</td>
+                <td className={`${TYPE.body} p-2`}>
+                  {value.valueType === "cost" && value.annual.high_usd === 0
+                    ? "$0 (free tool)"
+                    : formatUsdRange(value.annual.low_usd, value.annual.high_usd)}
+                </td>
+                <td className={`${TYPE.small} p-2`}>{formatUsd(value.perVisit.dollars)}</td>
+                <td className={`${TYPE.small} p-2`}>{value.valueNote} ({value.confidence}: {value.sourceNote})</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </section>
   )
@@ -259,16 +319,45 @@ function RemediationPanel({ observations }: { observations: DisplayObservation[]
             <article className={`${UI.subtlePanel} p-4`} key={displayEventKey(event)}>
               <h3 className="font-display text-base font-semibold tracking-tight">{remediation.observerName}</h3>
               <p className={`${TYPE.small} mt-1`}>{remediation.parentCompany} · {remediation.categoryLabels.join(" · ")}</p>
+              <p className={`${TYPE.body} mt-3`}>{remediation.explanation.plainSummary}</p>
               <dl className="mt-4 grid gap-x-5 gap-y-2 sm:grid-cols-[180px_1fr]">
                 <dt className={TYPE.small}>Collects</dt>
                 <dd className={TYPE.body}>{remediation.collects.join(", ")}</dd>
                 <dt className={TYPE.small}>Used for</dt>
                 <dd className={TYPE.body}>{remediation.monetization.join(", ")}</dd>
+                <dt className={TYPE.small}>Risk</dt>
+                <dd className={TYPE.body}>{titleCase(remediation.explanation.riskLevel)} · {remediation.explanation.riskReasons.join(", ")}</dd>
                 <dt className={TYPE.small}>Friction</dt>
                 <dd className={TYPE.body}>{titleCase(remediation.frictionClass)} · about {remediation.estimatedTimeMinutes} min</dd>
                 <dt className={TYPE.small}>Recheck</dt>
                 <dd className={TYPE.body}>{remediation.recheckIntervalDays} days</dd>
               </dl>
+              <div className="mt-4 grid gap-4 border-t border-border pt-4 md:grid-cols-2">
+                <div>
+                  <h4 className={TYPE.label}>Browser-visible data</h4>
+                  <BulletList items={remediation.explanation.observedData} />
+                </div>
+                <div>
+                  <h4 className={TYPE.label}>Site-provided data</h4>
+                  <BulletList items={remediation.explanation.siteProvidedData} />
+                </div>
+                <div>
+                  <h4 className={TYPE.label}>Not visible here</h4>
+                  <BulletList items={remediation.explanation.notVisibleToExtension} />
+                </div>
+                <div>
+                  <h4 className={TYPE.label}>Why it matters</h4>
+                  <BulletList items={remediation.explanation.whyItMatters} />
+                </div>
+                <div>
+                  <h4 className={TYPE.label}>Blocking changes</h4>
+                  <BulletList items={remediation.explanation.whatBlockingChanges} />
+                </div>
+                <div>
+                  <h4 className={TYPE.label}>Blocking does not change</h4>
+                  <BulletList items={remediation.explanation.whatBlockingDoesNotChange} />
+                </div>
+              </div>
               <div className="mt-4 flex flex-wrap gap-3 border-t border-border pt-3">
                 <a className={`${TYPE.label} underline`} href={remediation.futureCollectionUrl} rel="noreferrer" target="_blank">Opt out</a>
                 <a className={`${TYPE.label} underline`} href={remediation.deletionUrl} rel="noreferrer" target="_blank">Request deletion</a>
@@ -416,6 +505,7 @@ function ReportTab() {
 
         <ExposureScanSection events={exposureEvents} />
         <AtomicSignalMatrix rows={rows} />
+        <ValuationSection events={summary.events} />
 
         <section className="mt-6">
           <SectionTitle number="04" title="Observer details" />

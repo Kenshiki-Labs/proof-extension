@@ -1,5 +1,6 @@
 import { SiteSummarySchema } from "~core/contracts/schemas"
 import { getObserverRemediation } from "~core/domain/remediation"
+import { rollupObservedValuations } from "~core/domain/valuation"
 import { isDiagnosticEvent, isExposureScanEvent, isPageActivityEvent } from "~core/state/summaries"
 import type { BlockabilityClass, ObservationStatus, ObserverEvent, PageError, SiteSummary } from "~core/domain/types"
 
@@ -232,6 +233,7 @@ export function buildCopyPayload(summary: SiteSummary) {
         exposedSignals: visibleSignals(summary).length,
         cannotBlockSignals: summary.cannotBlockSignals.length
       },
+      perPersonValue: rollupObservedValuations(summary.events),
       observations: observations.map(({ event, count }) => formatCopyEvent(event, count)),
       pageActivityEvents: pageEvents.map((event) => formatCopyEvent(event, event.count ?? 1)),
       exposureScanEvents: exposureEvents.map((event) => formatCopyEvent(event, event.count ?? 1)),

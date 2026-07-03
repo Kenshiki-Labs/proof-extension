@@ -150,6 +150,35 @@ export const TrackerUserImpactSchema = z.object({
   riskReasons: z.array(z.string().min(1)).default([])
 })
 
+// Per-person economic value (docs/TRACKER_VALUE_SPEC.md): what one person's
+// data is worth to this company, per visit and per year. valueType "revenue"
+// means the tracker company monetizes the user; "cost" means the site pays
+// to track. Estimates, never measurements — confidence is explicit.
+export const PerPersonValueSchema = z.object({
+  schemaVersion: z.literal(1),
+  currency: z.literal("USD"),
+  geography: z.literal("US"),
+  userProfile: z.string().min(1),
+  valueType: z.enum(["revenue", "cost"]),
+  monetizationFlow: z.enum(["platform_ads", "programmatic", "identity_infra", "operator_saas"]),
+  perVisit: z.object({
+    microdollars: z.number().min(0),
+    dollars: z.number().min(0),
+    basis: z.string().min(1)
+  }),
+  annual: z.object({
+    low_usd: z.number().min(0),
+    high_usd: z.number().min(0),
+    midpoint_usd: z.number().min(0)
+  }),
+  valueNote: z.string().min(1),
+  sourceNote: z.string().min(1),
+  lastUpdated: z.iso.date(),
+  confidence: z.enum(["sourced", "estimated"])
+})
+
+export type PerPersonValue = z.infer<typeof PerPersonValueSchema>
+
 export const TrackerRecordSchema = z.object({
   id: z.string().min(1),
   schemaVersion: z.number().int().positive(),
@@ -175,7 +204,8 @@ export const TrackerRecordSchema = z.object({
   evidenceTemplate: z.array(z.string().min(1)).min(1),
   remediationId: z.string().min(1),
   sources: z.array(TrackerSourceSchema).min(1),
-  review: TrackerReviewSchema
+  review: TrackerReviewSchema,
+  perPersonValue: PerPersonValueSchema
 })
 
 export type TrackerSource = z.infer<typeof TrackerSourceSchema>

@@ -2,7 +2,7 @@
   {
     "id": "fullstory",
     "schemaVersion": 2,
-    "displayName": "Meta Pixel",
+    "displayName": "FullStory",
     "match": {
       "domains": [
         "fullstory.com",
@@ -34,46 +34,46 @@
       "blockability": "network_blockable",
       "method": "network-block",
       "whatBlockingChanges": [
-        "Blocks future browser requests matching Meta Pixel domains and paths.",
-        "May reduce browser-side event reporting from this page."
+        "Blocks future browser requests matching FullStory domains and ingest paths.",
+        "May reduce browser-side session replay recording from this page."
       ],
       "whatBlockingDoesNotChange": [
-        "Does not delete prior records Meta already received.",
-        "Does not stop server-side Conversions API events sent by the website.",
-        "Does not stop Meta processing from other sessions, apps, or logged-in services."
+        "Does not delete prior recordings held by FullStory or the site.",
+        "Does not change masking choices or retention settings configured by the site.",
+        "Does not remove records already received before blocking was enabled."
       ]
     },
     "observes": {
       "browserVisible": [
+        "session replay script request URL",
+        "recording ingest request URL",
         "page URL",
-        "referrer",
-        "event request URL",
-        "browser and device metadata",
-        "cookie identifiers when present"
+        "browser and device metadata"
       ],
       "siteProvided": [
-        "standard events such as PageView, Lead, Purchase, or CompleteRegistration when configured by the site",
-        "custom event names and parameters chosen by the site",
-        "hashed contact information when advanced matching is enabled by the site"
+        "clicks",
+        "scrolls",
+        "navigation events",
+        "form interaction metadata when configured by the site"
       ],
       "notVisibleToExtension": [
-        "server-side Conversions API events",
-        "Meta account matching and downstream ad profile processing",
-        "events already received before blocking was enabled"
+        "masked-field policy choices made by the site",
+        "records already received before blocking was enabled",
+        "server-side enrichment by FullStory or the site"
       ]
     },
     "userImpact": {
-      "plainSummary": "Meta Pixel lets a site report page visits and configured events to Meta for ads measurement, conversion attribution, and retargeting.",
+      "plainSummary": "FullStory lets a site collect product analytics and session replay events for behavior replay, UX analysis, and conversion optimization.",
       "whyItMatters": [
-        "It can connect activity on this site to advertising profiles.",
-        "It may be used to measure conversions or retarget visitors across Meta properties.",
-        "Browser blocking reduces future browser-side requests but does not delete prior records."
+        "Session replay tooling can capture detailed interaction patterns on a page.",
+        "The sensitivity depends on how the site configures masking and capture rules.",
+        "Browser blocking reduces future browser-side recording but does not delete prior recordings."
       ],
       "riskLevel": "high",
       "riskReasons": [
-        "cross-site advertising",
-        "conversion attribution",
-        "identity matching"
+        "session replay",
+        "behavioral analytics",
+        "interaction recording"
       ]
     },
     "confidence": "confirmed",
@@ -96,6 +96,28 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 40,
+        "dollars": 4e-05,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.5,
+        "high_usd": 5,
+        "midpoint_usd": 2.75
+      },
+      "valueNote": "Enterprise session replay cost paid by the site.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -196,6 +218,28 @@
         "session measurement",
         "audience reporting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 0,
+        "dollars": 0.0,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0,
+        "high_usd": 0,
+        "midpoint_usd": 0.0
+      },
+      "valueNote": "Free tool; GA audiences feed Google remarketing (value under Google Ads).",
+      "sourceNote": "Proton 2025",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -219,7 +263,7 @@
       "arbitrary tags configured by the site operator, which can include third-party pixels"
     ],
     "monetization": [
-      "indirect — GTM is a delivery mechanism for other vendors' tags"
+      "indirect \u2014 GTM is a delivery mechanism for other vendors' tags"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -273,7 +317,7 @@
       ]
     },
     "userImpact": {
-      "plainSummary": "Google Tag Manager lets a site send tag manager events to Alphabet Inc. for indirect — GTM is a delivery mechanism for other vendors' tags.",
+      "plainSummary": "Google Tag Manager lets a site send tag manager events to Alphabet Inc. for indirect \u2014 GTM is a delivery mechanism for other vendors' tags.",
       "whyItMatters": [
         "A tag manager can load or coordinate other tracking scripts.",
         "What it collects depends on the site configuration and downstream tags.",
@@ -285,6 +329,28 @@
         "site-configured tracking",
         "indirect data sharing"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 0,
+        "dollars": 0.0,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0,
+        "high_usd": 0,
+        "midpoint_usd": 0.0
+      },
+      "valueNote": "Free tag delivery mechanism; value is the trackers it loads.",
+      "sourceNote": "Proton 2025",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -385,6 +451,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisit": {
+        "microdollars": 768,
+        "dollars": 0.000768,
+        "basis": "annualARPU \u00f7 estimated annual signals"
+      },
+      "annual": {
+        "low_usd": 420,
+        "high_usd": 500,
+        "midpoint_usd": 460.0
+      },
+      "valueNote": "Google US ARPU ~$460/yr. Present on a large share of the web.",
+      "sourceNote": "Proton 2025: ~$460 US ARPU; Mediapost 2026: $1,605 engaged desktop user",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -483,6 +571,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisit": {
+        "microdollars": 420,
+        "dollars": 0.00042,
+        "basis": "annualARPU \u00f7 estimated annual signals"
+      },
+      "annual": {
+        "low_usd": 185,
+        "high_usd": 250,
+        "midpoint_usd": 217.5
+      },
+      "valueNote": "Meta US/CA ARPU; the pixel extends monetization to off-Facebook browsing.",
+      "sourceNote": "Proton 2025: ~$217 US estimate; Statista Jan 2025: $49.63 global ARPU 2024",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -576,6 +686,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisit": {
+        "microdollars": 220,
+        "dollars": 0.00022,
+        "basis": "annualARPU \u00f7 estimated annual signals"
+      },
+      "annual": {
+        "low_usd": 80,
+        "high_usd": 140,
+        "midpoint_usd": 110.0
+      },
+      "valueNote": "ByteDance US ARPU estimates.",
+      "sourceNote": "Surff.io 2026 brand-by-brand analysis",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -672,6 +804,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisit": {
+        "microdollars": 200,
+        "dollars": 0.0002,
+        "basis": "annualARPU \u00f7 estimated annual signals"
+      },
+      "annual": {
+        "low_usd": 80,
+        "high_usd": 120,
+        "midpoint_usd": 100.0
+      },
+      "valueNote": "LinkedIn revenue over active users; B2B ad premium.",
+      "sourceNote": "Surff.io 2026 brand-by-brand analysis",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -770,6 +924,28 @@
         "behavioral analytics",
         "interaction recording"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 8,
+        "dollars": 8e-06,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.1,
+        "high_usd": 1,
+        "midpoint_usd": 0.55
+      },
+      "valueNote": "Per-session replay/heatmap cost paid by the site.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -866,6 +1042,28 @@
         "behavioral measurement",
         "event profiling"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 0.2,
+        "dollars": 2.0000000000000002e-07,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.002,
+        "high_usd": 0.04,
+        "midpoint_usd": 0.021
+      },
+      "valueNote": "Per-event/per-user product analytics pricing.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -962,6 +1160,28 @@
         "identity resolution",
         "downstream data sharing"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 0.5,
+        "dollars": 5e-07,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.002,
+        "high_usd": 0.1,
+        "midpoint_usd": 0.051
+      },
+      "valueNote": "Per monthly-tracked-user CDP pricing.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -1056,6 +1276,28 @@
         "behavioral measurement",
         "event profiling"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 0.3,
+        "dollars": 3e-07,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.003,
+        "high_usd": 0.05,
+        "midpoint_usd": 0.0265
+      },
+      "valueNote": "Per-event/per-user product analytics tiers.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -1152,6 +1394,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 50,
+        "dollars": 5e-05,
+        "basis": "CPM auction share \u00f7 estimated annual impressions"
+      },
+      "annual": {
+        "low_usd": 2,
+        "high_usd": 8,
+        "midpoint_usd": 5.0
+      },
+      "valueNote": "Commerce-media retargeting share of CPM auctions.",
+      "sourceNote": "Criteo IR Sept 2025; ZipDo 2026",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -1247,6 +1511,28 @@
         "session measurement",
         "audience reporting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 30,
+        "dollars": 3e-05,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.5,
+        "high_usd": 5,
+        "midpoint_usd": 2.75
+      },
+      "valueNote": "Enterprise analytics SaaS pricing paid by the site.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -1340,6 +1626,28 @@
         "customer engagement",
         "cross-channel messaging"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 15,
+        "dollars": 1.5e-05,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.2,
+        "high_usd": 2,
+        "midpoint_usd": 1.1
+      },
+      "valueNote": "Per-MAU engagement platform pricing paid by the operator.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -1434,6 +1742,28 @@
         "support analytics",
         "visitor identification"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 5,
+        "dollars": 5e-06,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.05,
+        "high_usd": 1,
+        "midpoint_usd": 0.525
+      },
+      "valueNote": "Per-seat/contact messaging platform pricing.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -1527,6 +1857,28 @@
         "support analytics",
         "visitor identification"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 3,
+        "dollars": 3e-06,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.05,
+        "high_usd": 0.5,
+        "midpoint_usd": 0.275
+      },
+      "valueNote": "B2B sales messaging tool pricing.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -1619,6 +1971,28 @@
         "behavioral measurement",
         "conversion tracking"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 1,
+        "dollars": 1e-06,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.01,
+        "high_usd": 0.1,
+        "midpoint_usd": 0.055
+      },
+      "valueNote": "Per-visitor experimentation pricing.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -1713,6 +2087,28 @@
         "behavioral analytics",
         "interaction recording"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 0.5,
+        "dollars": 5e-07,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.01,
+        "high_usd": 0.05,
+        "midpoint_usd": 0.03
+      },
+      "valueNote": "Heatmap SaaS cost paid by the site.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -1807,6 +2203,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 30,
+        "dollars": 3e-05,
+        "basis": "CPM auction share \u00f7 estimated annual impressions"
+      },
+      "annual": {
+        "low_usd": 1,
+        "high_usd": 5,
+        "midpoint_usd": 3.0
+      },
+      "valueNote": "Audience measurement plus programmatic share.",
+      "sourceNote": "ZipDo 2026",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -1901,6 +2319,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 60,
+        "dollars": 6e-05,
+        "basis": "CPM auction share \u00f7 estimated annual impressions"
+      },
+      "annual": {
+        "low_usd": 2,
+        "high_usd": 8,
+        "midpoint_usd": 5.0
+      },
+      "valueNote": "Native content-recommendation CPM economics.",
+      "sourceNote": "ZipDo 2026: US CPMs $2.30-$9.20",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -1995,6 +2435,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 45,
+        "dollars": 4.5e-05,
+        "basis": "CPM auction share \u00f7 estimated annual impressions"
+      },
+      "annual": {
+        "low_usd": 2,
+        "high_usd": 6,
+        "midpoint_usd": 4.0
+      },
+      "valueNote": "Native content-recommendation CPM economics.",
+      "sourceNote": "ZipDo 2026",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -2089,6 +2551,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisit": {
+        "microdollars": 28,
+        "dollars": 2.8e-05,
+        "basis": "annualARPU \u00f7 estimated annual signals"
+      },
+      "annual": {
+        "low_usd": 10,
+        "high_usd": 18,
+        "midpoint_usd": 14.0
+      },
+      "valueNote": "Snap quarterly ARPU annualized.",
+      "sourceNote": "Statista Feb 2025: $3.44/quarter Q4 2024",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -2184,6 +2668,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisit": {
+        "microdollars": 72,
+        "dollars": 7.2e-05,
+        "basis": "annualARPU \u00f7 estimated annual signals"
+      },
+      "annual": {
+        "low_usd": 28,
+        "high_usd": 44,
+        "midpoint_usd": 36.0
+      },
+      "valueNote": "Pinterest US/CA quarterly ARPU ~$9 annualized.",
+      "sourceNote": "Statista Feb 2025: $9/quarter US/CA Q4 2024",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -2278,6 +2784,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisit": {
+        "microdollars": 52,
+        "dollars": 5.2e-05,
+        "basis": "annualARPU \u00f7 estimated annual signals"
+      },
+      "annual": {
+        "low_usd": 20,
+        "high_usd": 32,
+        "midpoint_usd": 26.0
+      },
+      "valueNote": "Post-acquisition ARPU decline from ~$6.50/quarter global pre-2022.",
+      "sourceNote": "Surff.io 2026",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -2374,6 +2902,28 @@
         "behavioral analytics",
         "interaction recording"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 2,
+        "dollars": 2e-06,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0,
+        "high_usd": 0.5,
+        "midpoint_usd": 0.25
+      },
+      "valueNote": "Free analytics product; feeds Yandex advertising ecosystem.",
+      "sourceNote": "Vendor docs",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -2469,6 +3019,28 @@
         "behavioral analytics",
         "interaction recording"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 2,
+        "dollars": 2e-06,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0,
+        "high_usd": 0.5,
+        "midpoint_usd": 0.25
+      },
+      "valueNote": "Free session replay; enriches Microsoft Advertising.",
+      "sourceNote": "Vendor docs",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -2561,6 +3133,28 @@
         "error monitoring",
         "session diagnostics"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 8,
+        "dollars": 8e-06,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.1,
+        "high_usd": 1,
+        "midpoint_usd": 0.55
+      },
+      "valueNote": "Per-session real-user-monitoring pricing paid by the site.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -2657,6 +3251,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 18,
+        "dollars": 1.8e-05,
+        "basis": "CPM auction share \u00f7 estimated annual impressions"
+      },
+      "annual": {
+        "low_usd": 3,
+        "high_usd": 15,
+        "midpoint_usd": 9.0
+      },
+      "valueNote": "DSP revenue over addressable US users.",
+      "sourceNote": "TTD Q4 FY2025: $2.9B revenue",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -2752,6 +3368,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 10,
+        "dollars": 1e-05,
+        "basis": "CPM auction share \u00f7 estimated annual impressions"
+      },
+      "annual": {
+        "low_usd": 1,
+        "high_usd": 5,
+        "midpoint_usd": 3.0
+      },
+      "valueNote": "Supply-side fraction of CPM per impression.",
+      "sourceNote": "ZipDo 2026",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -2848,6 +3486,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 10,
+        "dollars": 1e-05,
+        "basis": "CPM auction share \u00f7 estimated annual impressions"
+      },
+      "annual": {
+        "low_usd": 1,
+        "high_usd": 5,
+        "midpoint_usd": 3.0
+      },
+      "valueNote": "Supply-side fraction of CPM per impression; CTV growing.",
+      "sourceNote": "ZipDo 2026",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -2942,6 +3602,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 8,
+        "dollars": 8e-06,
+        "basis": "CPM auction share \u00f7 estimated annual impressions"
+      },
+      "annual": {
+        "low_usd": 1,
+        "high_usd": 4,
+        "midpoint_usd": 2.5
+      },
+      "valueNote": "Supply-side share of CPM economics.",
+      "sourceNote": "ZipDo 2026 CPM baseline",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -3037,6 +3719,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 8,
+        "dollars": 8e-06,
+        "basis": "CPM auction share \u00f7 estimated annual impressions"
+      },
+      "annual": {
+        "low_usd": 1,
+        "high_usd": 4,
+        "midpoint_usd": 2.5
+      },
+      "valueNote": "Header-bidding infrastructure share of CPM economics.",
+      "sourceNote": "ZipDo 2026 CPM baseline",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -3131,6 +3835,28 @@
         "session measurement",
         "audience reporting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "identity_infra",
+      "perVisit": {
+        "microdollars": 8,
+        "dollars": 8e-06,
+        "basis": "per-record licensing \u00f7 estimated annual match events"
+      },
+      "annual": {
+        "low_usd": 0.5,
+        "high_usd": 3,
+        "midpoint_usd": 1.75
+      },
+      "valueNote": "Audience segment sales via DMP.",
+      "sourceNote": "Surff.io 2026",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -3226,6 +3952,28 @@
         "session measurement",
         "audience reporting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "identity_infra",
+      "perVisit": {
+        "microdollars": 12,
+        "dollars": 1.2e-05,
+        "basis": "per-record licensing \u00f7 estimated annual match events"
+      },
+      "annual": {
+        "low_usd": 0.5,
+        "high_usd": 5,
+        "midpoint_usd": 2.75
+      },
+      "valueNote": "Offline-to-online identity matching charged per record/match.",
+      "sourceNote": "LiveRamp identity-resolution value materials",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -3319,6 +4067,28 @@
         "session measurement",
         "audience reporting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "identity_infra",
+      "perVisit": {
+        "microdollars": 3,
+        "dollars": 3e-06,
+        "basis": "per-record licensing \u00f7 estimated annual match events"
+      },
+      "annual": {
+        "low_usd": 0.1,
+        "high_usd": 1,
+        "midpoint_usd": 0.55
+      },
+      "valueNote": "Shared-ID infrastructure; value flows to publishers/buyers.",
+      "sourceNote": "Surff.io 2026",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -3414,6 +4184,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 5,
+        "dollars": 5e-06,
+        "basis": "CPM auction share \u00f7 estimated annual impressions"
+      },
+      "annual": {
+        "low_usd": 1,
+        "high_usd": 3,
+        "midpoint_usd": 2.0
+      },
+      "valueNote": "Cookieless addressability share of CPM economics.",
+      "sourceNote": "ZipDo 2026 CPM baseline",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -3508,6 +4300,28 @@
         "session measurement",
         "audience reporting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "identity_infra",
+      "perVisit": {
+        "microdollars": 8,
+        "dollars": 8e-06,
+        "basis": "per-record licensing \u00f7 estimated annual match events"
+      },
+      "annual": {
+        "low_usd": 0.5,
+        "high_usd": 3,
+        "midpoint_usd": 1.75
+      },
+      "valueNote": "Cross-device graph licensing (Experian).",
+      "sourceNote": "Surff.io 2026",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -3601,6 +4415,28 @@
         "customer engagement",
         "cross-channel messaging"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "identity_infra",
+      "perVisit": {
+        "microdollars": 20,
+        "dollars": 2e-05,
+        "basis": "per-record licensing \u00f7 estimated annual match events"
+      },
+      "annual": {
+        "low_usd": 1,
+        "high_usd": 5,
+        "midpoint_usd": 3.0
+      },
+      "valueNote": "B2B intent and IP-level firmographic data sold at account level.",
+      "sourceNote": "Surff.io 2026",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -3700,6 +4536,28 @@
         "session measurement",
         "audience reporting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 3,
+        "dollars": 3e-06,
+        "basis": "operator SaaS pricing \u00f7 tracked users"
+      },
+      "annual": {
+        "low_usd": 0.01,
+        "high_usd": 0.5,
+        "midpoint_usd": 0.255
+      },
+      "valueNote": "Per-contact marketing automation pricing at scale.",
+      "sourceNote": "Vendor pricing tiers",
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated"
     }
   },
   {
@@ -3794,6 +4652,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisit": {
+        "microdollars": 60,
+        "dollars": 6e-05,
+        "basis": "annualARPU \u00f7 estimated annual signals"
+      },
+      "annual": {
+        "low_usd": 20,
+        "high_usd": 40,
+        "midpoint_usd": 30.0
+      },
+      "valueNote": "Microsoft search/news ad revenue over estimated users.",
+      "sourceNote": "Proton 2025",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -3890,6 +4770,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisit": {
+        "microdollars": 320,
+        "dollars": 0.00032,
+        "basis": "annualARPU \u00f7 estimated annual signals"
+      },
+      "annual": {
+        "low_usd": 120,
+        "high_usd": 200,
+        "midpoint_usd": 160.0
+      },
+      "valueNote": "Amazon retail media ad revenue per customer; higher for Prime members.",
+      "sourceNote": "Surff.io 2026 brand-by-brand analysis",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   },
   {
@@ -3984,6 +4886,28 @@
         "conversion attribution",
         "retargeting"
       ]
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisit": {
+        "microdollars": 62,
+        "dollars": 6.2e-05,
+        "basis": "annualARPU \u00f7 estimated annual signals"
+      },
+      "annual": {
+        "low_usd": 25,
+        "high_usd": 38,
+        "midpoint_usd": 31.5
+      },
+      "valueNote": "Reddit US ARPU annualized.",
+      "sourceNote": "Reddit Q2 2025 earnings: $7.87/quarter US",
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced"
     }
   }
 ]

@@ -37,7 +37,10 @@ const rows = trackers.map((tracker) => {
     optOut: Boolean(record?.future_collection_url),
     friction: record?.friction_class ?? "?",
     verified: record?.last_verified_at ?? "?",
-    contact: Boolean(company.privacyContact)
+    contact: Boolean(company.privacyContact),
+    explanation: Boolean(tracker.displayName && tracker.observes?.browserVisible?.length && tracker.userImpact?.plainSummary),
+    blockingLimits: Boolean(tracker.browserAction?.whatBlockingChanges?.length && tracker.browserAction?.whatBlockingDoesNotChange?.length),
+    notVisible: Boolean(tracker.observes?.notVisibleToExtension?.length)
   }
 })
 
@@ -61,6 +64,9 @@ lines.push(`- Companies: **${companies.size}**, remediation records: **${remedia
 lines.push(`- SDK-global signatures: **${count(rows, (r) => r.sdk)}/${trackers.length}** trackers covered`)
 lines.push(`- Provenance: **${count(rows, (r) => r.review === "seed")}** seed / **${count(rows, (r) => r.review !== "seed")}** source-backed`)
 lines.push(`- Remediation: deletion link **${count(rows, (r) => r.deletion)}/${trackers.length}**, opt-out link **${count(rows, (r) => r.optOut)}/${trackers.length}**`)
+lines.push(`- Explanation coverage: **${count(rows, (r) => r.explanation)}/${trackers.length}**`)
+lines.push(`- Blocking-limit coverage: **${count(rows, (r) => r.blockingLimits)}/${trackers.length}**`)
+lines.push(`- Not-visible-to-extension coverage: **${count(rows, (r) => r.notVisible)}/${trackers.length}**`)
 lines.push(`- Blockability classes in use: ${tally(trackers, (t) => t.browserAction.blockability).map(([k, v]) => `\`${k}\` (${v})`).join(", ")}`)
 lines.push("")
 lines.push("### By category")
@@ -81,6 +87,9 @@ lines.push("## Gap register")
 lines.push("")
 const noSdk = rows.filter((r) => !r.sdk).map((r) => r.id)
 const noContact = rows.filter((r) => !r.contact).map((r) => r.id)
+const noExplanation = rows.filter((r) => !r.explanation).map((r) => r.id)
+const noBlockingLimits = rows.filter((r) => !r.blockingLimits).map((r) => r.id)
+const noNotVisible = rows.filter((r) => !r.notVisible).map((r) => r.id)
 const unknownFriction = rows.filter((r) => r.friction === "unknown").map((r) => r.id)
 const seedCount = count(rows, (r) => r.review === "seed")
 lines.push(`- **Provenance**: ${seedCount} of ${trackers.length} records are hand-authored seeds pending Tracker Radar / EasyPrivacy source backing (Phase 3).`)
@@ -88,6 +97,9 @@ lines.push(`- **All trackers are network_blockable** — no \`content_mitigatabl
 lines.push(`- **No SDK-global signature** (${noSdk.length}): ${noSdk.join(", ") || "none"}.`)
 lines.push(`- **Unknown remediation friction** (${unknownFriction.length}): ${unknownFriction.join(", ") || "none"}.`)
 lines.push(`- **Missing privacy contact** (${noContact.length}): ${noContact.join(", ") || "none"}.`)
+lines.push(`- **Missing explanation coverage** (${noExplanation.length}): ${noExplanation.join(", ") || "none"}.`)
+lines.push(`- **Missing blocking-limit coverage** (${noBlockingLimits.length}): ${noBlockingLimits.join(", ") || "none"}.`)
+lines.push(`- **Missing not-visible-to-extension coverage** (${noNotVisible.length}): ${noNotVisible.join(", ") || "none"}.`)
 const sharedRemediation = tally(trackers, (t) => t.remediationId).filter(([, n]) => n > 1)
 lines.push(`- **Shared remediation records**: ${sharedRemediation.map(([k, v]) => `\`${k}\` used by ${v} trackers`).join(", ") || "none"}.`)
 lines.push("")
