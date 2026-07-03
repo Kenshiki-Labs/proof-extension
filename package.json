@@ -23,7 +23,6 @@
     "build:firefox": "plasmo build --target=firefox-mv2",
     "build:edge": "plasmo build --target=edge-mv3",
     "package": "plasmo package",
-    "release:observe": "pnpm build:chrome && pnpm package && node scripts/release-observe.mjs",
     "release:supabase": "node scripts/release-supabase.mjs",
     "lint": "eslint src eslint.config.js --ext .ts,.tsx,.js",
     "typecheck": "tsc --noEmit",
