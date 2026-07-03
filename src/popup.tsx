@@ -22,6 +22,7 @@ import {
   visibleSignals,
   type DisplayObservation
 } from "~core/report/display"
+import { formatUsd, formatUsdRange, rollupObservedValuations } from "~core/domain/valuation"
 import { isDiagnosticEvent } from "~core/state/summaries"
 import type { ObserverEvent, SiteSummary, UserSettings } from "~core/domain/types"
 import Button from "~components/system/Button"
@@ -209,6 +210,43 @@ function ObserverCard({
         </section>
       ) : null}
     </article>
+  )
+}
+
+// Compact per-tab value rollup (docs/TRACKER_VALUE_SPEC.md). The popup shows
+// the headline; the full per-tracker table with sources lives in the report
+// tab. Revenue and site-paid tooling are never summed into one number.
+function ValueSection({ events }: { events: ObserverEvent[] }) {
+  const rollup = rollupObservedValuations(events)
+  if (rollup.perTracker.length === 0) return null
+
+  return (
+    <section className="mt-4">
+      <h2 className={TYPE.label}>What you are worth</h2>
+      <div className={`mt-2.5 ${UI.subtlePanel} p-3`}>
+        <dl className="grid grid-cols-[128px_1fr] gap-1.5">
+          <dt className={TYPE.small}>This visit</dt>
+          <dd className={TYPE.body}>{formatUsd(rollup.thisVisitUsd)} across {rollup.perTracker.length} observed {rollup.perTracker.length === 1 ? "tracker" : "trackers"}</dd>
+          {rollup.revenueTrackerCount > 0 ? (
+            <>
+              <dt className={TYPE.small}>Your value/yr</dt>
+              <dd className={TYPE.body}>
+                {formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)} to {rollup.revenueTrackerCount} {rollup.revenueTrackerCount === 1 ? "company" : "companies"} that monetize you
+              </dd>
+            </>
+          ) : null}
+          {rollup.costTrackerCount > 0 ? (
+            <>
+              <dt className={TYPE.small}>Site pays/yr</dt>
+              <dd className={TYPE.body}>
+                {formatUsdRange(rollup.annualOperatorCostLowUsd, rollup.annualOperatorCostHighUsd)} for {rollup.costTrackerCount} tracking {rollup.costTrackerCount === 1 ? "tool" : "tools"}
+              </dd>
+            </>
+          ) : null}
+        </dl>
+        <p className={`${TYPE.small} mt-2`}>Estimates from public revenue data, not measurements. Details and sources in the full report.</p>
+      </div>
+    </section>
   )
 }
 
@@ -444,6 +482,8 @@ function IndexPopup() {
         <Metric label="Blocked" value={summary.blockedCompanies.length} />
         <Metric label="Cannot" value={summary.cannotBlockSignals.length} />
       </section>
+
+      <ValueSection events={summary.events} />
 
       <section className="mt-4">
         <h2 className={TYPE.label}>Recent observations</h2>
