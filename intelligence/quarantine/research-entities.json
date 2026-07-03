@@ -18,8 +18,8 @@
   },
   "adjudication": {
     "path": "intelligence/adjudication/entity-adjudications.json",
-    "records": 1,
-    "appliedRecords": 1
+    "records": 0,
+    "appliedRecords": 0
   },
   "conflictReport": "intelligence/quarantine/research-entity-conflicts.json",
   "scope": {

@@ -156,7 +156,7 @@ Every entity join must carry:
 
 The resolver must also emit `intelligence/normalized/entity-conflicts.json`. This is the generated review queue for extension-scoped domain ownership collisions, slug ownership collisions, multi-entity domain matches, and low-confidence joins. A conflict in this file means the data can remain in the SSOT as an import artifact, but it must not be promoted into runtime claims until reviewed. Research-only conflicts belong under `intelligence/quarantine/`.
 
-Human decisions live in `intelligence/adjudication/entity-adjudications.json`. This file is the manual adjudication ledger; it is hand-authored, sorted by id when populated, and referenced by generated conflict records. Generated files may read it, but generated files must not be hand-edited to encode review decisions.
+Human decisions live in `intelligence/adjudication/entity-adjudications.json`. This file is the manual adjudication ledger; it is hand-authored, sorted by id when populated, and referenced by generated conflict records. Generated files may read it, but generated files must not write proposed records into it. Near misses and candidates belong in generated eval/conflict reports until a human records an `approved`, `rejected`, or `superseded` decision.
 
 Each normalization run must also write a versioned snapshot manifest under `intelligence/snapshots/<snapshot-version>/manifest.json`. The manifest pins every SSOT artifact by SHA-256 and supports HMAC-SHA256 signing with `INTELLIGENCE_SNAPSHOT_SIGNING_KEY`. If the signing key is absent, the manifest must state `unsigned_no_key` rather than presenting a hash as a signature.
 
