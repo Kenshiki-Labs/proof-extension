@@ -55,9 +55,9 @@ const STATUS_CLASSES: Record<ObserverEvent["status"], string> = {
   cannot_block: "border-border text-muted-foreground"
 }
 
-function Metric({ label, value }: { label: string; value: number | string }) {
+function Metric({ label, value, title }: { label: string; title?: string; value: number | string }) {
   return (
-    <div className="min-w-0 border border-border bg-card/80 p-3 shadow-sm">
+    <div className="min-w-0 border border-border bg-card/80 p-3 shadow-sm" title={title}>
       <div className={TYPE.label}>{label}</div>
       <div className="mt-1 font-display text-xl font-semibold tracking-tight">{value}</div>
     </div>
@@ -497,11 +497,11 @@ function IndexPopup() {
       </section>
 
       <section aria-label="Observation summary" className="mt-2.5 grid grid-cols-5 gap-2">
-        <Metric label="Types" value={displayEvents.length} />
-        <Metric label="Raw" value={summary.events.length} />
-        <Metric label="Active" value={summary.activeCompanies.length} />
-        <Metric label="Blocked" value={summary.blockedCompanies.length} />
-        <Metric label="Cannot" value={summary.cannotBlockSignals.length} />
+        <Metric label="Types" title="Distinct observation types after grouping repeats (one row per observer + signal)" value={displayEvents.length} />
+        <Metric label="Raw" title="Every stored event for this tab, before grouping (capped by your retention settings)" value={summary.events.length} />
+        <Metric label="Active" title="Companies observed on this tab whose collection is still happening" value={summary.activeCompanies.length} />
+        <Metric label="Blocked" title="Companies whose requests were actually blocked by a rule you enabled — nothing blocks by default" value={summary.blockedCompanies.length} />
+        <Metric label="Cannot" title="Signals the browser cannot block (visible before the extension can act, or server-side)" value={summary.cannotBlockSignals.length} />
       </section>
 
       <ValueSection events={summary.events} />

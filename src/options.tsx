@@ -122,11 +122,30 @@ function OptionsPage() {
         description={
           'This is primarily an observer, not a blocker. There is no global on/off switch here — blocking is a per-tracker choice you make from the popup, right next to the specific company or script it applies to. Nothing is blocked by default.'
         }>
-        <p className={TYPE.small}>
-          {settings.blockedTrackerIds.length === 0
-            ? "No trackers are currently blocked."
-            : `${settings.blockedTrackerIds.length} tracker${settings.blockedTrackerIds.length === 1 ? "" : "s"} currently blocked: ${settings.blockedTrackerIds.join(", ")}`}
-        </p>
+        {settings.blockedTrackerIds.length === 0 ? (
+          <p className={TYPE.small}>No trackers are currently blocked.</p>
+        ) : (
+          <div>
+            <p className={TYPE.small}>
+              {settings.blockedTrackerIds.length} tracker{settings.blockedTrackerIds.length === 1 ? "" : "s"} currently blocked — each was enabled by a click in the popup or report; nothing blocks by default:
+            </p>
+            <ul className="mt-2 space-y-1.5">
+              {[...settings.blockedTrackerIds].sort().map((trackerId) => (
+                <li className="flex items-center gap-2" key={trackerId}>
+                  <span className={`${TYPE.body} flex-1`}>{trackerId}</span>
+                  <Button onClick={() => updateSettings({ blockedTrackerIds: settings.blockedTrackerIds.filter((id) => id !== trackerId) })}>
+                    Unblock
+                  </Button>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-3">
+              <Button variant="danger" onClick={() => updateSettings({ blockedTrackerIds: [] })}>
+                Unblock all
+              </Button>
+            </div>
+          </div>
+        )}
       </Section>
 
       <Section
