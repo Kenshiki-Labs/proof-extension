@@ -31,9 +31,12 @@ and reviewed. Normalized outputs live in `intelligence/normalized/`.
 
 - Kenshiki Labs research artifact mapping the tiered US personal-data
   monetization supply chain (collection → aggregation → resale). Used for
-  supply-chain-tier joins between observed trackers and downstream brokers,
-  not for runtime rules.
+  supply-chain-tier research between observed trackers and downstream brokers,
+  not for runtime rules or extension-facing claims.
 - Source family: `kenshiki_defense_registry`.
+- Quarantine status: research-only. Do not include in the extension SSOT unless
+  a reviewed promotion links a specific supply-chain fact to an observed runtime
+  company or tracker.
 
 ## License
 

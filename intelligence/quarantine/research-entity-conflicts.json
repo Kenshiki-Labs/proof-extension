@@ -1,0 +1,1149 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "family": "kenshiki_entity_index",
+      "name": "Kenshiki entity conflict report",
+      "version": "1",
+      "retrieved_at": "2026-07-03",
+      "license": "Derived index; per-facet licensing follows each source file.",
+      "transform_notes": "Generated from resolver domain/slug ownership conflicts plus low-confidence alias joins. Manual decisions are read from intelligence/adjudication/entity-adjudications.json."
+    }
+  ],
+  "review": {
+    "status": "false_positive_review",
+    "last_reviewed_at": "2026-07-03",
+    "reviewer": "Kenshiki",
+    "notes": "67 conflict records require manual review before promotion into runtime claims."
+  },
+  "summary": {
+    "scope": "quarantined_research",
+    "total": 67,
+    "needsReview": 67,
+    "adjudicated": 0,
+    "manualAdjudications": 86
+  },
+  "records": [
+    {
+      "id": "resolver-conflict-0001",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "apple.com",
+        "distinctClaimants": 6
+      }
+    },
+    {
+      "id": "resolver-conflict-0002",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "appscience.ai",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0003",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "cloudflare.com",
+        "distinctClaimants": 5
+      }
+    },
+    {
+      "id": "resolver-conflict-0004",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "data-axle.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0005",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "dataprivacyframework.gov",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0006",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "deepsync.com",
+        "distinctClaimants": 4
+      }
+    },
+    {
+      "id": "resolver-conflict-0007",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "equifax.com",
+        "distinctClaimants": 9
+      }
+    },
+    {
+      "id": "resolver-conflict-0008",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "experian.com",
+        "distinctClaimants": 7
+      }
+    },
+    {
+      "id": "resolver-conflict-0009",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "facebook.com",
+        "distinctClaimants": 15
+      }
+    },
+    {
+      "id": "resolver-conflict-0010",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "finthrive.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0011",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "fullcontact.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0012",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "g2.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0013",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "google.com",
+        "distinctClaimants": 7
+      }
+    },
+    {
+      "id": "resolver-conflict-0014",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "innovis.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0015",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "instagram.com",
+        "distinctClaimants": 12
+      }
+    },
+    {
+      "id": "resolver-conflict-0016",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "lexisnexis.com",
+        "distinctClaimants": 4
+      }
+    },
+    {
+      "id": "resolver-conflict-0017",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "linkedin.com",
+        "distinctClaimants": 41
+      }
+    },
+    {
+      "id": "resolver-conflict-0018",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "moodys.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0019",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "networkadvertising.org",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0020",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "onetrust.com",
+        "distinctClaimants": 8
+      }
+    },
+    {
+      "id": "resolver-conflict-0021",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "optery.com",
+        "distinctClaimants": 31
+      }
+    },
+    {
+      "id": "resolver-conflict-0022",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "semasio.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0023",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "spglobal.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0024",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "state.tx.us",
+        "distinctClaimants": 6
+      }
+    },
+    {
+      "id": "resolver-conflict-0025",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "theworknumber.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0026",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "transunion.com",
+        "distinctClaimants": 14
+      }
+    },
+    {
+      "id": "resolver-conflict-0027",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "twitter.com",
+        "distinctClaimants": 16
+      }
+    },
+    {
+      "id": "resolver-conflict-0028",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "unacast.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0029",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "verisk.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0030",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "wealthfeed.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0031",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "x.com",
+        "distinctClaimants": 3
+      }
+    },
+    {
+      "id": "resolver-conflict-0032",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "youtube.com",
+        "distinctClaimants": 13
+      }
+    },
+    {
+      "id": "resolver-conflict-0033",
+      "type": "shared_infrastructure_domain",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [],
+      "facetKeys": [],
+      "details": {
+        "domain": "zendesk.com",
+        "distinctClaimants": 4
+      }
+    },
+    {
+      "id": "resolver-conflict-0034",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "adstra-llc",
+        "belardi-ostroy-alc-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "ALC LLC",
+        "domains": [
+          "adstradata.com",
+          "alc.com",
+          "belardiwong.com"
+        ],
+        "entityIds": [
+          "adstra-llc",
+          "belardi-ostroy-alc-llc"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0035",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "adstra-llc",
+        "belardi-ostroy-alc-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "belardiwong.com",
+        "existingEntityId": "belardi-ostroy-alc-llc",
+        "attemptedEntityId": "adstra-llc",
+        "attemptedName": "ALC LLC"
+      }
+    },
+    {
+      "id": "resolver-conflict-0036",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "33-mile-radius-llc",
+        "keyword-connects-llc",
+        "remodeling-com-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "33 MILE RADIUS LLC",
+        "domains": [
+          "33mileradius.com",
+          "keywordconnects.com",
+          "remodeling.com"
+        ],
+        "entityIds": [
+          "33-mile-radius-llc",
+          "keyword-connects-llc",
+          "remodeling-com-llc"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0037",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "33-mile-radius-llc",
+        "keyword-connects-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "keywordconnects.com",
+        "existingEntityId": "keyword-connects-llc",
+        "attemptedEntityId": "33-mile-radius-llc",
+        "attemptedName": "33 MILE RADIUS LLC"
+      }
+    },
+    {
+      "id": "resolver-conflict-0038",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "33-mile-radius-llc",
+        "remodeling-com-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "remodeling.com",
+        "existingEntityId": "remodeling-com-llc",
+        "attemptedEntityId": "33-mile-radius-llc",
+        "attemptedName": "33 MILE RADIUS LLC"
+      }
+    },
+    {
+      "id": "resolver-conflict-0039",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "clickagy-llc",
+        "datanyze-llc",
+        "zoominfo"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "CLICKAGY LLC",
+        "domains": [
+          "clickagy.com",
+          "datanyze.com",
+          "zoominfo.com"
+        ],
+        "entityIds": [
+          "clickagy-llc",
+          "datanyze-llc",
+          "zoominfo"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0040",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "clickagy-llc",
+        "datanyze-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "datanyze.com",
+        "existingEntityId": "datanyze-llc",
+        "attemptedEntityId": "clickagy-llc",
+        "attemptedName": "CLICKAGY LLC"
+      }
+    },
+    {
+      "id": "resolver-conflict-0041",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "clickagy-llc",
+        "zoominfo"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "zoominfo.com",
+        "existingEntityId": "zoominfo",
+        "attemptedEntityId": "clickagy-llc",
+        "attemptedName": "CLICKAGY LLC"
+      }
+    },
+    {
+      "id": "resolver-conflict-0042",
+      "type": "slug_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "data-axle",
+        "donorbase-inc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "slug": "data-axle-inc",
+        "existingEntityId": "data-axle",
+        "attemptedEntityId": "donorbase-inc",
+        "attemptedName": "DATA AXLE Inc"
+      }
+    },
+    {
+      "id": "resolver-conflict-0043",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "deep-root-analytics-llc",
+        "tunnl-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "Deep Root Analytics, LLC",
+        "domains": [
+          "deeprootanalytics.com",
+          "tunnldata.com"
+        ],
+        "entityIds": [
+          "deep-root-analytics-llc",
+          "tunnl-llc"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0044",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "deep-root-analytics-llc",
+        "tunnl-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "tunnldata.com",
+        "existingEntityId": "tunnl-llc",
+        "attemptedEntityId": "deep-root-analytics-llc",
+        "attemptedName": "Deep Root Analytics, LLC"
+      }
+    },
+    {
+      "id": "resolver-conflict-0045",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "family-tree-now-llc",
+        "smartbackgroundchecks",
+        "usphonebook"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "FAMILY TREE NOW LLC",
+        "domains": [
+          "cyberbackgroundchecks.com",
+          "familytreenow.com",
+          "fastbackgroundcheck.com",
+          "fastpeoplesearch.com",
+          "searchpeoplefree.com",
+          "smartbackgroundchecks.com",
+          "usphonebook.com"
+        ],
+        "entityIds": [
+          "family-tree-now-llc",
+          "smartbackgroundchecks",
+          "usphonebook"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0046",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "family-tree-now-llc",
+        "smartbackgroundchecks"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "smartbackgroundchecks.com",
+        "existingEntityId": "smartbackgroundchecks",
+        "attemptedEntityId": "family-tree-now-llc",
+        "attemptedName": "FAMILY TREE NOW LLC"
+      }
+    },
+    {
+      "id": "resolver-conflict-0047",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "family-tree-now-llc",
+        "usphonebook"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "usphonebook.com",
+        "existingEntityId": "usphonebook",
+        "attemptedEntityId": "family-tree-now-llc",
+        "attemptedName": "FAMILY TREE NOW LLC"
+      }
+    },
+    {
+      "id": "resolver-conflict-0048",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "heartbeat-ai-inc",
+        "swordfish-ai-inc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "All The Way Up LTD",
+        "domains": [
+          "heartbeat.ai",
+          "swordfish.ai",
+          "swordfishapp.com"
+        ],
+        "entityIds": [
+          "heartbeat-ai-inc",
+          "swordfish-ai-inc"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0049",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "heartbeat-ai-inc",
+        "swordfish-ai-inc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "swordfish.ai",
+        "existingEntityId": "swordfish-ai-inc",
+        "attemptedEntityId": "heartbeat-ai-inc",
+        "attemptedName": "All The Way Up LTD"
+      }
+    },
+    {
+      "id": "resolver-conflict-0050",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "kloudend-inc",
+        "maxmind-inc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "KLOUDEND Inc",
+        "domains": [
+          "creativecommons.org",
+          "db-ip.com",
+          "ipapi.co",
+          "kloudend.com",
+          "maxmind.com"
+        ],
+        "entityIds": [
+          "kloudend-inc",
+          "maxmind-inc"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0051",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "kloudend-inc",
+        "maxmind-inc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "maxmind.com",
+        "existingEntityId": "maxmind-inc",
+        "attemptedEntityId": "kloudend-inc",
+        "attemptedName": "KLOUDEND Inc"
+      }
+    },
+    {
+      "id": "resolver-conflict-0052",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "disqus",
+        "liveintent",
+        "zeta-global"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "Disqus, Inc.",
+        "domains": [
+          "disqus.com",
+          "liveintent.com",
+          "zetaglobal.com"
+        ],
+        "entityIds": [
+          "disqus",
+          "liveintent",
+          "zeta-global"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0053",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "disqus",
+        "liveintent"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "liveintent.com",
+        "existingEntityId": "liveintent",
+        "attemptedEntityId": "disqus",
+        "attemptedName": "Disqus, Inc."
+      }
+    },
+    {
+      "id": "resolver-conflict-0054",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "disqus",
+        "zeta-global"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "zetaglobal.com",
+        "existingEntityId": "zeta-global",
+        "attemptedEntityId": "disqus",
+        "attemptedName": "Disqus, Inc."
+      }
+    },
+    {
+      "id": "resolver-conflict-0055",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "dun-and-bradstreet-inc",
+        "netwise-data-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "DUN & BRADSTREET Inc",
+        "domains": [
+          "dnb.com",
+          "netwisedata.com"
+        ],
+        "entityIds": [
+          "dun-and-bradstreet-inc",
+          "netwise-data-llc"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0056",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "dun-and-bradstreet-inc",
+        "netwise-data-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "netwisedata.com",
+        "existingEntityId": "netwise-data-llc",
+        "attemptedEntityId": "dun-and-bradstreet-inc",
+        "attemptedName": "DUN & BRADSTREET Inc"
+      }
+    },
+    {
+      "id": "resolver-conflict-0057",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "comscore-inc",
+        "samba-tv-inc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "Free Stream Media Corp.",
+        "domains": [
+          "comscore.com",
+          "samba.tv",
+          "thetradedesk.com"
+        ],
+        "entityIds": [
+          "comscore-inc",
+          "samba-tv-inc"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0058",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "comscore-inc",
+        "samba-tv-inc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "samba.tv",
+        "existingEntityId": "samba-tv-inc",
+        "attemptedEntityId": "comscore-inc",
+        "attemptedName": "Free Stream Media Corp."
+      }
+    },
+    {
+      "id": "resolver-conflict-0059",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "id5-technology-ltd",
+        "unearth-campaigns-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "UNEARTH CAMPAIGNS LLC",
+        "domains": [
+          "aboutads.info",
+          "unearthcampaigns.com"
+        ],
+        "entityIds": [
+          "id5-technology-ltd",
+          "unearth-campaigns-llc"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0060",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "id5-technology-ltd",
+        "unearth-campaigns-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "unearthcampaigns.com",
+        "existingEntityId": "unearth-campaigns-llc",
+        "attemptedEntityId": "id5-technology-ltd",
+        "attemptedName": "UNEARTH CAMPAIGNS LLC"
+      }
+    },
+    {
+      "id": "resolver-conflict-0061",
+      "type": "slug_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "id5-technology-ltd",
+        "unearth-campaigns-llc"
+      ],
+      "facetKeys": [],
+      "details": {
+        "slug": "unearth-campaigns-llc",
+        "existingEntityId": "unearth-campaigns-llc",
+        "attemptedEntityId": "id5-technology-ltd",
+        "attemptedName": "UNEARTH CAMPAIGNS LLC"
+      }
+    },
+    {
+      "id": "weak-join-apollo-io",
+      "type": "low_confidence_join",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [
+        "apollo-io"
+      ],
+      "facetKeys": [
+        "ca2026:zenleads-inc"
+      ],
+      "details": {
+        "canonicalName": "Apollo.io",
+        "joins": [
+          {
+            "key": "ca2026:zenleads-inc",
+            "method": "alias",
+            "confidence": 0.65,
+            "confidenceLabel": "low",
+            "reasons": [
+              "CA 2026 registry record zenleads-inc",
+              "DBA: Apollo.io",
+              "name: Zenleads, Inc.",
+              "registrable domains: apollo.io, apollo.io"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weak-join-data-axle",
+      "type": "low_confidence_join",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [
+        "data-axle"
+      ],
+      "facetKeys": [
+        "ca2026:data-axle-inc"
+      ],
+      "details": {
+        "canonicalName": "Data Axle",
+        "joins": [
+          {
+            "key": "ca2026:data-axle-inc",
+            "method": "alias",
+            "confidence": 0.65,
+            "confidenceLabel": "low",
+            "reasons": [
+              "CA 2026 registry record data-axle-inc",
+              "DBA: Data Axle",
+              "name: Data Axle Inc."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weak-join-instant-checkmate",
+      "type": "low_confidence_join",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [
+        "instant-checkmate"
+      ],
+      "facetKeys": [
+        "ca2026:instant-checkmate-llc"
+      ],
+      "details": {
+        "canonicalName": "Instant Checkmate",
+        "joins": [
+          {
+            "key": "ca2026:instant-checkmate-llc",
+            "method": "alias",
+            "confidence": 0.65,
+            "confidenceLabel": "low",
+            "reasons": [
+              "CA 2026 registry record instant-checkmate-llc",
+              "DBA: Instant Checkmate",
+              "name: Instant Checkmate LLC",
+              "registrable domains: instantcheckmate.com"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weak-join-transunion-2",
+      "type": "low_confidence_join",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [
+        "transunion-2"
+      ],
+      "facetKeys": [
+        "ca2026:trans-union-llc"
+      ],
+      "details": {
+        "canonicalName": "TransUnion",
+        "joins": [
+          {
+            "key": "ca2026:trans-union-llc",
+            "method": "alias",
+            "confidence": 0.65,
+            "confidenceLabel": "low",
+            "reasons": [
+              "CA 2026 registry record trans-union-llc",
+              "DBA: TransUnion",
+              "name: Trans Union LLC"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weak-join-truthfinder",
+      "type": "low_confidence_join",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [
+        "truthfinder"
+      ],
+      "facetKeys": [
+        "ca2026:truthfinder-llc"
+      ],
+      "details": {
+        "canonicalName": "TruthFinder",
+        "joins": [
+          {
+            "key": "ca2026:truthfinder-llc",
+            "method": "alias",
+            "confidence": 0.65,
+            "confidenceLabel": "low",
+            "reasons": [
+              "CA 2026 registry record truthfinder-llc",
+              "DBA: TruthFinder",
+              "name: TruthFinder, LLC",
+              "registrable domains: truthfinder.com"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "weak-join-zoominfo",
+      "type": "low_confidence_join",
+      "severity": "medium",
+      "status": "needs_review",
+      "entityIds": [
+        "zoominfo"
+      ],
+      "facetKeys": [
+        "ca2026:zoominfo-technologies-llc"
+      ],
+      "details": {
+        "canonicalName": "ZoomInfo",
+        "joins": [
+          {
+            "key": "ca2026:zoominfo-technologies-llc",
+            "method": "alias",
+            "confidence": 0.65,
+            "confidenceLabel": "low",
+            "reasons": [
+              "CA 2026 registry record zoominfo-technologies-llc",
+              "DBA: ZoomInfo",
+              "name: ZoomInfo Technologies, LLC",
+              "registrable domains: zoominfo.com, zoominfo.com"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

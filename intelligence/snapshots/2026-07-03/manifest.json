@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "snapshotVersion": "2026-07-03",
+  "packageVersion": "0.1.0",
+  "generatedAt": "2026-07-03",
+  "signing": {
+    "algorithm": "HMAC-SHA256",
+    "keyEnv": "INTELLIGENCE_SNAPSHOT_SIGNING_KEY",
+    "status": "unsigned_no_key"
+  },
+  "artifacts": [
+    {
+      "path": "intelligence/adjudication/entity-adjudications.json",
+      "sha256": "3e0faff923231537b77e1ba4cf703536d5249e7a26fd6223cfcfbd7b4d69d4f2"
+    },
+    {
+      "path": "intelligence/entity-ledger.json",
+      "sha256": "fe53bc84c2fe0f1ab539a775d0813e11c4c20f2475acb1e988d2093b6434d6fa"
+    },
+    {
+      "path": "intelligence/normalized/brokers.json",
+      "sha256": "b18725fa1d2d44468e3c3559a47a1136137cb680c2a6a87413114dbcae5920a8"
+    },
+    {
+      "path": "intelligence/normalized/ca-brokers-2026.json",
+      "sha256": "287bd5fe15f68ea02f6ef1fcb0b2b805bd94c914cfc5326ca293af255d4f6324"
+    },
+    {
+      "path": "intelligence/normalized/defense-destinations.json",
+      "sha256": "ed8dfa7f03b1f0276b275a1e3eaf9369793c044de92849a5508d2f607b344bad"
+    },
+    {
+      "path": "intelligence/normalized/entities.json",
+      "sha256": "02da405ced99e38206d07bd5a721a8b5ae0baa067917e966c989402fe7bf8f1e"
+    },
+    {
+      "path": "intelligence/normalized/entity-conflicts.json",
+      "sha256": "c855230705d96eb8e2e9c0392e4963bdc68ec2f0f3c60f90ffaac865c70a26fd"
+    },
+    {
+      "path": "intelligence/quarantine/research-entities.json",
+      "sha256": "33612078a43d50971147241bc8053f3b9f566d4901635500a4921ba44afeadec"
+    },
+    {
+      "path": "intelligence/quarantine/research-entity-conflicts.json",
+      "sha256": "5af56d65ee0e19b1e1af3e5775d972e6849e5f24775d1e8d11e2fb5d24e237e7"
+    }
+  ],
+  "signature": null
+}

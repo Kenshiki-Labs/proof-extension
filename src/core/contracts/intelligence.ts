@@ -158,17 +158,93 @@ export const EntityRecordSchema = z.object({
   joins: z.array(
     z.object({
       key: z.string().min(1),
-      method: z.enum(["anchor", "domain", "name", "alias"])
+      method: z.enum(["anchor", "domain", "name", "alias", "adjudicated"]),
+      confidence: z.number().min(0).max(1),
+      confidenceLabel: z.enum(["confirmed", "high", "medium", "low"]),
+      reasons: z.array(z.string().min(1)).min(1)
     })
   )
 })
 
 export const NormalizedEntitiesSchema = z.object({
   ...importArtifactBase,
+  adjudication: z.object({
+    path: z.string().min(1),
+    records: z.number().int().nonnegative(),
+    appliedRecords: z.number().int().nonnegative()
+  }),
+  conflictReport: z.string().min(1),
+  scope: z.object({
+    purpose: z.enum(["extension_runtime", "quarantined_research"]),
+    rule: z.string().min(1),
+    quarantinedEntityCount: z.number().int().nonnegative().optional(),
+    quarantinePath: z.string().min(1).optional()
+  }).optional(),
   records: z.array(EntityRecordSchema).min(1)
+})
+
+export const EntityAdjudicationRecordSchema = z.object({
+  id: z.string().min(1),
+  status: z.enum(["proposed", "approved", "rejected", "superseded"]),
+  action: z.enum(["merge", "split", "confirm", "reject"]),
+  conflictId: z.string().min(1).nullable(),
+  facetKeys: z.array(z.string().min(1)),
+  targetEntityId: z.string().min(1).nullable(),
+  reviewer: z.string().min(1),
+  reviewed_at: z.iso.date().nullable(),
+  evidence: z.array(z.string().min(1)),
+  notes: z.string().min(1)
+})
+
+export const EntityAdjudicationsSchema = z.object({
+  schemaVersion: z.literal(1),
+  records: z.array(EntityAdjudicationRecordSchema)
+})
+
+export const EntityConflictRecordSchema = z.object({
+  id: z.string().min(1),
+  type: z.enum(["domain_points_to_multiple_entities", "domain_owner_conflict", "slug_owner_conflict", "low_confidence_join", "shared_infrastructure_domain"]),
+  severity: z.enum(["medium", "high"]),
+  status: z.enum(["needs_review", "adjudicated"]),
+  entityIds: z.array(z.string().min(1)),
+  facetKeys: z.array(z.string().min(1)),
+  adjudicationIds: z.array(z.string().min(1)).optional(),
+  details: z.record(z.string(), z.unknown())
+})
+
+export const EntityConflictReportSchema = z.object({
+  ...importArtifactBase,
+  summary: z.object({
+    scope: z.enum(["extension_runtime", "quarantined_research"]),
+    total: z.number().int().nonnegative(),
+    needsReview: z.number().int().nonnegative(),
+    adjudicated: z.number().int().nonnegative(),
+    manualAdjudications: z.number().int().nonnegative()
+  }),
+  records: z.array(EntityConflictRecordSchema)
+})
+
+export const IntelligenceSnapshotManifestSchema = z.object({
+  schemaVersion: z.literal(1),
+  snapshotVersion: z.string().min(1),
+  packageVersion: z.string().min(1),
+  generatedAt: z.iso.date(),
+  signing: z.object({
+    algorithm: z.literal("HMAC-SHA256"),
+    keyEnv: z.literal("INTELLIGENCE_SNAPSHOT_SIGNING_KEY"),
+    status: z.enum(["signed", "unsigned_no_key"])
+  }),
+  artifacts: z.array(
+    z.object({
+      path: z.string().min(1),
+      sha256: z.string().regex(/^[a-f0-9]{64}$/)
+    })
+  ),
+  signature: z.string().regex(/^[a-f0-9]{64}$/).nullable()
 })
 
 export type BrokerRecord = z.infer<typeof BrokerRecordSchema>
 export type DefenseDestinationRecord = z.infer<typeof DefenseDestinationRecordSchema>
 export type CaliforniaBrokerRecord = z.infer<typeof CaliforniaBrokerRecordSchema>
 export type EntityRecord = z.infer<typeof EntityRecordSchema>
+export type EntityConflictRecord = z.infer<typeof EntityConflictRecordSchema>

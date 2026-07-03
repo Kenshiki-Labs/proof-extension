@@ -3,6 +3,9 @@ import { resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import {
+  EntityAdjudicationsSchema,
+  EntityConflictReportSchema,
+  IntelligenceSnapshotManifestSchema,
   NormalizedBrokersSchema,
   NormalizedCaliforniaBrokersSchema,
   NormalizedDefenseDestinationsSchema,
@@ -14,6 +17,11 @@ const brokersRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalize
 const destinationsRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/defense-destinations.json"), "utf8"))
 const californiaRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/ca-brokers-2026.json"), "utf8"))
 const entitiesRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/entities.json"), "utf8"))
+const conflictsRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/entity-conflicts.json"), "utf8"))
+const quarantinedEntitiesRaw = JSON.parse(readFileSync(resolve(root, "intelligence/quarantine/research-entities.json"), "utf8"))
+const quarantinedConflictsRaw = JSON.parse(readFileSync(resolve(root, "intelligence/quarantine/research-entity-conflicts.json"), "utf8"))
+const adjudicationsRaw = JSON.parse(readFileSync(resolve(root, "intelligence/adjudication/entity-adjudications.json"), "utf8"))
+const snapshotManifestRaw = JSON.parse(readFileSync(resolve(root, "intelligence/snapshots/2026-07-03/manifest.json"), "utf8"))
 
 describe("normalized broker registry", () => {
   const brokers = NormalizedBrokersSchema.parse(brokersRaw)
@@ -114,11 +122,12 @@ describe("entity SSOT index", () => {
     expect(new Set(domains).size).toBe(domains.length)
   })
 
-  it("joins the 2025 and 2026 registries beyond exact-name matching", () => {
-    const crossYear = entities.records.filter(
-      (record) => record.facets.broker2025Ids.length > 0 && record.facets.caRegistry2026Ids.length > 0
-    )
-    expect(crossYear.length).toBeGreaterThan(400)
+  it("is scoped to entities reachable from runtime tracker/company observations", () => {
+    expect(entities.scope?.purpose).toBe("extension_runtime")
+    expect(entities.records.length).toBeLessThan(100)
+    for (const entity of entities.records) {
+      expect(entity.facets.companyIds.length + entity.facets.trackerIds.length).toBeGreaterThan(0)
+    }
   })
 
   it("anchors every runtime company exactly once so observers can reach broker intelligence", () => {
@@ -141,15 +150,82 @@ describe("entity SSOT index", () => {
       for (const id of entity.facets.defenseDestinationIds) expect(defense).toContain(id)
     }
   })
+
+  it("records confidence, reason codes, and artifact links for every facet join", () => {
+    expect(entities.sources[0]?.family).toBe("kenshiki_entity_index")
+    expect(entities.conflictReport).toBe("intelligence/normalized/entity-conflicts.json")
+    expect(entities.adjudication.path).toBe("intelligence/adjudication/entity-adjudications.json")
+    for (const entity of entities.records) {
+      expect(entity.joins.length).toBeGreaterThan(0)
+      for (const join of entity.joins) {
+        expect(join.confidence).toBeGreaterThanOrEqual(0)
+        expect(join.confidence).toBeLessThanOrEqual(1)
+        expect(join.reasons.length).toBeGreaterThan(0)
+      }
+    }
+  })
+})
+
+describe("entity conflict and adjudication artifacts", () => {
+  const conflicts = EntityConflictReportSchema.parse(conflictsRaw)
+  const quarantinedConflicts = EntityConflictReportSchema.parse(quarantinedConflictsRaw)
+  const adjudications = EntityAdjudicationsSchema.parse(adjudicationsRaw)
+
+  it("validates generated conflict reporting with source provenance", () => {
+    expect(conflicts.sources[0]?.family).toBe("kenshiki_entity_index")
+    expect(conflicts.summary.scope).toBe("extension_runtime")
+    expect(conflicts.summary.total).toBe(conflicts.records.length)
+    expect(conflicts.summary.manualAdjudications).toBe(adjudications.records.length)
+    expect(quarantinedConflicts.summary.scope).toBe("quarantined_research")
+  })
+
+  it("keeps the manual adjudication ledger sorted and unique when populated", () => {
+    const ids = adjudications.records.map((record) => record.id)
+    expect(new Set(ids).size).toBe(ids.length)
+    expect(ids).toEqual([...ids].sort((a, b) => a.localeCompare(b)))
+  })
+})
+
+describe("quarantined research entity index", () => {
+  const quarantined = NormalizedEntitiesSchema.parse(quarantinedEntitiesRaw)
+
+  it("keeps broker-only and defense-only records out of the extension SSOT", () => {
+    expect(quarantined.scope?.purpose).toBe("quarantined_research")
+    expect(quarantined.records.length).toBeGreaterThan(700)
+    for (const entity of quarantined.records) {
+      expect(entity.facets.companyIds.length + entity.facets.trackerIds.length).toBe(0)
+    }
+  })
+
+  it("preserves cross-year registry joins for audit without making them runtime SSOT", () => {
+    const crossYear = quarantined.records.filter(
+      (record) => record.facets.broker2025Ids.length > 0 && record.facets.caRegistry2026Ids.length > 0
+    )
+    expect(crossYear.length).toBeGreaterThan(400)
+  })
+})
+
+describe("versioned intelligence snapshot manifest", () => {
+  const manifest = IntelligenceSnapshotManifestSchema.parse(snapshotManifestRaw)
+
+  it("pins every normalized intelligence artifact by hash", () => {
+    expect(manifest.snapshotVersion).toBe("2026-07-03")
+    expect(manifest.artifacts.map((artifact) => artifact.path)).toEqual([...manifest.artifacts.map((artifact) => artifact.path)].sort())
+    expect(manifest.artifacts.some((artifact) => artifact.path === "intelligence/normalized/entities.json")).toBe(true)
+    expect(manifest.artifacts.some((artifact) => artifact.path === "intelligence/normalized/entity-conflicts.json")).toBe(true)
+    expect(manifest.artifacts.some((artifact) => artifact.path === "intelligence/quarantine/research-entities.json")).toBe(true)
+    expect(manifest.artifacts.some((artifact) => artifact.path === "intelligence/adjudication/entity-adjudications.json")).toBe(true)
+  })
 })
 
 describe("entity ID stability ledger", () => {
   const ledger = JSON.parse(readFileSync(resolve(root, "intelligence/entity-ledger.json"), "utf8"))
   const entities = NormalizedEntitiesSchema.parse(entitiesRaw)
+  const quarantined = NormalizedEntitiesSchema.parse(quarantinedEntitiesRaw)
 
   it("assigns every facet of every entity to that entity's id", () => {
     const map = ledger.facetKeyToEntityId as Record<string, string>
-    for (const entity of entities.records) {
+    for (const entity of [...entities.records, ...quarantined.records]) {
       const keys = [
         ...entity.facets.companyIds.map((id) => `company:${id}`),
         ...entity.facets.broker2025Ids.map((id) => `broker2025:${id}`),
@@ -161,7 +237,7 @@ describe("entity ID stability ledger", () => {
   })
 
   it("contains no ids that point at nonexistent entities", () => {
-    const ids = new Set(entities.records.map((record) => record.id))
+    const ids = new Set([...entities.records, ...quarantined.records].map((record) => record.id))
     for (const id of Object.values(ledger.facetKeyToEntityId as Record<string, string>)) {
       expect(ids).toContain(id)
     }

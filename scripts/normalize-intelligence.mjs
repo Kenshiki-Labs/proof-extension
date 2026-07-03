@@ -5,12 +5,17 @@
 // Governance (docs/intelligence-standards.md): these outputs are import
 // artifacts. They must not affect runtime blocking or popup claims until a
 // reviewed join promotes specific records into src/core/db/*.
+import { createHash, createHmac } from "node:crypto"
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs"
 import { getDomain } from "tldts"
 
 const SOURCE_DIR = "intelligence/source/defense-ai"
 const OUT_DIR = "intelligence/normalized"
+const QUARANTINE_DIR = "intelligence/quarantine"
 const RETRIEVED_AT = "2026-07-03"
+const SNAPSHOT_VERSION = RETRIEVED_AT
+const SNAPSHOT_DIR = `intelligence/snapshots/${SNAPSHOT_VERSION}`
+const ADJUDICATION_PATH = "intelligence/adjudication/entity-adjudications.json"
 
 // --- minimal RFC-4180 CSV parser (quoted fields, embedded commas/newlines) ---
 function parseCsv(text) {
@@ -412,6 +417,8 @@ function registrableDomain(url) {
 function buildEntities({ brokers, californiaBrokers, destinations }) {
   const companies = JSON.parse(readFileSync("src/core/db/companies.json", "utf8"))
   const trackers = JSON.parse(readFileSync("src/core/db/trackers.json", "utf8"))
+  const adjudications = loadEntityAdjudications()
+  const conflicts = []
   const trackerDomainsByCompany = new Map()
   for (const tracker of trackers) {
     const list = trackerDomainsByCompany.get(tracker.companyId) ?? []
@@ -419,14 +426,66 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
     trackerDomainsByCompany.set(tracker.companyId, list)
   }
 
+  // Shared-infrastructure guard: a registrable domain claimed as identity
+  // evidence by 3+ distinctly named records is not identity evidence — it is
+  // a platform artifact (e.g. cloudflare.com from crawler 5xx pages, opt-out
+  // SaaS portals). Without this, every broker whose site errored through
+  // Cloudflare merges into one false mega-entity.
+  const domainClaims = new Map()
+  const claimDomain = (domain, name) => {
+    if (!domain) return
+    const claimant = slugify(name)
+    const claimants = domainClaims.get(domain) ?? new Set()
+    claimants.add(claimant)
+    domainClaims.set(domain, claimants)
+  }
+  for (const destination of destinations.records) claimDomain(registrableDomain(destination.url), destination.companyName)
+  for (const broker of californiaBrokers.records) {
+    claimDomain(registrableDomain(broker.websiteUrl), broker.name)
+    claimDomain(registrableDomain(broker.privacyRightsUrl), broker.name)
+  }
+  for (const broker of brokers.records) for (const url of broker.websiteUrls) claimDomain(registrableDomain(url), broker.name)
+  const sharedInfrastructureDomains = new Set(
+    [...domainClaims.entries()].filter(([, claimants]) => claimants.size >= 3).map(([domain]) => domain)
+  )
+  for (const domain of [...sharedInfrastructureDomains].sort()) {
+    recordConflict("shared_infrastructure_domain", { domain, distinctClaimants: domainClaims.get(domain).size })
+  }
+  const identityDomains = (domains) => domains.filter((domain) => !sharedInfrastructureDomains.has(domain))
+
   const entities = new Map()
   const byDomain = new Map()
   const bySlug = new Map()
+
+  function joinEvidence(key, method, evidence) {
+    const confidenceByMethod = {
+      anchor: { score: 1, label: "confirmed" },
+      domain: { score: 0.95, label: "high" },
+      name: { score: 0.8, label: "medium" },
+      alias: { score: 0.65, label: "low" }
+    }
+    const confidence = confidenceByMethod[method]
+    return {
+      key,
+      method,
+      confidence: confidence.score,
+      confidenceLabel: confidence.label,
+      reasons: uniqueSorted(evidence)
+    }
+  }
+
+  function recordConflict(type, details) {
+    conflicts.push({ type, ...details })
+  }
 
   // Match strength order: domain (strongest) → exact name slug → alias/DBA
   // slug (weakest). The method is recorded per joined facet so downstream
   // consumers can weigh joins the way the extension weighs evidence.
   function resolveEntity(name, domains, aliasNames = []) {
+    const matchedDomainEntities = uniqueSorted(domains.map((domain) => byDomain.get(domain)?.id).filter(Boolean))
+    if (matchedDomainEntities.length > 1) {
+      recordConflict("domain_points_to_multiple_entities", { name, domains, entityIds: matchedDomainEntities })
+    }
     for (const domain of domains) {
       const existing = byDomain.get(domain)
       if (existing) return { entity: existing, method: "domain" }
@@ -456,7 +515,11 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
 
   function attach(entity, { name, domains, alias }) {
     for (const domain of domains) {
-      if (!byDomain.has(domain)) byDomain.set(domain, entity)
+      const owner = byDomain.get(domain)
+      if (!owner) byDomain.set(domain, entity)
+      else if (owner !== entity) {
+        recordConflict("domain_owner_conflict", { domain, existingEntityId: owner.id, attemptedEntityId: entity.id, attemptedName: name })
+      }
       // A domain belongs to exactly one entity — first claim wins. Listing
       // it on a later entity would make the SSOT ambiguous for joins.
       if (byDomain.get(domain) === entity && !entity.domains.includes(domain)) entity.domains.push(domain)
@@ -467,7 +530,11 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
     // still resolves to one entity.
     for (const aliasName of [name, alias]) {
       const aliasSlug = slugify(aliasName ?? "")
-      if (aliasSlug && !bySlug.has(aliasSlug)) bySlug.set(aliasSlug, entity)
+      const owner = aliasSlug ? bySlug.get(aliasSlug) : null
+      if (aliasSlug && !owner) bySlug.set(aliasSlug, entity)
+      else if (owner && owner !== entity) {
+        recordConflict("slug_owner_conflict", { slug: aliasSlug, existingEntityId: owner.id, attemptedEntityId: entity.id, attemptedName: name })
+      }
     }
     if (!entity.canonicalName) entity.canonicalName = name
   }
@@ -478,32 +545,32 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
     const domains = uniqueSorted(trackerDomainsByCompany.get(company.id) ?? [])
     const { entity, method } = resolveEntity(company.name, domains)
     entity.facets.companyIds.push(company.id)
-    entity.joins.push({ key: `company:${company.id}`, method })
+    entity.joins.push(joinEvidence(`company:${company.id}`, method, [`runtime company ${company.id}`, domains.length > 0 ? `registrable domains: ${domains.join(", ")}` : "no runtime domains"]))
     for (const tracker of trackers.filter((item) => item.companyId === company.id)) entity.facets.trackerIds.push(tracker.id)
     attach(entity, { name: company.name, domains, alias: company.parentCompany })
   }
 
   for (const destination of destinations.records) {
-    const domains = [registrableDomain(destination.url)].filter(Boolean)
+    const domains = identityDomains([registrableDomain(destination.url)].filter(Boolean))
     const { entity, method } = resolveEntity(destination.companyName, domains, [destination.displayName])
     entity.facets.defenseDestinationIds.push(destination.id)
-    entity.joins.push({ key: `defense:${destination.id}`, method })
+    entity.joins.push(joinEvidence(`defense:${destination.id}`, method, [`defense destination ${destination.id}`, `company name: ${destination.companyName}`, destination.displayName ? `display name: ${destination.displayName}` : null, domains.length > 0 ? `registrable domains: ${domains.join(", ")}` : null]))
     attach(entity, { name: destination.companyName, domains, alias: destination.displayName })
   }
 
   for (const broker of californiaBrokers.records) {
-    const domains = [registrableDomain(broker.websiteUrl), registrableDomain(broker.privacyRightsUrl)].filter(Boolean)
+    const domains = identityDomains([registrableDomain(broker.websiteUrl), registrableDomain(broker.privacyRightsUrl)].filter(Boolean))
     const { entity, method } = resolveEntity(broker.name, domains, [broker.dba])
     entity.facets.caRegistry2026Ids.push(broker.id)
-    entity.joins.push({ key: `ca2026:${broker.id}`, method })
+    entity.joins.push(joinEvidence(`ca2026:${broker.id}`, method, [`CA 2026 registry record ${broker.id}`, `name: ${broker.name}`, broker.dba ? `DBA: ${broker.dba}` : null, domains.length > 0 ? `registrable domains: ${domains.join(", ")}` : null]))
     attach(entity, { name: broker.name, domains, alias: broker.dba })
   }
 
   for (const broker of brokers.records) {
-    const domains = uniqueSorted(broker.websiteUrls.map((url) => registrableDomain(url)).filter(Boolean))
+    const domains = identityDomains(uniqueSorted(broker.websiteUrls.map((url) => registrableDomain(url)).filter(Boolean)))
     const { entity, method } = resolveEntity(broker.name, domains)
     entity.facets.broker2025Ids.push(broker.id)
-    entity.joins.push({ key: `broker2025:${broker.id}`, method })
+    entity.joins.push(joinEvidence(`broker2025:${broker.id}`, method, [`2025 registry merge record ${broker.id}`, `name: ${broker.name}`, domains.length > 0 ? `registrable domains: ${domains.join(", ")}` : null]))
     attach(entity, { name: broker.name, domains, alias: null })
   }
 
@@ -523,9 +590,19 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
     }))
     .sort((left, right) => left.id.localeCompare(right.id))
 
+  records = applyAdjudications(records, adjudications)
   records = applyEntityLedger(records)
+  const scoped = splitExtensionScope(records, conflicts)
+  const conflictReport = buildEntityConflictReport({ records: scoped.extensionRecords, conflicts: scoped.extensionConflicts, adjudications, scope: "extension_runtime" })
+  const quarantinedEntities = buildQuarantinedEntities({ records: scoped.quarantinedRecords, adjudications })
+  const quarantinedConflictReport = buildEntityConflictReport({
+    records: scoped.quarantinedRecords,
+    conflicts: scoped.quarantinedConflicts,
+    adjudications,
+    scope: "quarantined_research"
+  })
 
-  return {
+  const entityIndex = {
     schemaVersion: 1,
     sources: [
       {
@@ -535,7 +612,7 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
         retrieved_at: RETRIEVED_AT,
         license: "Derived index; per-facet licensing follows each source file.",
         transform_notes:
-          "Entities resolved by PSL registrable domain first, then exact name slug, then DBA/alias slug; no fuzzy matching. Each join records its method (domain/name/alias/anchor) as match confidence. Facts remain in per-source normalized files — entities.json only records identity joins. Measured by pnpm intel:eval against intelligence/eval/entity-pairs.json. See scripts/normalize-intelligence.mjs."
+          "Extension-scoped entity index: only entities reachable from runtime tracker/company records remain here. Broker-only and defense-only research entities are quarantined under intelligence/quarantine/. Entities are resolved by PSL registrable domain first, then exact name slug, then DBA/alias slug; no fuzzy matching. Each join records its method as match confidence."
       }
     ],
     review: {
@@ -544,7 +621,264 @@ function buildEntities({ brokers, californiaBrokers, destinations }) {
       reviewer: "Kenshiki",
       notes: "SSOT identity index for intelligence sources. Not wired to runtime."
     },
+    adjudication: {
+      path: ADJUDICATION_PATH,
+      records: adjudications.records.length,
+      appliedRecords: adjudications.records.filter((record) => record.status === "approved").length
+    },
+    conflictReport: "intelligence/normalized/entity-conflicts.json",
+    scope: {
+      purpose: "extension_runtime",
+      rule: "Keep entities with runtime companyIds or trackerIds; quarantine broker-only and defense-only entities.",
+      quarantinedEntityCount: scoped.quarantinedRecords.length,
+      quarantinePath: "intelligence/quarantine/research-entities.json"
+    },
+    records: scoped.extensionRecords
+  }
+
+  return { entityIndex, conflictReport, quarantinedEntities, quarantinedConflictReport }
+}
+
+function isExtensionEntity(entity) {
+  return entity.facets.companyIds.length > 0 || entity.facets.trackerIds.length > 0
+}
+
+function conflictTouchesEntities(conflict, entityIds) {
+  const ids = [conflict.existingEntityId, conflict.attemptedEntityId, ...(conflict.entityIds ?? [])].filter(Boolean)
+  return ids.some((id) => entityIds.has(id))
+}
+
+function splitExtensionScope(records, conflicts) {
+  const extensionRecords = records.filter(isExtensionEntity)
+  const quarantinedRecords = records.filter((entity) => !isExtensionEntity(entity))
+  const extensionEntityIds = new Set(extensionRecords.map((entity) => entity.id))
+  const extensionConflicts = conflicts.filter((conflict) => conflictTouchesEntities(conflict, extensionEntityIds))
+  const quarantinedConflicts = conflicts.filter((conflict) => !conflictTouchesEntities(conflict, extensionEntityIds))
+  return { extensionRecords, quarantinedRecords, extensionConflicts, quarantinedConflicts }
+}
+
+function buildQuarantinedEntities({ records, adjudications }) {
+  return {
+    schemaVersion: 1,
+    sources: [
+      {
+        family: "kenshiki_entity_index",
+        name: "Quarantined Kenshiki research entity index",
+        version: "1",
+        retrieved_at: RETRIEVED_AT,
+        license: "Derived index; per-facet licensing follows each source file.",
+        transform_notes:
+          "Entities not reachable from runtime tracker/company records. Preserved for audit and future review, but excluded from the extension SSOT and runtime promotion inputs."
+      }
+    ],
+    review: {
+      status: "false_positive_review",
+      last_reviewed_at: RETRIEVED_AT,
+      reviewer: "Kenshiki",
+      notes: "Quarantined research entities are not extension runtime intelligence. Promote only through explicit reviewed links."
+    },
+    adjudication: {
+      path: ADJUDICATION_PATH,
+      records: adjudications.records.length,
+      appliedRecords: adjudications.records.filter((record) => record.status === "approved").length
+    },
+    conflictReport: "intelligence/quarantine/research-entity-conflicts.json",
+    scope: {
+      purpose: "quarantined_research",
+      rule: "Broker-only and defense-only entities stay out of intelligence/normalized/entities.json."
+    },
     records
+  }
+}
+
+function loadEntityAdjudications() {
+  if (!existsSync(ADJUDICATION_PATH)) return { schemaVersion: 1, records: [] }
+  return JSON.parse(readFileSync(ADJUDICATION_PATH, "utf8"))
+}
+
+// Apply human decisions to the resolved entities. Only status "approved"
+// changes structure; "proposed" records are the review queue and change
+// nothing. Merges move the listed facets into the target entity; rejects
+// split facets that the resolver wrongly co-located. Adjudicated joins get
+// confidence 1.0 — a human decision outranks any heuristic.
+const FACET_ARRAY_BY_PREFIX = {
+  company: "companyIds",
+  broker2025: "broker2025Ids",
+  ca2026: "caRegistry2026Ids",
+  defense: "defenseDestinationIds"
+}
+
+function applyAdjudications(records, adjudications) {
+  const approved = adjudications.records.filter((record) => record.status === "approved").sort((a, b) => a.id.localeCompare(b.id))
+  if (approved.length === 0) return records
+
+  const entityByFacetKey = new Map()
+  const entityById = new Map(records.map((record) => [record.id, record]))
+  const facetKeysOf = (entity) =>
+    Object.entries(FACET_ARRAY_BY_PREFIX).flatMap(([prefix, field]) => entity.facets[field].map((id) => `${prefix}:${id}`))
+  for (const entity of records) for (const key of facetKeysOf(entity)) entityByFacetKey.set(key, entity)
+
+  function moveFacet(key, from, to, adjudication) {
+    const prefix = key.slice(0, key.indexOf(":"))
+    const id = key.slice(key.indexOf(":") + 1)
+    const field = FACET_ARRAY_BY_PREFIX[prefix]
+    if (!field) return
+    from.facets[field] = from.facets[field].filter((facetId) => facetId !== id)
+    if (!to.facets[field].includes(id)) to.facets[field].push(id)
+    const join = from.joins.find((item) => item.key === key) ?? {
+      key,
+      method: "adjudicated",
+      confidence: 1,
+      confidenceLabel: "confirmed",
+      reasons: []
+    }
+    from.joins = from.joins.filter((item) => item.key !== key)
+    to.joins = to.joins.filter((item) => item.key !== key)
+    to.joins.push({
+      ...join,
+      method: "adjudicated",
+      confidence: 1,
+      confidenceLabel: "confirmed",
+      reasons: uniqueSorted([...join.reasons, `adjudication ${adjudication.id} (${adjudication.reviewer}, ${adjudication.reviewed_at ?? "undated"})`])
+    })
+    entityByFacetKey.set(key, to)
+  }
+
+  for (const adjudication of approved) {
+    if (adjudication.action === "merge") {
+      const target =
+        (adjudication.targetEntityId && entityById.get(adjudication.targetEntityId)) ||
+        entityByFacetKey.get(adjudication.facetKeys[0])
+      if (!target) continue
+      for (const key of adjudication.facetKeys) {
+        const source = entityByFacetKey.get(key)
+        if (!source || source === target) continue
+        moveFacet(key, source, target, adjudication)
+        // If the source entity is now empty, its identity evidence
+        // (domains, aliases) belongs with the merged entity.
+        if (facetKeysOf(source).length === 0) {
+          target.domains = uniqueSorted([...target.domains, ...source.domains])
+          target.aliases = uniqueSorted(
+            [...target.aliases, ...source.aliases, source.canonicalName].filter((alias) => alias && alias !== target.canonicalName)
+          )
+          source.domains = []
+          source.aliases = []
+        }
+      }
+    }
+    if (adjudication.action === "reject" || adjudication.action === "split") {
+      // Facets a human says are NOT the same organization must not share an
+      // entity: every facet after the first that co-habits gets its own.
+      const [first, ...rest] = adjudication.facetKeys
+      const firstEntity = entityByFacetKey.get(first)
+      for (const key of rest) {
+        const entity = entityByFacetKey.get(key)
+        if (!entity || entity !== firstEntity) continue
+        const split = {
+          id: `${entity.id}-split-${key.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`,
+          canonicalName: key.slice(key.indexOf(":") + 1),
+          aliases: [],
+          domains: [],
+          facets: { companyIds: [], trackerIds: [], broker2025Ids: [], caRegistry2026Ids: [], defenseDestinationIds: [] },
+          joins: []
+        }
+        records.push(split)
+        entityById.set(split.id, split)
+        moveFacet(key, entity, split, adjudication)
+      }
+    }
+    // action "confirm" is a recorded human endorsement of the existing
+    // resolution — annotate confidence, change no structure.
+    if (adjudication.action === "confirm") {
+      for (const key of adjudication.facetKeys) {
+        const entity = entityByFacetKey.get(key)
+        const join = entity?.joins.find((item) => item.key === key)
+        if (!join) continue
+        join.confidence = 1
+        join.confidenceLabel = "confirmed"
+        join.reasons = uniqueSorted([...join.reasons, `adjudication ${adjudication.id} confirmed by ${adjudication.reviewer}`])
+      }
+    }
+  }
+
+  return records
+    .filter((entity) => facetKeysOf(entity).length > 0 || entity.facets.trackerIds.length > 0)
+    .map((entity) => ({
+      ...entity,
+      joins: [...entity.joins].sort((a, b) => a.key.localeCompare(b.key))
+    }))
+    .sort((left, right) => left.id.localeCompare(right.id))
+}
+
+function buildEntityConflictReport({ records, conflicts, adjudications, scope }) {
+  const generated = []
+
+  for (const [index, conflict] of conflicts.entries()) {
+    generated.push({
+      id: `resolver-conflict-${String(index + 1).padStart(4, "0")}`,
+      type: conflict.type,
+      severity: conflict.type === "shared_infrastructure_domain" ? "medium" : "high",
+      status: "needs_review",
+      entityIds: uniqueSorted([conflict.existingEntityId, conflict.attemptedEntityId, ...(conflict.entityIds ?? [])]),
+      facetKeys: [],
+      details: Object.fromEntries(Object.entries(conflict).filter(([key]) => key !== "type"))
+    })
+  }
+
+  for (const entity of records) {
+    const weakJoins = entity.joins.filter((join) => join.confidenceLabel === "low")
+    if (weakJoins.length === 0) continue
+    generated.push({
+      id: `weak-join-${entity.id}`,
+      type: "low_confidence_join",
+      severity: "medium",
+      status: "needs_review",
+      entityIds: [entity.id],
+      facetKeys: weakJoins.map((join) => join.key),
+      details: {
+        canonicalName: entity.canonicalName,
+        joins: weakJoins
+      }
+    })
+  }
+
+  const byConflictKey = new Map(generated.map((conflict) => [conflict.id, conflict]))
+  for (const adjudication of adjudications.records) {
+    if (adjudication.conflictId && byConflictKey.has(adjudication.conflictId)) {
+      const conflict = byConflictKey.get(adjudication.conflictId)
+      conflict.status = adjudication.status === "approved" ? "adjudicated" : "needs_review"
+      conflict.adjudicationIds = uniqueSorted([...(conflict.adjudicationIds ?? []), adjudication.id])
+    }
+  }
+
+  const recordsNeedingReview = generated.filter((conflict) => conflict.status === "needs_review")
+  return {
+    schemaVersion: 1,
+    sources: [
+      {
+        family: "kenshiki_entity_index",
+        name: "Kenshiki entity conflict report",
+        version: "1",
+        retrieved_at: RETRIEVED_AT,
+        license: "Derived index; per-facet licensing follows each source file.",
+        transform_notes:
+          "Generated from resolver domain/slug ownership conflicts plus low-confidence alias joins. Manual decisions are read from intelligence/adjudication/entity-adjudications.json."
+      }
+    ],
+    review: {
+      status: recordsNeedingReview.length === 0 ? "source_backed" : "false_positive_review",
+      last_reviewed_at: RETRIEVED_AT,
+      reviewer: "Kenshiki",
+      notes: `${recordsNeedingReview.length} conflict records require manual review before promotion into runtime claims.`
+    },
+    summary: {
+      scope,
+      total: generated.length,
+      needsReview: recordsNeedingReview.length,
+      adjudicated: generated.filter((conflict) => conflict.status === "adjudicated").length,
+      manualAdjudications: adjudications.records.length
+    },
+    records: generated.sort((left, right) => left.id.localeCompare(right.id))
   }
 }
 
@@ -599,15 +933,63 @@ function applyEntityLedger(records) {
   return sorted
 }
 
+function sha256File(path) {
+  return createHash("sha256").update(readFileSync(path)).digest("hex")
+}
+
+function writeSnapshotManifest(paths) {
+  mkdirSync(SNAPSHOT_DIR, { recursive: true })
+  const packageJson = JSON.parse(readFileSync("package.json", "utf8"))
+  const artifacts = paths
+    .map((path) => ({ path, sha256: sha256File(path) }))
+    .sort((left, right) => left.path.localeCompare(right.path))
+  const unsigned = {
+    schemaVersion: 1,
+    snapshotVersion: SNAPSHOT_VERSION,
+    packageVersion: packageJson.version,
+    generatedAt: RETRIEVED_AT,
+    signing: {
+      algorithm: "HMAC-SHA256",
+      keyEnv: "INTELLIGENCE_SNAPSHOT_SIGNING_KEY",
+      status: process.env.INTELLIGENCE_SNAPSHOT_SIGNING_KEY ? "signed" : "unsigned_no_key"
+    },
+    artifacts
+  }
+  const payload = JSON.stringify(unsigned)
+  const signature = process.env.INTELLIGENCE_SNAPSHOT_SIGNING_KEY
+    ? createHmac("sha256", process.env.INTELLIGENCE_SNAPSHOT_SIGNING_KEY).update(payload).digest("hex")
+    : null
+  const manifest = { ...unsigned, signature }
+  const manifestPath = `${SNAPSHOT_DIR}/manifest.json`
+  writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n")
+  return manifestPath
+}
+
 mkdirSync(OUT_DIR, { recursive: true })
+mkdirSync(QUARANTINE_DIR, { recursive: true })
 const brokers = normalizeBrokers()
 const destinations = normalizeDefenseDestinations()
 const californiaBrokers = normalizeCaliforniaRegistry()
-const entities = buildEntities({ brokers, californiaBrokers, destinations })
-writeFileSync(`${OUT_DIR}/brokers.json`, JSON.stringify(brokers, null, 2) + "\n")
-writeFileSync(`${OUT_DIR}/defense-destinations.json`, JSON.stringify(destinations, null, 2) + "\n")
-writeFileSync(`${OUT_DIR}/ca-brokers-2026.json`, JSON.stringify(californiaBrokers, null, 2) + "\n")
-writeFileSync(`${OUT_DIR}/entities.json`, JSON.stringify(entities, null, 2) + "\n")
+const { entityIndex: entities, conflictReport, quarantinedEntities, quarantinedConflictReport } = buildEntities({ brokers, californiaBrokers, destinations })
+const outputPaths = {
+  brokers: `${OUT_DIR}/brokers.json`,
+  destinations: `${OUT_DIR}/defense-destinations.json`,
+  californiaBrokers: `${OUT_DIR}/ca-brokers-2026.json`,
+  entities: `${OUT_DIR}/entities.json`,
+  conflicts: `${OUT_DIR}/entity-conflicts.json`,
+  quarantinedEntities: `${QUARANTINE_DIR}/research-entities.json`,
+  quarantinedConflicts: `${QUARANTINE_DIR}/research-entity-conflicts.json`,
+  ledger: LEDGER_PATH,
+  adjudications: ADJUDICATION_PATH
+}
+writeFileSync(outputPaths.brokers, JSON.stringify(brokers, null, 2) + "\n")
+writeFileSync(outputPaths.destinations, JSON.stringify(destinations, null, 2) + "\n")
+writeFileSync(outputPaths.californiaBrokers, JSON.stringify(californiaBrokers, null, 2) + "\n")
+writeFileSync(outputPaths.entities, JSON.stringify(entities, null, 2) + "\n")
+writeFileSync(outputPaths.conflicts, JSON.stringify(conflictReport, null, 2) + "\n")
+writeFileSync(outputPaths.quarantinedEntities, JSON.stringify(quarantinedEntities, null, 2) + "\n")
+writeFileSync(outputPaths.quarantinedConflicts, JSON.stringify(quarantinedConflictReport, null, 2) + "\n")
+const manifestPath = writeSnapshotManifest(Object.values(outputPaths))
 console.log(`Wrote ${OUT_DIR}/brokers.json (${brokers.records.length} brokers)`)
 console.log(`Wrote ${OUT_DIR}/defense-destinations.json (${destinations.records.length} destinations)`)
 console.log(`Wrote ${OUT_DIR}/ca-brokers-2026.json (${californiaBrokers.records.length} brokers)`)
@@ -615,3 +997,7 @@ const multiFacet = entities.records.filter(
   (entity) => Object.values(entity.facets).filter((ids) => ids.length > 0).length > 1
 ).length
 console.log(`Wrote ${OUT_DIR}/entities.json (${entities.records.length} entities, ${multiFacet} with cross-source joins)`)
+console.log(`Wrote ${OUT_DIR}/entity-conflicts.json (${conflictReport.summary.needsReview} needing review)`)
+console.log(`Wrote ${QUARANTINE_DIR}/research-entities.json (${quarantinedEntities.records.length} quarantined entities)`)
+console.log(`Wrote ${QUARANTINE_DIR}/research-entity-conflicts.json (${quarantinedConflictReport.summary.needsReview} needing review)`)
+console.log(`Wrote ${manifestPath}`)

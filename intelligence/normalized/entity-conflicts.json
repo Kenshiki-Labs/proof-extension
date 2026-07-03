@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "family": "kenshiki_entity_index",
+      "name": "Kenshiki entity conflict report",
+      "version": "1",
+      "retrieved_at": "2026-07-03",
+      "license": "Derived index; per-facet licensing follows each source file.",
+      "transform_notes": "Generated from resolver domain/slug ownership conflicts plus low-confidence alias joins. Manual decisions are read from intelligence/adjudication/entity-adjudications.json."
+    }
+  ],
+  "review": {
+    "status": "false_positive_review",
+    "last_reviewed_at": "2026-07-03",
+    "reviewer": "Kenshiki",
+    "notes": "4 conflict records require manual review before promotion into runtime claims."
+  },
+  "summary": {
+    "scope": "extension_runtime",
+    "total": 4,
+    "needsReview": 4,
+    "adjudicated": 0,
+    "manualAdjudications": 86
+  },
+  "records": [
+    {
+      "id": "resolver-conflict-0001",
+      "type": "slug_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "google-ads-doubleclick",
+        "google-analytics"
+      ],
+      "facetKeys": [],
+      "details": {
+        "slug": "alphabet-inc",
+        "existingEntityId": "google-analytics",
+        "attemptedEntityId": "google-ads-doubleclick",
+        "attemptedName": "Google Ads / DoubleClick"
+      }
+    },
+    {
+      "id": "resolver-conflict-0002",
+      "type": "slug_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "linkedin-insight-tag",
+        "microsoft-clarity"
+      ],
+      "facetKeys": [],
+      "details": {
+        "slug": "microsoft-corporation",
+        "existingEntityId": "linkedin-insight-tag",
+        "attemptedEntityId": "microsoft-clarity",
+        "attemptedName": "Microsoft Clarity"
+      }
+    },
+    {
+      "id": "resolver-conflict-0003",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "date-detective-inc",
+        "tiktok-pixel"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "DATE DETECTIVE Inc",
+        "domains": [
+          "date-detective.app",
+          "tiktok.com"
+        ],
+        "entityIds": [
+          "date-detective-inc",
+          "tiktok-pixel"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0004",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "date-detective-inc",
+        "tiktok-pixel"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "tiktok.com",
+        "existingEntityId": "tiktok-pixel",
+        "attemptedEntityId": "date-detective-inc",
+        "attemptedName": "DATE DETECTIVE Inc"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1488 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "id": "nm-alcllc_32ba3bf2-belardi-ostroy-alc-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:alcllc_32ba3bf2",
+        "ca2026:belardi-ostroy-alc-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy.officer@belardiwong.com",
+        "full name-token containment (ALC LLC / Belardi Ostroy, ALC, LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: ALC LLC ≈ Belardi Ostroy, ALC, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-appscience_a_b5e58f15-app-science-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:appscience_a_b5e58f15",
+        "ca2026:app-science-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@appscience.inc"
+      ],
+      "notes": "Auto-queued from near-miss report: Appscience ≈ App Science, Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-clickagy_c_32f405e8-datanyze-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:clickagy_c_32f405e8",
+        "ca2026:datanyze-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@datanyze.com"
+      ],
+      "notes": "Auto-queued from near-miss report: CLICKAGY LLC ≈ Datanyze LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-clickagy_c_32f405e8-zoominfo-technologies-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:clickagy_c_32f405e8",
+        "ca2026:zoominfo-technologies-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@zoominfo.com"
+      ],
+      "notes": "Auto-queued from near-miss report: CLICKAGY LLC ≈ ZoomInfo Technologies, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-corterainc_c_ceb06512-moody-s-corporation",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:corterainc_c_ceb06512",
+        "ca2026:moody-s-corporation"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@moodys.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Acquire Media U.S., LLC ≈ Moody's Corporation. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-crunchbase_b9ef33c7-crunchbase-inc",
+      "status": "approved",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:crunchbase_b9ef33c7",
+        "ca2026:crunchbase-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Claude Fable 5 (assistant review; identical name, street number, and zip)",
+      "reviewed_at": "2026-07-03",
+      "evidence": [
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: Crunchbase ≈ Crunchbase, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-dataaxleinc_d_89386907-data-axle-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:dataaxleinc_d_89386907",
+        "ca2026:data-axle-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacyteam@data-axle.com"
+      ],
+      "notes": "Auto-queued from near-miss report: DATA AXLE Inc ≈ Data Axle Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-dataaxleinc_d_89386907-donorbase-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:dataaxleinc_d_89386907",
+        "ca2026:donorbase-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email doba_privacy@donorbase.com"
+      ],
+      "notes": "Auto-queued from near-miss report: DATA AXLE Inc ≈ DonorBase, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-datamailinc_1fcda3e1-epsilon-data-management-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:datamailinc_1fcda3e1",
+        "ca2026:epsilon-data-management-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Data Management LLC / Epsilon Data Management, LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: Data Management LLC ≈ Epsilon Data Management, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-datamarketingso_13eb8e99-agr-marketing-solutions-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:datamarketingso_13eb8e99",
+        "ca2026:agr-marketing-solutions-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Data Marketing Solutions, Inc. / AGR Marketing Solutions LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: Data Marketing Solutions, Inc. ≈ AGR Marketing Solutions LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-datamarketingso_13eb8e99-blue-hill-marketing-solutions-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:datamarketingso_13eb8e99",
+        "ca2026:blue-hill-marketing-solutions-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Data Marketing Solutions, Inc. / Blue Hill Marketing Solutions, Inc)"
+      ],
+      "notes": "Auto-queued from near-miss report: Data Marketing Solutions, Inc. ≈ Blue Hill Marketing Solutions, Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-datamarketingso_13eb8e99-experian-marketing-solutions-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:datamarketingso_13eb8e99",
+        "ca2026:experian-marketing-solutions-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Data Marketing Solutions, Inc. / Experian Marketing Solutions, LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: Data Marketing Solutions, Inc. ≈ Experian Marketing Solutions, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-datamarketingso_13eb8e99-milestone-marketing-solutions",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:datamarketingso_13eb8e99",
+        "ca2026:milestone-marketing-solutions"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Data Marketing Solutions, Inc. / Milestone Marketing Solutions)"
+      ],
+      "notes": "Auto-queued from near-miss report: Data Marketing Solutions, Inc. ≈ Milestone Marketing Solutions. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-datapartnersinc_d_fef3f276-dealerx-partners-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:datapartnersinc_d_fef3f276",
+        "ca2026:dealerx-partners-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (DATA PARTNERS Inc / DealerX Partners LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: DATA PARTNERS Inc ≈ DealerX Partners LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-datapartnersinc_d_fef3f276-giant-partners-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:datapartnersinc_d_fef3f276",
+        "ca2026:giant-partners-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (DATA PARTNERS Inc / Giant Partners, Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: DATA PARTNERS Inc ≈ Giant Partners, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-datapartnersinc_d_fef3f276-marketshare-partners-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:datapartnersinc_d_fef3f276",
+        "ca2026:marketshare-partners-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (DATA PARTNERS Inc / MarketShare Partners, LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: DATA PARTNERS Inc ≈ MarketShare Partners, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-datapartnersinc_d_fef3f276-ror-partners-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:datapartnersinc_d_fef3f276",
+        "ca2026:ror-partners-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (DATA PARTNERS Inc / ROR Partners, LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: DATA PARTNERS Inc ≈ ROR Partners, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-dataxltd_50a7cc61-austin-consolidated-holdings-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:dataxltd_50a7cc61",
+        "ca2026:austin-consolidated-holdings-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email usprivacy@equifax.com"
+      ],
+      "notes": "Auto-queued from near-miss report: ANSONIA CREDIT DATA Inc ≈ Austin Consolidated Holdings, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-dataxltd_50a7cc61-equifax-information-services-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:dataxltd_50a7cc61",
+        "ca2026:equifax-information-services-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email usprivacy@equifax.com"
+      ],
+      "notes": "Auto-queued from near-miss report: ANSONIA CREDIT DATA Inc ≈ Equifax Information Services LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-dataxltd_50a7cc61-equifax-workforce-solutions-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:dataxltd_50a7cc61",
+        "ca2026:equifax-workforce-solutions-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email usprivacy@equifax.com"
+      ],
+      "notes": "Auto-queued from near-miss report: ANSONIA CREDIT DATA Inc ≈ Equifax Workforce Solutions LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-dataxltd_50a7cc61-ixi-corporation",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:dataxltd_50a7cc61",
+        "ca2026:ixi-corporation"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email usprivacy@equifax.com"
+      ],
+      "notes": "Auto-queued from near-miss report: ANSONIA CREDIT DATA Inc ≈ IXI Corporation. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-dealerdirectllc_d_46948cf0-dealerdirect-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:dealerdirectllc_d_46948cf0",
+        "ca2026:dealerdirect-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email dprivacy@forddirect.com",
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: DEALERDIRECT LLC ≈ DealerDirect LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-economicmodelin_e_dcc6f277-lightcast-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:economicmodelin_e_dcc6f277",
+        "ca2026:lightcast-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@lightcast.io"
+      ],
+      "notes": "Auto-queued from near-miss report: ECONOMIC MODELING LLC ≈ Lightcast, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-equimine_e_309fcda5-equimine-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:equimine_e_309fcda5",
+        "ca2026:equimine-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: Equimine ≈ EquiMine Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-exactdata_8ed23405-consumerbase-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:exactdata_8ed23405",
+        "ca2026:consumerbase-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@exactdata.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Consumerbase LLC ≈ Consumerbase, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-familytreenowll_f_b3bdbd28-mississippi-tornado-alley-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:familytreenowll_f_b3bdbd28",
+        "ca2026:mississippi-tornado-alley-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@mtalley.zendesk.com"
+      ],
+      "notes": "Auto-queued from near-miss report: FAMILY TREE NOW LLC ≈ Mississippi Tornado Alley, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-foomonkllc_f_97df7c35-foo-monk-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:foomonkllc_f_97df7c35",
+        "ca2026:foo-monk-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@instantly.ai",
+        "street number + zip + name overlap",
+        "full name-token containment (FOO MONK LLC / Foo Monk, LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: FOO MONK LLC ≈ Foo Monk, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-fullcontact_83454911-j2-martech-corp",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:fullcontact_83454911",
+        "ca2026:j2-martech-corp"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@fullcontact.com"
+      ],
+      "notes": "Auto-queued from near-miss report: FULLCONTACT Inc ≈ J2 Martech Corp. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-hdinformationll_38f637d4-equifax-information-services-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:hdinformationll_38f637d4",
+        "ca2026:equifax-information-services-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: HD INFORMATION LLC ≈ Equifax Information Services LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-healthcarecom_h_73828d95-definitive-healthcare-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:healthcarecom_h_73828d95",
+        "ca2026:definitive-healthcare-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Healthcare, Inc / Definitive Healthcare LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: Healthcare, Inc ≈ Definitive Healthcare LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-healthcarecom_h_73828d95-finthrive-healthcare-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:healthcarecom_h_73828d95",
+        "ca2026:finthrive-healthcare-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Healthcare, Inc / FinThrive Healthcare, Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: Healthcare, Inc ≈ FinThrive Healthcare, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-heartbeataiinc_h_6c4fceb4-swordfish-ai-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:heartbeataiinc_h_6c4fceb4",
+        "ca2026:swordfish-ai-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email contact@swordfish.ai"
+      ],
+      "notes": "Auto-queued from near-miss report: All The Way Up LTD ≈ Swordfish AI Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-hivestackinc_a9062111-hivestack-technologies-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:hivestackinc_a9062111",
+        "ca2026:hivestack-technologies-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@hivestack.com",
+        "full name-token containment (Hivestack Inc. / Hivestack Technologies Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: Hivestack Inc. ≈ Hivestack Technologies Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-homedata_h_6c4cb3b4-accudata-integrated-marketing-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:homedata_h_6c4cb3b4",
+        "ca2026:accudata-integrated-marketing-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap",
+        "full name-token containment (ACCUDATA INTEGRATED Marketing, Inc. / Accudata Integrated Marketing, LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: ACCUDATA INTEGRATED Marketing, Inc. ≈ Accudata Integrated Marketing, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-homedata_h_6c4cb3b4-compact-information-systems-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:homedata_h_6c4cb3b4",
+        "ca2026:compact-information-systems-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy.compliance@deepsync.com"
+      ],
+      "notes": "Auto-queued from near-miss report: ACCUDATA INTEGRATED Marketing, Inc. ≈ Compact Information Systems, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-interactivedata_i_0d60f0a9-apollo-interactive-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:interactivedata_i_0d60f0a9",
+        "ca2026:apollo-interactive-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (INTERACTIVE DATA LLC / Apollo Interactive, LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: INTERACTIVE DATA LLC ≈ Apollo Interactive, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-interactivedata_i_0d60f0a9-transunion-interactive-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:interactivedata_i_0d60f0a9",
+        "ca2026:transunion-interactive-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (INTERACTIVE DATA LLC / TransUnion Interactive, Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: INTERACTIVE DATA LLC ≈ TransUnion Interactive, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-irys_i_7b17311f-irys-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:irys_i_7b17311f",
+        "ca2026:irys-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@irys.us",
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: Irys ≈ Irys, Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-isoservicesinc_i_da7c5f32-lead-intelligence-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:isoservicesinc_i_da7c5f32",
+        "ca2026:lead-intelligence-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email vmsprivacy@verisk.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Data Driven Safety, LLC ≈ Lead Intelligence Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-j2martechcorp_j_f35cd1bd-j2-global-canada-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:j2martechcorp_j_f35cd1bd",
+        "ca2026:j2-global-canada-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@ziffdavis.com",
+        "full name-token containment (J2 GLOBAL CANADA Inc / J2 Global Canada Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: J2 GLOBAL CANADA Inc ≈ J2 Global Canada Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-listsonline_l_538f7e76-listsonline-com-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:listsonline_l_538f7e76",
+        "ca2026:listsonline-com-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap",
+        "full name-token containment (Listsonline / ListsOnline.com, Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: Listsonline ≈ ListsOnline.com, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-liveintent_792ea661-liveintent",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:liveintent_792ea661",
+        "ca2026:liveintent"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@zetaglobal.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Disqus, Inc. ≈ LiveIntent. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-liveintent_792ea661-zeta-global",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:liveintent_792ea661",
+        "ca2026:zeta-global"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@zetaglobal.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Disqus, Inc. ≈ Zeta Global. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-netwise_866af877-netwise-data-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:netwise_866af877",
+        "ca2026:netwise-data-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacyofficer@dnb.com"
+      ],
+      "notes": "Auto-queued from near-miss report: DUN & BRADSTREET Inc ≈ NetWise Data, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-nuwberinc_n_40125eca-nuwber-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:nuwberinc_n_40125eca",
+        "ca2026:nuwber-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email support@nuwber.com",
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: NUWBER Inc ≈ Nuwber Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-peopleconnectin_p_451c7f62-truthfinder-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:peopleconnectin_p_451c7f62",
+        "ca2026:truthfinder-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email legal@peopleconnect.us"
+      ],
+      "notes": "Auto-queued from near-miss report: Peopleconnect, Inc. ≈ TruthFinder, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-predactiv_63b8088d-predactiv",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:predactiv_63b8088d",
+        "ca2026:predactiv"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@predactiv.com",
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: Predactiv ≈ Predactiv. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-pulsepointinc_p_caf95fcd-pulsepoint-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:pulsepointinc_p_caf95fcd",
+        "ca2026:pulsepoint-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email dataprivacy@pulsepoint.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Pulsepoint, Inc. ≈ PulsePoint, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-realeflowllc_r_cc492291-realeflow-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:realeflowllc_r_cc492291",
+        "ca2026:realeflow-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: REALEFLOW LLC ≈ Realeflow LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-realintentinc_r_b15813df-real-intent-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:realintentinc_r_b15813df",
+        "ca2026:real-intent-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap",
+        "full name-token containment (REAL INTENT Inc. / REAL INTENT INC)"
+      ],
+      "notes": "Auto-queued from near-miss report: REAL INTENT Inc. ≈ REAL INTENT INC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-redmobllc_r_18c46f49-redmob-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:redmobllc_r_18c46f49",
+        "ca2026:redmob-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@redmob.io",
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: REDMOB LLC ≈ Redmob LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-relxinc_r_6121712d-lexisnexis-risk-solutions-fl-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:relxinc_r_6121712d",
+        "ca2026:lexisnexis-risk-solutions-fl-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email consumer.documents@lexisnexisrisk.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Accuity Asset Verification Services Inc. ≈ LexisNexis Risk Solutions FL Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-relxinc_r_6121712d-relx-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:relxinc_r_6121712d",
+        "ca2026:relx-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy.inquiries@lexisnexis.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Accuity Asset Verification Services Inc. ≈ RELX Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-roiqinc_359f0d46-connatix-native-exchange-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:roiqinc_359f0d46",
+        "ca2026:connatix-native-exchange-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Data Exchange / Connatix Native Exchange Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: Data Exchange ≈ Connatix Native Exchange Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-roiqinc_359f0d46-index-exchange-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:roiqinc_359f0d46",
+        "ca2026:index-exchange-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Data Exchange / Index Exchange Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: Data Exchange ≈ Index Exchange Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-roiqinc_359f0d46-place-exchange-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:roiqinc_359f0d46",
+        "ca2026:place-exchange-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Data Exchange / Place Exchange, Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: Data Exchange ≈ Place Exchange, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-sabioinc_s_b374107a-sabio-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:sabioinc_s_b374107a",
+        "ca2026:sabio-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@sabio.inc"
+      ],
+      "notes": "Auto-queued from near-miss report: Sabio, Inc. ≈ Sabio Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-sambatvinc_s_00dc50cb-samba-tv-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:sambatvinc_s_00dc50cb",
+        "ca2026:samba-tv-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email jagdip.sekhon@samba.tv"
+      ],
+      "notes": "Auto-queued from near-miss report: Free Stream Media Corp. ≈ Samba TV, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-schmermsllc_s_d7a166d9-date-detective-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:schmermsllc_s_d7a166d9",
+        "ca2026:date-detective-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap",
+        "full name-token containment (DATE DETECTIVE Inc / Date Detective Inc)"
+      ],
+      "notes": "Auto-queued from near-miss report: DATE DETECTIVE Inc ≈ Date Detective Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-semasioinc_s_3cfc0ebc-semasio-gmbh",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:semasioinc_s_3cfc0ebc",
+        "ca2026:semasio-gmbh"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email info@semasio.com",
+        "full name-token containment (SEMASIO Inc / Semasio GmbH)"
+      ],
+      "notes": "Auto-queued from near-miss report: SEMASIO Inc ≈ Semasio GmbH. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-sharelocalmedia_s_79e591e3-share-local-media-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:sharelocalmedia_s_79e591e3",
+        "ca2026:share-local-media-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap",
+        "full name-token containment (SHARE LOCAL MEDIA Inc / Share Local Media, Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: SHARE LOCAL MEDIA Inc ≈ Share Local Media, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-spglobalinc_s_65f188c6-s-p-global-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:spglobalinc_s_65f188c6",
+        "ca2026:s-p-global-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@spglobal.com"
+      ],
+      "notes": "Auto-queued from near-miss report: R.L. Polk & Co. ≈ S&P Global Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-statsocial_3c7dc71f-statsocial",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:statsocial_3c7dc71f",
+        "ca2026:statsocial"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@statsocial.com",
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: Statsocial ≈ StatSocial. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-stirista_s_6f26d7c4-stirista-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:stirista_s_6f26d7c4",
+        "ca2026:stirista-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email info@stirista.com"
+      ],
+      "notes": "Auto-queued from near-miss report: STIRISTA ≈ Stirista, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-strategicinform_f2ce1486-information-data-resources-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:strategicinform_f2ce1486",
+        "ca2026:information-data-resources-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (Strategic Information Resources / Information Data Resources, LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: Strategic Information Resources ≈ Information Data Resources, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-subdirectllc_ce0c99b6-subdirect-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:subdirectllc_ce0c99b6",
+        "ca2026:subdirect-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@360mediadirect.com"
+      ],
+      "notes": "Auto-queued from near-miss report: 360 Media Direct ≈ Subdirect LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-swoopcominc_4b529e85-swoop-com-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:swoopcominc_4b529e85",
+        "ca2026:swoop-com-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap",
+        "full name-token containment (Swoop.Com, Inc. / Swoop.com Inc)"
+      ],
+      "notes": "Auto-queued from near-miss report: Swoop.Com, Inc. ≈ Swoop.com Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-techtargetinc_t_e31d1801-techtarget-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:techtargetinc_t_e31d1801",
+        "ca2026:techtarget-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@techtarget.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Informa Business Media Inc ≈ TechTarget, Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-theleadcompanyi_t_e6783914-lead-intelligence-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:theleadcompanyi_t_e6783914",
+        "ca2026:lead-intelligence-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (The Lead Company, Inc. / Lead Intelligence Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: The Lead Company, Inc. ≈ Lead Intelligence Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-theleadcompanyi_t_e6783914-lead-me-media-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:theleadcompanyi_t_e6783914",
+        "ca2026:lead-me-media-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "full name-token containment (The Lead Company, Inc. / Lead Me Media LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: The Lead Company, Inc. ≈ Lead Me Media LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-transunion_8b9db530-datalink-services-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:transunion_8b9db530",
+        "ca2026:datalink-services-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@transunion.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Ebureau, LLC ≈ Datalink Services, Inc. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-transunion_8b9db530-drivers-history-information-sales-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:transunion_8b9db530",
+        "ca2026:drivers-history-information-sales-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@transunion.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Ebureau, LLC ≈ Drivers History Information Sales, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-transunion_8b9db530-iovation-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:transunion_8b9db530",
+        "ca2026:iovation-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@transunion.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Ebureau, LLC ≈ iovation Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-transunion_8b9db530-trans-union-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:transunion_8b9db530",
+        "ca2026:trans-union-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@transunion.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Ebureau, LLC ≈ Trans Union LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-transunion_8b9db530-transunion-digital-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:transunion_8b9db530",
+        "ca2026:transunion-digital-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@transunion.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Ebureau, LLC ≈ TransUnion Digital LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-transunion_8b9db530-transunion-interactive-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:transunion_8b9db530",
+        "ca2026:transunion-interactive-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@transunion.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Ebureau, LLC ≈ TransUnion Interactive, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-transunion_8b9db530-transunion-risk-and-alternative-data-solutions-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:transunion_8b9db530",
+        "ca2026:transunion-risk-and-alternative-data-solutions-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@transunion.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Ebureau, LLC ≈ TransUnion Risk and Alternative Data Solutions, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-tsgholdcollc_t_f9a12392-finthrive-healthcare-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:tsgholdcollc_t_f9a12392",
+        "ca2026:finthrive-healthcare-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email tuhc@finthrive.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Equation Consulting LLC ≈ FinThrive Healthcare, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-tsgholdcollc_t_f9a12392-tsg-holdco-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:tsgholdcollc_t_f9a12392",
+        "ca2026:tsg-holdco-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email tsg@finthrive.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Equation Consulting LLC ≈ TSG Holdco, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-tunnlllc_t_c782296e-tunnl-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:tunnlllc_t_c782296e",
+        "ca2026:tunnl-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: Tunnl, LLC ≈ Tunnl, LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-unacastinc_u_b16d0d44-unacast-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:unacastinc_u_b16d0d44",
+        "ca2026:unacast-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@unacast.com"
+      ],
+      "notes": "Auto-queued from near-miss report: GA-UC HOLDINGS Inc ≈ Unacast, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-unearthcampaign_u_0bd55301-unearth-campaigns-llc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:unearthcampaign_u_0bd55301",
+        "ca2026:unearth-campaigns-llc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@unearthcampaigns.com",
+        "street number + zip + name overlap",
+        "full name-token containment (UNEARTH CAMPAIGNS LLC / Unearth Campaigns LLC)"
+      ],
+      "notes": "Auto-queued from near-miss report: UNEARTH CAMPAIGNS LLC ≈ Unearth Campaigns LLC. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-venntel_587e9de9-venntel-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:venntel_587e9de9",
+        "ca2026:venntel-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "exact email privacy@venntel.com"
+      ],
+      "notes": "Auto-queued from near-miss report: Venntel ≈ Venntel, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-wealthfeed_w_7fdddd08-wealthfeed-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:wealthfeed_w_7fdddd08",
+        "ca2026:wealthfeed-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: WEALTHFEED ≈ WealthFeed, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-wizainc_cc30416e-wiza-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:wizainc_cc30416e",
+        "ca2026:wiza-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap"
+      ],
+      "notes": "Auto-queued from near-miss report: Wiza, Inc. ≈ Wiza, Inc.. Set status to approved/rejected after review."
+    },
+    {
+      "id": "nm-yobiventuresllc_42f21d08-yobi-ventures-inc",
+      "status": "proposed",
+      "action": "merge",
+      "conflictId": null,
+      "facetKeys": [
+        "broker2025:yobiventuresllc_42f21d08",
+        "ca2026:yobi-ventures-inc"
+      ],
+      "targetEntityId": null,
+      "reviewer": "near-miss-queue",
+      "reviewed_at": null,
+      "evidence": [
+        "street number + zip + name overlap",
+        "full name-token containment (Yobi Ventures, LLC / Yobi Ventures, Inc.)"
+      ],
+      "notes": "Auto-queued from near-miss report: Yobi Ventures, LLC ≈ Yobi Ventures, Inc.. Set status to approved/rejected after review."
+    }
+  ]
+}

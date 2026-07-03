@@ -3,7 +3,7 @@ title: "Pulse Browser Extension - LLM Build Specification"
 description: "The full build specification for Pulse Observer: product definition, threat model, architecture, detection/blocking spec, and acceptance criteria."
 owner: Kenshiki
 section: docs
-lastReviewed: 2026-07-02
+lastReviewed: 2026-07-03
 nextReview: 2026-09-29
 version: "0.0.1"
 status: draft
@@ -168,6 +168,7 @@ Required capabilities:
 
 - DuckDuckGo Tracker Radar metadata importer.
 - EasyPrivacy import/normalization pipeline.
+- Ghostery TrackerDB / WhoTracks.Me source evaluation for taxonomy, company metadata, prevalence language, and correction workflow patterns, with runtime use blocked until license approval.
 - Source family, source version/date, license notes, and transform notes on records.
 - Required `sources` and `review` metadata for every tracker record before it can affect runtime blocking or claims.
 - Snapshot tests for imported rule transforms.
