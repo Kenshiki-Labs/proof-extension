@@ -1,5 +1,86 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`normalized California 2026 registry > pins the transform for a known broker 1`] = `
+{
+  "address": "3857 Birch St, PMB 5032, Newport Beach, CA, 92660, UNITED STATES",
+  "ccpaMetrics": {
+    "deleteRequests": {
+      "compliedInPart": 0,
+      "compliedInWhole": 0,
+      "denied": 0,
+      "meanResponseDays": 0,
+      "medianResponseDays": 0,
+      "received": 0,
+    },
+    "knowCollectedRequests": {
+      "compliedInPart": 0,
+      "compliedInWhole": 0,
+      "denied": 0,
+      "meanResponseDays": 0,
+      "medianResponseDays": 0,
+      "received": 0,
+    },
+    "knowSoldRequests": {
+      "compliedInPart": 0,
+      "compliedInWhole": 0,
+      "denied": 0,
+      "meanResponseDays": 0,
+      "medianResponseDays": 0,
+      "received": 0,
+    },
+    "limitSensitiveRequests": {
+      "compliedInPart": 0,
+      "compliedInWhole": 0,
+      "denied": 0,
+      "meanResponseDays": 0,
+      "medianResponseDays": 0,
+      "received": 0,
+    },
+    "optOutRequests": {
+      "compliedInPart": 0,
+      "compliedInWhole": 0,
+      "denied": 0,
+      "meanResponseDays": 0,
+      "medianResponseDays": 0,
+      "received": 0,
+    },
+  },
+  "collects": {
+    "accountLogins": "no",
+    "biometricData": "no",
+    "citizenshipData": "no",
+    "genderIdentity": "yes",
+    "governmentId": "no",
+    "minorsData": "no",
+    "preciseGeolocation": "yes",
+    "reproductiveHealthData": "no",
+    "sexualOrientation": "yes",
+    "unionMembership": "no",
+  },
+  "dba": null,
+  "email": "privacy@01advertising.com",
+  "id": "01advertising-inc",
+  "name": "01Advertising Inc.",
+  "phone": "9496099696",
+  "privacyRightsUrl": "https://www.01advertising.com/legal/dsar/",
+  "regulatedBy": {
+    "cmia": "no",
+    "fcra": "no",
+    "glba": "no",
+    "hipaa": "no",
+    "iippa": "no",
+  },
+  "sharedOrSoldTo": {
+    "federalGovernment": "no",
+    "foreignActor": "no",
+    "genAiDevelopers": "no",
+    "lawEnforcement": "no",
+    "stateGovernments": "no",
+  },
+  "websiteUrl": "https://www.01advertising.com",
+}
+`;
+
 exports[`normalized broker registry > pins the transform for a known multi-state broker 1`] = `
 {
   "addresses": [

@@ -239,10 +239,304 @@ function normalizeDefenseDestinations() {
   }
 }
 
+// --- California 2026 registry ---------------------------------------------
+
+function yesNoFlag(value) {
+  const normalized = clean(value).toLowerCase()
+  if (normalized === "yes" || normalized === "true") return "yes"
+  if (normalized === "no" || normalized === "false") return "no"
+  return "unknown"
+}
+
+function intOrNull(value) {
+  const normalized = clean(value).replaceAll(",", "")
+  if (!normalized) return null
+  const parsed = Number(normalized)
+  return Number.isFinite(parsed) ? Math.round(parsed) : null
+}
+
+function slugify(name) {
+  return clean(name)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+}
+
+// Header text uses typographic quotes/hyphens inconsistently; match on a
+// simplified form instead of exact strings so a re-export doesn't break us.
+function simplifyHeader(header) {
+  return clean(header)
+    .toLowerCase()
+    .replace(/[’‘]/g, "'")
+    .replace(/[‑–—]/g, "-")
+    .replace(/\s+/g, " ")
+}
+
+const CCPA_REQUEST_FAMILIES = [
+  ["deleteRequests", "requests to delete - total requests received"],
+  ["knowCollectedRequests", "requests to know what personal information is being collected - total requests received"],
+  ["knowSoldRequests", "requests to know what personal information is sold or shared - total requests received"],
+  ["optOutRequests", "requests to opt out of sale or sharing - total requests received"],
+  ["limitSensitiveRequests", "requests to limit the use and disclosure of sensitive personal information - total requests received"]
+]
+
+function normalizeCaliforniaRegistry() {
+  const text = readFileSync("intelligence/source/ca-registry-2026/California_Data_Broker_Registry_2026.csv", "utf8").replace(/^﻿/, "")
+  const [header, ...rows] = parseCsv(text)
+  const simplified = header.map(simplifyHeader)
+  const indexOfHeader = (fragment) => {
+    const index = simplified.findIndex((column) => column.startsWith(simplifyHeader(fragment)))
+    if (index === -1) throw new Error(`CA 2026 header not found: ${fragment}`)
+    return index
+  }
+  const cellAt = (row, fragment) => clean(row[indexOfHeader(fragment)])
+
+  const usedIds = new Map()
+  const records = rows
+    .filter((row) => clean(row[indexOfHeader("Data broker name:")]))
+    .map((row) => {
+      const name = cellAt(row, "Data broker name:")
+      const baseId = slugify(name) || "unnamed"
+      const seen = usedIds.get(baseId) ?? 0
+      usedIds.set(baseId, seen + 1)
+      const id = seen === 0 ? baseId : `${baseId}-${seen + 1}`
+
+      const ccpaMetrics = {}
+      for (const [key, startHeader] of CCPA_REQUEST_FAMILIES) {
+        const start = indexOfHeader(startHeader)
+        ccpaMetrics[key] = {
+          received: intOrNull(row[start]),
+          compliedInWhole: intOrNull(row[start + 1]),
+          compliedInPart: intOrNull(row[start + 2]),
+          denied: intOrNull(row[start + 3]),
+          meanResponseDays: intOrNull(row[start + 4]),
+          medianResponseDays: intOrNull(row[start + 5])
+        }
+      }
+
+      return {
+        id,
+        name,
+        dba: cellAt(row, "Doing Business As") || null,
+        websiteUrl: cellAt(row, "Data broker primary website:") || null,
+        email: cellAt(row, "Data broker primary contact email address:").toLowerCase() || null,
+        phone: cellAt(row, "Data broker primary phone number:") || null,
+        address:
+          [
+            cellAt(row, "Data broker primary street address:"),
+            cellAt(row, "Data broker city:"),
+            cellAt(row, "Data broker state:"),
+            cellAt(row, "Data broker zip code:"),
+            cellAt(row, "Data broker country:")
+          ]
+            .filter(Boolean)
+            .join(", ") || null,
+        privacyRightsUrl: cellAt(row, "Data broker's primary website that contains details") || null,
+        collects: {
+          minorsData: yesNoFlag(cellAt(row, "Data broker collects personal information of minors:")),
+          accountLogins: yesNoFlag(cellAt(row, "Data broker collects consumers' account logins")),
+          governmentId: yesNoFlag(cellAt(row, "Data broker collects consumers' government-issued identification")),
+          citizenshipData: yesNoFlag(cellAt(row, "Data broker collects consumers' citizenship data")),
+          unionMembership: yesNoFlag(cellAt(row, "Data broker collects consumers' union membership status")),
+          sexualOrientation: yesNoFlag(cellAt(row, "Data broker collects consumers' sexual orientation status")),
+          genderIdentity: yesNoFlag(cellAt(row, "Data broker collects consumers' gender identity")),
+          biometricData: yesNoFlag(cellAt(row, "Data broker collects consumers' biometric data")),
+          preciseGeolocation: yesNoFlag(cellAt(row, "Data broker collects consumers' precise geolocation")),
+          reproductiveHealthData: yesNoFlag(cellAt(row, "Data broker collects consumers' reproductive health care data:"))
+        },
+        sharedOrSoldTo: {
+          foreignActor: yesNoFlag(cellAt(row, "Data broker shared or sold consumers' data to a foreign actor")),
+          federalGovernment: yesNoFlag(cellAt(row, "Data broker shared or sold consumers' data to the federal government")),
+          stateGovernments: yesNoFlag(cellAt(row, "Data broker shared or sold consumers' data to other state governments")),
+          lawEnforcement: yesNoFlag(cellAt(row, "Data broker shared or sold consumers' data to law enforcement")),
+          genAiDevelopers: yesNoFlag(cellAt(row, "Data broker shared or sold consumers' data to a developer of a GenAI"))
+        },
+        regulatedBy: {
+          fcra: yesNoFlag(cellAt(row, "The data broker or any of its subsidiaries is regulated by the federal Fair Credit Reporting Act")),
+          glba: yesNoFlag(cellAt(row, "The data broker or any of its subsidiaries is regulated by the Gramm-Leach-Bliley Act")),
+          iippa: yesNoFlag(cellAt(row, "The data broker or any of its subsidiaries is regulated by the California Insurance Information")),
+          cmia: yesNoFlag(cellAt(row, "The data broker or any of its subsidiaries is regulated by the California Confidentiality of Medical")),
+          hipaa: yesNoFlag(cellAt(row, "The data broker or its subsidiaries are regulated by the HIPAA"))
+        },
+        ccpaMetrics
+      }
+    })
+    .sort((left, right) => left.id.localeCompare(right.id))
+
+  return {
+    schemaVersion: 1,
+    sources: [
+      {
+        family: "state_registry",
+        name: "California Data Broker Registry, 2026 filing cycle",
+        version: "2026",
+        retrieved_at: RETRIEVED_AT,
+        license: "Public-record registry filings; normalization under repository MIT license.",
+        transform_notes:
+          "Parsed 77-column CPPA registry export. Yes/No decoded to yes/no/unknown; CCPA request metrics parsed per family (delete, know-collected, know-sold, opt-out, limit-sensitive) as 6-column blocks; regulatory and sharing disclosures preserved verbatim as flags. See scripts/normalize-intelligence.mjs."
+      }
+    ],
+    review: {
+      status: "source_backed",
+      last_reviewed_at: RETRIEVED_AT,
+      reviewer: "Kenshiki",
+      notes: "Normalized import artifact. Not wired to runtime; joins happen via entities.json entity resolution."
+    },
+    records
+  }
+}
+
+// --- Entity resolution: the SSOT index --------------------------------------
+//
+// entities.json is the single source of truth for WHO exists across all
+// intelligence sources. Facts stay in the per-source normalized files; each
+// entity records which facets (tracker DB, 2025 registries, CA 2026, defense
+// destinations) refer to the same real-world organization. Resolution is by
+// registrable domain first, then by name slug — deterministic, no fuzzing.
+
+function registrableDomain(url) {
+  const trimmed = clean(url)
+  if (!trimmed) return null
+  try {
+    const host = new URL(trimmed.includes("://") ? trimmed : `https://${trimmed}`).hostname.toLowerCase().replace(/^www\./, "")
+    const labels = host.split(".").filter(Boolean)
+    if (labels.length < 2) return null
+    return labels.slice(-2).join(".")
+  } catch {
+    return null
+  }
+}
+
+function buildEntities({ brokers, californiaBrokers, destinations }) {
+  const companies = JSON.parse(readFileSync("src/core/db/companies.json", "utf8"))
+  const trackers = JSON.parse(readFileSync("src/core/db/trackers.json", "utf8"))
+  const trackerDomainsByCompany = new Map()
+  for (const tracker of trackers) {
+    const list = trackerDomainsByCompany.get(tracker.companyId) ?? []
+    list.push(...tracker.match.domains.map((domain) => registrableDomain(domain)).filter(Boolean))
+    trackerDomainsByCompany.set(tracker.companyId, list)
+  }
+
+  const entities = new Map()
+  const byDomain = new Map()
+  const bySlug = new Map()
+
+  function resolveEntity(name, domains) {
+    for (const domain of domains) {
+      const existing = byDomain.get(domain)
+      if (existing) return existing
+    }
+    const slug = slugify(name)
+    if (slug && bySlug.has(slug)) return bySlug.get(slug)
+
+    const entity = {
+      id: slug || `entity-${entities.size + 1}`,
+      canonicalName: name,
+      aliases: [],
+      domains: [],
+      facets: { companyIds: [], trackerIds: [], broker2025Ids: [], caRegistry2026Ids: [], defenseDestinationIds: [] }
+    }
+    // Domain collisions can leave two entities wanting one slug (e.g. a DBA
+    // and its parent). Suffix deterministically instead of merging by name.
+    while (entities.has(entity.id)) entity.id = `${entity.id}-x`
+    entities.set(entity.id, entity)
+    if (slug && !bySlug.has(slug)) bySlug.set(slug, entity)
+    return entity
+  }
+
+  function attach(entity, { name, domains, alias }) {
+    for (const domain of domains) {
+      if (!byDomain.has(domain)) byDomain.set(domain, entity)
+      // A domain belongs to exactly one entity — first claim wins. Listing
+      // it on a later entity would make the SSOT ambiguous for joins.
+      if (byDomain.get(domain) === entity && !entity.domains.includes(domain)) entity.domains.push(domain)
+    }
+    if (alias && alias !== entity.canonicalName && !entity.aliases.includes(alias)) entity.aliases.push(alias)
+    if (!entity.canonicalName) entity.canonicalName = name
+  }
+
+  // Order matters and is fixed: runtime companies first (they anchor ids the
+  // extension already uses), then richest-to-broadest external sources.
+  for (const company of companies) {
+    const domains = uniqueSorted(trackerDomainsByCompany.get(company.id) ?? [])
+    const entity = resolveEntity(company.name, domains)
+    entity.facets.companyIds.push(company.id)
+    for (const tracker of trackers.filter((item) => item.companyId === company.id)) entity.facets.trackerIds.push(tracker.id)
+    attach(entity, { name: company.name, domains, alias: company.parentCompany })
+  }
+
+  for (const destination of destinations.records) {
+    const domains = [registrableDomain(destination.url)].filter(Boolean)
+    const entity = resolveEntity(destination.companyName, domains)
+    entity.facets.defenseDestinationIds.push(destination.id)
+    attach(entity, { name: destination.companyName, domains, alias: destination.displayName })
+  }
+
+  for (const broker of californiaBrokers.records) {
+    const domains = [registrableDomain(broker.websiteUrl), registrableDomain(broker.privacyRightsUrl)].filter(Boolean)
+    const entity = resolveEntity(broker.name, domains)
+    entity.facets.caRegistry2026Ids.push(broker.id)
+    attach(entity, { name: broker.name, domains, alias: broker.dba })
+  }
+
+  for (const broker of brokers.records) {
+    const domains = uniqueSorted(broker.websiteUrls.map((url) => registrableDomain(url)).filter(Boolean))
+    const entity = resolveEntity(broker.name, domains)
+    entity.facets.broker2025Ids.push(broker.id)
+    attach(entity, { name: broker.name, domains, alias: null })
+  }
+
+  const records = [...entities.values()]
+    .map((entity) => ({
+      ...entity,
+      aliases: uniqueSorted(entity.aliases),
+      domains: uniqueSorted(entity.domains),
+      facets: {
+        companyIds: uniqueSorted(entity.facets.companyIds),
+        trackerIds: uniqueSorted(entity.facets.trackerIds),
+        broker2025Ids: uniqueSorted(entity.facets.broker2025Ids),
+        caRegistry2026Ids: uniqueSorted(entity.facets.caRegistry2026Ids),
+        defenseDestinationIds: uniqueSorted(entity.facets.defenseDestinationIds)
+      }
+    }))
+    .sort((left, right) => left.id.localeCompare(right.id))
+
+  return {
+    schemaVersion: 1,
+    sources: [
+      {
+        family: "kenshiki_defense_registry",
+        name: "Kenshiki entity resolution over runtime DB, state registries (2025 merge, CA 2026), and defense destinations",
+        version: "1",
+        retrieved_at: RETRIEVED_AT,
+        license: "Derived index; per-facet licensing follows each source file.",
+        transform_notes:
+          "Entities resolved by registrable domain first, then exact name slug; no fuzzy matching. Facts remain in per-source normalized files — entities.json only records identity joins. See scripts/normalize-intelligence.mjs."
+      }
+    ],
+    review: {
+      status: "source_backed",
+      last_reviewed_at: RETRIEVED_AT,
+      reviewer: "Kenshiki",
+      notes: "SSOT identity index for intelligence sources. Not wired to runtime."
+    },
+    records
+  }
+}
+
 mkdirSync(OUT_DIR, { recursive: true })
 const brokers = normalizeBrokers()
 const destinations = normalizeDefenseDestinations()
+const californiaBrokers = normalizeCaliforniaRegistry()
+const entities = buildEntities({ brokers, californiaBrokers, destinations })
 writeFileSync(`${OUT_DIR}/brokers.json`, JSON.stringify(brokers, null, 2) + "\n")
 writeFileSync(`${OUT_DIR}/defense-destinations.json`, JSON.stringify(destinations, null, 2) + "\n")
+writeFileSync(`${OUT_DIR}/ca-brokers-2026.json`, JSON.stringify(californiaBrokers, null, 2) + "\n")
+writeFileSync(`${OUT_DIR}/entities.json`, JSON.stringify(entities, null, 2) + "\n")
 console.log(`Wrote ${OUT_DIR}/brokers.json (${brokers.records.length} brokers)`)
 console.log(`Wrote ${OUT_DIR}/defense-destinations.json (${destinations.records.length} destinations)`)
+console.log(`Wrote ${OUT_DIR}/ca-brokers-2026.json (${californiaBrokers.records.length} brokers)`)
+const multiFacet = entities.records.filter(
+  (entity) => Object.values(entity.facets).filter((ids) => ids.length > 0).length > 1
+).length
+console.log(`Wrote ${OUT_DIR}/entities.json (${entities.records.length} entities, ${multiFacet} with cross-source joins)`)
