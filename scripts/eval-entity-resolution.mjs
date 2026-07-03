@@ -227,43 +227,6 @@ function buildNearMisses() {
 
 const nearMisses = buildNearMisses()
 
-// Every near-miss becomes a "proposed" adjudication record awaiting human
-// review. Existing records (any status) are never touched — approving or
-// rejecting is a human edit to the adjudication file, and the normalizer
-// applies it on the next run.
-function queueProposedAdjudications() {
-  const path = "intelligence/adjudication/entity-adjudications.json"
-  const adjudications = existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : { schemaVersion: 1, records: [] }
-  const existingIds = new Set(adjudications.records.map((record) => record.id))
-  const existingPairs = new Set(
-    adjudications.records.flatMap((record) => (record.facetKeys.length === 2 ? [record.facetKeys.join("|")] : []))
-  )
-
-  let queued = 0
-  for (const candidate of nearMisses) {
-    const facetKeys = [`broker2025:${candidate.broker2025Id}`, `ca2026:${candidate.caRegistry2026Id}`]
-    const id = `nm-${candidate.broker2025Id}-${candidate.caRegistry2026Id}`
-    if (existingIds.has(id) || existingPairs.has(facetKeys.join("|"))) continue
-    adjudications.records.push({
-      id,
-      status: "proposed",
-      action: "merge",
-      conflictId: null,
-      facetKeys,
-      targetEntityId: null,
-      reviewer: "near-miss-queue",
-      reviewed_at: null,
-      evidence: candidate.reasons,
-      notes: `Auto-queued from near-miss report: ${candidate.broker2025Name} ≈ ${candidate.caRegistry2026Name}. Set status to approved/rejected after review.`
-    })
-    queued++
-  }
-  adjudications.records.sort((a, b) => a.id.localeCompare(b.id))
-  writeFileSync(path, JSON.stringify(adjudications, null, 2) + "\n")
-  if (queued > 0) console.log(`Queued ${queued} proposed adjudications for review in ${path}`)
-}
-
-queueProposedAdjudications()
 mkdirSync(EVAL_DIR, { recursive: true })
 writeFileSync(
   `${EVAL_DIR}/near-misses.json`,

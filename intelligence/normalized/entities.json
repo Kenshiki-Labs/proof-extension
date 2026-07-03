@@ -18,7 +18,7 @@
   },
   "adjudication": {
     "path": "intelligence/adjudication/entity-adjudications.json",
-    "records": 86,
+    "records": 1,
     "appliedRecords": 1
   },
   "conflictReport": "intelligence/normalized/entity-conflicts.json",

@@ -9,6 +9,7 @@ import {
   NormalizedBrokersSchema,
   NormalizedCaliforniaBrokersSchema,
   NormalizedDefenseDestinationsSchema,
+  NormalizedDefenseProductSurfaceSchema,
   NormalizedEntitiesSchema
 } from "./intelligence"
 
@@ -240,6 +241,32 @@ describe("entity ID stability ledger", () => {
     const ids = new Set([...entities.records, ...quarantined.records].map((record) => record.id))
     for (const id of Object.values(ledger.facetKeyToEntityId as Record<string, string>)) {
       expect(ids).toContain(id)
+    }
+  })
+})
+
+describe("defense product surface (AI-generated, SSOT-governed)", () => {
+  const surfaceRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/defense-product-surface.json"), "utf8"))
+
+  it("validates the full surface with kenshiki_defense_registry provenance", () => {
+    const surface = NormalizedDefenseProductSurfaceSchema.parse(surfaceRaw)
+    expect(surface.sources[0]?.family).toBe("kenshiki_defense_registry")
+    expect(Object.keys(surface.destinations).length).toBe(105)
+    expect(surface.routing.destinationOrder.length).toBe(105)
+  })
+
+  it("keeps AI guardrails attached to destinations", () => {
+    const surface = NormalizedDefenseProductSurfaceSchema.parse(surfaceRaw)
+    const freeze = surface.destinations["equifax_freeze"]
+    expect(freeze?.aiGuidance?.disallowedModelActions).toContain("provide_legal_advice")
+    const guarded = Object.values(surface.destinations).filter((destination) => destination.aiGuidance)
+    expect(guarded.length).toBeGreaterThan(100)
+  })
+
+  it("carries every copy block the app renders", () => {
+    const surface = NormalizedDefenseProductSurfaceSchema.parse(surfaceRaw)
+    for (const block of ["ui", "modes", "categories", "renderer", "fields", "statuses"] as const) {
+      expect(Object.keys(surface.copy[block]).length).toBeGreaterThan(0)
     }
   })
 })

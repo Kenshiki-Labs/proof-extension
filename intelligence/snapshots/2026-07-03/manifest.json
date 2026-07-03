@@ -11,7 +11,7 @@
   "artifacts": [
     {
       "path": "intelligence/adjudication/entity-adjudications.json",
-      "sha256": "3e0faff923231537b77e1ba4cf703536d5249e7a26fd6223cfcfbd7b4d69d4f2"
+      "sha256": "ab3bb0374608aa8a36f16eb04c3eb350295880336cb8b5a187711b0530ee429b"
     },
     {
       "path": "intelligence/entity-ledger.json",
@@ -30,20 +30,24 @@
       "sha256": "ed8dfa7f03b1f0276b275a1e3eaf9369793c044de92849a5508d2f607b344bad"
     },
     {
+      "path": "intelligence/normalized/defense-product-surface.json",
+      "sha256": "cb5064befafc0287cba39b5e59c9bc807d4d5680a46f2b23bc71dac4a52d7917"
+    },
+    {
       "path": "intelligence/normalized/entities.json",
-      "sha256": "02da405ced99e38206d07bd5a721a8b5ae0baa067917e966c989402fe7bf8f1e"
+      "sha256": "64ef5201b26f6df8ed608ff2fcd4b44d8c725882938e17e3b7f5f5e0beb7b13c"
     },
     {
       "path": "intelligence/normalized/entity-conflicts.json",
-      "sha256": "c855230705d96eb8e2e9c0392e4963bdc68ec2f0f3c60f90ffaac865c70a26fd"
+      "sha256": "c7138bf5cba169f682a8fecf3ffa4ebb6bd0dff3a8d772a8bf31f578417bdff4"
     },
     {
       "path": "intelligence/quarantine/research-entities.json",
-      "sha256": "33612078a43d50971147241bc8053f3b9f566d4901635500a4921ba44afeadec"
+      "sha256": "3e70ee736d8c2f234ae16d02a8ccd5d8046b42d234a71d84e9e8e52b5c5975fe"
     },
     {
       "path": "intelligence/quarantine/research-entity-conflicts.json",
-      "sha256": "5af56d65ee0e19b1e1af3e5775d972e6849e5f24775d1e8d11e2fb5d24e237e7"
+      "sha256": "ba130ca9991cb6f792ac99ec6d1a53707d62d4db0e0912ee4a07f4fe794303fa"
     }
   ],
   "signature": null

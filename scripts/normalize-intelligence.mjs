@@ -965,15 +965,77 @@ function writeSnapshotManifest(paths) {
   return manifestPath
 }
 
+// The Defense tab's product surface — UX copy, situation routing, harm
+// rationale, AI guardrails, renderer config — was AI-generated from the
+// registry data, which makes it derived intelligence, not hand curation.
+// It therefore lives in the SSOT under the same governance: verbatim
+// projection, provenance, schema validation, staleness gate. The lean
+// defense-destinations.json remains the remediation-join view; this file is
+// the complete surface a consumer app (e.g. the iOS Defense tab) renders.
+function normalizeDefenseProductSurface() {
+  const source = JSON.parse(readFileSync(`${SOURCE_DIR}/defense-copy-v3-keyed.json`, "utf8"))
+  const registry = source.registry
+
+  const sortedDestinations = Object.fromEntries(
+    Object.keys(registry.destinations)
+      .sort()
+      .map((key) => [key, registry.destinations[key]])
+  )
+
+  return {
+    schemaVersion: 1,
+    upstreamSchema: registry.schemaVersion,
+    upstreamVersion: registry.version != null ? String(registry.version) : null,
+    sources: [
+      {
+        family: "kenshiki_defense_registry",
+        name: "Kenshiki defense registry product surface (AI-generated copy, routing, guardrails)",
+        version: String(registry.version ?? "v3"),
+        retrieved_at: RETRIEVED_AT,
+        license: "Kenshiki Labs first-party work; repository MIT license.",
+        transform_notes:
+          "Verbatim projection of the AI-generated product surface: top-level ui/modes/categories/renderer/fields/statuses copy blocks plus the complete destination records (nextSteps, whyMatters, harmProfile rationale, aiGuidance guardrails, renderer and prestage config) and routing structures (situations, topRecommendationIds, destinationOrder, badgeSchema, harmProfileMeta, primitiveDecisionPolicy). Destinations re-keyed in sorted order for determinism; no content changes. See scripts/normalize-intelligence.mjs."
+      }
+    ],
+    review: {
+      status: "source_backed",
+      last_reviewed_at: RETRIEVED_AT,
+      reviewer: "Kenshiki",
+      notes: "AI-generated product surface under SSOT governance. Models reformat these structured facts; they must not invent destinations, harm ratings, or legal claims (defense_kenshiki_spec.md)."
+    },
+    copy: {
+      ui: source.ui,
+      modes: source.modes,
+      categories: source.categories,
+      renderer: source.renderer,
+      fields: source.fields,
+      statuses: source.statuses
+    },
+    routing: {
+      topRecommendationIds: registry.topRecommendationIds,
+      situations: registry.situations,
+      destinationOrder: registry.destinationOrder,
+      badgeSchema: registry.badgeSchema,
+      harmProfileMeta: registry.harmProfileMeta,
+      primitiveDecisionPolicy: registry.primitiveDecisionPolicy,
+      referenceIntelligence: registry.referenceIntelligence
+    },
+    destinations: sortedDestinations
+  }
+}
+
 mkdirSync(OUT_DIR, { recursive: true })
+
 mkdirSync(QUARANTINE_DIR, { recursive: true })
 const brokers = normalizeBrokers()
 const destinations = normalizeDefenseDestinations()
+const productSurface = normalizeDefenseProductSurface()
 const californiaBrokers = normalizeCaliforniaRegistry()
 const { entityIndex: entities, conflictReport, quarantinedEntities, quarantinedConflictReport } = buildEntities({ brokers, californiaBrokers, destinations })
 const outputPaths = {
   brokers: `${OUT_DIR}/brokers.json`,
   destinations: `${OUT_DIR}/defense-destinations.json`,
+  productSurface: `${OUT_DIR}/defense-product-surface.json`,
   californiaBrokers: `${OUT_DIR}/ca-brokers-2026.json`,
   entities: `${OUT_DIR}/entities.json`,
   conflicts: `${OUT_DIR}/entity-conflicts.json`,
@@ -984,6 +1046,7 @@ const outputPaths = {
 }
 writeFileSync(outputPaths.brokers, JSON.stringify(brokers, null, 2) + "\n")
 writeFileSync(outputPaths.destinations, JSON.stringify(destinations, null, 2) + "\n")
+writeFileSync(outputPaths.productSurface, JSON.stringify(productSurface, null, 2) + "\n")
 writeFileSync(outputPaths.californiaBrokers, JSON.stringify(californiaBrokers, null, 2) + "\n")
 writeFileSync(outputPaths.entities, JSON.stringify(entities, null, 2) + "\n")
 writeFileSync(outputPaths.conflicts, JSON.stringify(conflictReport, null, 2) + "\n")
@@ -992,6 +1055,7 @@ writeFileSync(outputPaths.quarantinedConflicts, JSON.stringify(quarantinedConfli
 const manifestPath = writeSnapshotManifest(Object.values(outputPaths))
 console.log(`Wrote ${OUT_DIR}/brokers.json (${brokers.records.length} brokers)`)
 console.log(`Wrote ${OUT_DIR}/defense-destinations.json (${destinations.records.length} destinations)`)
+console.log(`Wrote ${OUT_DIR}/defense-product-surface.json (${Object.keys(productSurface.destinations).length} destinations, full copy/routing/guardrails)`)
 console.log(`Wrote ${OUT_DIR}/ca-brokers-2026.json (${californiaBrokers.records.length} brokers)`)
 const multiFacet = entities.records.filter(
   (entity) => Object.values(entity.facets).filter((ids) => ids.length > 0).length > 1

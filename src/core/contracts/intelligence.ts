@@ -183,9 +183,54 @@ export const NormalizedEntitiesSchema = z.object({
   records: z.array(EntityRecordSchema).min(1)
 })
 
+// The AI-generated Defense product surface (copy, routing, harm rationale,
+// AI guardrails, renderer config) under SSOT governance. Content blocks are
+// intentionally loosely typed — the contract pins the governance envelope,
+// the presence of every surface section, and the guardrails on each
+// destination; upstream owns the fine-grained shape.
+export const DefenseProductSurfaceDestinationSchema = z.looseObject({
+  id: z.string().min(1),
+  companyId: z.string().min(1),
+  displayName: z.string().min(1),
+  whyMatters: z.string().min(1).nullish(),
+  nextSteps: z.array(z.string().min(1)).optional(),
+  harmProfile: z.looseObject({ actorClass: z.string().min(1).optional() }).optional(),
+  aiGuidance: z
+    .looseObject({
+      enabled: z.boolean(),
+      allowedModelActions: z.array(z.string().min(1)),
+      disallowedModelActions: z.array(z.string().min(1))
+    })
+    .optional()
+})
+
+export const NormalizedDefenseProductSurfaceSchema = z.object({
+  ...importArtifactBase,
+  upstreamSchema: z.string().min(1),
+  upstreamVersion: z.string().min(1).nullable(),
+  copy: z.object({
+    ui: z.record(z.string(), z.unknown()),
+    modes: z.record(z.string(), z.unknown()),
+    categories: z.record(z.string(), z.unknown()),
+    renderer: z.record(z.string(), z.unknown()),
+    fields: z.record(z.string(), z.unknown()),
+    statuses: z.record(z.string(), z.unknown())
+  }),
+  routing: z.object({
+    topRecommendationIds: z.array(z.string().min(1)).min(1),
+    situations: z.array(z.unknown()).min(1),
+    destinationOrder: z.array(z.string().min(1)).min(1),
+    badgeSchema: z.unknown(),
+    harmProfileMeta: z.unknown(),
+    primitiveDecisionPolicy: z.unknown(),
+    referenceIntelligence: z.unknown()
+  }),
+  destinations: z.record(z.string(), DefenseProductSurfaceDestinationSchema)
+})
+
 export const EntityAdjudicationRecordSchema = z.object({
   id: z.string().min(1),
-  status: z.enum(["proposed", "approved", "rejected", "superseded"]),
+  status: z.enum(["approved", "rejected", "superseded"]),
   action: z.enum(["merge", "split", "confirm", "reject"]),
   conflictId: z.string().min(1).nullable(),
   facetKeys: z.array(z.string().min(1)),
