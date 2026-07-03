@@ -73,11 +73,23 @@ Every local tracker record must be defensible by at least one source:
 
 Every imported or manually authored tracker record must include:
 
-- source family: `tracker-radar`, `easyprivacy`, `manual-fixture`, `vendor-doc`, or `first-party-evidence`
+- source family: `manual_seed`, `manual_fixture`, `vendor_docs`, `easyprivacy`, `easylist`, `duckduckgo_tracker_radar`, or `first_party_evidence`
 - source version/date when available
 - transformation notes when the source was converted into a local rule
 - license/attribution notes when the source imposes redistribution conditions
 - false-positive review status
+
+Local schema names are intentionally stable enum identifiers:
+
+| Schema value | Meaning |
+| --- | --- |
+| `manual_seed` | Hand-authored seed data pending source-backed review. |
+| `manual_fixture` | Reproducible local fixture or captured event evidence. |
+| `vendor_docs` | Vendor documentation, privacy policy, or developer docs. |
+| `easyprivacy` | EasyPrivacy rule or policy category. |
+| `easylist` | EasyList rule or policy category. |
+| `duckduckgo_tracker_radar` | DuckDuckGo Tracker Radar metadata. |
+| `first_party_evidence` | First-party source-code or fixture evidence. |
 
 ## Import Guardrails
 

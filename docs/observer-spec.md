@@ -3,7 +3,7 @@ title: "Pulse Browser Extension - LLM Build Specification"
 description: "The full build specification for Pulse Observer: product definition, threat model, architecture, detection/blocking spec, and acceptance criteria."
 owner: Kenshiki
 section: docs
-lastReviewed: 2026-07-01
+lastReviewed: 2026-07-02
 nextReview: 2026-09-29
 version: "0.0.1"
 status: draft
@@ -75,18 +75,19 @@ Required capabilities:
 
 - Plasmo project with shared core and thin browser adapters.
 - Zod-validated contracts and tracker DB files.
-- Main-world first-party canvas observation.
+- Non-invasive first-party exposure scan for browser-visible passive surfaces.
 - Isolated content-script bridge with duplicate suppression.
 - Background event router with tab-scoped summaries.
 - Local storage persistence and retention limits.
 - Copy/export current tab report.
-- Chrome MV3 build and E2E fixture proving page-script observation.
+- Chrome MV3 build and E2E fixture proving network, DOM, and exposure-scan observation without page breakage.
 
 Done when:
 
-- first-party canvas reads on the Proof site appear in the popup as evidence-backed events
+- Proof can be loaded with the extension enabled without breaking page rendering
+- passive browser-surface exposure appears as locally generated, evidence-backed extension-scan events
 - no browsing telemetry leaves the browser
-- `pnpm qa` and Chromium extension E2E pass
+- `pnpm qa` and Chromium extension E2E (`pnpm test:e2e`) pass
 
 ### Phase 1: Launchable observer product
 
@@ -96,7 +97,8 @@ Required capabilities:
 
 - `/observe` download page on the Proof site.
 - Versioned Chrome MV3 downloadable artifact.
-- Popup sections for `Watching now`, `Blocked`, `Still exposed`, `Cannot block`, `Stop at source`, and `What blocking changes`.
+- Popup content for `Watching now`, `Blocked`, `Still exposed`, `Cannot block`, source-level remediation, and `What blocking changes`.
+- Full report tab for detailed evidence, exposure scan, atomic observe/block matrix, source remediation, timeline, and diagnostics.
 - Network `request_seen` events from the tracker DB.
 - Chromium DNR block rules and block-result reporting where available.
 - At least 25 high-value tracker records with company/remediation joins.
@@ -130,18 +132,18 @@ Done when:
 - every known observer card either has a remediation path or explicitly states why none is known
 - the UI never implies browser blocking deleted source-held records
 
-### Phase 2: Mitigation and parity
+### Phase 2: Opt-in diagnostics, mitigation, and parity
 
-Goal: move from observation-only content hooks to controlled mitigation where browser APIs allow it.
+Goal: move from non-invasive default observation to controlled, opt-in diagnostics and mitigation where browser APIs allow it without breaking ordinary pages.
 
 Required capabilities:
 
-- Settings-backed canvas mitigation.
-- WebGL query observation and mitigation.
-- Audio fingerprint observation and mitigation.
-- Font enumeration observation where feasible.
+- Settings-backed canvas mitigation behind an explicit user/developer control.
+- WebGL query observation and mitigation only in opt-in diagnostic mode, never as an automatic page-load hook.
+- Audio fingerprint observation and mitigation only in opt-in diagnostic mode, never as an automatic page-load hook.
+- Font enumeration observation where feasible without mutating page APIs by default.
 - Options toggles that actually change runtime behavior.
-- Firefox adapter parity for core observation and status labels.
+- Firefox adapter parity for core observation and status labels, including evaluating a Firefox MV3 migration (build currently targets `firefox-mv2`; see Build Commands).
 
 Done when:
 
@@ -157,6 +159,7 @@ Required capabilities:
 - DuckDuckGo Tracker Radar metadata importer.
 - EasyPrivacy import/normalization pipeline.
 - Source family, source version/date, license notes, and transform notes on records.
+- Required `sources` and `review` metadata for every tracker record before it can affect runtime blocking or claims.
 - Snapshot tests for imported rule transforms.
 - Golden fixture tests for expected matches and non-matches.
 - False-positive review fixtures.
@@ -277,7 +280,7 @@ Do not build separate product codebases for Chrome and Firefox. One shared core 
 | --- | --- |
 | Chrome | Required, MV3 target |
 | Edge | Required, same logic as Chrome, separate packaging |
-| Firefox | Required, separate adapter target because manifest/runtime behavior differs |
+| Firefox | Required, separate adapter target; MV2 build initially for compatibility with Firefox channels where MV3 support lags — revisit before Phase 2 |
 | Safari | Excluded from v1 |
 
 ## Functional Scope
@@ -292,7 +295,7 @@ Do not build separate product codebases for Chrome and Firefox. One shared core 
 - First-party fingerprint-relevant API use.
 - Dynamic script injection after page load.
 - Third-party cookie sync behavior where visible.
-- CNAME-cloaked or first-party-proxied tracker endpoints where detectable by DB rules or script behavior.
+- CNAME-cloaked or first-party-proxied tracker endpoints where detectable by DB rules or script behavior (best-effort; see Adversarial and evasion cases for the unsupported subset).
 
 ### Must classify
 
@@ -313,6 +316,8 @@ Do not build separate product codebases for Chrome and Firefox. One shared core 
 - Known external analytics libraries.
 
 ### Must partially mitigate where possible
+
+Default observation must be non-invasive. Mitigation hooks may be installed only after an explicit user/developer setting enables that class, and they must be disabled if they cause page breakage on the fixture set.
 
 - Canvas reads.
 - Audio fingerprinting.
@@ -537,7 +542,7 @@ Detect by:
 - Request type match.
 - Initiator context.
 - Script URL and ingest endpoint pairing.
-- CNAME or first-party proxy indicators where available.
+- CNAME or first-party proxy indicators where available (best-effort; see Adversarial and evasion cases for the unsupported subset, matching the Functional Scope framing above).
 
 Examples:
 
@@ -549,13 +554,26 @@ Examples:
 
 ### Content detection
 
-Observe:
+The default content strategy is non-invasive. It may observe DOM/script activity, request context, and passive browser-surface exposure from isolated content scripts. It must not monkey-patch hot rendering APIs on ordinary page load.
+
+Separate evidence families are required:
+
+- `page activity observed`: what the current page or third-party scripts actually did.
+- `extension exposure scan`: what Pulse Observer could read locally from browser APIs. This does not prove the current page queried those fields.
+- `extension diagnostic`: extension lifecycle, bridge, scan, and failure-state events. These must not inflate observer counts.
+
+Default observation may include:
+
+- dynamic `<script>` insertion after page load
+- passive browser surface fields such as viewport, screen, timezone, locale, hardware concurrency, device memory, touch points, color scheme, reduced motion, webdriver, plugin count, cookie setting, and Do Not Track
+- network request observation and tracker DB matching
+
+Opt-in diagnostic or mitigation mode may observe or constrain:
 
 - `HTMLCanvasElement.toDataURL`
 - `CanvasRenderingContext2D.getImageData`
 - `AudioContext`
 - `WebGLRenderingContext.getParameter`
-- dynamic `<script>` insertion
 - optionally `RTCPeerConnection` local IP exposure attempts
 
 Each content observation event must include:
@@ -568,9 +586,11 @@ Each content observation event must include:
 - confidence
 - evidence
 
+Invasive hooks must not be enabled by default. They must be treated as diagnostics or mitigation, not as the baseline observer path.
+
 ### Adversarial and evasion cases
 
-The implementation must explicitly handle or mark unsupported:
+The implementation must explicitly handle or mark unsupported. This is the unsupported counterpart to the best-effort CNAME/proxy detection listed in Functional Scope and Network detection above — detect what DB rules and heuristics can catch, and document the rest here as a known limitation:
 
 - CNAME cloaking.
 - Tracker scripts proxied through first-party paths.
@@ -639,7 +659,23 @@ Each record must include:
   "evidenceTemplate": [
     "Request matched FullStory domain or ingest path."
   ],
-  "remediationId": "fullstory-default"
+  "remediationId": "fullstory-default",
+  "sources": [
+    {
+      "family": "manual_seed",
+      "name": "Proof Extension seed tracker database",
+      "version": "0.0.1",
+      "retrieved_at": "2026-07-02",
+      "license": "MIT",
+      "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+    }
+  ],
+  "review": {
+    "status": "seed",
+    "last_reviewed_at": "2026-07-02",
+    "reviewer": "Kenshiki",
+    "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+  }
 }
 ```
 
@@ -676,7 +712,9 @@ Each record must include:
 - EasyPrivacy/EasyList policy is the benchmark for privacy-blocking scope, filter compatibility, and tracking categories.
 - Imported intelligence must follow `docs/intelligence-standards.md` before it can affect runtime blocking or popup claims.
 - Additions must include source notes or a reproducible reason for classification.
-- The test suite must reject duplicate tracker ids, duplicate company ids, invalid remediation references, and malformed URLs.
+- Every tracker must include `sources` and `review` metadata.
+- Network-blockable trackers must include a blocking-policy source family such as `manual_seed`, `manual_fixture`, `vendor_docs`, `easyprivacy`, `easylist`, or `first_party_evidence`.
+- The test suite must reject duplicate tracker ids, duplicate company ids, invalid remediation references, missing provenance, malformed domains, malformed paths, and path-only rules.
 - False-positive reports must be reproducible with a test page or captured event fixture.
 - Remote DB updates are not required in v1. If added later, updates must be signed and verified before use.
 - If DB parsing fails, the extension must keep working with the last valid local DB or a bundled fallback.
@@ -685,16 +723,35 @@ Each record must include:
 
 ### Popup layout
 
-Sections, in this order:
+Top-level sections, in this order:
 
 1. `Watching now`
 2. `Blocked`
 3. `Still exposed`
 4. `Cannot block`
-5. `Stop at source`
-6. `What blocking changes`
+5. `What blocking changes`
 
-This is the canonical popup IA. Roadmap phases, acceptance criteria, and implementation tickets must use this same section order. `Cannot block` is required because non-blockable exposures are first-class evidence, not empty state copy. `What blocking changes` is required because browser blocking does not delete historical or source-held records.
+This is the canonical top-level popup IA. Roadmap phases, acceptance criteria, and implementation tickets must preserve these user-facing concepts. `Cannot block` is required because non-blockable exposures are first-class evidence, not empty state copy. `What blocking changes` is required because browser blocking does not delete historical or source-held records.
+
+`Stop at source` is not a page-breakage state. It means source-level remediation: opt-out links, deletion request links, verification requirements, friction class, and reminder intervals for the company or first-party origin that collected data. It may appear inside expanded observer cards or as a dedicated remediation section when there are enough remediation items to summarize.
+
+### Full report tab
+
+The popup is a compact controller. Detailed evidence belongs in a full extension tab opened from the popup after inline confirmation.
+
+The report tab must use normalized background state only. It must not own observation state independently of the background service worker.
+
+Report sections, in this order:
+
+1. `Summary`
+2. `Exposure scan`
+3. `Atomic observe/block matrix`
+4. `Observer details`
+5. `Stop at source`
+6. `Evidence timeline`
+7. `Diagnostics`
+
+`Exposure scan` must be labeled as extension-run local visibility. It must not imply the current page queried those fields. `Atomic observe/block matrix` must exclude exposure-scan and extension-diagnostic events so it answers what page activity was actually observed and what can be blocked or mitigated.
 
 ### Card fields
 
@@ -888,6 +945,8 @@ The extension must classify Proof's own instrumentation honestly when installed 
 
 Use Plasmo-first commands.
 
+Firefox targets MV2 initially because Firefox channels vary in MV3 support; this is revisited as part of Phase 2 Firefox adapter parity work (see Product Roadmap).
+
 ```bash
 pnpm create plasmo pulse-observer-extension
 cd pulse-observer-extension
@@ -932,7 +991,7 @@ export type ObserverEvent = {
   frameId?: number
   origin: string
   observedAt: number
-  source: "network" | "content" | "api-hook"
+  source: "network" | "content" | "api-hook" | "extension-scan"
   trackerId?: string
   companyId?: string
   firstParty: boolean
@@ -947,6 +1006,8 @@ export type ObserverEvent = {
     | "request_seen"
     | "request_blocked"
     | "script_injected"
+    | "extension_diagnostic"
+    | "browser_surface"
     | "canvas_read"
     | "audio_fingerprint"
     | "webgl_query"
@@ -957,6 +1018,7 @@ export type ObserverEvent = {
   status: ObservationStatus
   confidence: "confirmed" | "probable" | "weak"
   evidence: string[]
+  count?: number
   details?: Record<string, string | number | boolean>
 }
 ```
@@ -964,6 +1026,13 @@ export type ObserverEvent = {
 ### SiteSummary
 
 ```ts
+export type PageError = {
+  id: string
+  observedAt: number
+  message: string
+  stackPreview?: string
+}
+
 export type SiteSummary = {
   origin: string
   tabId: number
@@ -973,6 +1042,7 @@ export type SiteSummary = {
   exposedSignals: string[]
   cannotBlockSignals: string[]
   events: ObserverEvent[]
+  pageErrors: PageError[]
   incomplete: boolean
   updatedAt: number
 }
@@ -983,9 +1053,12 @@ export type SiteSummary = {
 ```ts
 export type RuntimeMessage =
   | { type: "OBSERVED_EVENT"; payload: ObserverEvent }
+  | { type: "PAGE_ERROR_OBSERVED"; payload: Omit<PageError, "id"> }
   | { type: "GET_SITE_SUMMARY"; tabId: number }
   | { type: "SITE_SUMMARY"; payload: SiteSummary }
   | { type: "REFRESH_TAB_SCAN"; tabId: number }
+  | { type: "GET_SETTINGS" }
+  | { type: "SETTINGS"; payload: UserSettings }
   | { type: "UPDATE_SETTINGS"; payload: Partial<UserSettings> }
   | { type: "CLEAR_LOCAL_DATA" }
 ```
@@ -1022,7 +1095,7 @@ The UI must never directly inspect raw browser APIs. It reads normalized message
 | --- | --- | --- | --- | --- |
 | Third-party pixel page | Yes | Yes | Yes | detected and blocked if configured |
 | Session replay page | Yes | Yes | Yes | replay shown and ingest blocked if configured |
-| First-party fingerprint page | Yes | Yes | Yes | canvas/WebGL observation shown even without third-party host |
+| First-party fingerprint page | Yes | Yes | Yes | passive exposure scan shown by default; invasive canvas/WebGL diagnostics only when explicitly enabled |
 | Proof site | Yes | Yes | Yes | first-party instrumentation reported honestly |
 | Restricted browser URL | Yes | Yes | Yes | factual unavailable state |
 | Static page | Yes | Yes | Yes | no observers |
@@ -1047,10 +1120,11 @@ The UI must never directly inspect raw browser APIs. It reads normalized message
 
 ## OSS Structure
 
-Recommended licensing:
+Licensing:
 
-- code: GPL v3
-- intelligence database: CC BY-SA
+- extension repo code: MIT
+- bundled seed intelligence authored in this repo: MIT unless a specific file states otherwise after license review
+- imported third-party intelligence must preserve source attribution, license notes, and compatibility review before it is vendored or distributed
 
 Recommended repo layout:
 
@@ -1328,8 +1402,8 @@ Use `identity consistency indicator` language for this family. Do not claim loca
 2. Tracker DB governance fields and standards.
 3. Popup company and remediation cards.
 4. Options settings that actually change behavior.
-5. Canvas mitigation.
-6. WebGL and audio hooks.
+5. Opt-in diagnostic/mitigation mode design.
+6. Canvas/WebGL/audio hooks only after page-breakage fixtures pass.
 7. Network seen/blocked UI.
 8. EasyPrivacy import pipeline.
 9. Tracker Radar metadata pipeline.
@@ -1386,10 +1460,11 @@ Use this as the execution checklist. Every item must be completed or explicitly 
 ### Checklist: Content scripts
 
 - [ ] Implement DOM mutation watcher.
-- [ ] Implement canvas hook.
-- [ ] Implement audio hook.
-- [ ] Implement WebGL hook.
-- [ ] Implement font enumeration detection where feasible.
+- [ ] Implement non-invasive browser-surface exposure scan.
+- [ ] Implement opt-in canvas hook.
+- [ ] Implement opt-in audio hook.
+- [ ] Implement opt-in WebGL hook.
+- [ ] Implement font enumeration detection where feasible without default page mutation.
 - [ ] Emit normalized observation events.
 - [ ] Avoid collecting form values or page content.
 
