@@ -6,6 +6,7 @@ import { getDynamicBlockRuleMetadata, installDynamicBlockRules, uninstallDynamic
 import { validateTrackerDatabase } from "~core/db/validate"
 import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
 import { matchTrackerRequest } from "~core/domain/network-match"
+import { filterBlockableTrackerIds } from "~core/domain/blocking-policy"
 import { detectCookieSync } from "~core/signals/cookie-sync"
 import { enrichSdkDetection } from "~core/signals/sdk-globals"
 import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, upsertEvent } from "~core/state/summaries"
@@ -136,8 +137,11 @@ function isDuplicateContentEvent(event: ObserverEvent) {
 // set in sync with settings.blockedTrackerIds, so unblocking a tracker from
 // the popup actually stops it immediately, not just future installs.
 async function syncBlockingRules() {
-  if (settings.blockedTrackerIds.length > 0) {
-    await installDynamicBlockRules(settings.blockedTrackerIds)
+  // Defense in depth: high-breakage trackers never get DNR rules, even if
+  // an old stored settings blob or forged message lists them.
+  const blockable = filterBlockableTrackerIds(settings.blockedTrackerIds)
+  if (blockable.length > 0) {
+    await installDynamicBlockRules(blockable)
   } else {
     await uninstallDynamicBlockRules()
   }

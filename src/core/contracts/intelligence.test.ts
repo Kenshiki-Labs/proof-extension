@@ -10,7 +10,8 @@ import {
   NormalizedCaliforniaBrokersSchema,
   NormalizedDefenseDestinationsSchema,
   NormalizedDefenseProductSurfaceSchema,
-  NormalizedEntitiesSchema
+  NormalizedEntitiesSchema,
+  NormalizedValuationsSchema
 } from "./intelligence"
 
 const root = resolve(__dirname, "../../..")
@@ -18,6 +19,7 @@ const brokersRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalize
 const destinationsRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/defense-destinations.json"), "utf8"))
 const californiaRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/ca-brokers-2026.json"), "utf8"))
 const entitiesRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/entities.json"), "utf8"))
+const valuationsRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/valuations.json"), "utf8"))
 const conflictsRaw = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/entity-conflicts.json"), "utf8"))
 const quarantinedEntitiesRaw = JSON.parse(readFileSync(resolve(root, "intelligence/quarantine/research-entities.json"), "utf8"))
 const quarantinedConflictsRaw = JSON.parse(readFileSync(resolve(root, "intelligence/quarantine/research-entity-conflicts.json"), "utf8"))
@@ -214,9 +216,51 @@ describe("versioned intelligence snapshot manifest", () => {
     expect(manifest.snapshotVersion).toBe("2026-07-03")
     expect(manifest.artifacts.map((artifact) => artifact.path)).toEqual([...manifest.artifacts.map((artifact) => artifact.path)].sort())
     expect(manifest.artifacts.some((artifact) => artifact.path === "intelligence/normalized/entities.json")).toBe(true)
+    expect(manifest.artifacts.some((artifact) => artifact.path === "intelligence/normalized/valuations.json")).toBe(true)
     expect(manifest.artifacts.some((artifact) => artifact.path === "intelligence/normalized/entity-conflicts.json")).toBe(true)
     expect(manifest.artifacts.some((artifact) => artifact.path === "intelligence/quarantine/research-entities.json")).toBe(true)
     expect(manifest.artifacts.some((artifact) => artifact.path === "intelligence/adjudication/entity-adjudications.json")).toBe(true)
+  })
+})
+
+describe("normalized valuation projections", () => {
+  const valuations = NormalizedValuationsSchema.parse(valuationsRaw)
+  const trackerIds = JSON.parse(readFileSync(resolve(root, "src/core/db/trackers.json"), "utf8")).map((tracker: { id: string }) => tracker.id)
+  const entities = NormalizedEntitiesSchema.parse(entitiesRaw)
+
+  it("projects every finding to exactly one live runtime tracker", () => {
+    expect(valuations.sources[0]?.family).toBe("market_research")
+    expect(valuations.review.status).toBe("source_backed")
+    expect(valuations.records).toHaveLength(trackerIds.length)
+    expect(valuations.sourceFindingCount).toBeGreaterThan(0)
+    expect(valuations.records.map((record) => record.trackerId)).toEqual([...trackerIds].sort((a, b) => a.localeCompare(b)))
+  })
+
+  it("resolves every valuation subject to an extension entity that owns the tracker", () => {
+    const entityById = new Map(entities.records.map((entity) => [entity.id, entity]))
+    for (const record of valuations.records) {
+      const entity = entityById.get(record.subjectEntityId)
+      expect(entity, record.trackerId).toBeDefined()
+      expect(entity?.facets.trackerIds, record.trackerId).toContain(record.trackerId)
+    }
+  })
+
+  it("computes derived valuation fields and pins corpus totals", () => {
+    for (const record of valuations.records) {
+      expect(record.perPersonValue.perVisit.dollars, record.trackerId).toBeCloseTo(record.perPersonValue.perVisit.microdollars / 1_000_000, 12)
+      expect(record.perPersonValue.annual.midpoint_usd, record.trackerId).toBeCloseTo(
+        (record.perPersonValue.annual.low_usd + record.perPersonValue.annual.high_usd) / 2,
+        8
+      )
+      expect(record.perPersonValue.sourceFindingIds).toEqual(record.sourceFindingIds)
+    }
+
+    const totalLow = valuations.records.reduce((sum, record) => sum + record.perPersonValue.annual.low_usd, 0)
+    const totalHigh = valuations.records.reduce((sum, record) => sum + record.perPersonValue.annual.high_usd, 0)
+    const totalMicro = valuations.records.reduce((sum, record) => sum + record.perPersonValue.perVisit.microdollars, 0)
+    expect(totalLow).toBeCloseTo(1007.14, 1)
+    expect(totalHigh).toBeCloseTo(1479.34, 1)
+    expect(totalMicro).toBeCloseTo(2615.5, 1)
   })
 })
 

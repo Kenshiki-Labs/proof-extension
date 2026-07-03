@@ -19,6 +19,17 @@ const SOURCE_URL_REQUIRED_FAMILIES = new Set<TrackerSource["family"]>([
   "easylist"
 ])
 
+const TRACKER_CLAIM_SOURCE_FAMILIES = new Set<TrackerSource["family"]>([
+  "manual_fixture",
+  "vendor_docs",
+  "easyprivacy",
+  "easylist",
+  "duckduckgo_tracker_radar",
+  "first_party_evidence"
+])
+
+const FORBIDDEN_REASSURANCE_PATTERN = /\b(safe|protected|anonymous|anonymized|guarantee|guaranteed|private|secure)\b/i
+
 function assertUniqueIds(records: Array<{ id: string }>, label: string) {
   const seen = new Set<string>()
   for (const record of records) {
@@ -61,8 +72,8 @@ function assertTrackerProvenance(tracker: TrackerRecord) {
     }
   }
 
-  if (tracker.review.status === "source_backed" && tracker.sources.every((source) => source.family === "manual_seed")) {
-    throw new Error(`Tracker ${tracker.id} cannot be source_backed with only manual_seed provenance`)
+  if (tracker.review.status === "source_backed" && !tracker.sources.some((source) => TRACKER_CLAIM_SOURCE_FAMILIES.has(source.family))) {
+    throw new Error(`Tracker ${tracker.id} cannot be source_backed without tracker-claim provenance`)
   }
 }
 
@@ -120,6 +131,18 @@ function assertBlockingLimitLanguage(tracker: TrackerRecord) {
   }
 }
 
+function assertNoReassuranceLanguage(tracker: TrackerRecord) {
+  const statements = [
+    tracker.userImpact?.plainSummary,
+    ...(tracker.userImpact?.whyItMatters ?? []),
+    ...(tracker.browserAction.whatBlockingChanges ?? []),
+    ...(tracker.browserAction.whatBlockingDoesNotChange ?? [])
+  ].filter((statement): statement is string => typeof statement === "string" && statement.length > 0)
+
+  const match = statements.find((statement) => FORBIDDEN_REASSURANCE_PATTERN.test(statement))
+  if (match) throw new Error(`Tracker ${tracker.id} uses forbidden reassurance language: ${match}`)
+}
+
 export function validateTrackerDatabaseRecords(rawTrackers: unknown, rawCompanies: unknown, rawRemediation: unknown) {
   const parsedTrackers = TrackerDatabaseSchema.parse(rawTrackers)
   const parsedCompanies = CompanyDatabaseSchema.parse(rawCompanies)
@@ -142,6 +165,7 @@ export function validateTrackerDatabaseRecords(rawTrackers: unknown, rawCompanie
     assertHighFidelityTracker(tracker)
     assertTrackerValuation(tracker)
     assertBlockingLimitLanguage(tracker)
+    assertNoReassuranceLanguage(tracker)
   }
 
   return {

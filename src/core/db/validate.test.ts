@@ -37,7 +37,8 @@ const tracker = {
   monetization: ["UX analytics"],
   browserAction: {
     blockability: "network_blockable",
-    method: "network-block"
+    method: "network-block",
+    siteBreakage: { risk: "low", affects: [], note: "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only." }
   },
   confidence: "confirmed",
   evidenceTemplate: ["Request matched FullStory domain."],
@@ -77,6 +78,7 @@ const tracker = {
     },
     valueNote: "Enterprise session replay cost paid by the site.",
     sourceNote: "Vendor pricing tiers",
+    sourceFindingIds: ["fullstory-valuation-2026"],
     lastUpdated: "2026-07-03",
     confidence: "estimated"
   }
@@ -98,6 +100,7 @@ const highFidelityFields = {
   browserAction: {
     blockability: "network_blockable",
     method: "network-block",
+    siteBreakage: { risk: "low", affects: [], note: "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only." },
     whatBlockingChanges: ["Blocks future browser requests matching FullStory domains."],
     whatBlockingDoesNotChange: ["Does not delete prior records held by FullStory or the site."]
   }
@@ -150,13 +153,21 @@ describe("validateTrackerDatabase", () => {
     ], [company], [remediation])).toThrow("network_blockable without a blocking-policy source")
   })
 
-  it("rejects source-backed review when only manual seed provenance exists", () => {
+  it("rejects source-backed review without tracker-claim provenance", () => {
     expect(() => validateTrackerDatabaseRecords([
       {
         ...tracker,
         review: { ...tracker.review, status: "source_backed" }
       }
-    ], [company], [remediation])).toThrow("cannot be source_backed")
+    ], [company], [remediation])).toThrow("without tracker-claim provenance")
+
+    expect(() => validateTrackerDatabaseRecords([
+      {
+        ...tracker,
+        sources: [...tracker.sources, { family: "market_research", name: "Market research", license: "Kenshiki", transform_notes: "Valuation only." }],
+        review: { ...tracker.review, status: "source_backed" }
+      }
+    ], [company], [remediation])).toThrow("without tracker-claim provenance")
   })
 
   it("rejects imported source families without required source URLs", () => {
@@ -221,5 +232,19 @@ describe("validateTrackerDatabase", () => {
         }
       }
     ], [company], [remediation])).toThrow("blocking does not delete prior records")
+  })
+
+  it("rejects reassurance language in tracker explanations and blocking copy", () => {
+    expect(() => validateTrackerDatabaseRecords([
+      {
+        ...tracker,
+        schemaVersion: 2,
+        ...highFidelityFields,
+        userImpact: {
+          ...highFidelityFields.userImpact,
+          whyItMatters: ["Blocking makes this tracker safe."]
+        }
+      }
+    ], [company], [remediation])).toThrow("forbidden reassurance language")
   })
 })

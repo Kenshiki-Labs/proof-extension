@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest"
+import { readFileSync } from "node:fs"
+import { resolve } from "node:path"
 
 import { validateTrackerDatabase } from "~core/db/validate"
 import type { ObserverEvent } from "~core/domain/types"
 import { formatUsd, formatUsdRange, getTrackerValuation, rollupObservedValuations, VALUATION_DISCLAIMER } from "./valuation"
+
+const root = resolve(__dirname, "../../..")
+const normalizedValuations = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/valuations.json"), "utf8"))
 
 function event(trackerId: string | undefined, id: string): ObserverEvent {
   return {
@@ -33,13 +38,16 @@ describe("perPersonValue database", () => {
     }
   })
 
-  it("matches the spec's theoretical maximums across all trackers", () => {
+  it("matches the normalized valuation projection totals across all trackers", () => {
     const totalLow = trackers.reduce((sum, tracker) => sum + tracker.perPersonValue.annual.low_usd, 0)
     const totalHigh = trackers.reduce((sum, tracker) => sum + tracker.perPersonValue.annual.high_usd, 0)
     const totalMicro = trackers.reduce((sum, tracker) => sum + tracker.perPersonValue.perVisit.microdollars, 0)
-    expect(totalLow).toBeCloseTo(1007.14, 1)
-    expect(totalHigh).toBeCloseTo(1479.34, 1)
-    expect(totalMicro).toBeCloseTo(2615.5, 1)
+    const normalizedLow = normalizedValuations.records.reduce((sum: number, record: { perPersonValue: { annual: { low_usd: number } } }) => sum + record.perPersonValue.annual.low_usd, 0)
+    const normalizedHigh = normalizedValuations.records.reduce((sum: number, record: { perPersonValue: { annual: { high_usd: number } } }) => sum + record.perPersonValue.annual.high_usd, 0)
+    const normalizedMicro = normalizedValuations.records.reduce((sum: number, record: { perPersonValue: { perVisit: { microdollars: number } } }) => sum + record.perPersonValue.perVisit.microdollars, 0)
+    expect(totalLow).toBeCloseTo(normalizedLow, 8)
+    expect(totalHigh).toBeCloseTo(normalizedHigh, 8)
+    expect(totalMicro).toBeCloseTo(normalizedMicro, 8)
   })
 
   it("pins flagship numbers and value types from the spec", () => {

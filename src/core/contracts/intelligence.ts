@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { TrackerReviewSchema, TrackerSourceSchema } from "~core/contracts/schemas"
+import { PerPersonValueSchema, TrackerReviewSchema, TrackerSourceSchema } from "~core/contracts/schemas"
 
 // Contracts for intelligence/normalized/* import artifacts. These validate
 // the normalizer's output (scripts/normalize-intelligence.mjs); they are not
@@ -226,6 +226,19 @@ export const NormalizedDefenseProductSurfaceSchema = z.object({
     referenceIntelligence: z.unknown()
   }),
   destinations: z.record(z.string(), DefenseProductSurfaceDestinationSchema)
+})
+
+export const NormalizedValuationRecordSchema = z.object({
+  trackerId: z.string().min(1),
+  subjectEntityId: z.string().min(1),
+  sourceFindingIds: z.array(z.string().min(1)).min(1),
+  perPersonValue: PerPersonValueSchema
+})
+
+export const NormalizedValuationsSchema = z.object({
+  ...importArtifactBase,
+  sourceFindingCount: z.number().int().positive(),
+  records: z.array(NormalizedValuationRecordSchema).min(1)
 })
 
 export const EntityAdjudicationRecordSchema = z.object({

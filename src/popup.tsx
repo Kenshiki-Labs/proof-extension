@@ -22,7 +22,8 @@ import {
   visibleSignals,
   type DisplayObservation
 } from "~core/report/display"
-import { formatUsd, formatUsdRange, rollupObservedValuations } from "~core/domain/valuation"
+import { blockingGuidance } from "~core/domain/blocking-policy"
+import { formatUsd, formatUsdRange, getTrackerValuation, rollupObservedValuations } from "~core/domain/valuation"
 import { isDiagnosticEvent } from "~core/state/summaries"
 import type { ObserverEvent, SiteSummary, UserSettings } from "~core/domain/types"
 import Button from "~components/system/Button"
@@ -54,7 +55,7 @@ const STATUS_CLASSES: Record<ObserverEvent["status"], string> = {
   cannot_block: "border-border text-muted-foreground"
 }
 
-function Metric({ label, value }: { label: string; value: number }) {
+function Metric({ label, value }: { label: string; value: number | string }) {
   return (
     <div className="min-w-0 border border-border bg-card/80 p-3 shadow-sm">
       <div className={TYPE.label}>{label}</div>
@@ -83,9 +84,11 @@ function ObserverCard({
   onToggleBlocking
 }: DisplayObservation & { blockedTrackerIds: string[]; onToggleBlocking: (trackerId: string, blocked: boolean) => void }) {
   const remediation = getObserverRemediation(event)
-  const canBlock = event.blockability === "network_blockable" && Boolean(event.trackerId)
+  const guidance = blockingGuidance(event.trackerId)
+  const canBlock = event.blockability === "network_blockable" && Boolean(event.trackerId) && guidance.offerBlocking
   const isBlocked = canBlock && blockedTrackerIds.includes(event.trackerId as string)
   const details = detailEntries(event)
+  const valuation = getTrackerValuation(event.trackerId)
 
   return (
     <article className={`mt-2.5 ${UI.subtlePanel} p-3`}>
@@ -112,6 +115,12 @@ function ObserverCard({
       </div>
       {remediation ? <p className={`${TYPE.small} mt-1`}>{remediation.parentCompany} · {remediation.categoryLabels.join(" · ")}</p> : null}
       <p className={`${TYPE.body} mt-2`}>{eventSummary(event)}</p>
+      {event.blockability === "network_blockable" && event.trackerId && !guidance.offerBlocking ? (
+        <p className={`${TYPE.small} mt-1.5 text-muted-foreground`}>{"reason" in guidance ? guidance.reason : null}</p>
+      ) : null}
+      {canBlock && guidance.offerBlocking && guidance.warning ? (
+        <p className={`${TYPE.small} mt-1.5 text-muted-foreground`}>Blocking caution: {guidance.warning}</p>
+      ) : null}
       {count > 1 ? <p className={`${TYPE.small} mt-1`}>Observed {count} times in this tab. Showing the latest instance.</p> : null}
       <dl className="mt-2.5 grid grid-cols-[96px_1fr] gap-1.5">
         <dt className={TYPE.small}>Observed</dt>
@@ -179,6 +188,14 @@ function ObserverCard({
             <dd className={TYPE.body}>{remediation.monetization.join(", ")}</dd>
             <dt className={TYPE.small}>Risk</dt>
             <dd className={TYPE.body}>{titleCase(remediation.explanation.riskLevel)} · {remediation.explanation.riskReasons.join(", ")}</dd>
+            {valuation ? (
+              <>
+                <dt className={TYPE.small}>Value</dt>
+                <dd className={TYPE.body}>
+                  {formatUsdRange(valuation.annual.low_usd, valuation.annual.high_usd)}/yr {valuation.valueType === "revenue" ? "revenue estimate" : "site cost estimate"}
+                </dd>
+              </>
+            ) : null}
             <dt className={TYPE.small}>Friction</dt>
             <dd className={TYPE.body}>{titleCase(remediation.frictionClass)} · about {remediation.estimatedTimeMinutes} min</dd>
             <dt className={TYPE.small}>Verify ID</dt>
@@ -214,7 +231,7 @@ function ObserverCard({
 }
 
 // Compact per-tab value rollup (docs/TRACKER_VALUE_SPEC.md). The popup shows
-// the headline; the full per-tracker table with sources lives in the report
+// estimates only; the full per-tracker table with sources lives in the report
 // tab. Revenue and site-paid tooling are never summed into one number.
 function ValueSection({ events }: { events: ObserverEvent[] }) {
   const rollup = rollupObservedValuations(events)
@@ -222,16 +239,16 @@ function ValueSection({ events }: { events: ObserverEvent[] }) {
 
   return (
     <section className="mt-4">
-      <h2 className={TYPE.label}>What you are worth</h2>
+      <h2 className={TYPE.label}>Estimated data value</h2>
       <div className={`mt-2.5 ${UI.subtlePanel} p-3`}>
         <dl className="grid grid-cols-[128px_1fr] gap-1.5">
           <dt className={TYPE.small}>This visit</dt>
           <dd className={TYPE.body}>{formatUsd(rollup.thisVisitUsd)} across {rollup.perTracker.length} observed {rollup.perTracker.length === 1 ? "tracker" : "trackers"}</dd>
           {rollup.revenueTrackerCount > 0 ? (
             <>
-              <dt className={TYPE.small}>Your value/yr</dt>
+              <dt className={TYPE.small}>Ad value/yr</dt>
               <dd className={TYPE.body}>
-                {formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)} to {rollup.revenueTrackerCount} {rollup.revenueTrackerCount === 1 ? "company" : "companies"} that monetize you
+                {formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)} across {rollup.revenueTrackerCount} revenue-model {rollup.revenueTrackerCount === 1 ? "tracker" : "trackers"}
               </dd>
             </>
           ) : null}
@@ -244,7 +261,7 @@ function ValueSection({ events }: { events: ObserverEvent[] }) {
             </>
           ) : null}
         </dl>
-        <p className={`${TYPE.small} mt-2`}>Estimates from public revenue data, not measurements. Details and sources in the full report.</p>
+        <p className={`${TYPE.small} mt-2`}>Estimates, not measurements. Details and sources in the full report.</p>
       </div>
     </section>
   )
@@ -442,7 +459,11 @@ function IndexPopup() {
         </section>
       ) : null}
 
-      {pageErrors.length > 0 ? (
+      {/* Errors on a tab where the extension took no action (nothing blocked
+          or mitigated) are the site's own bugs — reporting them here implied
+          involvement we did not have and read as noise. Full detail stays in
+          the report tab diagnostics for anyone investigating. */}
+      {pageErrors.length > 0 && (summary.blockedCompanies.length > 0 || summary.mitigatedCompanies.length > 0) ? (
         <section className="mt-3.5 border border-danger bg-card p-3 shadow-sm" role="alert">
           <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger">
             Page error while this extension was active

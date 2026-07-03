@@ -112,6 +112,10 @@ export const TrackerSourceFamilySchema = z.enum([
   // US state data-broker registry filings (Vermont, Oregon, Texas,
   // California AG/CPPA) — public-record provenance for remediation data.
   "state_registry",
+  // Curated market/economic research used only to support per-person
+  // valuation estimates. This does not prove tracker identity, collection,
+  // or blocking behavior.
+  "market_research",
   // Kenshiki-authored defense registry (defense-registry.v3-harm) and
   // supply-chain research; first-party curated remediation intelligence.
   "kenshiki_defense_registry",
@@ -173,6 +177,7 @@ export const PerPersonValueSchema = z.object({
   }),
   valueNote: z.string().min(1),
   sourceNote: z.string().min(1),
+  sourceFindingIds: z.array(z.string().min(1)).min(1),
   lastUpdated: z.iso.date(),
   confidence: z.enum(["sourced", "estimated"])
 })
@@ -195,6 +200,14 @@ export const TrackerRecordSchema = z.object({
   browserAction: z.object({
     blockability: BlockabilityClassSchema,
     method: z.string().min(1),
+    // Whether blocking this tracker's network requests can break visible
+    // site functionality (chat widgets, forms, tag delivery). "high" means
+    // the UI must not offer a block toggle at all — observation only.
+    siteBreakage: z.object({
+      risk: z.enum(["low", "medium", "high"]),
+      affects: z.array(z.string().min(1)),
+      note: z.string().min(1)
+    }),
     whatBlockingChanges: z.array(z.string().min(1)).default([]),
     whatBlockingDoesNotChange: z.array(z.string().min(1)).default([])
   }),

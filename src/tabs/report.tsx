@@ -25,6 +25,7 @@ import {
   titleCase,
   visibleSignals
 } from "~core/report/display"
+import { blockingGuidance } from "~core/domain/blocking-policy"
 import { formatUsd, formatUsdRange, MONETIZATION_FLOW_LABELS, rollupObservedValuations } from "~core/domain/valuation"
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import type { UserSettings } from "~core/domain/types"
@@ -153,21 +154,21 @@ function ExposureScanSection({ events }: { events: ObserverEvent[] }) {
   )
 }
 
-// What the observed companies earn from one person (docs/TRACKER_VALUE_SPEC.md).
-// Revenue and operator cost are shown separately and every figure is labeled
-// as an estimate — no false certainty, no single conflated number.
+// Estimated value model (docs/TRACKER_VALUE_SPEC.md). Revenue and operator
+// cost are shown separately and every figure is labeled as an estimate — no
+// false certainty, no single conflated number.
 function ValuationSection({ events }: { events: ObserverEvent[] }) {
   const rollup = rollupObservedValuations(events)
   if (rollup.perTracker.length === 0) return null
 
   return (
     <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-      <SectionTitle number="03b" title="What you are worth" />
+      <SectionTitle number="03b" title="Estimated data value" />
       <p className={`${TYPE.small} mt-2`}>{rollup.disclaimer}</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         <Metric label="This visit" value={formatUsd(rollup.thisVisitUsd)} />
         <Metric
-          label={`Your value/yr (${rollup.revenueTrackerCount} ${rollup.revenueTrackerCount === 1 ? "company" : "companies"})`}
+          label={`Ad value/yr (${rollup.revenueTrackerCount} ${rollup.revenueTrackerCount === 1 ? "tracker" : "trackers"})`}
           value={formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)}
         />
         <Metric
@@ -181,7 +182,7 @@ function ValuationSection({ events }: { events: ObserverEvent[] }) {
             <tr className={TYPE.small}>
               <th className="p-2">Tracker</th>
               <th className="p-2">Model</th>
-              <th className="p-2">Per year</th>
+              <th className="p-2">Annual estimate</th>
               <th className="p-2">This visit</th>
               <th className="p-2">Basis</th>
             </tr>
@@ -230,7 +231,8 @@ function ObservationTable({
         <tbody>
           {observations.map(({ event, count }) => {
             const remediation = getObserverRemediation(event)
-            const canBlock = event.blockability === "network_blockable" && Boolean(event.trackerId)
+            const guidance = blockingGuidance(event.trackerId)
+            const canBlock = event.blockability === "network_blockable" && Boolean(event.trackerId) && guidance.offerBlocking
             const isBlocked = canBlock && blockedTrackerIds.includes(event.trackerId as string)
             const details = detailEntries(event)
 
@@ -252,6 +254,10 @@ function ObservationTable({
                   <td className={`${TYPE.body} p-3`}>{count}</td>
                   <td className={`${TYPE.body} p-3`}>{formatTime(event.observedAt)}</td>
                   <td className="p-3">
+                    {event.blockability === "network_blockable" && event.trackerId && !guidance.offerBlocking ? (
+                      <p className={TYPE.small}>{"reason" in guidance ? guidance.reason : null}</p>
+                    ) : null}
+                    {canBlock && guidance.warning ? <p className={TYPE.small}>Blocking caution: {guidance.warning}</p> : null}
                     {canBlock ? (
                       <Button onClick={() => onToggleBlocking(event.trackerId as string, !isBlocked)}>
                         {isBlocked ? "Unblock" : "Block"}

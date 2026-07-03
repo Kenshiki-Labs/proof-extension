@@ -41,7 +41,12 @@
         "Does not delete prior recordings held by FullStory or the site.",
         "Does not change masking choices or retention settings configured by the site.",
         "Does not remove records already received before blocking was enabled."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "observes": {
       "browserVisible": [
@@ -89,6 +94,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -116,6 +129,9 @@
       },
       "valueNote": "Enterprise session replay cost paid by the site.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "fullstory-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -163,7 +179,12 @@
         "Does not delete prior records held by Google Analytics, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -178,6 +199,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -228,16 +257,19 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 0,
-        "dollars": 0.0,
+        "dollars": 0,
         "basis": "operator SaaS pricing \u00f7 tracked users"
       },
       "annual": {
         "low_usd": 0,
         "high_usd": 0,
-        "midpoint_usd": 0.0
+        "midpoint_usd": 0
       },
       "valueNote": "Free tool; GA audiences feed Google remarketing (value under Google Ads).",
       "sourceNote": "Proton 2025",
+      "sourceFindingIds": [
+        "google-analytics-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -276,7 +308,15 @@
         "Does not delete prior records held by Google Tag Manager, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "high",
+        "affects": [
+          "site tag loading",
+          "embedded widgets"
+        ],
+        "note": "GTM loads the site's own tags. Blocking it can break features the site delivers through it, not just tracking."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -291,6 +331,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -339,16 +387,19 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 0,
-        "dollars": 0.0,
+        "dollars": 0,
         "basis": "operator SaaS pricing \u00f7 tracked users"
       },
       "annual": {
         "low_usd": 0,
         "high_usd": 0,
-        "midpoint_usd": 0.0
+        "midpoint_usd": 0
       },
       "valueNote": "Free tag delivery mechanism; value is the trackers it loads.",
       "sourceNote": "Proton 2025",
+      "sourceFindingIds": [
+        "google-tag-manager-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -396,7 +447,12 @@
         "Does not delete prior records held by Google Ads / DoubleClick, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -411,6 +467,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -467,10 +531,13 @@
       "annual": {
         "low_usd": 420,
         "high_usd": 500,
-        "midpoint_usd": 460.0
+        "midpoint_usd": 460
       },
       "valueNote": "Google US ARPU ~$460/yr. Present on a large share of the web.",
       "sourceNote": "Proton 2025: ~$460 US ARPU; Mediapost 2026: $1,605 engaged desktop user",
+      "sourceFindingIds": [
+        "google-ads-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -516,7 +583,12 @@
         "Does not delete prior records held by Meta Pixel, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -531,6 +603,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -591,6 +671,9 @@
       },
       "valueNote": "Meta US/CA ARPU; the pixel extends monetization to off-Facebook browsing.",
       "sourceNote": "Proton 2025: ~$217 US estimate; Statista Jan 2025: $49.63 global ARPU 2024",
+      "sourceFindingIds": [
+        "meta-pixel-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -631,7 +714,12 @@
         "Does not delete prior records held by TikTok Pixel, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -646,6 +734,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -702,10 +798,13 @@
       "annual": {
         "low_usd": 80,
         "high_usd": 140,
-        "midpoint_usd": 110.0
+        "midpoint_usd": 110
       },
       "valueNote": "ByteDance US ARPU estimates.",
       "sourceNote": "Surff.io 2026 brand-by-brand analysis",
+      "sourceFindingIds": [
+        "tiktok-pixel-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -749,7 +848,12 @@
         "Does not delete prior records held by LinkedIn Insight Tag, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -764,6 +868,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -820,10 +932,13 @@
       "annual": {
         "low_usd": 80,
         "high_usd": 120,
-        "midpoint_usd": 100.0
+        "midpoint_usd": 100
       },
       "valueNote": "LinkedIn revenue over active users; B2B ad premium.",
       "sourceNote": "Surff.io 2026 brand-by-brand analysis",
+      "sourceFindingIds": [
+        "linkedin-insight-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -868,7 +983,12 @@
         "Does not delete prior records held by Hotjar, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -883,6 +1003,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -944,6 +1072,9 @@
       },
       "valueNote": "Per-session replay/heatmap cost paid by the site.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "hotjar-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -987,7 +1118,12 @@
         "Does not delete prior records held by Mixpanel, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1002,6 +1138,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1062,6 +1206,9 @@
       },
       "valueNote": "Per-event/per-user product analytics pricing.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "mixpanel-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -1105,7 +1252,15 @@
         "Does not delete prior records held by Segment, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "medium",
+        "affects": [
+          "feature flags",
+          "product event routing"
+        ],
+        "note": "Some sites route feature flags and product logic through Segment; blocking can change site behavior."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1120,6 +1275,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1176,10 +1339,13 @@
       "annual": {
         "low_usd": 0.002,
         "high_usd": 0.1,
-        "midpoint_usd": 0.051
+        "midpoint_usd": 0.051000000000000004
       },
       "valueNote": "Per monthly-tracked-user CDP pricing.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "segment-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -1221,7 +1387,12 @@
         "Does not delete prior records held by Amplitude, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1236,6 +1407,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1292,10 +1471,13 @@
       "annual": {
         "low_usd": 0.003,
         "high_usd": 0.05,
-        "midpoint_usd": 0.0265
+        "midpoint_usd": 0.026500000000000003
       },
       "valueNote": "Per-event/per-user product analytics tiers.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "amplitude-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -1339,7 +1521,12 @@
         "Does not delete prior records held by Criteo, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1354,6 +1541,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1410,10 +1605,13 @@
       "annual": {
         "low_usd": 2,
         "high_usd": 8,
-        "midpoint_usd": 5.0
+        "midpoint_usd": 5
       },
       "valueNote": "Commerce-media retargeting share of CPM auctions.",
       "sourceNote": "Criteo IR Sept 2025; ZipDo 2026",
+      "sourceFindingIds": [
+        "criteo-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -1456,7 +1654,12 @@
         "Does not delete prior records held by Adobe Analytics, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1471,6 +1674,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1531,6 +1742,9 @@
       },
       "valueNote": "Enterprise analytics SaaS pricing paid by the site.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "adobe-analytics-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -1572,7 +1786,15 @@
         "Does not delete prior records held by Braze, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "medium",
+        "affects": [
+          "in-app messages",
+          "web push prompts"
+        ],
+        "note": "Sites deliver product messaging through Braze; blocking can suppress content the site intended to show."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1587,6 +1809,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1646,6 +1876,9 @@
       },
       "valueNote": "Per-MAU engagement platform pricing paid by the operator.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "braze-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -1687,7 +1920,14 @@
         "Does not delete prior records held by Intercom, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "high",
+        "affects": [
+          "support chat widget"
+        ],
+        "note": "The Intercom messenger is the site's support channel. Blocking removes it and can throw errors in code that expects it."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1702,6 +1942,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1762,6 +2010,9 @@
       },
       "valueNote": "Per-seat/contact messaging platform pricing.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "intercom-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -1802,7 +2053,14 @@
         "Does not delete prior records held by Drift, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "high",
+        "affects": [
+          "sales and support chat widget"
+        ],
+        "note": "Drift renders the site's chat. Blocking removes it and can throw errors in code that expects it."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1817,6 +2075,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1877,6 +2143,9 @@
       },
       "valueNote": "B2B sales messaging tool pricing.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "drift-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -1917,7 +2186,14 @@
         "Does not delete prior records held by Optimizely, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "medium",
+        "affects": [
+          "A/B test content"
+        ],
+        "note": "Pages may wait on experiment payloads; blocking can cause flicker or default-variant content."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1932,6 +2208,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1991,6 +2275,9 @@
       },
       "valueNote": "Per-visitor experimentation pricing.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "optimizely-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -2031,7 +2318,12 @@
         "Does not delete prior records held by Crazy Egg, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -2046,6 +2338,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -2103,10 +2403,13 @@
       "annual": {
         "low_usd": 0.01,
         "high_usd": 0.05,
-        "midpoint_usd": 0.03
+        "midpoint_usd": 0.030000000000000002
       },
       "valueNote": "Heatmap SaaS cost paid by the site.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "crazyegg-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -2148,7 +2451,12 @@
         "Does not delete prior records held by Quantcast, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -2163,6 +2471,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -2219,10 +2535,13 @@
       "annual": {
         "low_usd": 1,
         "high_usd": 5,
-        "midpoint_usd": 3.0
+        "midpoint_usd": 3
       },
       "valueNote": "Audience measurement plus programmatic share.",
       "sourceNote": "ZipDo 2026",
+      "sourceFindingIds": [
+        "quantcast-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -2264,7 +2583,12 @@
         "Does not delete prior records held by Taboola, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -2279,6 +2603,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -2335,10 +2667,13 @@
       "annual": {
         "low_usd": 2,
         "high_usd": 8,
-        "midpoint_usd": 5.0
+        "midpoint_usd": 5
       },
       "valueNote": "Native content-recommendation CPM economics.",
       "sourceNote": "ZipDo 2026: US CPMs $2.30-$9.20",
+      "sourceFindingIds": [
+        "taboola-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -2380,7 +2715,12 @@
         "Does not delete prior records held by Outbrain, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -2395,6 +2735,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -2451,10 +2799,13 @@
       "annual": {
         "low_usd": 2,
         "high_usd": 6,
-        "midpoint_usd": 4.0
+        "midpoint_usd": 4
       },
       "valueNote": "Native content-recommendation CPM economics.",
       "sourceNote": "ZipDo 2026",
+      "sourceFindingIds": [
+        "outbrain-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -2496,7 +2847,12 @@
         "Does not delete prior records held by Snapchat Pixel, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -2511,6 +2867,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -2567,10 +2931,13 @@
       "annual": {
         "low_usd": 10,
         "high_usd": 18,
-        "midpoint_usd": 14.0
+        "midpoint_usd": 14
       },
       "valueNote": "Snap quarterly ARPU annualized.",
       "sourceNote": "Statista Feb 2025: $3.44/quarter Q4 2024",
+      "sourceFindingIds": [
+        "snap-pixel-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -2613,7 +2980,12 @@
         "Does not delete prior records held by Pinterest Tag, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -2628,6 +3000,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -2684,10 +3064,13 @@
       "annual": {
         "low_usd": 28,
         "high_usd": 44,
-        "midpoint_usd": 36.0
+        "midpoint_usd": 36
       },
       "valueNote": "Pinterest US/CA quarterly ARPU ~$9 annualized.",
       "sourceNote": "Statista Feb 2025: $9/quarter US/CA Q4 2024",
+      "sourceFindingIds": [
+        "pinterest-tag-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -2729,7 +3112,12 @@
         "Does not delete prior records held by X (Twitter) Pixel, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -2744,6 +3132,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -2800,10 +3196,13 @@
       "annual": {
         "low_usd": 20,
         "high_usd": 32,
-        "midpoint_usd": 26.0
+        "midpoint_usd": 26
       },
       "valueNote": "Post-acquisition ARPU decline from ~$6.50/quarter global pre-2022.",
       "sourceNote": "Surff.io 2026",
+      "sourceFindingIds": [
+        "twitter-pixel-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -2846,7 +3245,12 @@
         "Does not delete prior records held by Yandex Metrica, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -2861,6 +3265,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -2922,6 +3334,9 @@
       },
       "valueNote": "Free analytics product; feeds Yandex advertising ecosystem.",
       "sourceNote": "Vendor docs",
+      "sourceFindingIds": [
+        "yandex-metrica-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -2963,7 +3378,12 @@
         "Does not delete prior records held by Microsoft Clarity, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -2978,6 +3398,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3039,6 +3467,9 @@
       },
       "valueNote": "Free session replay; enriches Microsoft Advertising.",
       "sourceNote": "Vendor docs",
+      "sourceFindingIds": [
+        "microsoft-clarity-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -3079,7 +3510,12 @@
         "Does not delete prior records held by Datadog RUM, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -3094,6 +3530,14 @@
         "retrieved_at": "2026-07-02",
         "license": "MIT",
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3153,6 +3597,9 @@
       },
       "valueNote": "Per-session real-user-monitoring pricing paid by the site.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "datadog-rum-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -3196,7 +3643,12 @@
         "Does not delete prior records held by The Trade Desk, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -3211,6 +3663,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3267,10 +3727,13 @@
       "annual": {
         "low_usd": 3,
         "high_usd": 15,
-        "midpoint_usd": 9.0
+        "midpoint_usd": 9
       },
       "valueNote": "DSP revenue over addressable US users.",
       "sourceNote": "TTD Q4 FY2025: $2.9B revenue",
+      "sourceFindingIds": [
+        "the-trade-desk-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -3313,7 +3776,12 @@
         "Does not delete prior records held by PubMatic, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -3328,6 +3796,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3384,10 +3860,13 @@
       "annual": {
         "low_usd": 1,
         "high_usd": 5,
-        "midpoint_usd": 3.0
+        "midpoint_usd": 3
       },
       "valueNote": "Supply-side fraction of CPM per impression.",
       "sourceNote": "ZipDo 2026",
+      "sourceFindingIds": [
+        "pubmatic-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -3431,7 +3910,12 @@
         "Does not delete prior records held by Magnite, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -3446,6 +3930,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3502,10 +3994,13 @@
       "annual": {
         "low_usd": 1,
         "high_usd": 5,
-        "midpoint_usd": 3.0
+        "midpoint_usd": 3
       },
       "valueNote": "Supply-side fraction of CPM per impression; CTV growing.",
       "sourceNote": "ZipDo 2026",
+      "sourceFindingIds": [
+        "magnite-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -3547,7 +4042,12 @@
         "Does not delete prior records held by OpenX, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -3562,6 +4062,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3622,6 +4130,9 @@
       },
       "valueNote": "Supply-side share of CPM economics.",
       "sourceNote": "ZipDo 2026 CPM baseline",
+      "sourceFindingIds": [
+        "openx-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -3664,7 +4175,12 @@
         "Does not delete prior records held by Index Exchange, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -3679,6 +4195,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3739,6 +4263,9 @@
       },
       "valueNote": "Header-bidding infrastructure share of CPM economics.",
       "sourceNote": "ZipDo 2026 CPM baseline",
+      "sourceFindingIds": [
+        "index-exchange-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -3780,7 +4307,12 @@
         "Does not delete prior records held by Lotame, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -3795,6 +4327,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3855,6 +4395,9 @@
       },
       "valueNote": "Audience segment sales via DMP.",
       "sourceNote": "Surff.io 2026",
+      "sourceFindingIds": [
+        "lotame-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -3897,7 +4440,12 @@
         "Does not delete prior records held by LiveRamp, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -3912,6 +4460,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "LiveRamp links online cookies to offline identity (name, address, email). It is a registered state data broker; remediation URLs come from its registry filings."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3972,6 +4528,9 @@
       },
       "valueNote": "Offline-to-online identity matching charged per record/match.",
       "sourceNote": "LiveRamp identity-resolution value materials",
+      "sourceFindingIds": [
+        "liveramp-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -4012,7 +4571,12 @@
         "Does not delete prior records held by ID5, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -4027,6 +4591,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -4087,6 +4659,9 @@
       },
       "valueNote": "Shared-ID infrastructure; value flows to publishers/buyers.",
       "sourceNote": "Surff.io 2026",
+      "sourceFindingIds": [
+        "id5-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -4129,7 +4704,12 @@
         "Does not delete prior records held by 33Across, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -4144,6 +4724,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -4200,10 +4788,13 @@
       "annual": {
         "low_usd": 1,
         "high_usd": 3,
-        "midpoint_usd": 2.0
+        "midpoint_usd": 2
       },
       "valueNote": "Cookieless addressability share of CPM economics.",
       "sourceNote": "ZipDo 2026 CPM baseline",
+      "sourceFindingIds": [
+        "33across-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -4245,7 +4836,12 @@
         "Does not delete prior records held by Tapad, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -4260,6 +4856,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -4320,6 +4924,9 @@
       },
       "valueNote": "Cross-device graph licensing (Experian).",
       "sourceNote": "Surff.io 2026",
+      "sourceFindingIds": [
+        "tapad-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -4361,7 +4968,12 @@
         "Does not delete prior records held by 6sense, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -4376,6 +4988,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "6sense resolves anonymous visits to employer accounts for B2B intent scoring; it is a registered state data broker."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -4431,10 +5051,13 @@
       "annual": {
         "low_usd": 1,
         "high_usd": 5,
-        "midpoint_usd": 3.0
+        "midpoint_usd": 3
       },
       "valueNote": "B2B intent and IP-level firmographic data sold at account level.",
       "sourceNote": "Surff.io 2026",
+      "sourceFindingIds": [
+        "6sense-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -4481,7 +5104,16 @@
         "Does not delete prior records held by HubSpot, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "high",
+        "affects": [
+          "forms",
+          "chat",
+          "meeting schedulers"
+        ],
+        "note": "Sites embed HubSpot forms and chat. Blocking the loader makes inline code like hbspt.forms.create() throw and those features disappear."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -4496,6 +5128,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -4556,6 +5196,9 @@
       },
       "valueNote": "Per-contact marketing automation pricing at scale.",
       "sourceNote": "Vendor pricing tiers",
+      "sourceFindingIds": [
+        "hubspot-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "estimated"
     }
@@ -4597,7 +5240,12 @@
         "Does not delete prior records held by Microsoft Advertising (UET), its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -4612,6 +5260,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -4668,10 +5324,13 @@
       "annual": {
         "low_usd": 20,
         "high_usd": 40,
-        "midpoint_usd": 30.0
+        "midpoint_usd": 30
       },
       "valueNote": "Microsoft search/news ad revenue over estimated users.",
       "sourceNote": "Proton 2025",
+      "sourceFindingIds": [
+        "microsoft-ads-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -4715,7 +5374,12 @@
         "Does not delete prior records held by Amazon Ads, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -4730,6 +5394,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -4786,10 +5458,13 @@
       "annual": {
         "low_usd": 120,
         "high_usd": 200,
-        "midpoint_usd": 160.0
+        "midpoint_usd": 160
       },
       "valueNote": "Amazon retail media ad revenue per customer; higher for Prime members.",
       "sourceNote": "Surff.io 2026 brand-by-brand analysis",
+      "sourceFindingIds": [
+        "amazon-ads-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
@@ -4831,7 +5506,12 @@
         "Does not delete prior records held by Reddit Pixel, its parent company, or the site.",
         "Does not stop server-side events sent by the website.",
         "Does not stop processing from other sessions, apps, or logged-in services."
-      ]
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+      }
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -4846,6 +5526,14 @@
         "retrieved_at": "2026-07-03",
         "license": "MIT",
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -4906,6 +5594,9 @@
       },
       "valueNote": "Reddit US ARPU annualized.",
       "sourceNote": "Reddit Q2 2025 earnings: $7.87/quarter US",
+      "sourceFindingIds": [
+        "reddit-pixel-valuation-2026"
+      ],
       "lastUpdated": "2026-07-03",
       "confidence": "sourced"
     }
