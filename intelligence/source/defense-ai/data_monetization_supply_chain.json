@@ -1,0 +1,2942 @@
+{
+  "title": "Companies in the US Personal Data Supply Chain",
+  "subtitle": "Who Monetizes, Sells, or Aggregates Consumer Data",
+  "research_completed": "2026-06-25",
+  "source_report": "data_monetization_supply_chain.md",
+  "schema_notes": {
+    "tier": "wholesale = B2B brokers operating in the background; retail = consumer-facing companies that also monetize data; both = operates in both tiers",
+    "category": "Functional category within the data supply chain",
+    "fields": [
+      "name",
+      "hq",
+      "parent_or_owner",
+      "tier",
+      "category",
+      "description",
+      "data_products",
+      "notable_actions",
+      "ticker",
+      "url"
+    ]
+  },
+  "categories": [
+    {
+      "id": 1,
+      "name": "Credit Bureaus & Consumer Reporting Agencies (CRAs)",
+      "definition": "Credit bureaus are the original data brokers. They collect financial behavior data from lenders, then package and resell it to creditors, insurers, employers, landlords, and marketers. Governed by FCRA, but significant marketing-arm flows occur outside FCRA scope.",
+      "companies": [
+        {
+          "name": "Equifax",
+          "hq": "Atlanta, GA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "EFX",
+          "description": "One of the 'big three' CRAs; ~220M US consumer files; credit reports, scores, identity verification, fraud analytics; also operates The Work Number.",
+          "data_products": [
+            "credit reports",
+            "credit scores",
+            "identity verification",
+            "fraud analytics",
+            "employment verification"
+          ],
+          "notable_actions": [
+            "$575M FTC/CFPB settlement (2019) for 2017 breach affecting 147M people"
+          ]
+        },
+        {
+          "name": "Experian",
+          "hq": "Dublin, Ireland / Costa Mesa, CA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "EXPN.L",
+          "description": "Big three CRA; credit files, fraud prevention, identity verification; Experian Marketing Services sells profiles outside FCRA scope.",
+          "data_products": [
+            "credit reports",
+            "fraud prevention",
+            "identity verification",
+            "marketing data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "TransUnion",
+          "hq": "Chicago, IL",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "TRU",
+          "description": "Big three CRA; credit reporting, fraud prevention; acquired Neustar in 2021 for $3.1B to expand into marketing and identity resolution.",
+          "data_products": [
+            "credit reports",
+            "fraud prevention",
+            "marketing",
+            "identity resolution"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Innovis",
+          "hq": "Columbus, OH",
+          "parent_or_owner": "CBC Companies",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Fourth major CRA, less prominent than big three; used for credit decisions and fraud screening.",
+          "data_products": [
+            "credit reports",
+            "fraud screening"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "LexisNexis Risk Solutions",
+          "hq": "Alpharetta, GA",
+          "parent_or_owner": "RELX Group",
+          "tier": "wholesale",
+          "ticker": "REL.L",
+          "description": "Operates C.L.U.E. (Comprehensive Loss Underwriting Exchange) for insurance claims history; identity verification, fraud, public records across insurance, financial services, and government; works with 98 of top 100 US personal lines carriers.",
+          "data_products": [
+            "C.L.U.E. insurance claims",
+            "identity verification",
+            "fraud analytics",
+            "public records"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Cotality (formerly CoreLogic)",
+          "hq": "Irvine, CA",
+          "parent_or_owner": "Stone Point Capital / Insight Partners",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Property data, mortgage analytics, specialty insurance scores, and CLUE property claims; rebranded from CoreLogic in March 2025.",
+          "data_products": [
+            "property data",
+            "mortgage analytics",
+            "insurance scores",
+            "CLUE property claims"
+          ],
+          "notable_actions": [
+            "Rebranded from CoreLogic to Cotality in March 2025"
+          ]
+        },
+        {
+          "name": "Verisk Analytics",
+          "hq": "Jersey City, NJ",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "VRSK",
+          "description": "Parent of ISO, A-PLUS (Auto/Property claims exchange), AIR Worldwide (catastrophe modeling); major data analytics hub for insurance and financial services.",
+          "data_products": [
+            "insurance analytics",
+            "A-PLUS claims exchange",
+            "catastrophe modeling",
+            "actuarial benchmarks"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "MIB Group",
+          "hq": "Braintree, MA",
+          "parent_or_owner": "Member-owned cooperative (~430 insurers)",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Founded 1902; coded medical and non-medical data sharing for life, health, disability underwriting; covers 99% of individual life policies.",
+          "data_products": [
+            "coded medical data",
+            "lifestyle data",
+            "underwriting signals"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "ChexSystems",
+          "hq": "Eden Prairie, MN",
+          "parent_or_owner": "Fidelity National Information Services (FIS)",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Consumer banking history CRA; banks use it to screen account applicants for overdrafts, fraud, forced closures.",
+          "data_products": [
+            "deposit account history",
+            "banking fraud screening"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Equifax Workforce Solutions / The Work Number",
+          "hq": "Atlanta, GA",
+          "parent_or_owner": "Equifax",
+          "tier": "wholesale",
+          "ticker": "EFX",
+          "description": "Centralized employment and income verification database; payroll records from 2M+ employers; covers 50%+ of US workers; used by lenders, landlords, government.",
+          "data_products": [
+            "VOE/VOI verification",
+            "payroll records",
+            "income data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "NCTUE (National Consumer Telecom & Utilities Exchange)",
+          "hq": "Atlanta, GA",
+          "parent_or_owner": "Managed by Equifax",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Specialty CRA tracking utility and telecom payment history for consumers with thin credit files.",
+          "data_products": [
+            "utility payment history",
+            "telecom payment history"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Early Warning Services",
+          "hq": "Scottsdale, AZ",
+          "parent_or_owner": "Consortium of major US banks",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Operates Zelle and the Early Warning bank fraud database; CRA for deposit account screening.",
+          "data_products": [
+            "Zelle payments network",
+            "deposit account screening",
+            "bank fraud database"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "People-Search / Identity Data Brokers",
+      "definition": "Brokers compiling publicly available info (voter rolls, court records, property, social media) combined with commercial data to build consumer identity profiles sold to anyone who pays. FTC's 2014 study found the nine largest had 3,000 data segments on nearly every US consumer.",
+      "companies": [
+        {
+          "name": "Acxiom / LiveRamp",
+          "hq": "Little Rock, AR / San Francisco, CA",
+          "parent_or_owner": "LiveRamp Holdings",
+          "tier": "wholesale",
+          "ticker": "RAMP",
+          "description": "Acxiom maintains ~2.5B consumer profiles globally; LiveRamp operates identity resolution linking offline/online identities.",
+          "data_products": [
+            "consumer profiles",
+            "RampID identity graph",
+            "data onboarding",
+            "AbiliTec identity graph"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Epsilon",
+          "hq": "Irving, TX",
+          "parent_or_owner": "Publicis Groupe",
+          "tier": "wholesale",
+          "ticker": "PUB.PA",
+          "description": "Consumer database of ~250M US profiles; powers direct mail, email, digital targeting for Fortune 500.",
+          "data_products": [
+            "consumer profiles",
+            "Epsilon PeopleCloud (CDP/DMP)",
+            "direct mail",
+            "email marketing"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Spokeo",
+          "hq": "Pasadena, CA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": null,
+          "description": "Consumer-facing people search aggregating public records, social profiles, contact information.",
+          "data_products": [
+            "people search",
+            "background information"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Intelius",
+          "hq": "Bellevue, WA",
+          "parent_or_owner": "H.I.G. Capital",
+          "tier": "retail",
+          "ticker": null,
+          "description": "People-search platform selling background checks, phone lookups, identity reports directly to consumers.",
+          "data_products": [
+            "background checks",
+            "phone lookups",
+            "identity reports"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "BeenVerified",
+          "hq": "New York, NY",
+          "parent_or_owner": "The Lifetime Value Co.",
+          "tier": "retail",
+          "ticker": null,
+          "description": "Consumer-facing people-search and background check platform.",
+          "data_products": [
+            "people search",
+            "background checks"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Whitepages",
+          "hq": "Seattle, WA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": null,
+          "description": "Longstanding directory and identity platform; operates Hiya (caller ID) and TenantCheck.",
+          "data_products": [
+            "identity data",
+            "caller ID (Hiya)",
+            "tenant screening"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "PeopleFinders",
+          "hq": "Sacramento, CA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": null,
+          "description": "People-search site aggregating public records and contact data.",
+          "data_products": [
+            "people search",
+            "public records"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Radaris",
+          "hq": "Cambridge, MA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": null,
+          "description": "People-search engine aggregating public and commercial data.",
+          "data_products": [
+            "people search",
+            "public records"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "MyLife",
+          "hq": "Los Angeles, CA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": null,
+          "description": "Consumer-facing profile aggregation with 'reputation scores.'",
+          "data_products": [
+            "reputation scores",
+            "people search"
+          ],
+          "notable_actions": [
+            "FTC and state AG scrutiny for deceptive reputation score practices"
+          ]
+        },
+        {
+          "name": "TruePeopleSearch",
+          "hq": "United States",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": null,
+          "description": "Free people-search aggregating public records; monetized via advertising.",
+          "data_products": [
+            "people search",
+            "public records"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Marketing / Audience Data Brokers & Data Enrichment",
+      "definition": "Brokers selling demographic, psychographic, purchase-intent, and behavioral consumer segments to advertisers, political campaigns, direct marketers. Often outside FCRA because data isn't used for credit or employment decisions.",
+      "companies": [
+        {
+          "name": "Neustar / TransUnion Marketing Solutions",
+          "hq": "Reston, VA",
+          "parent_or_owner": "TransUnion (acquired 2021)",
+          "tier": "wholesale",
+          "ticker": "TRU",
+          "description": "Identity resolution, audience targeting, marketing analytics; OneID and TrueAudience platforms.",
+          "data_products": [
+            "identity resolution",
+            "audience targeting",
+            "marketing analytics"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Merkle",
+          "hq": "Columbia, MD",
+          "parent_or_owner": "Dentsu",
+          "tier": "wholesale",
+          "ticker": "4324.T",
+          "description": "Data-driven performance marketing agency with proprietary consumer identity graph for CRM onboarding and digital targeting.",
+          "data_products": [
+            "consumer identity graph",
+            "CRM onboarding",
+            "digital targeting"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Data Axle (formerly Infogroup)",
+          "hq": "Papillion, NE",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Business and consumer database marketing; B2B and B2C contact lists, data enrichment, digital audience segments.",
+          "data_products": [
+            "B2B contact lists",
+            "B2C contact lists",
+            "data enrichment"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "V12 Data",
+          "hq": "Clearwater, FL",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Automotive and consumer data for targeted marketing; merged with Windfall Data in 2023.",
+          "data_products": [
+            "automotive data",
+            "consumer marketing data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Datalogix",
+          "hq": "Louisville, CO",
+          "parent_or_owner": "Oracle (acquired 2014)",
+          "tier": "wholesale",
+          "ticker": "ORCL",
+          "description": "Offline purchase data for digital targeting; part of Oracle Advertising which was largely wound down in 2023.",
+          "data_products": [
+            "offline purchase data",
+            "audience segments"
+          ],
+          "notable_actions": [
+            "Oracle Advertising wound down in 2023"
+          ]
+        },
+        {
+          "name": "Nielsen",
+          "hq": "Chicago, IL",
+          "parent_or_owner": "Private equity consortium (Elliott / Brookfield)",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "TV audience measurement, consumer panel (Nielsen Homescan), marketing analytics; sells audience segments for programmatic activation.",
+          "data_products": [
+            "TV audience measurement",
+            "Homescan panel",
+            "audience segments"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Claritas",
+          "hq": "San Diego, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "PRIZM segmentation system (68 lifestyle and lifestage clusters); consumer demographic and behavioral segments.",
+          "data_products": [
+            "PRIZM segmentation",
+            "demographic segments",
+            "behavioral segments"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Experian Marketing Services",
+          "hq": "Costa Mesa, CA",
+          "parent_or_owner": "Experian",
+          "tier": "wholesale",
+          "ticker": "EXPN.L",
+          "description": "Marketing arm of Experian; consumer data lists, email append, digital audience targeting outside FCRA scope.",
+          "data_products": [
+            "marketing lists",
+            "email append",
+            "audience targeting"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Ad-Tech & Programmatic Advertising",
+      "definition": "Ad-tech enables real-time automated buying/selling of digital ads. Built on cross-site/cross-app surveillance of browsing, purchase intent, and demographics for micro-targeting.",
+      "companies": [
+        {
+          "name": "Google / Alphabet",
+          "hq": "Mountain View, CA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "GOOGL",
+          "description": "Dominates search, display, video advertising; DV360 (DSP), Google Ad Manager (SSP); Chrome and Android as data infrastructure; ~80% of Alphabet revenue is ads.",
+          "data_products": [
+            "search ads",
+            "DV360 DSP",
+            "Google Ad Manager SSP",
+            "YouTube ads",
+            "Privacy Sandbox"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Meta Platforms",
+          "hq": "Menlo Park, CA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "META",
+          "description": "Facebook, Instagram, WhatsApp ads; cross-site tracking via Facebook Pixel and Conversions API; ~97% ads revenue.",
+          "data_products": [
+            "Facebook Ads",
+            "Instagram Ads",
+            "Facebook Pixel",
+            "Conversions API"
+          ],
+          "notable_actions": [
+            "Multiple GDPR fines in EU"
+          ]
+        },
+        {
+          "name": "Amazon Advertising",
+          "hq": "Seattle, WA",
+          "parent_or_owner": "Amazon",
+          "tier": "both",
+          "ticker": "AMZN",
+          "description": "Leverages purchase/intent signals from 200M+ US Prime members; $56.2B ad revenue in 2024.",
+          "data_products": [
+            "sponsored products",
+            "DSP",
+            "Amazon Marketing Cloud"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "The Trade Desk",
+          "hq": "Ventura, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "TTD",
+          "description": "Leading independent DSP; operates UID2.0 open identity (built on emails) as cookie alternative.",
+          "data_products": [
+            "DSP platform",
+            "UID2.0 identity"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Criteo",
+          "hq": "Paris, France / New York",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "CRTO",
+          "description": "Commerce media platform specializing in retargeting and retail media.",
+          "data_products": [
+            "retargeting",
+            "retail media",
+            "commerce data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Magnite",
+          "hq": "New York, NY",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "MGNI",
+          "description": "Largest independent SSP after Rubicon Project + Telaria merger; CTV and display exchange infrastructure.",
+          "data_products": [
+            "SSP platform",
+            "CTV exchange",
+            "display exchange"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "PubMatic",
+          "hq": "Redwood City, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "PUBM",
+          "description": "Independent sell-side advertising platform managing publisher inventory across display, video, CTV.",
+          "data_products": [
+            "SSP platform",
+            "publisher analytics"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Index Exchange",
+          "hq": "Toronto, Canada / New York",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "SSP providing programmatic marketplace infrastructure.",
+          "data_products": [
+            "SSP platform",
+            "ad exchange"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "LiveRamp",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "RAMP",
+          "description": "Identity resolution infrastructure connecting first-party data across the ad-tech ecosystem via RampID.",
+          "data_products": [
+            "RampID",
+            "data onboarding",
+            "identity resolution"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "ID5",
+          "hq": "Paris, France / New York",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Shared cookieless identity solution for publishers and ad-tech, replacing third-party cookies.",
+          "data_products": [
+            "ID5 universal ID",
+            "cookieless targeting"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Lotame",
+          "hq": "Columbia, MD",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Independent DMP offering audience data and Panorama ID identity solution.",
+          "data_products": [
+            "DMP",
+            "Panorama ID",
+            "audience data"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Location Data Brokers",
+      "definition": "Harvest precise GPS coordinates from mobile app SDKs (often via apps with unrelated location permissions). Package as audience segments, movement patterns, POI visits sold to advertisers, hedge funds, government. 2024 FTC enforcement wave heavily disrupted this sector.",
+      "companies": [
+        {
+          "name": "X-Mode Social / Outlogic",
+          "hq": "Reston, VA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Embedded SDKs in hundreds of apps to harvest location, including apps used by Muslim communities.",
+          "data_products": [
+            "precise location data",
+            "mobility patterns"
+          ],
+          "notable_actions": [
+            "FTC ordered deletion of all historical location data and prohibited sale of sensitive location data (Jan 9, 2024)"
+          ]
+        },
+        {
+          "name": "Gravy Analytics",
+          "hq": "Ashburn, VA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Tracked visits to health clinics, places of worship, political events.",
+          "data_products": [
+            "location intelligence",
+            "POI visits"
+          ],
+          "notable_actions": [
+            "FTC action Dec 3, 2024; required to destroy historical data"
+          ]
+        },
+        {
+          "name": "Venntel",
+          "hq": "Ashburn, VA",
+          "parent_or_owner": "Gravy Analytics",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Sold location data to US government agencies including DHS, CBP, IRS.",
+          "data_products": [
+            "government location data"
+          ],
+          "notable_actions": [
+            "Covered by Dec 2024 FTC order against Gravy/Venntel"
+          ]
+        },
+        {
+          "name": "Mobilewalla",
+          "hq": "Atlanta, GA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Collected 500M+ unique consumer IDs; harvested location data from RTB auctions without bidding.",
+          "data_products": [
+            "location data",
+            "RTB-harvested data",
+            "consumer IDs"
+          ],
+          "notable_actions": [
+            "FTC action Dec 3, 2024; first-ever allegation that RTB harvesting without bidding is an unfair practice"
+          ]
+        },
+        {
+          "name": "SafeGraph",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "POI visit data and foot traffic analytics for hedge funds, research, advertisers.",
+          "data_products": [
+            "POI data",
+            "foot traffic analytics"
+          ],
+          "notable_actions": [
+            "Temporarily suspended government data sales in 2021 under public pressure"
+          ]
+        },
+        {
+          "name": "Veraset",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Precise location data and mobility analytics; spun out from SafeGraph.",
+          "data_products": [
+            "precise location",
+            "mobility data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Foursquare",
+          "hq": "New York, NY",
+          "parent_or_owner": "Private equity (since 2020)",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Location intelligence platform combining POI, panel movement, attribution analytics.",
+          "data_products": [
+            "POI data",
+            "attribution",
+            "audience products"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Cuebiq",
+          "hq": "New York, NY",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Location intelligence and foot traffic analytics for CPG, retail, OOH measurement.",
+          "data_products": [
+            "foot traffic",
+            "OOH measurement"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Near Intelligence",
+          "hq": "Pasadena, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "NIR",
+          "description": "Global location data platform covering 1.6B+ devices; financial difficulties through 2024.",
+          "data_products": [
+            "global location data",
+            "audience targeting"
+          ],
+          "notable_actions": [
+            "Financial difficulties; restructuring through 2024"
+          ]
+        },
+        {
+          "name": "Anomaly Six",
+          "hq": "Washington, DC",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Defense contractor and commercial location data broker supplying US intelligence community.",
+          "data_products": [
+            "location data",
+            "government intelligence feeds"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Babel Street",
+          "hq": "Reston, VA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Government-facing intelligence analytics; major DHS, FBI, DOD contractor.",
+          "data_products": [
+            "location data",
+            "social media intelligence"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Kochava",
+          "hq": "Sandpoint, ID",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Mobile measurement and attribution platform; alleged sale of sensitive location data from hundreds of millions of devices.",
+          "data_products": [
+            "mobile attribution",
+            "location data"
+          ],
+          "notable_actions": [
+            "FTC sued Aug 2022; amended complaint July 2024; case pending"
+          ]
+        },
+        {
+          "name": "PlaceIQ",
+          "hq": "New York, NY",
+          "parent_or_owner": "Near Intelligence (via UberMedia, 2020)",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Location analytics and foot traffic measurement; rebranded under Near.",
+          "data_products": [
+            "foot traffic",
+            "location analytics"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Tamoco",
+          "hq": "London, UK / US operations",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Mobile location data platform for audience targeting and attribution.",
+          "data_products": [
+            "mobile location",
+            "audience targeting"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Complementics",
+          "hq": "San Jose, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Location-based audience data using SDK and carrier partnerships.",
+          "data_products": [
+            "location data",
+            "audience data"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Health & Wellness Data",
+      "definition": "Health data brokers operate in a HIPAA gap. HIPAA covers only 'covered entities' and business associates. De-identified data, wellness apps, prescription discount programs, and DTC genetic testing operate largely outside HIPAA.",
+      "companies": [
+        {
+          "name": "IQVIA",
+          "hq": "Durham, NC",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "IQV",
+          "description": "Largest health data company in the world; 90-93% of US retail pharmacy claims; real-world evidence to pharma, biotech, insurers.",
+          "data_products": [
+            "pharmacy claims",
+            "real-world evidence",
+            "clinical trial data",
+            "market analytics"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Komodo Health",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Maps 330M patient journeys across 65B clinical events for pharma market access and clinical operations.",
+          "data_products": [
+            "patient journey mapping",
+            "clinical event data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Datavant",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Health data logistics; connects 70,000+ hospitals/clinics and 70% of health system data via tokenization.",
+          "data_products": [
+            "data tokenization",
+            "health data linkage",
+            "privacy-preserving linkage"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "HealthVerity",
+          "hq": "Philadelphia, PA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Healthcare data marketplace with 75+ real-world data sources for pharma and life sciences buyers.",
+          "data_products": [
+            "RWD marketplace",
+            "patient-level data linkage"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Truveta",
+          "hq": "Bellevue, WA",
+          "parent_or_owner": "Consortium of 30+ US health systems",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "De-identified EHR data pooled from member health systems sold to pharma and life sciences.",
+          "data_products": [
+            "de-identified EHR data",
+            "research datasets"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Trilliant Health",
+          "hq": "Nashville, TN",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Healthcare market analytics and consumer health data for payers, providers, investors.",
+          "data_products": [
+            "market analytics",
+            "consumer health data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "23andMe",
+          "hq": "South San Francisco, CA",
+          "parent_or_owner": "TTAM Research Institute (post-June 2025 sale)",
+          "tier": "retail",
+          "ticker": null,
+          "description": "Consumer DTC genetic testing with 15M+ customers; ~80% consented to research use.",
+          "data_products": [
+            "genetic data",
+            "ancestry data",
+            "health research panels"
+          ],
+          "notable_actions": [
+            "Filed bankruptcy March 2025; court-approved sale June 2025 to TTAM (nonprofit led by co-founder Anne Wojcicki) for $305M after public outcry over Regeneron's $256M bid"
+          ]
+        },
+        {
+          "name": "Ancestry",
+          "hq": "Lehi, UT",
+          "parent_or_owner": "Blackstone",
+          "tier": "retail",
+          "ticker": null,
+          "description": "DNA and genealogy database with 22M+ test customers; monetizes data for research partnerships under consent.",
+          "data_products": [
+            "DNA data",
+            "genealogy records",
+            "research partnerships"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "GoodRx",
+          "hq": "Santa Monica, CA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": "GDRX",
+          "description": "Prescription drug discount platform; shared health data with Facebook, Google, advertisers.",
+          "data_products": [
+            "prescription data",
+            "drug pricing"
+          ],
+          "notable_actions": [
+            "FTC's first Health Breach Notification Rule enforcement (Feb 2023); $1.5M civil penalty"
+          ]
+        },
+        {
+          "name": "Symphony Health / PRA Health Sciences",
+          "hq": "Blue Bell, PA",
+          "parent_or_owner": "ICON plc / IQVIA subsidiaries",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Longitudinal patient data from pharmacy claims for pharma market research.",
+          "data_products": [
+            "pharmacy claims",
+            "longitudinal patient data"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Financial / Banking Data Aggregators",
+      "definition": "Aggregators access consumers' bank, brokerage, payroll accounts (with permission) and share data with fintech apps, lenders, financial institutions. CFPB §1033 final rule (Oct 2024) set standards; phased compliance April 2026–April 2030.",
+      "companies": [
+        {
+          "name": "Plaid",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Leading US bank data aggregator; 12,000+ FIs, 8,000+ apps.",
+          "data_products": [
+            "bank account data",
+            "transaction data",
+            "income verification"
+          ],
+          "notable_actions": [
+            "Subject to CFPB §1033 compliance phased April 2026–April 2030"
+          ]
+        },
+        {
+          "name": "Yodlee / Envestnet",
+          "hq": "Berwyn, PA",
+          "parent_or_owner": "Envestnet (acquired 2015)",
+          "tier": "wholesale",
+          "ticker": "ENV",
+          "description": "Pioneer bank data aggregator; data connectivity for financial wellness, wealth management, lending.",
+          "data_products": [
+            "bank account data",
+            "wealth data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "MX Technologies",
+          "hq": "Lehi, UT",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Account aggregation, transaction enrichment, financial insights for banks and fintechs.",
+          "data_products": [
+            "account aggregation",
+            "transaction enrichment"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Finicity",
+          "hq": "Salt Lake City, UT",
+          "parent_or_owner": "Mastercard (acquired 2020)",
+          "tier": "wholesale",
+          "ticker": "MA",
+          "description": "Open banking connectivity and credit risk insights using bank account data.",
+          "data_products": [
+            "bank data connectivity",
+            "credit risk insights"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Tink",
+          "hq": "Stockholm, Sweden / US operations",
+          "parent_or_owner": "Visa (acquired 2022)",
+          "tier": "wholesale",
+          "ticker": "V",
+          "description": "European open banking provider expanding US presence post-Visa acquisition.",
+          "data_products": [
+            "open banking",
+            "payments data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Argyle",
+          "hq": "New York, NY",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Payroll/employment data connectivity for instant VOE/VOI; alternative to The Work Number.",
+          "data_products": [
+            "payroll data",
+            "employment verification",
+            "income verification"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Pinwheel",
+          "hq": "New York, NY",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Payroll connectivity API for income verification, direct deposit switching, earned wage access.",
+          "data_products": [
+            "payroll connectivity",
+            "direct deposit switching"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Atomic Financial",
+          "hq": "Salt Lake City, UT",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Payroll connectivity for direct deposit switching and income verification.",
+          "data_products": [
+            "payroll connectivity",
+            "direct deposit switching"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Nova Credit",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Cross-border credit bureau enabling immigrants to port international credit history into US lending.",
+          "data_products": [
+            "cross-border credit data"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Telecom & ISPs",
+      "definition": "Carriers and ISPs see every network request, location, and communication pattern of subscribers. Despite CPNI rules, carriers historically monetized location data through reseller chains.",
+      "companies": [
+        {
+          "name": "AT&T",
+          "hq": "Dallas, TX",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "T",
+          "description": "Operates AT&T Advertising & Analytics and FirstMark; previously owned Xandr (sold to Microsoft).",
+          "data_products": [
+            "network data",
+            "ad platform",
+            "location data (historically)"
+          ],
+          "notable_actions": [
+            "FCC fined $57M in April 2024 for illegal location data sharing"
+          ]
+        },
+        {
+          "name": "Verizon",
+          "hq": "New York, NY",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "VZ",
+          "description": "Operates Verizon Media (Yahoo) advertising platform leveraging mobile and ISP data.",
+          "data_products": [
+            "mobile data",
+            "Yahoo ad platform",
+            "ISP data"
+          ],
+          "notable_actions": [
+            "FCC fined $46.9M in April 2024 for illegal location data sharing"
+          ]
+        },
+        {
+          "name": "T-Mobile",
+          "hq": "Bellevue, WA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "TMUS",
+          "description": "Wireless carrier; acquired Sprint.",
+          "data_products": [
+            "network data",
+            "advertising platform"
+          ],
+          "notable_actions": [
+            "FCC fined $80M in April 2024 (largest of the four) for illegal location data sharing"
+          ]
+        },
+        {
+          "name": "Comcast / Xfinity",
+          "hq": "Philadelphia, PA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "CMCSA",
+          "description": "ISP serving 32M broadband subscribers; operates Effectv and FreeWheel advertising.",
+          "data_products": [
+            "broadband data",
+            "Effectv ads",
+            "FreeWheel CTV"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Charter / Spectrum",
+          "hq": "Stamford, CT",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "CHTR",
+          "description": "Major cable ISP operating Spectrum Reach advertising.",
+          "data_products": [
+            "ISP data",
+            "Spectrum Reach ads"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Cox",
+          "hq": "Atlanta, GA",
+          "parent_or_owner": "Cox Enterprises (private)",
+          "tier": "both",
+          "ticker": null,
+          "description": "Regional cable/ISP operating Cox Media Group advertising.",
+          "data_products": [
+            "ISP data",
+            "Cox Media Group ads"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "LocationSmart",
+          "hq": "Carlsbad, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Location aggregator that purchased real-time location data from all major carriers and resold it.",
+          "data_products": [
+            "real-time carrier location data"
+          ],
+          "notable_actions": [
+            "Subject to FCC investigation following 2018 Motherboard exposé"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Smart-TV / ACR / Connected TV",
+      "definition": "Smart TVs embed Automatic Content Recognition (ACR) that fingerprints on-screen content — including HDMI inputs and antennas — to identify everything viewers watch. Sold to advertisers, networks, marketers.",
+      "companies": [
+        {
+          "name": "Vizio / Inscape",
+          "hq": "Irvine, CA",
+          "parent_or_owner": "Walmart (acquired 2024)",
+          "tier": "both",
+          "ticker": "WMT",
+          "description": "Inscape is Vizio's ACR data division; one of the most aggressive publishers of TV viewing data; now part of Walmart.",
+          "data_products": [
+            "ACR viewing data",
+            "TV audience segments"
+          ],
+          "notable_actions": [
+            "FTC $2.2M settlement (2017) for collecting smart TV data without consent"
+          ]
+        },
+        {
+          "name": "Samba TV",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "SMBA",
+          "description": "ACR data provider embedded in 24+ smart TV brands; sells audience measurement to advertisers and political campaigns.",
+          "data_products": [
+            "ACR data",
+            "audience measurement",
+            "attribution"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "LG Ads",
+          "hq": "Seoul, South Korea / Englewood Cliffs, NJ",
+          "parent_or_owner": "LG Electronics",
+          "tier": "both",
+          "ticker": "066570.KS",
+          "description": "LG's ACR and smart TV advertising division; sells viewing data for audience targeting.",
+          "data_products": [
+            "ACR data",
+            "smart TV ads"
+          ],
+          "notable_actions": [
+            "Named in Dec 2025 Texas AG lawsuit"
+          ]
+        },
+        {
+          "name": "Roku",
+          "hq": "San Jose, CA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": "ROKU",
+          "description": "Streaming platform with 89M+ accounts; OneView ad platform; ACR on Roku TV licensed sets.",
+          "data_products": [
+            "streaming viewership",
+            "OneView ads",
+            "ACR data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Samsung Ads",
+          "hq": "Seoul, South Korea / Mountain View, CA",
+          "parent_or_owner": "Samsung Electronics",
+          "tier": "both",
+          "ticker": "005930.KS",
+          "description": "ACR data from 50M+ Samsung smart TVs in the US.",
+          "data_products": [
+            "ACR data",
+            "audience segments",
+            "attribution"
+          ],
+          "notable_actions": [
+            "Texas AG sued Dec 2025; Samsung settled in early 2026 agreeing to stop ACR data collection from Texans without explicit consent"
+          ]
+        },
+        {
+          "name": "TiVo / Xperi",
+          "hq": "San Jose, CA",
+          "parent_or_owner": "Xperi Inc.",
+          "tier": "wholesale",
+          "ticker": "XPER",
+          "description": "ACR and content discovery; TiVo viewing data sold for audience analytics and ad measurement.",
+          "data_products": [
+            "ACR data",
+            "content discovery"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Hisense",
+          "hq": "Qingdao, China",
+          "parent_or_owner": "Hisense Group",
+          "tier": "both",
+          "ticker": "600060.SS",
+          "description": "Chinese TV manufacturer with US ACR deployments.",
+          "data_products": [
+            "ACR data",
+            "smart TV ads"
+          ],
+          "notable_actions": [
+            "Named in Dec 2025 Texas AG lawsuit alongside Samsung, LG, Sony, TCL"
+          ]
+        },
+        {
+          "name": "Amazon Fire TV",
+          "hq": "Seattle, WA",
+          "parent_or_owner": "Amazon",
+          "tier": "retail",
+          "ticker": "AMZN",
+          "description": "Fire TV devices and Amazon-licensed TVs feed Amazon's ad ecosystem.",
+          "data_products": [
+            "Fire TV viewership",
+            "device data"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Retailers with Data / Media Networks",
+      "definition": "Retail media networks monetize retailers' deterministic purchase data linked to authenticated customer identities. Highly valuable to CPG brands. Retail media on track to hit $106B by 2027.",
+      "companies": [
+        {
+          "name": "Amazon Advertising",
+          "hq": "Seattle, WA",
+          "parent_or_owner": "Amazon",
+          "tier": "retail",
+          "ticker": "AMZN",
+          "description": "Largest retail media network globally; $56.2B in 2024; leverages purchase, search, Prime streaming data.",
+          "data_products": [
+            "sponsored ads",
+            "DSP",
+            "Amazon Marketing Cloud"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Walmart Connect / Walmart Data Ventures",
+          "hq": "Bentonville, AR",
+          "parent_or_owner": "Walmart",
+          "tier": "retail",
+          "ticker": "WMT",
+          "description": "Second-largest US retail media network; $4.4B ad revenue FY2024; acquired Vizio in 2024 for ACR integration.",
+          "data_products": [
+            "retail media ads",
+            "purchase data",
+            "Vizio ACR data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Kroger Precision Marketing / 84.51°",
+          "hq": "Cincinnati, OH",
+          "parent_or_owner": "Kroger",
+          "tier": "retail",
+          "ticker": "KR",
+          "description": "Kroger's data analytics subsidiary; 60M+ household loyalty card transactions; CPG audience targeting on/offsite.",
+          "data_products": [
+            "loyalty card data",
+            "CPG audience targeting"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Target Roundel",
+          "hq": "Minneapolis, MN",
+          "parent_or_owner": "Target",
+          "tier": "retail",
+          "ticker": "TGT",
+          "description": "Target's retail media network leveraging Target Circle loyalty data.",
+          "data_products": [
+            "Target Circle data",
+            "retail media ads"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Albertsons Media Collective",
+          "hq": "Boise, ID",
+          "parent_or_owner": "Albertsons",
+          "tier": "retail",
+          "ticker": "ACI",
+          "description": "Retail media built on Albertsons/Safeway/Vons loyalty data from 35M+ households.",
+          "data_products": [
+            "loyalty data",
+            "retail media ads"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "CVS Media Exchange (CMX)",
+          "hq": "Woonsocket, RI",
+          "parent_or_owner": "CVS Health",
+          "tier": "retail",
+          "ticker": "CVS",
+          "description": "CVS Health's retail media network using pharmacy and ExtraCare loyalty data including prescription health insights.",
+          "data_products": [
+            "pharmacy data",
+            "ExtraCare loyalty",
+            "retail media ads"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Walgreens Advertising Group",
+          "hq": "Deerfield, IL",
+          "parent_or_owner": "Walgreens Boots Alliance",
+          "tier": "retail",
+          "ticker": "WBA",
+          "description": "Retail media using myWalgreens loyalty and pharmacy data across 9,000+ stores.",
+          "data_products": [
+            "myWalgreens data",
+            "pharmacy data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Best Buy Ads",
+          "hq": "Richfield, MN",
+          "parent_or_owner": "Best Buy",
+          "tier": "retail",
+          "ticker": "BBY",
+          "description": "Leverages consumer electronics purchase history for targeted advertising.",
+          "data_products": [
+            "electronics purchase data",
+            "retail media ads"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Home Depot Retail Media+",
+          "hq": "Atlanta, GA",
+          "parent_or_owner": "Home Depot",
+          "tier": "retail",
+          "ticker": "HD",
+          "description": "Built on Pro and DIY purchase data targeting contractor and home improvement audiences.",
+          "data_products": [
+            "purchase data",
+            "Pro audience targeting"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Lowe's One Roof Media Network",
+          "hq": "Mooresville, NC",
+          "parent_or_owner": "Lowe's",
+          "tier": "retail",
+          "ticker": "LOW",
+          "description": "Home improvement retail media leveraging MyLowe's loyalty data.",
+          "data_products": [
+            "MyLowe's loyalty data",
+            "retail media ads"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Instacart Ads",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": "CART",
+          "description": "Grocery delivery selling first-party purchase and browsing data across 1,400+ retail banners; Carrot Ads platform.",
+          "data_products": [
+            "grocery purchase data",
+            "Carrot Ads"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "DoorDash Ads",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": "DASH",
+          "description": "Restaurant and convenience delivery selling purchase/ordering data for CPG and restaurant targeting.",
+          "data_products": [
+            "ordering data",
+            "restaurant ads"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Uber Advertising",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": "Uber",
+          "tier": "retail",
+          "ticker": "UBER",
+          "description": "Leverages ride and Uber Eats order data for geo-contextual and purchase-based advertising.",
+          "data_products": [
+            "ride data",
+            "Uber Eats data",
+            "geo-contextual ads"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Loyalty / Receipt / Panel Data",
+      "definition": "Aggregate purchasing data through retailer loyalty partnerships, receipt scanning apps, or opt-in consumer panels. Tied to households' complete purchase histories. Sold to CPG manufacturers, retailers, market researchers.",
+      "companies": [
+        {
+          "name": "Catalina Marketing",
+          "hq": "St. Petersburg, FL",
+          "parent_or_owner": "Berkshire Partners",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Captures 440M loyalty cards and 11B+ shopping trips annually from 23,000+ stores at POS.",
+          "data_products": [
+            "loyalty card data",
+            "POS shopper data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "NielsenIQ",
+          "hq": "Chicago, IL",
+          "parent_or_owner": "Advent International",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Retail measurement panel and POS scanner data; acquired Brandbank and merged with GfK in 2023.",
+          "data_products": [
+            "retail measurement",
+            "scanner data",
+            "panel data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Circana",
+          "hq": "Chicago, IL",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Retail measurement, consumer behavior, loyalty data; formed by merger of IRI and NPD Group in 2023.",
+          "data_products": [
+            "retail measurement",
+            "consumer behavior",
+            "loyalty data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Numerator",
+          "hq": "Chicago, IL",
+          "parent_or_owner": "Vista Equity Partners",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Consumer purchase panel built on receipt-backed purchase data from verified buyers.",
+          "data_products": [
+            "receipt panel",
+            "purchase data",
+            "consumer attitudes"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Ibotta",
+          "hq": "Denver, CO",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "IBTA",
+          "description": "Cash-back rewards app monetizing purchase data from 8,000+ CPG brands and retailers.",
+          "data_products": [
+            "receipt data",
+            "purchase data",
+            "CPG targeting"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Fetch Rewards",
+          "hq": "Madison, WI",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": null,
+          "description": "Receipt scanning app with 17M+ users; anonymized purchase data sold to CPG brands.",
+          "data_products": [
+            "receipt data",
+            "purchase data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Swagbucks / Prodege",
+          "hq": "El Segundo, CA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": null,
+          "description": "Reward platform with surveys, purchase panels, receipt data sold to market research buyers.",
+          "data_products": [
+            "survey data",
+            "purchase panels",
+            "receipt data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "InfoScout",
+          "hq": "Chicago, IL",
+          "parent_or_owner": "Numerator",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Original receipt-based purchase panel; now part of Numerator.",
+          "data_products": [
+            "receipt panel"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Automotive / Connected Car Data",
+      "definition": "Modern vehicles generate continuous telemetry — location, speed, braking, acceleration, fuel — transmitted via OEM cellular and third-party telematics. Flows through 37+ companies identified by The Markup with minimal regulatory oversight.",
+      "companies": [
+        {
+          "name": "LexisNexis Risk Solutions – Telematics",
+          "hq": "Alpharetta, GA",
+          "parent_or_owner": "RELX Group",
+          "tier": "wholesale",
+          "ticker": "REL.L",
+          "description": "Aggregates connected vehicle data from OEM telematics; Telematics Exchange for UBI insurance; partnership with Ford announced 2021.",
+          "data_products": [
+            "telematics exchange",
+            "UBI data feeds",
+            "driving behavior"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Verisk / ISO",
+          "hq": "Jersey City, NJ",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "VRSK",
+          "description": "Auto insurance analytics including driving history, claims exchange, connected vehicle data.",
+          "data_products": [
+            "driving history",
+            "auto claims",
+            "vehicle data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Arity",
+          "hq": "Chicago, IL",
+          "parent_or_owner": "Allstate",
+          "tier": "wholesale",
+          "ticker": "ALL",
+          "description": "Over 1 trillion miles of driving data; embedded SDK in third-party apps (games, utilities) to harvest driving data.",
+          "data_products": [
+            "driving behavior",
+            "telematics SDK data"
+          ],
+          "notable_actions": [
+            "Registered as data broker in California"
+          ]
+        },
+        {
+          "name": "Cambridge Mobile Telematics (CMT)",
+          "hq": "Cambridge, MA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Largest telematics platform; powers DriveWell; 40B+ miles driven.",
+          "data_products": [
+            "DriveWell platform",
+            "driving behavior"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "CCC Intelligent Solutions",
+          "hq": "Chicago, IL",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "CCCS",
+          "description": "Auto claims, repair, parts data platform used by 350+ insurers; vehicle history and claims analytics.",
+          "data_products": [
+            "claims data",
+            "repair data",
+            "vehicle history"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Otonomo",
+          "hq": "Tel Aviv / San Jose, CA",
+          "parent_or_owner": "Urgently (merged 2022)",
+          "tier": "wholesale",
+          "ticker": "ULY",
+          "description": "Connected vehicle data marketplace; merged with Urgently in 2022.",
+          "data_products": [
+            "connected vehicle data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Wejo",
+          "hq": "Manchester, UK / Westport, CT",
+          "parent_or_owner": "Defunct (formerly backed by GM)",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Connected vehicle data company; SPAC in 2021 backed by GM; delisted and wound down in 2023.",
+          "data_products": [
+            "connected vehicle data (historical)"
+          ],
+          "notable_actions": [
+            "Delisted and wound down operations in 2023"
+          ]
+        },
+        {
+          "name": "GM / OnStar",
+          "hq": "Detroit, MI",
+          "parent_or_owner": "General Motors",
+          "tier": "both",
+          "ticker": "GM",
+          "description": "OnStar transmits location, driving, and diagnostic data; partners with LexisNexis for insurance data sharing.",
+          "data_products": [
+            "OnStar telematics",
+            "vehicle diagnostics",
+            "driving data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Ford",
+          "hq": "Dearborn, MI",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "F",
+          "description": "Ford Telematics and Connected Services; partnered with LexisNexis to channel vehicle data to insurers.",
+          "data_products": [
+            "Ford Telematics",
+            "Connected Services data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Smartcar",
+          "hq": "Redwood City, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "API platform for accessing vehicle telemetry from connected cars for mobility apps, fintech, insurers.",
+          "data_products": [
+            "vehicle API",
+            "telemetry data"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Real Estate / Property Data",
+      "definition": "Aggregate county recorder/assessor records, MLS data, mortgage filings, and derivative analytics for lenders, insurers, investors, property professionals. Three dominant platforms cover nearly all US property.",
+      "companies": [
+        {
+          "name": "Cotality (formerly CoreLogic)",
+          "hq": "Irvine, CA",
+          "parent_or_owner": "Stone Point Capital / Insight Partners",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Largest property data platform covering 155M+ US properties; MLS aggregation, mortgage analytics, insurance risk scores, property tax, CLUE; rebranded March 2025.",
+          "data_products": [
+            "property data",
+            "MLS aggregation",
+            "mortgage analytics",
+            "insurance scores",
+            "CLUE"
+          ],
+          "notable_actions": [
+            "Rebranded from CoreLogic to Cotality (March 2025)"
+          ]
+        },
+        {
+          "name": "ATTOM Data Solutions",
+          "hq": "Irvine, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "158M+ residential and commercial properties; foreclosure, ownership, AVM, neighborhood, hazard data via API.",
+          "data_products": [
+            "property data",
+            "foreclosure data",
+            "AVM",
+            "hazard data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "ICE Mortgage Technology / Black Knight",
+          "hq": "Jacksonville, FL",
+          "parent_or_owner": "Intercontinental Exchange (acquired 2023)",
+          "tier": "wholesale",
+          "ticker": "ICE",
+          "description": "Mortgage servicing/origination data; McDash loan performance; Data & Analytics provides property and mortgage data to lenders/investors.",
+          "data_products": [
+            "mortgage servicing data",
+            "McDash loan performance",
+            "property analytics"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Verisk / ISO (Property)",
+          "hq": "Jersey City, NJ",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "VRSK",
+          "description": "Property risk analytics including characteristics, reconstruction costs, catastrophe modeling.",
+          "data_products": [
+            "property risk analytics",
+            "catastrophe modeling"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Zillow Group",
+          "hq": "Seattle, WA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": "Z",
+          "description": "Consumer real estate marketplace and Zestimate AVM; licenses property and consumer engagement data to lenders/agents/advertisers.",
+          "data_products": [
+            "Zestimate AVM",
+            "listings data",
+            "consumer engagement data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "CoStar Group",
+          "hq": "Washington, DC",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "CSGP",
+          "description": "Commercial real estate platform covering 5M+ properties; CoStar, LoopNet, Apartments.com.",
+          "data_products": [
+            "commercial property data",
+            "LoopNet",
+            "Apartments.com"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "First American Data & Analytics",
+          "hq": "Santa Ana, CA",
+          "parent_or_owner": "First American Financial",
+          "tier": "wholesale",
+          "ticker": "FAF",
+          "description": "Title and property data, public records, real estate analytics for lenders and investors.",
+          "data_products": [
+            "title data",
+            "property data",
+            "real estate analytics"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Redfin",
+          "hq": "Seattle, WA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": "RDFN",
+          "description": "Consumer real estate brokerage and listing data; sells lead data and analytics to mortgage lenders.",
+          "data_products": [
+            "listings data",
+            "lead generation data"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Public Records / Government Data Resellers",
+      "definition": "Aggregate public court, property, motor vehicle, and government records into searchable databases licensed to law enforcement, government agencies, PIs, attorneys, lenders, employers. Often fall outside FCRA for 'investigative' uses.",
+      "companies": [
+        {
+          "name": "LexisNexis Risk Solutions",
+          "hq": "Alpharetta, GA",
+          "parent_or_owner": "RELX Group",
+          "tier": "wholesale",
+          "ticker": "REL.L",
+          "description": "Broadest commercial public records aggregation in US — court, criminal, property, business filings.",
+          "data_products": [
+            "public records",
+            "court records",
+            "criminal records",
+            "business filings"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Thomson Reuters CLEAR",
+          "hq": "Eagan, MN",
+          "parent_or_owner": "Thomson Reuters",
+          "tier": "wholesale",
+          "ticker": "TRI",
+          "description": "Investigation platform for law enforcement, government, corporate investigators; vetted access only.",
+          "data_products": [
+            "public records",
+            "investigation platform"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Westlaw",
+          "hq": "Eagan, MN",
+          "parent_or_owner": "Thomson Reuters",
+          "tier": "wholesale",
+          "ticker": "TRI",
+          "description": "Legal research database including court records, dockets, regulatory filings.",
+          "data_products": [
+            "legal research",
+            "court dockets",
+            "regulatory filings"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "IRB Search",
+          "hq": "Palm Beach Gardens, FL",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Public records aggregator and skip-tracing for debt collectors, legal pros, PIs.",
+          "data_products": [
+            "public records",
+            "skip tracing"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "IDI / TLO",
+          "hq": "Boca Raton, FL",
+          "parent_or_owner": "TransUnion (acquired Cogint/TLO)",
+          "tier": "wholesale",
+          "ticker": "TRU",
+          "description": "Public records and identity verification for debt collection and legal markets.",
+          "data_products": [
+            "public records",
+            "identity verification"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Tracers Information Specialists",
+          "hq": "Boca Raton, FL",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Public records and skip-tracing for legal and collections markets.",
+          "data_products": [
+            "public records",
+            "skip tracing"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Sayari Analytics",
+          "hq": "Washington, DC",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Corporate and financial public records for sanctions screening, supply chain due diligence, financial crime.",
+          "data_products": [
+            "corporate records",
+            "sanctions screening",
+            "supply chain data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "BRB Publications",
+          "hq": "Tempe, AZ",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Aggregator of public records sources and data broker directories.",
+          "data_products": [
+            "public records directory",
+            "data broker directory"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "B2B / Workplace Data",
+      "definition": "Compile professional profiles — title, employer, work email, direct phone, technographic and intent data — sold for sales prospecting and marketing. Fewer regulatory restrictions than consumer data.",
+      "companies": [
+        {
+          "name": "ZoomInfo",
+          "hq": "Vancouver, WA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "ZI",
+          "description": "260M+ professional profiles; CRM integrations, web scraping, intent signals.",
+          "data_products": [
+            "B2B contacts",
+            "intent data",
+            "technographic signals"
+          ],
+          "notable_actions": [
+            "Multiple lawsuits over data accuracy practices"
+          ]
+        },
+        {
+          "name": "Apollo.io",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "265M+ contacts and 60M+ companies; combines web scraping, contributors, licensed sources.",
+          "data_products": [
+            "B2B contacts",
+            "company data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "LinkedIn Sales Navigator",
+          "hq": "Sunnyvale, CA",
+          "parent_or_owner": "Microsoft",
+          "tier": "wholesale",
+          "ticker": "MSFT",
+          "description": "Professional network data for sales prospecting; 1B+ members globally.",
+          "data_products": [
+            "professional profiles",
+            "sales intelligence"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Dun & Bradstreet (D&B)",
+          "hq": "Jacksonville, FL",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "DNB",
+          "description": "500M+ business entity records; D-U-N-S number system; firmographic data, supply chain risk.",
+          "data_products": [
+            "D-U-N-S",
+            "business credit",
+            "firmographic data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Clearbit / HubSpot Breeze Intelligence",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": "HubSpot (acquired 2023)",
+          "tier": "wholesale",
+          "ticker": "HUBS",
+          "description": "B2B enrichment and intent data integrated into HubSpot CRM.",
+          "data_products": [
+            "enrichment data",
+            "intent data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Lusha",
+          "hq": "Tel Aviv / New York",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "100M+ professional profiles crowd-sourced from browser extension users.",
+          "data_products": [
+            "B2B contacts",
+            "browser-extension-sourced data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Cognism",
+          "hq": "London, UK / New York",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "GDPR-compliant B2B contact data with US operations.",
+          "data_products": [
+            "B2B contacts",
+            "GDPR-compliant data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "6sense",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "B2B intent data using AI to predict buyer intent from anonymous research signals.",
+          "data_products": [
+            "intent data",
+            "predictive analytics"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Bombora",
+          "hq": "New York, NY",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "B2B intent data cooperative aggregating content consumption from 5,000+ publisher sites.",
+          "data_products": [
+            "intent data",
+            "content consumption signals"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "TechTarget",
+          "hq": "Newton, MA",
+          "parent_or_owner": "Informa (acquired 2024)",
+          "tier": "wholesale",
+          "ticker": "INF.L",
+          "description": "B2B tech media and intent data; sells purchase intent signals from enterprise IT content.",
+          "data_products": [
+            "IT intent data",
+            "content engagement"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Education Data",
+      "definition": "Data from standardized testing, college admissions platforms, and ed-tech tools. FERPA restricts school-managed records, but significant flows occur through testing companies and 'school official' exception.",
+      "companies": [
+        {
+          "name": "College Board",
+          "hq": "New York, NY",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": null,
+          "description": "Administers SAT and AP; Student Search Service sells names, contact info, test scores, demographics to colleges/scholarships; ~170M name purchases annually.",
+          "data_products": [
+            "SAT/AP data",
+            "Student Search Service"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "ACT Inc.",
+          "hq": "Iowa City, IA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": null,
+          "description": "ACT exam; similar student data sales for college recruitment.",
+          "data_products": [
+            "ACT exam data",
+            "student recruitment lists"
+          ],
+          "notable_actions": [
+            "Class action alleging student disability information was included in data sold"
+          ]
+        },
+        {
+          "name": "PowerSchool / Naviance",
+          "hq": "Folsom, CA",
+          "parent_or_owner": "Bain Capital",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Largest K-12 SIS provider; Naviance powers college counseling for 12,000+ high schools.",
+          "data_products": [
+            "K-12 SIS",
+            "Naviance college counseling"
+          ],
+          "notable_actions": [
+            "Major data breach disclosed January 2025 affecting millions of students"
+          ]
+        },
+        {
+          "name": "Niche.com",
+          "hq": "Pittsburgh, PA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": null,
+          "description": "College and K-12 research platform; monetizes student/parent lead generation for college enrollment marketing.",
+          "data_products": [
+            "enrollment leads",
+            "school reviews"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "NRCCUA / Encoura",
+          "hq": "Austin, TX",
+          "parent_or_owner": "ACT",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Enrollment management and student search; sells college-bound student data to universities.",
+          "data_products": [
+            "student search data",
+            "enrollment management"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Hobsons",
+          "hq": "Arlington, VA",
+          "parent_or_owner": "EAB",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "College planning, admissions, advising software; processed student data under school licensing.",
+          "data_products": [
+            "college planning data",
+            "admissions data"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Workforce / Employment / Background Checks",
+      "definition": "Regulated under FCRA — permissible purpose, adverse action notices, dispute rights. Nearly every job, tenancy, loan application passes through these systems.",
+      "companies": [
+        {
+          "name": "Equifax Workforce Solutions / The Work Number",
+          "hq": "Atlanta, GA",
+          "parent_or_owner": "Equifax",
+          "tier": "wholesale",
+          "ticker": "EFX",
+          "description": "Centralized VOE/VOI database; records from 2M+ employers; 50%+ of US workers; core lending/employment infrastructure.",
+          "data_products": [
+            "VOE/VOI",
+            "payroll records"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Sterling",
+          "hq": "New York, NY",
+          "parent_or_owner": "Goldman Sachs",
+          "tier": "wholesale",
+          "ticker": "STER",
+          "description": "Background screening CRA for enterprise employers; criminal, employment, education, drug screening.",
+          "data_products": [
+            "background checks",
+            "drug screening"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "HireRight",
+          "hq": "Nashville, TN",
+          "parent_or_owner": "General Atlantic",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Pre-employment screening for global enterprises; integrates with major ATS platforms.",
+          "data_products": [
+            "background checks",
+            "ATS integration"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Checkr",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Tech-forward background screening for gig economy, startups, enterprise; building direct payroll connections to compete with The Work Number.",
+          "data_products": [
+            "background checks",
+            "payroll connectivity"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "GoodHire",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": "Meridian HR",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "FCRA-compliant background screening for SMBs.",
+          "data_products": [
+            "background checks"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "First Advantage",
+          "hq": "Atlanta, GA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "FA",
+          "description": "Global background screening and identity solutions; criminal, employment, financial history.",
+          "data_products": [
+            "background checks",
+            "identity solutions"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Accurate Background",
+          "hq": "Irvine, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "FCRA-compliant background screening; on CFPB's 2021 consumer reporting companies list.",
+          "data_products": [
+            "background checks"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Insurance Data",
+      "definition": "Specialized databases of claims history, underwriting info, and risk scores affecting consumer access to and pricing of auto, home, health, life insurance. Most are specialty CRAs under FCRA.",
+      "companies": [
+        {
+          "name": "LexisNexis Risk Solutions – Insurance",
+          "hq": "Alpharetta, GA",
+          "parent_or_owner": "RELX Group",
+          "tier": "wholesale",
+          "ticker": "REL.L",
+          "description": "C.L.U.E. for auto and property claims; C.L.U.E. Auto Damage 360; driving record analytics; 98 of top 100 US personal lines carriers.",
+          "data_products": [
+            "C.L.U.E.",
+            "Auto Damage 360",
+            "driving records"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Verisk / ISO",
+          "hq": "Jersey City, NJ",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "VRSK",
+          "description": "Property risk scoring, catastrophe modeling, A-PLUS auto/property claims exchange, actuarial benchmarking.",
+          "data_products": [
+            "A-PLUS",
+            "catastrophe models",
+            "actuarial data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "MIB Group",
+          "hq": "Braintree, MA",
+          "parent_or_owner": "Member-owned cooperative",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Coded medical and lifestyle data for life/health/disability underwriting.",
+          "data_products": [
+            "coded medical data",
+            "underwriting signals"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Milliman IntelliScript",
+          "hq": "Seattle, WA",
+          "parent_or_owner": "Milliman Inc.",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Prescription drug history database for life/disability underwriting; sourced from PBM claims; FCRA specialty CRA.",
+          "data_products": [
+            "prescription history",
+            "PBM claims data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "A-PLUS",
+          "hq": "Jersey City, NJ",
+          "parent_or_owner": "Verisk",
+          "tier": "wholesale",
+          "ticker": "VRSK",
+          "description": "Personal auto/property claims database used by 900+ insurers.",
+          "data_products": [
+            "auto claims",
+            "property claims"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Big Tech Platforms with Data Monetization",
+      "definition": "Largest consumer data collectors and advertisers. Monetization models differ — Apple positions privacy as differentiator versus Google and Meta's ad-dependent architectures.",
+      "companies": [
+        {
+          "name": "Google / Alphabet",
+          "hq": "Mountain View, CA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "GOOGL",
+          "description": "Search, Chrome, Gmail, Android, Maps, YouTube; ~$237B 2024 ad revenue.",
+          "data_products": [
+            "search queries",
+            "Chrome browsing",
+            "Gmail signals",
+            "Android location",
+            "YouTube viewing"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Meta Platforms",
+          "hq": "Menlo Park, CA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "META",
+          "description": "Facebook, Instagram, WhatsApp; cross-site Pixel; ~$164B 2024 ad revenue.",
+          "data_products": [
+            "social graph",
+            "Messenger content",
+            "Pixel tracking"
+          ],
+          "notable_actions": [
+            "Multiple GDPR fines in EU; ATT reduced iOS signal"
+          ]
+        },
+        {
+          "name": "Amazon",
+          "hq": "Seattle, WA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "AMZN",
+          "description": "Purchase history, Prime Video, Alexa audio, Echo usage; ~$56B 2024 ad revenue.",
+          "data_products": [
+            "purchase history",
+            "Prime Video",
+            "Alexa audio",
+            "Echo device data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Microsoft",
+          "hq": "Redmond, WA",
+          "parent_or_owner": null,
+          "tier": "both",
+          "ticker": "MSFT",
+          "description": "LinkedIn, Bing, Azure AD, Xbox, Office 365; ~$16B 2024 ad revenue; acquired Xandr (now Microsoft Advertising).",
+          "data_products": [
+            "LinkedIn graph",
+            "Bing search",
+            "Azure AD identity",
+            "Xbox",
+            "Office 365"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Apple",
+          "hq": "Cupertino, CA",
+          "parent_or_owner": null,
+          "tier": "retail",
+          "ticker": "AAPL",
+          "description": "App Store purchases, Apple Pay, Siri, Health; Privacy-first; ATT limits third-party tracking; does not sell user data to advertisers.",
+          "data_products": [
+            "App Store data",
+            "Apple Pay transactions",
+            "Siri queries",
+            "Health app data"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Data Exchanges / Marketplaces",
+      "definition": "Neutral platforms where data providers list datasets for sale/license to buyers. Unlike traditional brokers, they provide infrastructure for third-party data transactions with built-in privacy controls and cloud-native delivery.",
+      "companies": [
+        {
+          "name": "Snowflake Data Marketplace",
+          "hq": "Bozeman, MT",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "SNOW",
+          "description": "Cloud data platform with embedded marketplace; 2,000+ datasets from 500+ providers; secure cross-cloud sharing.",
+          "data_products": [
+            "data marketplace",
+            "cross-cloud data sharing"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "AWS Data Exchange",
+          "hq": "Seattle, WA",
+          "parent_or_owner": "Amazon",
+          "tier": "wholesale",
+          "ticker": "AMZN",
+          "description": "3,500+ third-party datasets across industries delivered via S3, Redshift, API.",
+          "data_products": [
+            "data exchange",
+            "S3/Redshift delivery"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Databricks Marketplace",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Open exchange for datasets, AI models, notebooks, apps; built on Delta Sharing.",
+          "data_products": [
+            "data marketplace",
+            "Delta Sharing",
+            "AI model marketplace"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Narrative.io",
+          "hq": "New York, NY",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Data collaboration platform enabling direct buyer-seller transactions with automated governance.",
+          "data_products": [
+            "data collaboration",
+            "marketplace"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Demyst",
+          "hq": "New York, NY",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Enterprise data marketplace for FIs and insurers; curated third-party vendors for credit, fraud, identity.",
+          "data_products": [
+            "enterprise data marketplace"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Crux Informatics",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Data operations platform for FIs managing external data procurement and delivery.",
+          "data_products": [
+            "data operations platform"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Datarade",
+          "hq": "Berlin, Germany / New York",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "B2B data marketplace listing 3,000+ data providers across 200+ categories.",
+          "data_products": [
+            "data marketplace directory"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Bloomberg Enterprise Data",
+          "hq": "New York, NY",
+          "parent_or_owner": "Bloomberg L.P.",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Financial data feeds, reference data, market data for institutional investors.",
+          "data_products": [
+            "financial data feeds",
+            "reference data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "LSEG / Refinitiv Data",
+          "hq": "London, UK / New York",
+          "parent_or_owner": "London Stock Exchange Group (acquired 2021)",
+          "tier": "wholesale",
+          "ticker": "LSEG.L",
+          "description": "Financial market data, reference data, and analytics for trading, investment, risk management.",
+          "data_products": [
+            "market data",
+            "reference data",
+            "risk analytics"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Mobile SDKs & App Data Collectors",
+      "definition": "Mobile measurement and attribution platforms embedding SDKs into thousands of apps to collect device IDs, location, in-app events, and behavioral data — processing vast raw behavioral data from hundreds of millions of devices.",
+      "companies": [
+        {
+          "name": "AppsFlyer",
+          "hq": "Tel Aviv / San Francisco",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Leading mobile attribution platform; SDK in 98%+ of top apps.",
+          "data_products": [
+            "mobile attribution",
+            "in-app events"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Adjust",
+          "hq": "Berlin, Germany / New York",
+          "parent_or_owner": "AppLovin (acquired 2021)",
+          "tier": "wholesale",
+          "ticker": "APP",
+          "description": "Mobile measurement platform; attribution, fraud prevention, audience analytics.",
+          "data_products": [
+            "mobile attribution",
+            "fraud prevention"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Branch",
+          "hq": "Palo Alto, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Mobile deep linking and attribution; cross-channel identity graph.",
+          "data_products": [
+            "deep linking",
+            "attribution"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Kochava",
+          "hq": "Sandpoint, ID",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Attribution and analytics; alleged sale of sensitive location data from hundreds of millions of devices.",
+          "data_products": [
+            "mobile attribution",
+            "location data"
+          ],
+          "notable_actions": [
+            "FTC sued Aug 2022; amended complaint July 2024"
+          ]
+        },
+        {
+          "name": "Singular",
+          "hq": "San Francisco, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Marketing analytics and attribution aggregating ad spend and performance from 1,000+ ad networks.",
+          "data_products": [
+            "marketing analytics",
+            "attribution"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "OneSignal",
+          "hq": "San Mateo, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Mobile/web push notification platform collecting behavioral data from engaged users.",
+          "data_products": [
+            "push notifications",
+            "engagement data"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Braze",
+          "hq": "New York, NY",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": "BRZE",
+          "description": "Customer engagement platform processing behavioral event streams from client apps and websites.",
+          "data_products": [
+            "customer engagement",
+            "behavioral events"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "AirSage",
+          "hq": "Atlanta, GA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Mobile location analytics from carrier-derived location data for mobility and audience insights.",
+          "data_products": [
+            "carrier location data",
+            "mobility insights"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Smaato",
+          "hq": "Hamburg, Germany / New York",
+          "parent_or_owner": "Verve Group (acquired 2021)",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Mobile advertising exchange and SSP; real-time bidding infrastructure processing consumer IDs at scale.",
+          "data_products": [
+            "mobile exchange",
+            "SSP",
+            "RTB infrastructure"
+          ],
+          "notable_actions": []
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Browser / Search / VPN / Antivirus Data Sales",
+      "definition": "Security and privacy software hold extraordinary data trust — and access. Several have exploited that trust to harvest and sell sensitive behavioral data including complete browsing histories, search queries, and network traffic.",
+      "companies": [
+        {
+          "name": "Avast / Jumpshot",
+          "hq": "Prague, Czech Republic",
+          "parent_or_owner": "Gen Digital",
+          "tier": "wholesale",
+          "ticker": "GEN",
+          "description": "AV provider with 400M+ users; Jumpshot collected granular browsing data — every Google search, every URL visited — sold to advertisers, hedge funds, market researchers.",
+          "data_products": [
+            "browsing data (historical)",
+            "search history (historical)"
+          ],
+          "notable_actions": [
+            "Jumpshot shut down January 2020 after PCMag/Motherboard investigation; FTC fined Avast $16.5M (Feb 2024); banned from selling browsing data for advertising"
+          ]
+        },
+        {
+          "name": "Kape Technologies",
+          "hq": "London, UK",
+          "parent_or_owner": "Private (delisted 2023)",
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Owns ExpressVPN, Private Internet Access (PIA), CyberGhost, Intego; previously Crossrider (browser extension monetization with adware history).",
+          "data_products": [
+            "VPN services",
+            "browser extension monetization (historical)"
+          ],
+          "notable_actions": [
+            "Ongoing scrutiny over VPN data practices"
+          ]
+        },
+        {
+          "name": "Pango Group (formerly AnchorFree)",
+          "hq": "Redwood City, CA",
+          "parent_or_owner": null,
+          "tier": "wholesale",
+          "ticker": null,
+          "description": "Operates Hotspot Shield VPN and a portfolio of privacy tools; monetizes through advertising requiring traffic analysis.",
+          "data_products": [
+            "VPN services",
+            "ad-supported privacy tools"
+          ],
+          "notable_actions": []
+        },
+        {
+          "name": "Opera Browser",
+          "hq": "Oslo, Norway",
+          "parent_or_owner": "Chinese consortium (Kunlun Tech / Qihoo 360)",
+          "tier": "wholesale",
+          "ticker": "OPRA",
+          "description": "Browser with detailed browsing data; also operates VPN and lending services; scrutiny over data flows to Chinese parent.",
+          "data_products": [
+            "browser data",
+            "VPN data"
+          ],
+          "notable_actions": [
+            "Scrutiny over data flows to Chinese parent"
+          ]
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "categories": 22,
+    "companies": 192
+  },
+  "regulatory_references": {
+    "state_registries": [
+      {
+        "jurisdiction": "Vermont",
+        "since": "2019",
+        "statute": "9 V.S.A. §§ 2430, 2433, 2446-2447",
+        "registered_2025": 441
+      },
+      {
+        "jurisdiction": "California",
+        "since": "CCPA/CPRA + DELETE Act (SB 362)",
+        "registry": "California Privacy Protection Agency",
+        "delete_act_platform_live": "2026-08-01"
+      },
+      {
+        "jurisdiction": "Texas",
+        "registered_2025": 226
+      },
+      {
+        "jurisdiction": "Oregon",
+        "registered_2025": 275
+      }
+    ],
+    "federal_enforcement_2023_2026": [
+      {
+        "date": "2023-02",
+        "agency": "FTC",
+        "target": "GoodRx",
+        "outcome": "First Health Breach Notification Rule enforcement; $1.5M civil penalty"
+      },
+      {
+        "date": "2024-01-09",
+        "agency": "FTC",
+        "target": "X-Mode / Outlogic",
+        "outcome": "Prohibition on sale/disclosure of sensitive location data; deletion of historical data"
+      },
+      {
+        "date": "2024-01-18",
+        "agency": "FTC",
+        "target": "InMarket Media",
+        "outcome": "Prohibited from selling/sharing precise location data"
+      },
+      {
+        "date": "2024-02",
+        "agency": "FTC",
+        "target": "Avast / Jumpshot",
+        "outcome": "$16.5M fine; banned from selling browsing data for advertising"
+      },
+      {
+        "date": "2024-04",
+        "agency": "FCC",
+        "target": "AT&T, Verizon, T-Mobile, Sprint",
+        "outcome": "~$200M combined fines for illegal location data sharing"
+      },
+      {
+        "date": "2024-07",
+        "agency": "FTC",
+        "target": "Kochava",
+        "outcome": "Amended complaint over sensitive location data; pending"
+      },
+      {
+        "date": "2024-12-03",
+        "agency": "FTC",
+        "target": "Gravy Analytics / Venntel",
+        "outcome": "Prohibited from selling sensitive location data; required destruction of historical data"
+      },
+      {
+        "date": "2024-12-03",
+        "agency": "FTC",
+        "target": "Mobilewalla",
+        "outcome": "Banned from selling sensitive location data; first-ever finding that RTB harvesting without bidding is unfair"
+      },
+      {
+        "date": "2024-12",
+        "agency": "CFPB",
+        "target": "Data brokers (rule)",
+        "outcome": "Proposed FCRA expansion to treat data brokers as CRAs"
+      },
+      {
+        "date": "2025-05",
+        "agency": "CFPB",
+        "target": "Data brokers (rule)",
+        "outcome": "Withdrew the proposed FCRA expansion rule"
+      },
+      {
+        "date": "2025-06",
+        "agency": "Bankruptcy court",
+        "target": "23andMe",
+        "outcome": "Court-approved $305M sale to TTAM (nonprofit led by co-founder Anne Wojcicki)"
+      },
+      {
+        "date": "2025-12",
+        "agency": "Texas AG",
+        "target": "Samsung, LG, Sony, TCL, Hisense",
+        "outcome": "Lawsuit over ACR data collection practices"
+      },
+      {
+        "date": "2026-early",
+        "agency": "Texas AG",
+        "target": "Samsung",
+        "outcome": "Settled — agreed to stop ACR collection from Texans without explicit consent"
+      },
+      {
+        "date": "2026-08-01",
+        "agency": "California CPPA",
+        "target": "All registered brokers",
+        "outcome": "DELETE Act DROP platform goes live (single deletion request covering all registered brokers)"
+      }
+    ]
+  }
+}

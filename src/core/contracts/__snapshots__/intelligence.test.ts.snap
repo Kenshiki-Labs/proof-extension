@@ -1,0 +1,95 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`normalized broker registry > pins the transform for a known multi-state broker 1`] = `
+{
+  "addresses": [
+    "3857 Birch St, Newport Beach, CA, 92660, United States",
+    "3857 Birch St, PMB 5032, Newport Beach, CA, 92660, United States",
+  ],
+  "collects": {
+    "addresses": "yes",
+    "biometricData": "no",
+    "commercialData": "yes",
+    "dateOfBirth": "no",
+    "employmentData": "yes",
+    "minorsData": "unknown",
+    "mothersMaidenName": "no",
+    "names": "yes",
+    "networkData": "yes",
+    "otherInfo": "no",
+    "placeOfBirth": "no",
+    "reproductiveHealthData": "no",
+    "ssnOrGovernmentId": "no",
+  },
+  "contacts": [
+    "Laleh Nikkhoo (Business Development Executive)",
+  ],
+  "dataCategories": [
+    "Addresses",
+    "Commercial Data",
+    "Employment Data",
+    "Geolocation",
+    "Names",
+    "Network Data",
+    "Not Health Data",
+    "Not Minors Data",
+    "Not Reproductive Health Data",
+    "Not SSN/Government ID",
+  ],
+  "emails": [
+    "privacy@01advertising.com",
+  ],
+  "id": "01advertisingin_0_b87ca1b8",
+  "name": "01Advertising Inc.",
+  "optOutUrls": [
+    "https://app.termly.io/notify/d1321341-0e82-4d8c-afaf-c4940d46c171",
+  ],
+  "phones": [
+    "19496099797",
+  ],
+  "privacyPolicyUrls": [
+    "https://www.01advertising.com/legal/privacy/",
+  ],
+  "registrySources": [
+    "California (California Privacy Protection Agency)",
+    "Texas",
+    "Vermont",
+  ],
+  "websiteUrls": [
+    "https://www.01advertising.com/",
+    "https://www.01advertising.com/contacts/",
+    "https://www.01advertising.com/legal/",
+    "https://www.01advertising.com/legal/cookie/",
+    "https://www.01advertising.com/legal/terms/",
+  ],
+}
+`;
+
+exports[`normalized defense destinations > pins the transform for a known destination 1`] = `
+{
+  "actionType": "freeze_or_dispute",
+  "actorClass": "regulated_cra",
+  "category": "bureau",
+  "collectionLayer": "consumer_reporting",
+  "companyId": "equifax",
+  "companyName": "Equifax",
+  "costModel": "free",
+  "defenseFunction": "remediation",
+  "displayName": "Equifax Security Freeze",
+  "estimatedMinutes": 10,
+  "frictionLevel": "low",
+  "harmSeverity": "none",
+  "hasRemovalFee": false,
+  "id": "equifax_freeze",
+  "mode": "respondToThreat",
+  "phoneNumber": null,
+  "situationIds": [
+    "lockdown",
+    "sim_hijack",
+    "tax_fraud",
+  ],
+  "sourceAttribution": "Equifax.com",
+  "url": "https://www.equifax.com/personal/credit-report-services/credit-freeze/",
+  "whyMatters": "Freezing Equifax helps prevent new credit from being opened in your name.",
+}
+`;

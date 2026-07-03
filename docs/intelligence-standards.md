@@ -73,7 +73,7 @@ Every local tracker record must be defensible by at least one source:
 
 Every imported or manually authored tracker record must include:
 
-- source family: `manual_seed`, `manual_fixture`, `vendor_docs`, `easyprivacy`, `easylist`, `duckduckgo_tracker_radar`, or `first_party_evidence`
+- source family: `manual_seed`, `manual_fixture`, `vendor_docs`, `easyprivacy`, `easylist`, `duckduckgo_tracker_radar`, `first_party_evidence`, `state_registry`, or `kenshiki_defense_registry`
 - source version/date when available
 - transformation notes when the source was converted into a local rule
 - license/attribution notes when the source imposes redistribution conditions
@@ -90,6 +90,8 @@ Local schema names are intentionally stable enum identifiers:
 | `easylist` | EasyList rule or policy category. |
 | `duckduckgo_tracker_radar` | DuckDuckGo Tracker Radar metadata. |
 | `first_party_evidence` | First-party source-code or fixture evidence. |
+| `state_registry` | US state data-broker registry filings (Vermont, Oregon, Texas, California AG/CPPA). Public-record provenance for broker identity, opt-out, and contact data. |
+| `kenshiki_defense_registry` | Kenshiki-authored defense destination registry and supply-chain research (`defense-registry.v3-harm`). First-party curated remediation intelligence. |
 
 ## Import Guardrails
 

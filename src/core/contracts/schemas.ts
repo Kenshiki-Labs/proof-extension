@@ -108,7 +108,13 @@ export const TrackerSourceFamilySchema = z.enum([
   "easyprivacy",
   "easylist",
   "duckduckgo_tracker_radar",
-  "first_party_evidence"
+  "first_party_evidence",
+  // US state data-broker registry filings (Vermont, Oregon, Texas,
+  // California AG/CPPA) — public-record provenance for remediation data.
+  "state_registry",
+  // Kenshiki-authored defense registry (defense-registry.v3-harm) and
+  // supply-chain research; first-party curated remediation intelligence.
+  "kenshiki_defense_registry"
 ])
 
 export const TrackerSourceSchema = z.object({
