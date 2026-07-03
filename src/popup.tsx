@@ -1,7 +1,7 @@
 import "~style.css"
 
 import { Fragment, useEffect, useState } from "react"
-import { Activity, AlertTriangle, CircleDollarSign, ClipboardCopy, Eye, EyeOff, FileText, Info, LineChart, Settings2, ShieldCheck, TrendingUp, type LucideIcon } from "lucide-react"
+import { Activity, AlertTriangle, CircleDollarSign, ClipboardCopy, ExternalLink, Eye, EyeOff, FileText, Info, LineChart, Settings2, ShieldCheck, Trash2, TrendingUp, type LucideIcon } from "lucide-react"
 import browser from "webextension-polyfill"
 
 import { RuntimeMessageSchema } from "~core/contracts/schemas"
@@ -172,6 +172,34 @@ function ObserverCard({
       </div>
       {remediation ? <p className={`${TYPE.small} mt-1`}>{remediation.parentCompany} · {remediation.categoryLabels.join(" · ")}</p> : null}
       <p className={`${TYPE.body} mt-2`}>{eventSummary(event)}</p>
+      {/* The two actions that matter most live at the top of the card, next
+          to Block — not buried at the bottom of the remediation section. The
+          cost of acting (time, ID check) is visible before the click. */}
+      {remediation ? (
+        <div className="mt-2.5 flex flex-wrap items-center gap-2">
+          <a
+            className="flex items-center gap-1 rounded-full border border-emerald-700/60 bg-emerald-700/10 px-2.5 py-1 text-[0.625rem] uppercase text-emerald-700 transition-colors hover:bg-emerald-700 hover:text-background"
+            href={remediation.futureCollectionUrl}
+            rel="noreferrer"
+            target="_blank"
+            title="Tell this company to stop collecting about you (opens their opt-out page)">
+            <ExternalLink aria-hidden className="h-3 w-3" />
+            Opt out
+          </a>
+          <a
+            className="flex items-center gap-1 rounded-full border border-danger/60 bg-danger/10 px-2.5 py-1 text-[0.625rem] uppercase text-danger transition-colors hover:bg-danger hover:text-background"
+            href={remediation.deletionUrl}
+            rel="noreferrer"
+            target="_blank"
+            title="Ask this company to delete what it already holds (opens their deletion page)">
+            <Trash2 aria-hidden className="h-3 w-3" />
+            Delete my data
+          </a>
+          <span className={TYPE.small}>
+            ≈{remediation.estimatedTimeMinutes} min · {remediation.identityVerificationRequired ? "ID check required" : "no ID check"}
+          </span>
+        </div>
+      ) : null}
       {event.blockability === "network_blockable" && event.trackerId && !guidance.offerBlocking ? (
         <p className={`${TYPE.small} mt-1.5 text-muted-foreground`}>{"reason" in guidance ? guidance.reason : null}</p>
       ) : null}
@@ -254,34 +282,26 @@ function ObserverCard({
                 </dd>
               </>
             ) : null}
-            <dt className={TYPE.small}>Friction</dt>
-            <dd className={TYPE.body}>{titleCase(remediation.frictionClass)} · about {remediation.estimatedTimeMinutes} min</dd>
-            <dt className={TYPE.small}>Verify ID</dt>
-            <dd className={TYPE.body}>{remediation.identityVerificationRequired ? "Required" : "Not required"}</dd>
           </dl>
-          <div className="mt-3 grid gap-3">
-            <div>
-              <h4 className={TYPE.label}>Why it matters</h4>
-              <ExplanationBullets items={remediation.explanation.whyItMatters} limit={2} />
+          <details className="mt-2.5">
+            <summary className={`${TYPE.small} cursor-pointer select-none text-muted-foreground`}>Why it matters, and what blocking changes</summary>
+            <div className="mt-2 grid gap-3">
+              <div>
+                <h4 className={TYPE.label}>Why it matters</h4>
+                <ExplanationBullets items={remediation.explanation.whyItMatters} limit={2} />
+              </div>
+              <div>
+                <h4 className={TYPE.label}>Blocking changes</h4>
+                <ExplanationBullets items={remediation.explanation.whatBlockingChanges} limit={2} />
+              </div>
+              <div>
+                <h4 className={TYPE.label}>Blocking does not change</h4>
+                <ExplanationBullets items={remediation.explanation.whatBlockingDoesNotChange} limit={2} />
+              </div>
+              <p className={TYPE.small}>{remediation.notes}</p>
             </div>
-            <div>
-              <h4 className={TYPE.label}>Blocking changes</h4>
-              <ExplanationBullets items={remediation.explanation.whatBlockingChanges} limit={2} />
-            </div>
-            <div>
-              <h4 className={TYPE.label}>Blocking does not change</h4>
-              <ExplanationBullets items={remediation.explanation.whatBlockingDoesNotChange} limit={2} />
-            </div>
-          </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <a className={`${TYPE.label} underline`} href={remediation.futureCollectionUrl} rel="noreferrer" target="_blank">
-              Opt out
-            </a>
-            <a className={`${TYPE.label} underline`} href={remediation.deletionUrl} rel="noreferrer" target="_blank">
-              Request deletion
-            </a>
-          </div>
-          <p className={`${TYPE.small} mt-2`}>Blocking does not delete prior records. {remediation.notes}</p>
+          </details>
+          <p className={`${TYPE.small} mt-2`}>Blocking does not delete records these companies already hold — use the buttons above for that.</p>
         </section>
       ) : null}
     </article>
@@ -306,7 +326,7 @@ function ValueSection({ events }: { events: ObserverEvent[] }) {
             <>
               <dt className={TYPE.small}>Ad value/yr</dt>
               <dd className={TYPE.body}>
-                {formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)} across {rollup.revenueTrackerCount} {rollup.revenueTrackerCount === 1 ? "company that profits from you" : "companies that profit from you"}
+                {formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)} across {rollup.revenueTrackerCount} revenue-model {rollup.revenueTrackerCount === 1 ? "tracker" : "trackers"}
               </dd>
             </>
           ) : null}
@@ -345,7 +365,7 @@ function RollingValueSection({
   return (
     <section className="mt-4">
       <div className="flex items-center justify-between gap-2">
-        <SectionHeading icon={TrendingUp}>Rolling local value</SectionHeading>
+        <SectionHeading icon={TrendingUp}>Local value ledger</SectionHeading>
         <div className="flex gap-1">
           {ROLLING_PERIODS.map((item) => (
             <button
@@ -609,7 +629,7 @@ function IndexPopup() {
           the report tab diagnostics for anyone investigating. */}
       {pageErrors.length > 0 && (summary.blockedCompanies.length > 0 || summary.mitigatedCompanies.length > 0) ? (
         <section className="mt-3.5 border border-danger bg-card p-3 shadow-sm" role="alert">
-          <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger" style={{display:"flex",alignItems:"center",gap:"6px"}}><AlertTriangle aria-hidden className="h-3 w-3 shrink-0" />Page error while this extension was active
+          <h2 className="flex items-center gap-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger"><AlertTriangle aria-hidden className="h-3 w-3 shrink-0" />Page error while this extension was active
           </h2>
           <p className={`${TYPE.small} mt-1`}>
             This tab threw {summary.pageErrors.length === 1 ? "an uncaught error" : `${summary.pageErrors.length} uncaught errors`}{" "}
