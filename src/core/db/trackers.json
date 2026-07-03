@@ -3,540 +3,1430 @@
     "id": "fullstory",
     "schemaVersion": 1,
     "match": {
-      "domains": ["fullstory.com", "edge.fullstory.com"],
-      "paths": ["/s/fs.js", "/rec/page"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "fullstory.com",
+        "edge.fullstory.com"
+      ],
+      "paths": [
+        "/s/fs.js",
+        "/rec/page"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "fullstory",
     "category": "session-replay",
-    "collects": ["scrolls", "clicks", "navigation", "potential form interaction metadata"],
-    "monetization": ["UX analytics", "conversion optimization", "behavior replay"],
+    "collects": [
+      "scrolls",
+      "clicks",
+      "navigation",
+      "potential form interaction metadata"
+    ],
+    "monetization": [
+      "UX analytics",
+      "conversion optimization",
+      "behavior replay"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched FullStory domain or ingest path."],
-    "remediationId": "fullstory-default"
+    "evidenceTemplate": [
+      "Request matched FullStory domain or ingest path."
+    ],
+    "remediationId": "fullstory-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "google-analytics",
     "schemaVersion": 1,
     "match": {
-      "domains": ["google-analytics.com", "www.googletagmanager.com"],
-      "paths": ["/g/collect", "/collect", "/gtag/js"],
-      "requestTypes": ["script", "xmlhttprequest", "ping"]
+      "domains": [
+        "google-analytics.com",
+        "www.googletagmanager.com"
+      ],
+      "paths": [
+        "/g/collect",
+        "/collect",
+        "/gtag/js"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "ping"
+      ]
     },
     "companyId": "google",
     "category": "analytics",
-    "collects": ["page views", "events", "session identifiers", "device/browser metadata"],
-    "monetization": ["site analytics", "audience measurement", "Google Ads remarketing lists"],
+    "collects": [
+      "page views",
+      "events",
+      "session identifiers",
+      "device/browser metadata"
+    ],
+    "monetization": [
+      "site analytics",
+      "audience measurement",
+      "Google Ads remarketing lists"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Google Analytics (GA4/gtag) domain or collect path."],
-    "remediationId": "google-default"
+    "evidenceTemplate": [
+      "Request matched Google Analytics (GA4/gtag) domain or collect path."
+    ],
+    "remediationId": "google-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "google-tag-manager",
     "schemaVersion": 1,
     "match": {
-      "domains": ["googletagmanager.com"],
-      "paths": ["/gtm.js", "/gtag/js"],
-      "requestTypes": ["script"]
+      "domains": [
+        "googletagmanager.com"
+      ],
+      "paths": [
+        "/gtm.js",
+        "/gtag/js"
+      ],
+      "requestTypes": [
+        "script"
+      ]
     },
     "companyId": "google-tag-manager",
     "category": "tag-manager",
-    "collects": ["arbitrary tags configured by the site operator, which can include third-party pixels"],
-    "monetization": ["indirect — GTM is a delivery mechanism for other vendors' tags"],
+    "collects": [
+      "arbitrary tags configured by the site operator, which can include third-party pixels"
+    ],
+    "monetization": [
+      "indirect — GTM is a delivery mechanism for other vendors' tags"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched googletagmanager.com script path."],
-    "remediationId": "google-default"
+    "evidenceTemplate": [
+      "Request matched googletagmanager.com script path."
+    ],
+    "remediationId": "google-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "google-ads",
     "schemaVersion": 1,
     "match": {
-      "domains": ["doubleclick.net", "googleadservices.com", "googlesyndication.com"],
-      "paths": ["/pagead/", "/conversion/"],
-      "requestTypes": ["script", "xmlhttprequest", "image", "ping"]
+      "domains": [
+        "doubleclick.net",
+        "googleadservices.com",
+        "googlesyndication.com"
+      ],
+      "paths": [
+        "/pagead/",
+        "/conversion/"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
     },
     "companyId": "google-ads",
     "category": "advertising",
-    "collects": ["conversion events", "ad click identifiers", "cross-site interest signals"],
-    "monetization": ["ad retargeting", "conversion attribution", "audience-based ad pricing"],
+    "collects": [
+      "conversion events",
+      "ad click identifiers",
+      "cross-site interest signals"
+    ],
+    "monetization": [
+      "ad retargeting",
+      "conversion attribution",
+      "audience-based ad pricing"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched DoubleClick/Google Ads domain or conversion path."],
-    "remediationId": "google-default"
+    "evidenceTemplate": [
+      "Request matched DoubleClick/Google Ads domain or conversion path."
+    ],
+    "remediationId": "google-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "meta-pixel",
     "schemaVersion": 1,
     "match": {
-      "domains": ["connect.facebook.net"],
-      "paths": ["/tr", "/en_US/fbevents.js"],
-      "requestTypes": ["script", "xmlhttprequest", "image"]
+      "domains": [
+        "connect.facebook.net",
+        "facebook.com"
+      ],
+      "paths": [
+        "/tr",
+        "/en_US/fbevents.js"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image"
+      ]
     },
     "companyId": "meta",
     "category": "advertising",
-    "collects": ["page views", "custom conversion events", "hashed contact info when advanced matching is enabled"],
-    "monetization": ["ad retargeting", "conversion attribution", "lookalike audience building"],
+    "collects": [
+      "page views",
+      "custom conversion events",
+      "hashed contact info when advanced matching is enabled"
+    ],
+    "monetization": [
+      "ad retargeting",
+      "conversion attribution",
+      "lookalike audience building"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Meta Pixel domain or tracking path."],
-    "remediationId": "meta-default"
+    "evidenceTemplate": [
+      "Request matched Meta Pixel domain or tracking path."
+    ],
+    "remediationId": "meta-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "tiktok-pixel",
     "schemaVersion": 1,
     "match": {
-      "domains": ["analytics.tiktok.com"],
-      "paths": ["/i18n/pixel/events.js"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "analytics.tiktok.com"
+      ],
+      "paths": [
+        "/i18n/pixel/events.js"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "tiktok",
     "category": "advertising",
-    "collects": ["page views", "custom conversion events"],
-    "monetization": ["ad retargeting", "conversion attribution"],
+    "collects": [
+      "page views",
+      "custom conversion events"
+    ],
+    "monetization": [
+      "ad retargeting",
+      "conversion attribution"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched TikTok Pixel domain or events path."],
-    "remediationId": "tiktok-default"
+    "evidenceTemplate": [
+      "Request matched TikTok Pixel domain or events path."
+    ],
+    "remediationId": "tiktok-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "linkedin-insight",
     "schemaVersion": 1,
     "match": {
-      "domains": ["snap.licdn.com", "px.ads.linkedin.com"],
-      "paths": ["/li.lms-analytics/insight.min.js"],
-      "requestTypes": ["script", "xmlhttprequest", "image"]
+      "domains": [
+        "snap.licdn.com",
+        "px.ads.linkedin.com"
+      ],
+      "paths": [
+        "/li.lms-analytics/insight.min.js"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image"
+      ]
     },
     "companyId": "linkedin",
     "category": "advertising",
-    "collects": ["page views", "conversion events", "employer/job-title inference for B2B targeting"],
-    "monetization": ["B2B ad retargeting", "conversion attribution"],
+    "collects": [
+      "page views",
+      "conversion events",
+      "employer/job-title inference for B2B targeting"
+    ],
+    "monetization": [
+      "B2B ad retargeting",
+      "conversion attribution"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched LinkedIn Insight Tag domain or script path."],
-    "remediationId": "linkedin-default"
+    "evidenceTemplate": [
+      "Request matched LinkedIn Insight Tag domain or script path."
+    ],
+    "remediationId": "linkedin-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "hotjar",
     "schemaVersion": 1,
     "match": {
-      "domains": ["static.hotjar.com", "script.hotjar.com"],
-      "paths": ["/modules.", "/collect"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "static.hotjar.com",
+        "script.hotjar.com"
+      ],
+      "paths": [
+        "/modules.",
+        "/collect"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "hotjar",
     "category": "session-replay",
-    "collects": ["mouse movement", "clicks", "scroll depth", "session recordings"],
-    "monetization": ["UX analytics", "heatmap products sold to the site operator"],
+    "collects": [
+      "mouse movement",
+      "clicks",
+      "scroll depth",
+      "session recordings"
+    ],
+    "monetization": [
+      "UX analytics",
+      "heatmap products sold to the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Hotjar domain or module/collect path."],
-    "remediationId": "hotjar-default"
+    "evidenceTemplate": [
+      "Request matched Hotjar domain or module/collect path."
+    ],
+    "remediationId": "hotjar-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "mixpanel",
     "schemaVersion": 1,
     "match": {
-      "domains": ["cdn.mxpnl.com", "api.mixpanel.com", "api-js.mixpanel.com"],
-      "paths": ["/track", "/engage"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "cdn.mxpnl.com",
+        "api.mixpanel.com",
+        "api-js.mixpanel.com"
+      ],
+      "paths": [
+        "/track",
+        "/engage"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "mixpanel",
     "category": "product-analytics",
-    "collects": ["events", "user properties", "session identifiers"],
-    "monetization": ["product analytics sold to the site operator"],
+    "collects": [
+      "events",
+      "user properties",
+      "session identifiers"
+    ],
+    "monetization": [
+      "product analytics sold to the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Mixpanel domain or track/engage path."],
-    "remediationId": "mixpanel-default"
+    "evidenceTemplate": [
+      "Request matched Mixpanel domain or track/engage path."
+    ],
+    "remediationId": "mixpanel-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "segment",
     "schemaVersion": 1,
     "match": {
-      "domains": ["cdn.segment.com", "api.segment.io"],
-      "paths": ["/analytics.js", "/v1/track", "/v1/page"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "cdn.segment.com",
+        "api.segment.io"
+      ],
+      "paths": [
+        "/analytics.js",
+        "/v1/track",
+        "/v1/page"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "segment",
     "category": "customer-data-platform",
-    "collects": ["events", "identity resolution keys", "forwarded to other configured destinations"],
-    "monetization": ["customer data platform fees paid by the site operator"],
+    "collects": [
+      "events",
+      "identity resolution keys",
+      "forwarded to other configured destinations"
+    ],
+    "monetization": [
+      "customer data platform fees paid by the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Segment domain or track/page path."],
-    "remediationId": "segment-default"
+    "evidenceTemplate": [
+      "Request matched Segment domain or track/page path."
+    ],
+    "remediationId": "segment-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "amplitude",
     "schemaVersion": 1,
     "match": {
-      "domains": ["cdn.amplitude.com", "api2.amplitude.com"],
-      "paths": ["/2/httpapi"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "cdn.amplitude.com",
+        "api2.amplitude.com"
+      ],
+      "paths": [
+        "/2/httpapi"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "amplitude",
     "category": "product-analytics",
-    "collects": ["events", "user properties", "session identifiers"],
-    "monetization": ["product analytics sold to the site operator"],
+    "collects": [
+      "events",
+      "user properties",
+      "session identifiers"
+    ],
+    "monetization": [
+      "product analytics sold to the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Amplitude domain or httpapi path."],
-    "remediationId": "amplitude-default"
+    "evidenceTemplate": [
+      "Request matched Amplitude domain or httpapi path."
+    ],
+    "remediationId": "amplitude-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "criteo",
     "schemaVersion": 1,
     "match": {
-      "domains": ["static.criteo.net", "bidder.criteo.com"],
-      "paths": ["/js/ld/ld.js"],
-      "requestTypes": ["script", "xmlhttprequest", "image"]
+      "domains": [
+        "static.criteo.net",
+        "bidder.criteo.com"
+      ],
+      "paths": [
+        "/js/ld/ld.js"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image"
+      ]
     },
     "companyId": "criteo",
     "category": "advertising",
-    "collects": ["product views", "cart events", "cross-site browsing for retargeting"],
-    "monetization": ["dynamic retargeting ads", "programmatic ad auctions"],
+    "collects": [
+      "product views",
+      "cart events",
+      "cross-site browsing for retargeting"
+    ],
+    "monetization": [
+      "dynamic retargeting ads",
+      "programmatic ad auctions"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Criteo domain or tag path."],
-    "remediationId": "criteo-default"
+    "evidenceTemplate": [
+      "Request matched Criteo domain or tag path."
+    ],
+    "remediationId": "criteo-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "adobe-analytics",
     "schemaVersion": 1,
     "match": {
-      "domains": ["assets.adobedtm.com", "sc.omtrdc.net"],
-      "paths": ["/b/ss/"],
-      "requestTypes": ["script", "xmlhttprequest", "image"]
+      "domains": [
+        "assets.adobedtm.com",
+        "sc.omtrdc.net"
+      ],
+      "paths": [
+        "/b/ss/"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image"
+      ]
     },
     "companyId": "adobe",
     "category": "analytics",
-    "collects": ["page views", "events", "session identifiers"],
-    "monetization": ["site analytics sold to the site operator"],
+    "collects": [
+      "page views",
+      "events",
+      "session identifiers"
+    ],
+    "monetization": [
+      "site analytics sold to the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Adobe Analytics/DTM domain or beacon path."],
-    "remediationId": "adobe-default"
+    "evidenceTemplate": [
+      "Request matched Adobe Analytics/DTM domain or beacon path."
+    ],
+    "remediationId": "adobe-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "braze",
     "schemaVersion": 1,
     "match": {
-      "domains": ["sdk.iad-01.braze.com", "sdk.fra-01.braze.eu"],
-      "paths": ["/api/v3/data"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "sdk.iad-01.braze.com",
+        "sdk.fra-01.braze.eu"
+      ],
+      "paths": [
+        "/api/v3/data"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "braze",
     "category": "behavioral-profiling",
-    "collects": ["events", "push/email engagement", "in-app behavior for segmentation"],
-    "monetization": ["customer engagement platform fees paid by the site operator"],
+    "collects": [
+      "events",
+      "push/email engagement",
+      "in-app behavior for segmentation"
+    ],
+    "monetization": [
+      "customer engagement platform fees paid by the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Braze SDK domain or data path."],
-    "remediationId": "braze-default"
+    "evidenceTemplate": [
+      "Request matched Braze SDK domain or data path."
+    ],
+    "remediationId": "braze-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "intercom",
     "schemaVersion": 1,
     "match": {
-      "domains": ["widget.intercom.io", "api-iam.intercom.io"],
-      "paths": ["/messenger/"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "widget.intercom.io",
+        "api-iam.intercom.io"
+      ],
+      "paths": [
+        "/messenger/"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "intercom",
     "category": "customer-messaging",
-    "collects": ["chat transcripts", "page views", "device/browser metadata"],
-    "monetization": ["customer messaging platform fees paid by the site operator"],
+    "collects": [
+      "chat transcripts",
+      "page views",
+      "device/browser metadata"
+    ],
+    "monetization": [
+      "customer messaging platform fees paid by the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Intercom widget domain or messenger path."],
-    "remediationId": "intercom-default"
+    "evidenceTemplate": [
+      "Request matched Intercom widget domain or messenger path."
+    ],
+    "remediationId": "intercom-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "drift",
     "schemaVersion": 1,
     "match": {
-      "domains": ["js.driftt.com"],
-      "paths": ["/include/"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "js.driftt.com"
+      ],
+      "paths": [
+        "/include/"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "drift",
     "category": "customer-messaging",
-    "collects": ["chat transcripts", "page views", "visitor identity when provided"],
-    "monetization": ["customer messaging platform fees paid by the site operator"],
+    "collects": [
+      "chat transcripts",
+      "page views",
+      "visitor identity when provided"
+    ],
+    "monetization": [
+      "customer messaging platform fees paid by the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Drift domain or include path."],
-    "remediationId": "drift-default"
+    "evidenceTemplate": [
+      "Request matched Drift domain or include path."
+    ],
+    "remediationId": "drift-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "optimizely",
     "schemaVersion": 1,
     "match": {
-      "domains": ["cdn.optimizely.com", "logx.optimizely.com"],
-      "paths": ["/log/event"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "cdn.optimizely.com",
+        "logx.optimizely.com"
+      ],
+      "paths": [
+        "/log/event"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "optimizely",
     "category": "experimentation",
-    "collects": ["experiment/variation assignment", "conversion events"],
-    "monetization": ["A/B testing and personalization platform fees paid by the site operator"],
+    "collects": [
+      "experiment/variation assignment",
+      "conversion events"
+    ],
+    "monetization": [
+      "A/B testing and personalization platform fees paid by the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Optimizely domain or log/event path."],
-    "remediationId": "optimizely-default"
+    "evidenceTemplate": [
+      "Request matched Optimizely domain or log/event path."
+    ],
+    "remediationId": "optimizely-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "crazyegg",
     "schemaVersion": 1,
     "match": {
-      "domains": ["script.crazyegg.com"],
-      "paths": ["/pages/scripts/"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "script.crazyegg.com"
+      ],
+      "paths": [
+        "/pages/scripts/"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "crazyegg",
     "category": "session-replay",
-    "collects": ["mouse movement", "clicks", "scroll depth heatmaps"],
-    "monetization": ["heatmap/UX analytics products sold to the site operator"],
+    "collects": [
+      "mouse movement",
+      "clicks",
+      "scroll depth heatmaps"
+    ],
+    "monetization": [
+      "heatmap/UX analytics products sold to the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Crazy Egg domain or script path."],
-    "remediationId": "crazyegg-default"
+    "evidenceTemplate": [
+      "Request matched Crazy Egg domain or script path."
+    ],
+    "remediationId": "crazyegg-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "quantcast",
     "schemaVersion": 1,
     "match": {
-      "domains": ["secure.quantserve.com"],
-      "paths": ["/quant.js"],
-      "requestTypes": ["script", "xmlhttprequest", "image"]
+      "domains": [
+        "secure.quantserve.com"
+      ],
+      "paths": [
+        "/quant.js"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image"
+      ]
     },
     "companyId": "quantcast",
     "category": "advertising",
-    "collects": ["page views", "audience segment inference"],
-    "monetization": ["audience measurement", "programmatic ad targeting"],
+    "collects": [
+      "page views",
+      "audience segment inference"
+    ],
+    "monetization": [
+      "audience measurement",
+      "programmatic ad targeting"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Quantcast domain or quant.js path."],
-    "remediationId": "quantcast-default"
+    "evidenceTemplate": [
+      "Request matched Quantcast domain or quant.js path."
+    ],
+    "remediationId": "quantcast-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "taboola",
     "schemaVersion": 1,
     "match": {
-      "domains": ["cdn.taboola.com"],
-      "paths": ["/libtrc/"],
-      "requestTypes": ["script", "xmlhttprequest", "image"]
+      "domains": [
+        "cdn.taboola.com"
+      ],
+      "paths": [
+        "/libtrc/"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image"
+      ]
     },
     "companyId": "taboola",
     "category": "advertising",
-    "collects": ["content engagement", "cross-site interest signals"],
-    "monetization": ["native ad recommendations", "programmatic ad auctions"],
+    "collects": [
+      "content engagement",
+      "cross-site interest signals"
+    ],
+    "monetization": [
+      "native ad recommendations",
+      "programmatic ad auctions"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Taboola domain or libtrc path."],
-    "remediationId": "taboola-default"
+    "evidenceTemplate": [
+      "Request matched Taboola domain or libtrc path."
+    ],
+    "remediationId": "taboola-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "outbrain",
     "schemaVersion": 1,
     "match": {
-      "domains": ["widgets.outbrain.com"],
-      "paths": ["/outbrain.js"],
-      "requestTypes": ["script", "xmlhttprequest", "image"]
+      "domains": [
+        "widgets.outbrain.com"
+      ],
+      "paths": [
+        "/outbrain.js"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image"
+      ]
     },
     "companyId": "outbrain",
     "category": "advertising",
-    "collects": ["content engagement", "cross-site interest signals"],
-    "monetization": ["native ad recommendations", "programmatic ad auctions"],
+    "collects": [
+      "content engagement",
+      "cross-site interest signals"
+    ],
+    "monetization": [
+      "native ad recommendations",
+      "programmatic ad auctions"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Outbrain domain or widget script path."],
-    "remediationId": "outbrain-default"
+    "evidenceTemplate": [
+      "Request matched Outbrain domain or widget script path."
+    ],
+    "remediationId": "outbrain-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "snap-pixel",
     "schemaVersion": 1,
     "match": {
-      "domains": ["sc-static.net", "tr.snapchat.com"],
-      "paths": ["/scevent.min.js"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "sc-static.net",
+        "tr.snapchat.com"
+      ],
+      "paths": [
+        "/scevent.min.js"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "snap",
     "category": "advertising",
-    "collects": ["page views", "custom conversion events"],
-    "monetization": ["ad retargeting", "conversion attribution"],
+    "collects": [
+      "page views",
+      "custom conversion events"
+    ],
+    "monetization": [
+      "ad retargeting",
+      "conversion attribution"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Snap Pixel domain or event script path."],
-    "remediationId": "snap-default"
+    "evidenceTemplate": [
+      "Request matched Snap Pixel domain or event script path."
+    ],
+    "remediationId": "snap-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "pinterest-tag",
     "schemaVersion": 1,
     "match": {
-      "domains": ["ct.pinterest.com", "s.pinimg.com"],
-      "paths": ["/ct/core.js"],
-      "requestTypes": ["script", "xmlhttprequest", "image"]
+      "domains": [
+        "ct.pinterest.com",
+        "s.pinimg.com"
+      ],
+      "paths": [
+        "/ct/core.js"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image"
+      ]
     },
     "companyId": "pinterest",
     "category": "advertising",
-    "collects": ["page views", "custom conversion events"],
-    "monetization": ["ad retargeting", "conversion attribution"],
+    "collects": [
+      "page views",
+      "custom conversion events"
+    ],
+    "monetization": [
+      "ad retargeting",
+      "conversion attribution"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Pinterest Tag domain or core.js path."],
-    "remediationId": "pinterest-default"
+    "evidenceTemplate": [
+      "Request matched Pinterest Tag domain or core.js path."
+    ],
+    "remediationId": "pinterest-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "twitter-pixel",
     "schemaVersion": 1,
     "match": {
-      "domains": ["static.ads-twitter.com", "analytics.twitter.com"],
-      "paths": ["/uwt.js"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "static.ads-twitter.com",
+        "analytics.twitter.com"
+      ],
+      "paths": [
+        "/uwt.js"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "twitter",
     "category": "advertising",
-    "collects": ["page views", "custom conversion events"],
-    "monetization": ["ad retargeting", "conversion attribution"],
+    "collects": [
+      "page views",
+      "custom conversion events"
+    ],
+    "monetization": [
+      "ad retargeting",
+      "conversion attribution"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched X (Twitter) Pixel domain or uwt.js path."],
-    "remediationId": "twitter-default"
+    "evidenceTemplate": [
+      "Request matched X (Twitter) Pixel domain or uwt.js path."
+    ],
+    "remediationId": "twitter-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "yandex-metrica",
     "schemaVersion": 1,
     "match": {
-      "domains": ["mc.yandex.ru"],
-      "paths": ["/metrika/tag.js", "/watch/"],
-      "requestTypes": ["script", "xmlhttprequest", "image"]
+      "domains": [
+        "mc.yandex.ru"
+      ],
+      "paths": [
+        "/metrika/tag.js",
+        "/watch/"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image"
+      ]
     },
     "companyId": "yandex",
     "category": "session-replay",
-    "collects": ["page views", "session recordings", "click maps"],
-    "monetization": ["site analytics sold to the site operator"],
+    "collects": [
+      "page views",
+      "session recordings",
+      "click maps"
+    ],
+    "monetization": [
+      "site analytics sold to the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Yandex Metrica domain or tag/watch path."],
-    "remediationId": "yandex-default"
+    "evidenceTemplate": [
+      "Request matched Yandex Metrica domain or tag/watch path."
+    ],
+    "remediationId": "yandex-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "microsoft-clarity",
     "schemaVersion": 1,
     "match": {
-      "domains": ["www.clarity.ms"],
-      "paths": ["/tag/"],
-      "requestTypes": ["script", "xmlhttprequest"]
+      "domains": [
+        "www.clarity.ms"
+      ],
+      "paths": [
+        "/tag/"
+      ],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
     },
     "companyId": "microsoft-clarity",
     "category": "session-replay",
-    "collects": ["mouse movement", "clicks", "session recordings", "heatmaps"],
-    "monetization": ["free product; underlying data may inform Microsoft Advertising"],
+    "collects": [
+      "mouse movement",
+      "clicks",
+      "session recordings",
+      "heatmaps"
+    ],
+    "monetization": [
+      "free product; underlying data may inform Microsoft Advertising"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Microsoft Clarity domain or tag path."],
-    "remediationId": "microsoft-clarity-default"
+    "evidenceTemplate": [
+      "Request matched Microsoft Clarity domain or tag path."
+    ],
+    "remediationId": "microsoft-clarity-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   },
   {
     "id": "datadog-rum",
     "schemaVersion": 1,
     "match": {
-      "domains": ["rum.browser-intake-datadoghq.com"],
-      "paths": ["/api/v2/rum"],
-      "requestTypes": ["xmlhttprequest", "ping"]
+      "domains": [
+        "rum.browser-intake-datadoghq.com"
+      ],
+      "paths": [
+        "/api/v2/rum"
+      ],
+      "requestTypes": [
+        "xmlhttprequest",
+        "ping"
+      ]
     },
     "companyId": "datadog",
     "category": "performance-monitoring",
-    "collects": ["page performance metrics", "session replay frames when enabled", "error traces"],
-    "monetization": ["infrastructure monitoring platform fees paid by the site operator"],
+    "collects": [
+      "page performance metrics",
+      "session replay frames when enabled",
+      "error traces"
+    ],
+    "monetization": [
+      "infrastructure monitoring platform fees paid by the site operator"
+    ],
     "browserAction": {
       "blockability": "network_blockable",
       "method": "network-block"
     },
     "confidence": "confirmed",
-    "evidenceTemplate": ["Request matched Datadog RUM intake domain or path."],
-    "remediationId": "datadog-default"
+    "evidenceTemplate": [
+      "Request matched Datadog RUM intake domain or path."
+    ],
+    "remediationId": "datadog-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension seed tracker database",
+        "version": "0.0.1",
+        "retrieved_at": "2026-07-02",
+        "license": "MIT",
+        "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-02",
+      "reviewer": "Kenshiki",
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    }
   }
 ]

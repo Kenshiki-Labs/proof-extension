@@ -41,7 +41,23 @@ const tracker = {
   },
   confidence: "confirmed",
   evidenceTemplate: ["Request matched FullStory domain."],
-  remediationId: "fullstory-default"
+  remediationId: "fullstory-default",
+  sources: [
+    {
+      family: "manual_seed",
+      name: "Proof Extension seed tracker database",
+      version: "0.0.1",
+      retrieved_at: "2026-07-02",
+      license: "MIT",
+      transform_notes: "Hand-authored seed record for validator tests."
+    }
+  ],
+  review: {
+    status: "seed",
+    last_reviewed_at: "2026-07-02",
+    reviewer: "Kenshiki",
+    notes: "Seed record pending source-backed import review."
+  }
 }
 
 describe("validateTrackerDatabase", () => {
@@ -73,5 +89,58 @@ describe("validateTrackerDatabase", () => {
     expect(() =>
       validateTrackerDatabaseRecords([{ ...tracker, remediationId: "missing" }], [company], [remediation])
     ).toThrow("unknown remediation")
+  })
+
+  it("rejects trackers without provenance", () => {
+    const { sources, ...trackerWithoutSources } = tracker
+
+    expect(() => validateTrackerDatabaseRecords([trackerWithoutSources], [company], [remediation])).toThrow()
+    expect(sources).toHaveLength(1)
+  })
+
+  it("rejects network-blockable trackers without a blocking-policy source", () => {
+    expect(() => validateTrackerDatabaseRecords([
+      {
+        ...tracker,
+        sources: [{ ...tracker.sources[0], family: "duckduckgo_tracker_radar", url: "https://example.com/radar" }]
+      }
+    ], [company], [remediation])).toThrow("network_blockable without a blocking-policy source")
+  })
+
+  it("rejects source-backed review when only manual seed provenance exists", () => {
+    expect(() => validateTrackerDatabaseRecords([
+      {
+        ...tracker,
+        review: { ...tracker.review, status: "source_backed" }
+      }
+    ], [company], [remediation])).toThrow("cannot be source_backed")
+  })
+
+  it("rejects imported source families without required source URLs", () => {
+    expect(() => validateTrackerDatabaseRecords([
+      {
+        ...tracker,
+        browserAction: { ...tracker.browserAction, blockability: "observable_only" },
+        sources: [{ ...tracker.sources[0], family: "duckduckgo_tracker_radar" }]
+      }
+    ], [company], [remediation])).toThrow("requires url")
+  })
+
+  it("rejects path-only tracker rules", () => {
+    expect(() => validateTrackerDatabaseRecords([
+      { ...tracker, match: { domains: [], paths: ["/collect"], requestTypes: ["script"] } }
+    ], [company], [remediation])).toThrow("path rules without domains")
+  })
+
+  it("rejects malformed tracker domains", () => {
+    expect(() => validateTrackerDatabaseRecords([
+      { ...tracker, match: { ...tracker.match, domains: ["https://fullstory.com"] } }
+    ], [company], [remediation])).toThrow("malformed domain")
+  })
+
+  it("rejects tracker paths without a leading slash", () => {
+    expect(() => validateTrackerDatabaseRecords([
+      { ...tracker, match: { ...tracker.match, paths: ["collect"] } }
+    ], [company], [remediation])).toThrow("path must start with /")
   })
 })
