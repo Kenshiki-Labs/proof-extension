@@ -923,7 +923,7 @@
       "severity": "high",
       "status": "needs_review",
       "entityIds": [
-        "id5-technology-ltd",
+        "id5",
         "unearth-campaigns-llc"
       ],
       "facetKeys": [],
@@ -934,7 +934,7 @@
           "unearthcampaigns.com"
         ],
         "entityIds": [
-          "id5-technology-ltd",
+          "id5",
           "unearth-campaigns-llc"
         ]
       }
@@ -945,14 +945,14 @@
       "severity": "high",
       "status": "needs_review",
       "entityIds": [
-        "id5-technology-ltd",
+        "id5",
         "unearth-campaigns-llc"
       ],
       "facetKeys": [],
       "details": {
         "domain": "unearthcampaigns.com",
         "existingEntityId": "unearth-campaigns-llc",
-        "attemptedEntityId": "id5-technology-ltd",
+        "attemptedEntityId": "id5",
         "attemptedName": "UNEARTH CAMPAIGNS LLC"
       }
     },
@@ -962,14 +962,14 @@
       "severity": "high",
       "status": "needs_review",
       "entityIds": [
-        "id5-technology-ltd",
+        "id5",
         "unearth-campaigns-llc"
       ],
       "facetKeys": [],
       "details": {
         "slug": "unearth-campaigns-llc",
         "existingEntityId": "unearth-campaigns-llc",
-        "attemptedEntityId": "id5-technology-ltd",
+        "attemptedEntityId": "id5",
         "attemptedName": "UNEARTH CAMPAIGNS LLC"
       }
     },

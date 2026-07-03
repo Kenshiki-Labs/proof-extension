@@ -3,8 +3,14 @@
     "id": "fullstory",
     "name": "FullStory",
     "parentCompany": "FullStory",
-    "aliases": ["FullStory", "FS"],
-    "categoryLabels": ["session replay", "product analytics"],
+    "aliases": [
+      "FullStory",
+      "FS"
+    ],
+    "categoryLabels": [
+      "session replay",
+      "product analytics"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@fullstory.com"
   },
@@ -12,8 +18,14 @@
     "id": "google",
     "name": "Google Analytics",
     "parentCompany": "Alphabet Inc.",
-    "aliases": ["GA4", "Universal Analytics", "gtag.js"],
-    "categoryLabels": ["analytics"],
+    "aliases": [
+      "GA4",
+      "Universal Analytics",
+      "gtag.js"
+    ],
+    "categoryLabels": [
+      "analytics"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@google.com"
   },
@@ -21,8 +33,12 @@
     "id": "google-tag-manager",
     "name": "Google Tag Manager",
     "parentCompany": "Alphabet Inc.",
-    "aliases": ["GTM"],
-    "categoryLabels": ["tag manager"],
+    "aliases": [
+      "GTM"
+    ],
+    "categoryLabels": [
+      "tag manager"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@google.com"
   },
@@ -30,8 +46,14 @@
     "id": "google-ads",
     "name": "Google Ads / DoubleClick",
     "parentCompany": "Alphabet Inc.",
-    "aliases": ["DoubleClick", "Google Ads Conversion Tracking"],
-    "categoryLabels": ["advertising", "retargeting"],
+    "aliases": [
+      "DoubleClick",
+      "Google Ads Conversion Tracking"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "retargeting"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@google.com"
   },
@@ -39,8 +61,14 @@
     "id": "meta",
     "name": "Meta Pixel",
     "parentCompany": "Meta Platforms, Inc.",
-    "aliases": ["Facebook Pixel", "Meta Ads"],
-    "categoryLabels": ["advertising", "retargeting"],
+    "aliases": [
+      "Facebook Pixel",
+      "Meta Ads"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "retargeting"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@meta.com"
   },
@@ -48,24 +76,39 @@
     "id": "tiktok",
     "name": "TikTok Pixel",
     "parentCompany": "ByteDance Ltd.",
-    "aliases": ["TikTok Ads"],
-    "categoryLabels": ["advertising", "retargeting"],
+    "aliases": [
+      "TikTok Ads"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "retargeting"
+    ],
     "jurisdiction": "SG"
   },
   {
     "id": "linkedin",
     "name": "LinkedIn Insight Tag",
     "parentCompany": "Microsoft Corporation",
-    "aliases": ["LinkedIn Ads"],
-    "categoryLabels": ["advertising", "b2b analytics"],
+    "aliases": [
+      "LinkedIn Ads"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "b2b analytics"
+    ],
     "jurisdiction": "US"
   },
   {
     "id": "hotjar",
     "name": "Hotjar",
     "parentCompany": "Contentsquare",
-    "aliases": ["Hotjar"],
-    "categoryLabels": ["session replay", "heatmaps"],
+    "aliases": [
+      "Hotjar"
+    ],
+    "categoryLabels": [
+      "session replay",
+      "heatmaps"
+    ],
     "jurisdiction": "EU",
     "privacyContact": "privacy@hotjar.com"
   },
@@ -73,8 +116,12 @@
     "id": "mixpanel",
     "name": "Mixpanel",
     "parentCompany": "Mixpanel, Inc.",
-    "aliases": ["Mixpanel"],
-    "categoryLabels": ["product analytics"],
+    "aliases": [
+      "Mixpanel"
+    ],
+    "categoryLabels": [
+      "product analytics"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@mixpanel.com"
   },
@@ -82,16 +129,25 @@
     "id": "segment",
     "name": "Segment",
     "parentCompany": "Twilio Inc.",
-    "aliases": ["Twilio Segment"],
-    "categoryLabels": ["customer data platform", "analytics"],
+    "aliases": [
+      "Twilio Segment"
+    ],
+    "categoryLabels": [
+      "customer data platform",
+      "analytics"
+    ],
     "jurisdiction": "US"
   },
   {
     "id": "amplitude",
     "name": "Amplitude",
     "parentCompany": "Amplitude, Inc.",
-    "aliases": ["Amplitude Analytics"],
-    "categoryLabels": ["product analytics"],
+    "aliases": [
+      "Amplitude Analytics"
+    ],
+    "categoryLabels": [
+      "product analytics"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@amplitude.com"
   },
@@ -99,8 +155,13 @@
     "id": "criteo",
     "name": "Criteo",
     "parentCompany": "Criteo SA",
-    "aliases": ["Criteo"],
-    "categoryLabels": ["advertising", "retargeting"],
+    "aliases": [
+      "Criteo"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "retargeting"
+    ],
     "jurisdiction": "FR",
     "privacyContact": "privacy@criteo.com"
   },
@@ -108,8 +169,13 @@
     "id": "adobe",
     "name": "Adobe Analytics",
     "parentCompany": "Adobe Inc.",
-    "aliases": ["Omniture", "SiteCatalyst"],
-    "categoryLabels": ["analytics"],
+    "aliases": [
+      "Omniture",
+      "SiteCatalyst"
+    ],
+    "categoryLabels": [
+      "analytics"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@adobe.com"
   },
@@ -117,16 +183,26 @@
     "id": "braze",
     "name": "Braze",
     "parentCompany": "Braze, Inc.",
-    "aliases": ["Braze SDK"],
-    "categoryLabels": ["customer engagement", "behavioral profiling"],
+    "aliases": [
+      "Braze SDK"
+    ],
+    "categoryLabels": [
+      "customer engagement",
+      "behavioral profiling"
+    ],
     "jurisdiction": "US"
   },
   {
     "id": "intercom",
     "name": "Intercom",
     "parentCompany": "Intercom, Inc.",
-    "aliases": ["Intercom Widget"],
-    "categoryLabels": ["customer messaging", "analytics"],
+    "aliases": [
+      "Intercom Widget"
+    ],
+    "categoryLabels": [
+      "customer messaging",
+      "analytics"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@intercom.com"
   },
@@ -134,32 +210,51 @@
     "id": "drift",
     "name": "Drift",
     "parentCompany": "Salesloft, Inc.",
-    "aliases": ["Drift Chat"],
-    "categoryLabels": ["customer messaging"],
+    "aliases": [
+      "Drift Chat"
+    ],
+    "categoryLabels": [
+      "customer messaging"
+    ],
     "jurisdiction": "US"
   },
   {
     "id": "optimizely",
     "name": "Optimizely",
     "parentCompany": "Optimizely, Inc.",
-    "aliases": ["Optimizely X"],
-    "categoryLabels": ["experimentation", "analytics"],
+    "aliases": [
+      "Optimizely X"
+    ],
+    "categoryLabels": [
+      "experimentation",
+      "analytics"
+    ],
     "jurisdiction": "US"
   },
   {
     "id": "crazyegg",
     "name": "Crazy Egg",
     "parentCompany": "Crazy Egg, Inc.",
-    "aliases": ["CrazyEgg"],
-    "categoryLabels": ["heatmaps", "session replay"],
+    "aliases": [
+      "CrazyEgg"
+    ],
+    "categoryLabels": [
+      "heatmaps",
+      "session replay"
+    ],
     "jurisdiction": "US"
   },
   {
     "id": "quantcast",
     "name": "Quantcast",
     "parentCompany": "Quantcast Corporation",
-    "aliases": ["Quantcast Measure"],
-    "categoryLabels": ["analytics", "advertising"],
+    "aliases": [
+      "Quantcast Measure"
+    ],
+    "categoryLabels": [
+      "analytics",
+      "advertising"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@quantcast.com"
   },
@@ -167,8 +262,13 @@
     "id": "taboola",
     "name": "Taboola",
     "parentCompany": "Taboola.com Ltd.",
-    "aliases": ["Taboola Native Ads"],
-    "categoryLabels": ["advertising", "content recommendation"],
+    "aliases": [
+      "Taboola Native Ads"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "content recommendation"
+    ],
     "jurisdiction": "IL",
     "privacyContact": "privacy@taboola.com"
   },
@@ -176,8 +276,13 @@
     "id": "outbrain",
     "name": "Outbrain",
     "parentCompany": "Outbrain Inc.",
-    "aliases": ["Outbrain Amplify"],
-    "categoryLabels": ["advertising", "content recommendation"],
+    "aliases": [
+      "Outbrain Amplify"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "content recommendation"
+    ],
     "jurisdiction": "IL",
     "privacyContact": "privacy@outbrain.com"
   },
@@ -185,8 +290,13 @@
     "id": "snap",
     "name": "Snapchat Pixel",
     "parentCompany": "Snap Inc.",
-    "aliases": ["Snap Pixel"],
-    "categoryLabels": ["advertising", "retargeting"],
+    "aliases": [
+      "Snap Pixel"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "retargeting"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@snap.com"
   },
@@ -194,32 +304,52 @@
     "id": "pinterest",
     "name": "Pinterest Tag",
     "parentCompany": "Pinterest, Inc.",
-    "aliases": ["Pinterest Ads"],
-    "categoryLabels": ["advertising", "retargeting"],
+    "aliases": [
+      "Pinterest Ads"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "retargeting"
+    ],
     "jurisdiction": "US"
   },
   {
     "id": "twitter",
     "name": "X (Twitter) Pixel",
     "parentCompany": "X Corp.",
-    "aliases": ["Twitter Ads Pixel"],
-    "categoryLabels": ["advertising", "retargeting"],
+    "aliases": [
+      "Twitter Ads Pixel"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "retargeting"
+    ],
     "jurisdiction": "US"
   },
   {
     "id": "yandex",
     "name": "Yandex Metrica",
     "parentCompany": "Yandex N.V.",
-    "aliases": ["Yandex.Metrica"],
-    "categoryLabels": ["analytics", "session replay"],
+    "aliases": [
+      "Yandex.Metrica"
+    ],
+    "categoryLabels": [
+      "analytics",
+      "session replay"
+    ],
     "jurisdiction": "RU"
   },
   {
     "id": "microsoft-clarity",
     "name": "Microsoft Clarity",
     "parentCompany": "Microsoft Corporation",
-    "aliases": ["Clarity"],
-    "categoryLabels": ["session replay", "heatmaps"],
+    "aliases": [
+      "Clarity"
+    ],
+    "categoryLabels": [
+      "session replay",
+      "heatmaps"
+    ],
     "jurisdiction": "US",
     "privacyContact": "privacy@microsoft.com"
   },
@@ -227,8 +357,206 @@
     "id": "datadog",
     "name": "Datadog RUM",
     "parentCompany": "Datadog, Inc.",
-    "aliases": ["Datadog Real User Monitoring"],
-    "categoryLabels": ["performance monitoring", "session replay"],
+    "aliases": [
+      "Datadog Real User Monitoring"
+    ],
+    "categoryLabels": [
+      "performance monitoring",
+      "session replay"
+    ],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "the-trade-desk",
+    "name": "The Trade Desk",
+    "parentCompany": "The Trade Desk, Inc.",
+    "aliases": [
+      "TTD",
+      "adsrvr"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "programmatic"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@thetradedesk.com"
+  },
+  {
+    "id": "pubmatic",
+    "name": "PubMatic",
+    "parentCompany": "PubMatic, Inc.",
+    "aliases": [],
+    "categoryLabels": [
+      "advertising",
+      "programmatic"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@pubmatic.com"
+  },
+  {
+    "id": "magnite",
+    "name": "Magnite",
+    "parentCompany": "Magnite, Inc.",
+    "aliases": [
+      "Rubicon Project"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "programmatic"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@magnite.com"
+  },
+  {
+    "id": "openx",
+    "name": "OpenX",
+    "parentCompany": "OpenX Technologies, Inc.",
+    "aliases": [],
+    "categoryLabels": [
+      "advertising",
+      "programmatic"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@openx.com"
+  },
+  {
+    "id": "index-exchange",
+    "name": "Index Exchange",
+    "parentCompany": "Index Exchange Inc.",
+    "aliases": [
+      "Casale Media"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "programmatic"
+    ],
+    "jurisdiction": "Canada",
+    "privacyContact": "privacy@indexexchange.com"
+  },
+  {
+    "id": "lotame",
+    "name": "Lotame",
+    "parentCompany": "Lotame Solutions, Inc.",
+    "aliases": [],
+    "categoryLabels": [
+      "advertising",
+      "data-management-platform"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@lotame.com"
+  },
+  {
+    "id": "liveramp",
+    "name": "LiveRamp",
+    "parentCompany": "LiveRamp Holdings, Inc.",
+    "aliases": [
+      "Acxiom (formerly)"
+    ],
+    "categoryLabels": [
+      "identity-resolution",
+      "data-broker"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "consumercare@liveramp.com"
+  },
+  {
+    "id": "id5",
+    "name": "ID5",
+    "parentCompany": "ID5 Technology Ltd",
+    "aliases": [],
+    "categoryLabels": [
+      "identity-resolution"
+    ],
+    "jurisdiction": "UK",
+    "privacyContact": "privacy@id5.io"
+  },
+  {
+    "id": "33across",
+    "name": "33Across",
+    "parentCompany": "33Across, Inc.",
+    "aliases": [
+      "Tynt"
+    ],
+    "categoryLabels": [
+      "advertising",
+      "identity-resolution"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@33across.com"
+  },
+  {
+    "id": "tapad",
+    "name": "Tapad",
+    "parentCompany": "Experian plc",
+    "aliases": [],
+    "categoryLabels": [
+      "identity-resolution",
+      "cross-device-tracking"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "legal@tapad.com"
+  },
+  {
+    "id": "6sense",
+    "name": "6sense",
+    "parentCompany": "6sense Insights, Inc.",
+    "aliases": [],
+    "categoryLabels": [
+      "b2b-intent",
+      "behavioral-profiling"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@6sense.com"
+  },
+  {
+    "id": "hubspot",
+    "name": "HubSpot",
+    "parentCompany": "HubSpot, Inc.",
+    "aliases": [
+      "Clearbit"
+    ],
+    "categoryLabels": [
+      "marketing-automation",
+      "analytics"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@hubspot.com"
+  },
+  {
+    "id": "microsoft-ads",
+    "name": "Microsoft Advertising (UET)",
+    "parentCompany": "Microsoft Corporation",
+    "aliases": [
+      "Bing Ads",
+      "Universal Event Tracking"
+    ],
+    "categoryLabels": [
+      "advertising"
+    ],
+    "jurisdiction": "US",
+    "privacyContact": "privacy@microsoft.com"
+  },
+  {
+    "id": "amazon-ads",
+    "name": "Amazon Ads",
+    "parentCompany": "Amazon.com, Inc.",
+    "aliases": [
+      "Amazon Advertising",
+      "A9"
+    ],
+    "categoryLabels": [
+      "advertising"
+    ],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "reddit",
+    "name": "Reddit Pixel",
+    "parentCompany": "Reddit, Inc.",
+    "aliases": [],
+    "categoryLabels": [
+      "advertising"
+    ],
     "jurisdiction": "US"
   }
 ]

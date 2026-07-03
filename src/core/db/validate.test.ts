@@ -60,6 +60,27 @@ const tracker = {
   }
 }
 
+const highFidelityFields = {
+  displayName: "FullStory",
+  observes: {
+    browserVisible: ["script request URL"],
+    siteProvided: ["session interaction events when configured by the site"],
+    notVisibleToExtension: ["records already received before blocking was enabled"]
+  },
+  userImpact: {
+    plainSummary: "FullStory records product analytics and session replay events when installed by a site.",
+    whyItMatters: ["Session replay tooling can capture detailed interaction patterns."],
+    riskLevel: "high",
+    riskReasons: ["session replay"]
+  },
+  browserAction: {
+    blockability: "network_blockable",
+    method: "network-block",
+    whatBlockingChanges: ["Blocks future browser requests matching FullStory domains."],
+    whatBlockingDoesNotChange: ["Does not delete prior records held by FullStory or the site."]
+  }
+}
+
 describe("validateTrackerDatabase", () => {
   it("validates DB schemas and cross-file references", () => {
     const db = validateTrackerDatabase()
@@ -142,5 +163,13 @@ describe("validateTrackerDatabase", () => {
     expect(() => validateTrackerDatabaseRecords([
       { ...tracker, match: { ...tracker.match, paths: ["collect"] } }
     ], [company], [remediation])).toThrow("path must start with /")
+  })
+
+  it("allows v1 seed records to migrate gradually while enforcing high-fidelity fields on v2 records", () => {
+    expect(() => validateTrackerDatabaseRecords([tracker], [company], [remediation])).not.toThrow()
+    expect(() => validateTrackerDatabaseRecords([{ ...tracker, schemaVersion: 2 }], [company], [remediation])).toThrow(
+      "v2 requires displayName"
+    )
+    expect(() => validateTrackerDatabaseRecords([{ ...tracker, schemaVersion: 2, ...highFidelityFields }], [company], [remediation])).not.toThrow()
   })
 })

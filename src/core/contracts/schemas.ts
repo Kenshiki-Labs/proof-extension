@@ -137,9 +137,23 @@ export const TrackerReviewSchema = z.object({
   notes: z.string().min(1)
 })
 
+export const TrackerObservationProfileSchema = z.object({
+  browserVisible: z.array(z.string().min(1)).default([]),
+  siteProvided: z.array(z.string().min(1)).default([]),
+  notVisibleToExtension: z.array(z.string().min(1)).default([])
+})
+
+export const TrackerUserImpactSchema = z.object({
+  plainSummary: z.string().min(1).optional(),
+  whyItMatters: z.array(z.string().min(1)).default([]),
+  riskLevel: z.enum(["low", "medium", "high"]).optional(),
+  riskReasons: z.array(z.string().min(1)).default([])
+})
+
 export const TrackerRecordSchema = z.object({
   id: z.string().min(1),
   schemaVersion: z.number().int().positive(),
+  displayName: z.string().min(1).optional(),
   match: z.object({
     domains: z.array(z.string().min(1)).default([]),
     paths: z.array(z.string().min(1)).default([]),
@@ -151,8 +165,12 @@ export const TrackerRecordSchema = z.object({
   monetization: z.array(z.string().min(1)).min(1),
   browserAction: z.object({
     blockability: BlockabilityClassSchema,
-    method: z.string().min(1)
+    method: z.string().min(1),
+    whatBlockingChanges: z.array(z.string().min(1)).default([]),
+    whatBlockingDoesNotChange: z.array(z.string().min(1)).default([])
   }),
+  observes: TrackerObservationProfileSchema.optional(),
+  userImpact: TrackerUserImpactSchema.optional(),
   confidence: DetectionConfidenceSchema,
   evidenceTemplate: z.array(z.string().min(1)).min(1),
   remediationId: z.string().min(1),

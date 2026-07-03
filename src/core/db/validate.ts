@@ -66,6 +66,25 @@ function assertTrackerProvenance(tracker: TrackerRecord) {
   }
 }
 
+function assertHighFidelityTracker(tracker: TrackerRecord) {
+  if (tracker.schemaVersion < 2) return
+
+  if (!tracker.displayName) throw new Error(`Tracker ${tracker.id} v2 requires displayName`)
+  if (!tracker.observes || tracker.observes.browserVisible.length === 0) {
+    throw new Error(`Tracker ${tracker.id} v2 requires browser-visible observation details`)
+  }
+  if (!tracker.userImpact?.plainSummary) throw new Error(`Tracker ${tracker.id} v2 requires userImpact.plainSummary`)
+  if (tracker.userImpact.whyItMatters.length === 0) throw new Error(`Tracker ${tracker.id} v2 requires whyItMatters`)
+  if (!tracker.userImpact.riskLevel) throw new Error(`Tracker ${tracker.id} v2 requires riskLevel`)
+  if (tracker.userImpact.riskReasons.length === 0) throw new Error(`Tracker ${tracker.id} v2 requires riskReasons`)
+  if (tracker.browserAction.whatBlockingChanges.length === 0) {
+    throw new Error(`Tracker ${tracker.id} v2 requires whatBlockingChanges`)
+  }
+  if (tracker.browserAction.whatBlockingDoesNotChange.length === 0) {
+    throw new Error(`Tracker ${tracker.id} v2 requires whatBlockingDoesNotChange`)
+  }
+}
+
 export function validateTrackerDatabaseRecords(rawTrackers: unknown, rawCompanies: unknown, rawRemediation: unknown) {
   const parsedTrackers = TrackerDatabaseSchema.parse(rawTrackers)
   const parsedCompanies = CompanyDatabaseSchema.parse(rawCompanies)
@@ -85,6 +104,7 @@ export function validateTrackerDatabaseRecords(rawTrackers: unknown, rawCompanie
     }
     assertSafeTrackerMatch(tracker)
     assertTrackerProvenance(tracker)
+    assertHighFidelityTracker(tracker)
   }
 
   return {

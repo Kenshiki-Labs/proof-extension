@@ -1,7 +1,8 @@
 [
   {
     "id": "fullstory",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
+    "displayName": "Meta Pixel",
     "match": {
       "domains": [
         "fullstory.com",
@@ -31,7 +32,49 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Meta Pixel domains and paths.",
+        "May reduce browser-side event reporting from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records Meta already received.",
+        "Does not stop server-side Conversions API events sent by the website.",
+        "Does not stop Meta processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "standard events such as PageView, Lead, Purchase, or CompleteRegistration when configured by the site",
+        "custom event names and parameters chosen by the site",
+        "hashed contact information when advanced matching is enabled by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side Conversions API events",
+        "Meta account matching and downstream ad profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Meta Pixel lets a site report page visits and configured events to Meta for ads measurement, conversion attribution, and retargeting.",
+      "whyItMatters": [
+        "It can connect activity on this site to advertising profiles.",
+        "It may be used to measure conversions or retarget visitors across Meta properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "identity matching"
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -57,7 +100,7 @@
   },
   {
     "id": "google-analytics",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "google-analytics.com",
@@ -89,7 +132,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Google Analytics domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Google Analytics, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -111,11 +163,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Google Analytics",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "analytics request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "pageview events",
+        "custom events and parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side analytics events",
+        "account-level analytics processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Google Analytics lets a site send analytics events to Alphabet Inc. for site analytics, audience measurement, Google Ads remarketing lists.",
+      "whyItMatters": [
+        "It can measure visits, navigation, and events on this site.",
+        "It may connect multiple page views into a session or visitor profile.",
+        "Browser blocking reduces future browser-side reporting but does not delete prior analytics records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "site analytics",
+        "session measurement",
+        "audience reporting"
+      ]
     }
   },
   {
     "id": "google-tag-manager",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "googletagmanager.com"
@@ -138,7 +223,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Google Tag Manager domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Google Tag Manager, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -160,11 +254,42 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Google Tag Manager",
+    "observes": {
+      "browserVisible": [
+        "tag manager script request URL",
+        "container request URL",
+        "page URL",
+        "referrer"
+      ],
+      "siteProvided": [
+        "site-configured tags and triggers",
+        "custom variables configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "which tags the site fires server-side",
+        "data sent by tags loaded after the container unless those requests are separately observed"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Google Tag Manager lets a site send tag manager events to Alphabet Inc. for indirect — GTM is a delivery mechanism for other vendors' tags.",
+      "whyItMatters": [
+        "A tag manager can load or coordinate other tracking scripts.",
+        "What it collects depends on the site configuration and downstream tags.",
+        "Blocking the container may reduce tag execution but can also change site behavior."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "third-party tag delivery",
+        "site-configured tracking",
+        "indirect data sharing"
+      ]
     }
   },
   {
     "id": "google-ads",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "doubleclick.net",
@@ -196,7 +321,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Google Ads / DoubleClick domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Google Ads / DoubleClick, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -218,11 +352,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Google Ads / DoubleClick",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Google Ads / DoubleClick lets a site send advertising events to Alphabet Inc. for ad retargeting, conversion attribution, audience-based ad pricing.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "meta-pixel",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "connect.facebook.net",
@@ -252,7 +419,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Meta Pixel domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Meta Pixel, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -274,11 +450,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Meta Pixel",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Meta Pixel lets a site send advertising events to Meta Platforms, Inc. for ad retargeting, conversion attribution, lookalike audience building.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "tiktok-pixel",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "analytics.tiktok.com"
@@ -303,7 +512,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching TikTok Pixel domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by TikTok Pixel, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -325,11 +543,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "TikTok Pixel",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "TikTok Pixel lets a site send advertising events to ByteDance Ltd. for ad retargeting, conversion attribution.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "linkedin-insight",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "snap.licdn.com",
@@ -357,7 +608,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching LinkedIn Insight Tag domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by LinkedIn Insight Tag, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -379,11 +639,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "LinkedIn Insight Tag",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "LinkedIn Insight Tag lets a site send advertising events to Microsoft Corporation for B2B ad retargeting, conversion attribution.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "hotjar",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "static.hotjar.com",
@@ -412,7 +705,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Hotjar domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Hotjar, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -434,11 +736,45 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Hotjar",
+    "observes": {
+      "browserVisible": [
+        "session replay script request URL",
+        "recording ingest request URL",
+        "page URL",
+        "browser and device metadata"
+      ],
+      "siteProvided": [
+        "clicks",
+        "scrolls",
+        "navigation events",
+        "form interaction metadata when configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "masked-field policy choices made by the site",
+        "records already received before blocking was enabled",
+        "server-side enrichment by the vendor or site"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Hotjar lets a site send session replay events to Contentsquare for UX analytics, heatmap products sold to the site operator.",
+      "whyItMatters": [
+        "Session replay tooling can capture detailed interaction patterns on a page.",
+        "The sensitivity depends on how the site configures masking and capture rules.",
+        "Blocking reduces future browser-side recording but does not delete prior recordings."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "session replay",
+        "behavioral analytics",
+        "interaction recording"
+      ]
     }
   },
   {
     "id": "mixpanel",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "cdn.mxpnl.com",
@@ -466,7 +802,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Mixpanel domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Mixpanel, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -488,11 +833,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Mixpanel",
+    "observes": {
+      "browserVisible": [
+        "analytics script request URL",
+        "event request URL",
+        "page URL",
+        "browser and device metadata",
+        "cookie or device identifiers when present"
+      ],
+      "siteProvided": [
+        "product events chosen by the site",
+        "account or user identifiers if configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side product analytics events",
+        "workspace-level identity stitching",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Mixpanel lets a site send product analytics events to Mixpanel, Inc. for product analytics sold to the site operator.",
+      "whyItMatters": [
+        "It can measure how visitors use product flows and features.",
+        "Sites may attach account or user identifiers to events.",
+        "Browser blocking reduces future browser-side events but does not delete prior analytics records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "product analytics",
+        "behavioral measurement",
+        "event profiling"
+      ]
     }
   },
   {
     "id": "segment",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "cdn.segment.com",
@@ -520,7 +898,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Segment domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Segment, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -542,11 +929,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Segment",
+    "observes": {
+      "browserVisible": [
+        "CDP script request URL",
+        "event collection request URL",
+        "page URL",
+        "browser and device metadata"
+      ],
+      "siteProvided": [
+        "site-defined customer traits",
+        "custom events",
+        "destination routing configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side CDP events",
+        "downstream destinations that receive data from the CDP backend",
+        "identity resolution performed outside the browser"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Segment lets a site send customer data platform events to Twilio Inc. for customer data platform fees paid by the site operator.",
+      "whyItMatters": [
+        "A customer data platform can route browser events to multiple downstream tools.",
+        "Sites may attach traits or identifiers to events.",
+        "Blocking browser collection does not stop server-side routing already configured by the site."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "customer data routing",
+        "identity resolution",
+        "downstream data sharing"
+      ]
     }
   },
   {
     "id": "amplitude",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "cdn.amplitude.com",
@@ -572,7 +992,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Amplitude domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Amplitude, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -594,11 +1023,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Amplitude",
+    "observes": {
+      "browserVisible": [
+        "analytics script request URL",
+        "event request URL",
+        "page URL",
+        "browser and device metadata",
+        "cookie or device identifiers when present"
+      ],
+      "siteProvided": [
+        "product events chosen by the site",
+        "account or user identifiers if configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side product analytics events",
+        "workspace-level identity stitching",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Amplitude lets a site send product analytics events to Amplitude, Inc. for product analytics sold to the site operator.",
+      "whyItMatters": [
+        "It can measure how visitors use product flows and features.",
+        "Sites may attach account or user identifiers to events.",
+        "Browser blocking reduces future browser-side events but does not delete prior analytics records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "product analytics",
+        "behavioral measurement",
+        "event profiling"
+      ]
     }
   },
   {
     "id": "criteo",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "static.criteo.net",
@@ -626,7 +1088,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Criteo domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Criteo, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -648,11 +1119,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Criteo",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Criteo lets a site send advertising events to Criteo SA for dynamic retargeting ads, programmatic ad auctions.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "adobe-analytics",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "assets.adobedtm.com",
@@ -679,7 +1183,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Adobe Analytics domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Adobe Analytics, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -701,11 +1214,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Adobe Analytics",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "analytics request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "pageview events",
+        "custom events and parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side analytics events",
+        "account-level analytics processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Adobe Analytics lets a site send analytics events to Adobe Inc. for site analytics sold to the site operator.",
+      "whyItMatters": [
+        "It can measure visits, navigation, and events on this site.",
+        "It may connect multiple page views into a session or visitor profile.",
+        "Browser blocking reduces future browser-side reporting but does not delete prior analytics records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "site analytics",
+        "session measurement",
+        "audience reporting"
+      ]
     }
   },
   {
     "id": "braze",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "sdk.iad-01.braze.com",
@@ -731,7 +1277,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Braze domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Braze, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -753,11 +1308,43 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Braze",
+    "observes": {
+      "browserVisible": [
+        "SDK script request URL",
+        "event request URL",
+        "page URL",
+        "browser and device metadata"
+      ],
+      "siteProvided": [
+        "engagement events",
+        "customer attributes when configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side profile updates",
+        "cross-channel messaging decisions",
+        "records already held by the vendor"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Braze lets a site send behavioral profiling events to Braze, Inc. for customer engagement platform fees paid by the site operator.",
+      "whyItMatters": [
+        "It may be used to build customer segments or trigger personalized messaging.",
+        "Sites may attach account or customer attributes to events.",
+        "Browser blocking does not delete existing customer profiles."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "behavioral profiling",
+        "customer engagement",
+        "cross-channel messaging"
+      ]
     }
   },
   {
     "id": "intercom",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "widget.intercom.io",
@@ -783,7 +1370,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Intercom domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Intercom, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -805,11 +1401,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Intercom",
+    "observes": {
+      "browserVisible": [
+        "widget script request URL",
+        "event request URL",
+        "page URL",
+        "browser and device metadata"
+      ],
+      "siteProvided": [
+        "chat events",
+        "visitor identifiers",
+        "support context chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "message contents sent after user interaction if outside observed requests",
+        "server-side CRM enrichment",
+        "records already held by the vendor or site"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Intercom lets a site send customer messaging events to Intercom, Inc. for customer messaging platform fees paid by the site operator.",
+      "whyItMatters": [
+        "Messaging widgets can identify visitors and connect conversations to site activity.",
+        "They may route support or sales events into CRM systems.",
+        "Blocking browser requests does not delete prior conversations or CRM records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "customer messaging",
+        "support analytics",
+        "visitor identification"
+      ]
     }
   },
   {
     "id": "drift",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "js.driftt.com"
@@ -834,7 +1463,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Drift domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Drift, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -856,11 +1494,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Drift",
+    "observes": {
+      "browserVisible": [
+        "widget script request URL",
+        "event request URL",
+        "page URL",
+        "browser and device metadata"
+      ],
+      "siteProvided": [
+        "chat events",
+        "visitor identifiers",
+        "support context chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "message contents sent after user interaction if outside observed requests",
+        "server-side CRM enrichment",
+        "records already held by the vendor or site"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Drift lets a site send customer messaging events to Salesloft, Inc. for customer messaging platform fees paid by the site operator.",
+      "whyItMatters": [
+        "Messaging widgets can identify visitors and connect conversations to site activity.",
+        "They may route support or sales events into CRM systems.",
+        "Blocking browser requests does not delete prior conversations or CRM records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "customer messaging",
+        "support analytics",
+        "visitor identification"
+      ]
     }
   },
   {
     "id": "optimizely",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "cdn.optimizely.com",
@@ -885,7 +1556,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Optimizely domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Optimizely, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -907,11 +1587,43 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Optimizely",
+    "observes": {
+      "browserVisible": [
+        "experimentation script request URL",
+        "decision or event request URL",
+        "page URL",
+        "browser and device metadata"
+      ],
+      "siteProvided": [
+        "experiment assignments",
+        "conversion events chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side experiment decisions",
+        "analytics joins performed outside the browser",
+        "records already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Optimizely lets a site send experimentation events to Optimizely, Inc. for A/B testing and personalization platform fees paid by the site operator.",
+      "whyItMatters": [
+        "Experimentation tools can assign visitors to variants and measure outcomes.",
+        "Sites may attach conversion events and visitor identifiers.",
+        "Blocking may change experiment behavior but does not delete prior experiment records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "experimentation",
+        "behavioral measurement",
+        "conversion tracking"
+      ]
     }
   },
   {
     "id": "crazyegg",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "script.crazyegg.com"
@@ -936,7 +1648,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Crazy Egg domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Crazy Egg, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -958,11 +1679,45 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Crazy Egg",
+    "observes": {
+      "browserVisible": [
+        "session replay script request URL",
+        "recording ingest request URL",
+        "page URL",
+        "browser and device metadata"
+      ],
+      "siteProvided": [
+        "clicks",
+        "scrolls",
+        "navigation events",
+        "form interaction metadata when configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "masked-field policy choices made by the site",
+        "records already received before blocking was enabled",
+        "server-side enrichment by the vendor or site"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Crazy Egg lets a site send session replay events to Crazy Egg, Inc. for heatmap/UX analytics products sold to the site operator.",
+      "whyItMatters": [
+        "Session replay tooling can capture detailed interaction patterns on a page.",
+        "The sensitivity depends on how the site configures masking and capture rules.",
+        "Blocking reduces future browser-side recording but does not delete prior recordings."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "session replay",
+        "behavioral analytics",
+        "interaction recording"
+      ]
     }
   },
   {
     "id": "quantcast",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "secure.quantserve.com"
@@ -988,7 +1743,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Quantcast domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Quantcast, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1010,11 +1774,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Quantcast",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Quantcast lets a site send advertising events to Quantcast Corporation for audience measurement, programmatic ad targeting.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "taboola",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "cdn.taboola.com"
@@ -1040,7 +1837,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Taboola domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Taboola, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1062,11 +1868,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Taboola",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Taboola lets a site send advertising events to Taboola.com Ltd. for native ad recommendations, programmatic ad auctions.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "outbrain",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "widgets.outbrain.com"
@@ -1092,7 +1931,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Outbrain domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Outbrain, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1114,11 +1962,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Outbrain",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Outbrain lets a site send advertising events to Outbrain Inc. for native ad recommendations, programmatic ad auctions.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "snap-pixel",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "sc-static.net",
@@ -1144,7 +2025,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Snapchat Pixel domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Snapchat Pixel, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1166,11 +2056,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Snapchat Pixel",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Snapchat Pixel lets a site send advertising events to Snap Inc. for ad retargeting, conversion attribution.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "pinterest-tag",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "ct.pinterest.com",
@@ -1197,7 +2120,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Pinterest Tag domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Pinterest Tag, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1219,11 +2151,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Pinterest Tag",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Pinterest Tag lets a site send advertising events to Pinterest, Inc. for ad retargeting, conversion attribution.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "twitter-pixel",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "static.ads-twitter.com",
@@ -1249,7 +2214,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching X (Twitter) Pixel domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by X (Twitter) Pixel, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1271,11 +2245,44 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "X (Twitter) Pixel",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "X (Twitter) Pixel lets a site send advertising events to X Corp. for ad retargeting, conversion attribution.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   },
   {
     "id": "yandex-metrica",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "mc.yandex.ru"
@@ -1302,7 +2309,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Yandex Metrica domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Yandex Metrica, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1324,11 +2340,45 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Yandex Metrica",
+    "observes": {
+      "browserVisible": [
+        "session replay script request URL",
+        "recording ingest request URL",
+        "page URL",
+        "browser and device metadata"
+      ],
+      "siteProvided": [
+        "clicks",
+        "scrolls",
+        "navigation events",
+        "form interaction metadata when configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "masked-field policy choices made by the site",
+        "records already received before blocking was enabled",
+        "server-side enrichment by the vendor or site"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Yandex Metrica lets a site send session replay events to Yandex N.V. for site analytics sold to the site operator.",
+      "whyItMatters": [
+        "Session replay tooling can capture detailed interaction patterns on a page.",
+        "The sensitivity depends on how the site configures masking and capture rules.",
+        "Blocking reduces future browser-side recording but does not delete prior recordings."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "session replay",
+        "behavioral analytics",
+        "interaction recording"
+      ]
     }
   },
   {
     "id": "microsoft-clarity",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "www.clarity.ms"
@@ -1354,7 +2404,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Microsoft Clarity domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Microsoft Clarity, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1376,11 +2435,45 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Microsoft Clarity",
+    "observes": {
+      "browserVisible": [
+        "session replay script request URL",
+        "recording ingest request URL",
+        "page URL",
+        "browser and device metadata"
+      ],
+      "siteProvided": [
+        "clicks",
+        "scrolls",
+        "navigation events",
+        "form interaction metadata when configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "masked-field policy choices made by the site",
+        "records already received before blocking was enabled",
+        "server-side enrichment by the vendor or site"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Microsoft Clarity lets a site send session replay events to Microsoft Corporation for free product; underlying data may inform Microsoft Advertising.",
+      "whyItMatters": [
+        "Session replay tooling can capture detailed interaction patterns on a page.",
+        "The sensitivity depends on how the site configures masking and capture rules.",
+        "Blocking reduces future browser-side recording but does not delete prior recordings."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "session replay",
+        "behavioral analytics",
+        "interaction recording"
+      ]
     }
   },
   {
     "id": "datadog-rum",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "match": {
       "domains": [
         "rum.browser-intake-datadoghq.com"
@@ -1405,7 +2498,16 @@
     ],
     "browserAction": {
       "blockability": "network_blockable",
-      "method": "network-block"
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Datadog RUM domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Datadog RUM, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
@@ -1427,6 +2529,1461 @@
       "last_reviewed_at": "2026-07-02",
       "reviewer": "Kenshiki",
       "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+    },
+    "displayName": "Datadog RUM",
+    "observes": {
+      "browserVisible": [
+        "monitoring script request URL",
+        "telemetry request URL",
+        "page URL",
+        "browser and device metadata",
+        "error or performance details"
+      ],
+      "siteProvided": [
+        "custom tags or user identifiers when configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side logs",
+        "backend traces",
+        "records already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Datadog RUM lets a site send performance monitoring events to Datadog, Inc. for infrastructure monitoring platform fees paid by the site operator.",
+      "whyItMatters": [
+        "Monitoring tools can report performance, errors, and diagnostic context from the browser.",
+        "Sites may attach user or account identifiers to telemetry.",
+        "Blocking reduces future browser-side telemetry but does not delete prior diagnostic records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "performance telemetry",
+        "error monitoring",
+        "session diagnostics"
+      ]
+    }
+  },
+  {
+    "id": "the-trade-desk",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "adsrvr.org"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "the-trade-desk",
+    "category": "advertising",
+    "collects": [
+      "browsing behavior across sites",
+      "interest segments",
+      "cookie and device identifiers",
+      "bid-request context"
+    ],
+    "monetization": [
+      "programmatic ad targeting",
+      "audience segment sales",
+      "retargeting"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching The Trade Desk domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by The Trade Desk, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched The Trade Desk domain adsrvr.org."
+    ],
+    "remediationId": "the-trade-desk-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "The Trade Desk",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "The Trade Desk lets a site send advertising events to The Trade Desk, Inc. for programmatic ad targeting, audience segment sales, retargeting.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
+    }
+  },
+  {
+    "id": "pubmatic",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "pubmatic.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "pubmatic",
+    "category": "advertising",
+    "collects": [
+      "page context",
+      "cookie identifiers",
+      "device characteristics",
+      "ad interaction"
+    ],
+    "monetization": [
+      "supply-side ad auctions",
+      "audience targeting"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching PubMatic domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by PubMatic, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched PubMatic domain pubmatic.com."
+    ],
+    "remediationId": "pubmatic-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "PubMatic",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "PubMatic lets a site send advertising events to PubMatic, Inc. for supply-side ad auctions, audience targeting.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
+    }
+  },
+  {
+    "id": "magnite",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "rubiconproject.com",
+        "magnite.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "magnite",
+    "category": "advertising",
+    "collects": [
+      "page context",
+      "cookie identifiers",
+      "device characteristics",
+      "ad interaction"
+    ],
+    "monetization": [
+      "supply-side ad auctions",
+      "audience targeting"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Magnite domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Magnite, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched Magnite/Rubicon Project domain."
+    ],
+    "remediationId": "magnite-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "Magnite",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Magnite lets a site send advertising events to Magnite, Inc. for supply-side ad auctions, audience targeting.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
+    }
+  },
+  {
+    "id": "openx",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "openx.net"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "openx",
+    "category": "advertising",
+    "collects": [
+      "page context",
+      "cookie identifiers",
+      "device characteristics"
+    ],
+    "monetization": [
+      "supply-side ad auctions",
+      "audience targeting"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching OpenX domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by OpenX, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched OpenX domain openx.net."
+    ],
+    "remediationId": "openx-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "OpenX",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "OpenX lets a site send advertising events to OpenX Technologies, Inc. for supply-side ad auctions, audience targeting.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
+    }
+  },
+  {
+    "id": "index-exchange",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "casalemedia.com",
+        "indexww.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "index-exchange",
+    "category": "advertising",
+    "collects": [
+      "page context",
+      "cookie identifiers",
+      "ad interaction"
+    ],
+    "monetization": [
+      "supply-side ad auctions",
+      "header bidding"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Index Exchange domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Index Exchange, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched Index Exchange domain (casalemedia.com / indexww.com)."
+    ],
+    "remediationId": "index-exchange-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "Index Exchange",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Index Exchange lets a site send advertising events to Index Exchange Inc. for supply-side ad auctions, header bidding.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
+    }
+  },
+  {
+    "id": "lotame",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "crwdcntrl.net"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "lotame",
+    "category": "data-management-platform",
+    "collects": [
+      "interest segments",
+      "cookie identifiers",
+      "cross-site behavior"
+    ],
+    "monetization": [
+      "audience segment sales",
+      "data management platform services"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Lotame domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Lotame, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched Lotame domain crwdcntrl.net."
+    ],
+    "remediationId": "lotame-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "Lotame",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "analytics request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "pageview events",
+        "custom events and parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side analytics events",
+        "account-level analytics processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Lotame lets a site send data management platform events to Lotame Solutions, Inc. for audience segment sales, data management platform services.",
+      "whyItMatters": [
+        "It can measure visits, navigation, and events on this site.",
+        "It may connect multiple page views into a session or visitor profile.",
+        "Browser blocking reduces future browser-side reporting but does not delete prior analytics records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "site analytics",
+        "session measurement",
+        "audience reporting"
+      ]
+    }
+  },
+  {
+    "id": "liveramp",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "rlcdn.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "liveramp",
+    "category": "identity-resolution",
+    "collects": [
+      "hashed identifiers",
+      "cookie-to-identity links",
+      "cross-device identity graph signals"
+    ],
+    "monetization": [
+      "identity resolution",
+      "offline-to-online data onboarding",
+      "audience matching"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching LiveRamp domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by LiveRamp, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched LiveRamp identity domain rlcdn.com."
+    ],
+    "remediationId": "liveramp-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "LiveRamp links online cookies to offline identity (name, address, email). It is a registered state data broker; remediation URLs come from its registry filings."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "LiveRamp",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "analytics request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "pageview events",
+        "custom events and parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side analytics events",
+        "account-level analytics processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "LiveRamp lets a site send identity resolution events to LiveRamp Holdings, Inc. for identity resolution, offline-to-online data onboarding, audience matching.",
+      "whyItMatters": [
+        "It can measure visits, navigation, and events on this site.",
+        "It may connect multiple page views into a session or visitor profile.",
+        "Browser blocking reduces future browser-side reporting but does not delete prior analytics records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "site analytics",
+        "session measurement",
+        "audience reporting"
+      ]
+    }
+  },
+  {
+    "id": "id5",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "id5-sync.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "id5",
+    "category": "identity-resolution",
+    "collects": [
+      "shared universal ID",
+      "cookie identifiers",
+      "cross-site sync events"
+    ],
+    "monetization": [
+      "identity resolution for programmatic advertising"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching ID5 domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by ID5, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched ID5 shared-ID domain id5-sync.com."
+    ],
+    "remediationId": "id5-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "ID5",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "analytics request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "pageview events",
+        "custom events and parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side analytics events",
+        "account-level analytics processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "ID5 lets a site send identity resolution events to ID5 Technology Ltd for identity resolution for programmatic advertising.",
+      "whyItMatters": [
+        "It can measure visits, navigation, and events on this site.",
+        "It may connect multiple page views into a session or visitor profile.",
+        "Browser blocking reduces future browser-side reporting but does not delete prior analytics records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "site analytics",
+        "session measurement",
+        "audience reporting"
+      ]
+    }
+  },
+  {
+    "id": "33across",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "33across.com",
+        "tynt.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "33across",
+    "category": "advertising",
+    "collects": [
+      "page engagement",
+      "copy/paste behavior (Tynt heritage)",
+      "cookie identifiers"
+    ],
+    "monetization": [
+      "audience targeting",
+      "addressability services"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching 33Across domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by 33Across, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched 33Across domain (33across.com / tynt.com)."
+    ],
+    "remediationId": "33across-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "33Across",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "33Across lets a site send advertising events to 33Across, Inc. for audience targeting, addressability services.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
+    }
+  },
+  {
+    "id": "tapad",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "tapad.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "tapad",
+    "category": "cross-device-tracking",
+    "collects": [
+      "device graph signals",
+      "cookie identifiers",
+      "cross-device identity links"
+    ],
+    "monetization": [
+      "cross-device ad targeting",
+      "identity graph licensing (Experian)"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Tapad domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Tapad, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched Tapad cross-device domain tapad.com."
+    ],
+    "remediationId": "tapad-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "Tapad",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "analytics request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "pageview events",
+        "custom events and parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side analytics events",
+        "account-level analytics processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Tapad lets a site send cross device tracking events to Experian plc for cross-device ad targeting, identity graph licensing (Experian).",
+      "whyItMatters": [
+        "It can measure visits, navigation, and events on this site.",
+        "It may connect multiple page views into a session or visitor profile.",
+        "Browser blocking reduces future browser-side reporting but does not delete prior analytics records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "site analytics",
+        "session measurement",
+        "audience reporting"
+      ]
+    }
+  },
+  {
+    "id": "6sense",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "6sc.co"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "6sense",
+    "category": "behavioral-profiling",
+    "collects": [
+      "company/IP-derived firmographics",
+      "page engagement",
+      "B2B intent signals"
+    ],
+    "monetization": [
+      "B2B intent data sales",
+      "account-based marketing"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching 6sense domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by 6sense, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched 6sense intent-data domain 6sc.co."
+    ],
+    "remediationId": "6sense-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "6sense resolves anonymous visits to employer accounts for B2B intent scoring; it is a registered state data broker."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "6sense",
+    "observes": {
+      "browserVisible": [
+        "SDK script request URL",
+        "event request URL",
+        "page URL",
+        "browser and device metadata"
+      ],
+      "siteProvided": [
+        "engagement events",
+        "customer attributes when configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side profile updates",
+        "cross-channel messaging decisions",
+        "records already held by the vendor"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "6sense lets a site send behavioral profiling events to 6sense Insights, Inc. for B2B intent data sales, account-based marketing.",
+      "whyItMatters": [
+        "It may be used to build customer segments or trigger personalized messaging.",
+        "Sites may attach account or customer attributes to events.",
+        "Browser blocking does not delete existing customer profiles."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "behavioral profiling",
+        "customer engagement",
+        "cross-channel messaging"
+      ]
+    }
+  },
+  {
+    "id": "hubspot",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "hs-analytics.net",
+        "hs-scripts.com",
+        "hs-banner.com",
+        "hubspot.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "hubspot",
+    "category": "marketing-automation",
+    "collects": [
+      "page views",
+      "form interactions",
+      "email-click linkage",
+      "CRM enrichment identifiers"
+    ],
+    "monetization": [
+      "marketing automation",
+      "CRM enrichment (Clearbit)",
+      "lead attribution"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching HubSpot domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by HubSpot, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched HubSpot tracking domain."
+    ],
+    "remediationId": "hubspot-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "HubSpot",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "analytics request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "pageview events",
+        "custom events and parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side analytics events",
+        "account-level analytics processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "HubSpot lets a site send marketing automation events to HubSpot, Inc. for marketing automation, CRM enrichment (Clearbit), lead attribution.",
+      "whyItMatters": [
+        "It can measure visits, navigation, and events on this site.",
+        "It may connect multiple page views into a session or visitor profile.",
+        "Browser blocking reduces future browser-side reporting but does not delete prior analytics records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "site analytics",
+        "session measurement",
+        "audience reporting"
+      ]
+    }
+  },
+  {
+    "id": "microsoft-ads",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "bat.bing.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "microsoft-ads",
+    "category": "advertising",
+    "collects": [
+      "page views",
+      "conversion events",
+      "search-click linkage"
+    ],
+    "monetization": [
+      "search ad conversion measurement",
+      "retargeting"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Microsoft Advertising (UET) domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Microsoft Advertising (UET), its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched Microsoft Advertising UET domain bat.bing.com."
+    ],
+    "remediationId": "microsoft-ads-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "Microsoft Advertising (UET)",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Microsoft Advertising (UET) lets a site send advertising events to Microsoft Corporation for search ad conversion measurement, retargeting.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
+    }
+  },
+  {
+    "id": "amazon-ads",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "amazon-adsystem.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "amazon-ads",
+    "category": "advertising",
+    "collects": [
+      "page context",
+      "cookie identifiers",
+      "ad interaction",
+      "purchase-intent signals"
+    ],
+    "monetization": [
+      "retail media advertising",
+      "retargeting",
+      "audience targeting"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Amazon Ads domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Amazon Ads, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched Amazon Ads domain amazon-adsystem.com."
+    ],
+    "remediationId": "amazon-ads-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "Amazon Ads",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Amazon Ads lets a site send advertising events to Amazon.com, Inc. for retail media advertising, retargeting, audience targeting.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
+    }
+  },
+  {
+    "id": "reddit-pixel",
+    "schemaVersion": 2,
+    "match": {
+      "domains": [
+        "alb.reddit.com"
+      ],
+      "paths": [],
+      "requestTypes": [
+        "script",
+        "xmlhttprequest",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "reddit",
+    "category": "advertising",
+    "collects": [
+      "page views",
+      "conversion events",
+      "reddit-account linkage where logged in"
+    ],
+    "monetization": [
+      "ad conversion measurement",
+      "retargeting"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching Reddit Pixel domains and paths.",
+        "May reduce browser-side collection from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Reddit Pixel, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched Reddit conversion endpoint alb.reddit.com."
+    ],
+    "remediationId": "reddit-default",
+    "sources": [
+      {
+        "family": "manual_seed",
+        "name": "Proof Extension expansion batch (domains hand-authored; remediation from state-registry filings where available)",
+        "version": "0.0.2",
+        "retrieved_at": "2026-07-03",
+        "license": "MIT",
+        "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
+      }
+    ],
+    "review": {
+      "status": "seed",
+      "last_reviewed_at": "2026-07-03",
+      "reviewer": "Kenshiki",
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+    },
+    "displayName": "Reddit Pixel",
+    "observes": {
+      "browserVisible": [
+        "page URL",
+        "referrer",
+        "event request URL",
+        "browser and device metadata",
+        "cookie identifiers when present"
+      ],
+      "siteProvided": [
+        "conversion events when configured by the site",
+        "custom audience or campaign parameters chosen by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side conversion events",
+        "downstream advertising profile processing",
+        "events already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Reddit Pixel lets a site send advertising events to Reddit, Inc. for ad conversion measurement, retargeting.",
+      "whyItMatters": [
+        "It may connect activity on this site to advertising or audience profiles.",
+        "It can be used to measure conversions or retarget visitors across other properties.",
+        "Browser blocking reduces future browser-side requests but does not delete prior records."
+      ],
+      "riskLevel": "high",
+      "riskReasons": [
+        "cross-site advertising",
+        "conversion attribution",
+        "retargeting"
+      ]
     }
   }
 ]

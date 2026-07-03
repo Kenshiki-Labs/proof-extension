@@ -132,11 +132,12 @@ describe("entity SSOT index", () => {
   })
 
   it("anchors every runtime company exactly once so observers can reach broker intelligence", () => {
+    const companyCount = JSON.parse(readFileSync(resolve(root, "src/core/db/companies.json"), "utf8")).length
     const companyIds = entities.records.flatMap((record) => record.facets.companyIds)
-    // 27 companies, each in exactly one entity — though one entity may hold
+    // Every runtime company in exactly one entity — though one entity may hold
     // several (Google Analytics + Tag Manager resolve to one Alphabet entity).
-    expect(companyIds.length).toBe(27)
-    expect(new Set(companyIds).size).toBe(27)
+    expect(companyIds.length).toBe(companyCount)
+    expect(new Set(companyIds).size).toBe(companyCount)
     const anchored = entities.records.filter((record) => record.facets.companyIds.length > 0)
     for (const entity of anchored) expect(entity.facets.trackerIds.length).toBeGreaterThan(0)
   })

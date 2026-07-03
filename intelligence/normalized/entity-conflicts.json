@@ -14,12 +14,12 @@
     "status": "false_positive_review",
     "last_reviewed_at": "2026-07-03",
     "reviewer": "Kenshiki",
-    "notes": "4 conflict records require manual review before promotion into runtime claims."
+    "notes": "9 conflict records require manual review before promotion into runtime claims."
   },
   "summary": {
     "scope": "extension_runtime",
-    "total": 4,
-    "needsReview": 4,
+    "total": 9,
+    "needsReview": 9,
     "adjudicated": 0,
     "manualAdjudications": 0
   },
@@ -60,6 +60,68 @@
     },
     {
       "id": "resolver-conflict-0003",
+      "type": "slug_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "linkedin-insight-tag",
+        "microsoft-advertising-uet"
+      ],
+      "facetKeys": [],
+      "details": {
+        "slug": "microsoft-corporation",
+        "existingEntityId": "linkedin-insight-tag",
+        "attemptedEntityId": "microsoft-advertising-uet",
+        "attemptedName": "Microsoft Advertising (UET)"
+      }
+    },
+    {
+      "id": "resolver-conflict-0004",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "faraday-inc",
+        "reddit-pixel"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "NEAR PTE LTD",
+        "domains": [
+          "github.com",
+          "near.ai",
+          "near.co",
+          "near.com",
+          "near.org",
+          "notion.site",
+          "reddit.com",
+          "t.me"
+        ],
+        "entityIds": [
+          "faraday-inc",
+          "reddit-pixel"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0005",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "faraday-inc",
+        "reddit-pixel"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "reddit.com",
+        "existingEntityId": "reddit-pixel",
+        "attemptedEntityId": "faraday-inc",
+        "attemptedName": "NEAR PTE LTD"
+      }
+    },
+    {
+      "id": "resolver-conflict-0006",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -81,7 +143,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0004",
+      "id": "resolver-conflict-0007",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -95,6 +157,48 @@
         "existingEntityId": "tiktok-pixel",
         "attemptedEntityId": "date-detective-inc",
         "attemptedName": "DATE DETECTIVE Inc"
+      }
+    },
+    {
+      "id": "resolver-conflict-0008",
+      "type": "domain_points_to_multiple_entities",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "faraday-inc",
+        "reddit-pixel"
+      ],
+      "facetKeys": [],
+      "details": {
+        "name": "Ubermedia",
+        "domains": [
+          "near.ai",
+          "near.org",
+          "reddit.com",
+          "t.me",
+          "ubermedia.com"
+        ],
+        "entityIds": [
+          "faraday-inc",
+          "reddit-pixel"
+        ]
+      }
+    },
+    {
+      "id": "resolver-conflict-0009",
+      "type": "domain_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "faraday-inc",
+        "reddit-pixel"
+      ],
+      "facetKeys": [],
+      "details": {
+        "domain": "reddit.com",
+        "existingEntityId": "reddit-pixel",
+        "attemptedEntityId": "faraday-inc",
+        "attemptedName": "Ubermedia"
       }
     }
   ]

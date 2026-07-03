@@ -147,49 +147,6 @@
       ]
     },
     {
-      "id": "33across-inc",
-      "canonicalName": "33Across, Inc.",
-      "aliases": [],
-      "domains": [
-        "33across.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "33acrossinc_3_2a9457a6"
-        ],
-        "caRegistry2026Ids": [
-          "33across-inc"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:33acrossinc_3_2a9457a6",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record 33acrossinc_3_2a9457a6",
-            "name: 33ACROSS Inc",
-            "registrable domains: 33across.com"
-          ]
-        },
-        {
-          "key": "ca2026:33across-inc",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record 33across-inc",
-            "name: 33Across, Inc.",
-            "registrable domains: 33across.com, 33across.com"
-          ]
-        }
-      ]
-    },
-    {
       "id": "360-media-direct",
       "canonicalName": "360 Media Direct",
       "aliases": [],
@@ -366,49 +323,6 @@
             "CA 2026 registry record 5x5-us-llc",
             "name: 5x5 US, LLC",
             "registrable domains: 5x5data.com, 5x5data.com"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "6sense-insights-inc",
-      "canonicalName": "6sense Insights, Inc.",
-      "aliases": [],
-      "domains": [
-        "6sense.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "6senseinsightsi_6_72de61f6"
-        ],
-        "caRegistry2026Ids": [
-          "6sense-insights-inc"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:6senseinsightsi_6_72de61f6",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record 6senseinsightsi_6_72de61f6",
-            "name: 6SENSE INSIGHTS Inc",
-            "registrable domains: 6sense.com"
-          ]
-        },
-        {
-          "key": "ca2026:6sense-insights-inc",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record 6sense-insights-inc",
-            "name: 6sense Insights, Inc.",
-            "registrable domains: 6sense.com, 6sense.com"
           ]
         }
       ]
@@ -12710,7 +12624,6 @@
         "near.com",
         "near.org",
         "notion.site",
-        "reddit.com",
         "t.me",
         "ubermedia.com"
       ],
@@ -15530,62 +15443,6 @@
       ]
     },
     {
-      "id": "hubspot-inc",
-      "canonicalName": "HubSpot, Inc.",
-      "aliases": [],
-      "domains": [
-        "clearbit.com",
-        "hubspot.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "apihubinc_fa8d752e",
-          "hubspotinc_9fd6e38f"
-        ],
-        "caRegistry2026Ids": [
-          "hubspot-inc"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:apihubinc_fa8d752e",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record apihubinc_fa8d752e",
-            "name: Apihub, Inc",
-            "registrable domains: clearbit.com, hubspot.com"
-          ]
-        },
-        {
-          "key": "broker2025:hubspotinc_9fd6e38f",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record hubspotinc_9fd6e38f",
-            "name: Hubspot, Inc.",
-            "registrable domains: hubspot.com"
-          ]
-        },
-        {
-          "key": "ca2026:hubspot-inc",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record hubspot-inc",
-            "name: HubSpot, Inc.",
-            "registrable domains: hubspot.com"
-          ]
-        }
-      ]
-    },
-    {
       "id": "huge-legal-technology-company-inc",
       "canonicalName": "Huge Legal Technology Company, Inc",
       "aliases": [
@@ -15747,68 +15604,6 @@
             "CA 2026 registry record i360-llc",
             "name: i360, LLC",
             "registrable domains: i-360.com, i-360.com"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "id5-technology-ltd",
-      "canonicalName": "ID5 Technology Ltd",
-      "aliases": [
-        "ID5"
-      ],
-      "domains": [
-        "aboutads.info",
-        "iabeurope.eu",
-        "id5.io",
-        "truste.com",
-        "youronlinechoices.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "id5technology_3cc0bc5d",
-          "unearthcampaign_u_0bd55301"
-        ],
-        "caRegistry2026Ids": [
-          "id5-technology-ltd"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:id5technology_3cc0bc5d",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record id5technology_3cc0bc5d",
-            "name: ID5 Technology",
-            "registrable domains: aboutads.info, iabeurope.eu, id5.io, truste.com, youronlinechoices.com"
-          ]
-        },
-        {
-          "key": "broker2025:unearthcampaign_u_0bd55301",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record unearthcampaign_u_0bd55301",
-            "name: UNEARTH CAMPAIGNS LLC",
-            "registrable domains: aboutads.info, unearthcampaigns.com"
-          ]
-        },
-        {
-          "key": "ca2026:id5-technology-ltd",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record id5-technology-ltd",
-            "DBA: ID5",
-            "name: ID5 Technology Ltd",
-            "registrable domains: id5.io, id5.io"
           ]
         }
       ]
@@ -16123,36 +15918,6 @@
             "defense destination incogni_service",
             "display name: Incogni automated data removal",
             "registrable domains: incogni.com"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "index-exchange-inc",
-      "canonicalName": "Index Exchange Inc.",
-      "aliases": [],
-      "domains": [
-        "indexexchange.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [],
-        "caRegistry2026Ids": [
-          "index-exchange-inc"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "ca2026:index-exchange-inc",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record index-exchange-inc",
-            "name: Index Exchange Inc.",
-            "registrable domains: indexexchange.com, indexexchange.com"
           ]
         }
       ]
@@ -19997,49 +19762,6 @@
       ]
     },
     {
-      "id": "liveramp-holdings-inc",
-      "canonicalName": "LiveRamp Holdings, Inc.",
-      "aliases": [],
-      "domains": [
-        "liveramp.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "liverampinc_l_5e5ce484"
-        ],
-        "caRegistry2026Ids": [
-          "liveramp-holdings-inc"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:liverampinc_l_5e5ce484",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record liverampinc_l_5e5ce484",
-            "name: LIVERAMP HOLDINGS Inc",
-            "registrable domains: liveramp.com"
-          ]
-        },
-        {
-          "key": "ca2026:liveramp-holdings-inc",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record liveramp-holdings-inc",
-            "name: LiveRamp Holdings, Inc.",
-            "registrable domains: liveramp.com, liveramp.com"
-          ]
-        }
-      ]
-    },
-    {
       "id": "lizdev-inc",
       "canonicalName": "LizDev,Inc",
       "aliases": [],
@@ -20325,36 +20047,6 @@
       ]
     },
     {
-      "id": "lotame-solutions-inc",
-      "canonicalName": "Lotame Solutions, Inc.",
-      "aliases": [],
-      "domains": [
-        "lotame.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "lotamesolutions_l_4654bd4a"
-        ],
-        "caRegistry2026Ids": [],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:lotamesolutions_l_4654bd4a",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "2025 registry merge record lotamesolutions_l_4654bd4a",
-            "name: Lotame Solutions, Inc.",
-            "registrable domains: lotame.com"
-          ]
-        }
-      ]
-    },
-    {
       "id": "lucid-holdings-llc",
       "canonicalName": "Lucid Holdings, LLC",
       "aliases": [],
@@ -20626,49 +20318,6 @@
             "2025 registry merge record madisonlogicinc_69ba1371",
             "name: Madison Logic, Inc.",
             "registrable domains: madisonlogic.com"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "magnite-inc",
-      "canonicalName": "Magnite Inc",
-      "aliases": [],
-      "domains": [
-        "magnite.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "magniteinc_m_e12daa9b"
-        ],
-        "caRegistry2026Ids": [
-          "magnite-inc"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:magniteinc_m_e12daa9b",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record magniteinc_m_e12daa9b",
-            "name: MAGNITE Inc",
-            "registrable domains: magnite.com"
-          ]
-        },
-        {
-          "key": "ca2026:magnite-inc",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record magnite-inc",
-            "name: Magnite Inc",
-            "registrable domains: magnite.com, magnite.com"
           ]
         }
       ]
@@ -23818,49 +23467,6 @@
       ]
     },
     {
-      "id": "openx-technologies-inc",
-      "canonicalName": "OpenX Technologies, Inc.",
-      "aliases": [],
-      "domains": [
-        "openx.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "openxtechnologi_o_10d3c24b"
-        ],
-        "caRegistry2026Ids": [
-          "openx-technologies-inc"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:openxtechnologi_o_10d3c24b",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record openxtechnologi_o_10d3c24b",
-            "name: Openx Technologies, Inc.",
-            "registrable domains: openx.com"
-          ]
-        },
-        {
-          "key": "ca2026:openx-technologies-inc",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record openx-technologies-inc",
-            "name: OpenX Technologies, Inc.",
-            "registrable domains: openx.com, openx.com"
-          ]
-        }
-      ]
-    },
-    {
       "id": "optable-technologies-us-inc",
       "canonicalName": "Optable Technologies US Inc.",
       "aliases": [
@@ -26192,52 +25798,6 @@
             "company name: PublicRecordsNow",
             "defense destination optery_publicrecordsnow",
             "display name: PublicRecordsNow opt-out guide"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "pubmatic-inc",
-      "canonicalName": "PubMatic Inc.",
-      "aliases": [
-        "Yes"
-      ],
-      "domains": [
-        "pubmatic.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "pubmaticinc_p_884b0758"
-        ],
-        "caRegistry2026Ids": [
-          "pubmatic-inc"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:pubmaticinc_p_884b0758",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record pubmaticinc_p_884b0758",
-            "name: PUBMATIC Inc",
-            "registrable domains: pubmatic.com"
-          ]
-        },
-        {
-          "key": "ca2026:pubmatic-inc",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record pubmatic-inc",
-            "DBA: Yes",
-            "name: PubMatic Inc.",
-            "registrable domains: pubmatic.com, pubmatic.com"
           ]
         }
       ]
@@ -31370,49 +30930,6 @@
             "2025 registry merge record tandemmarketing_903f16dd",
             "name: Tandem Marketing, LLC",
             "registrable domains: fhamortgagefinder.com"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "tapad",
-      "canonicalName": "Tapad",
-      "aliases": [],
-      "domains": [
-        "tapad.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "tapadinc_t_d0ca1f3d"
-        ],
-        "caRegistry2026Ids": [
-          "tapad"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:tapadinc_t_d0ca1f3d",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record tapadinc_t_d0ca1f3d",
-            "name: TAPAD Inc",
-            "registrable domains: tapad.com"
-          ]
-        },
-        {
-          "key": "ca2026:tapad",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record tapad",
-            "name: Tapad",
-            "registrable domains: tapad.com"
           ]
         }
       ]
