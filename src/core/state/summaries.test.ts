@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent, PageError } from "~core/domain/types"
-import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, upsertEvent } from "./summaries"
+import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, supersedeEvent, upsertEvent } from "./summaries"
 
 function event(overrides: Partial<ObserverEvent> = {}): ObserverEvent {
   return {
@@ -165,5 +165,43 @@ describe("recordPageError", () => {
     const withError = recordPageError(summary, { id: "error-1", message: "Uncaught error", observedAt: 1 })
 
     expect(withError).toBe(summary)
+  })
+})
+describe("supersedeEvent", () => {
+  it("removes a superseded seen-event so a blocked company is not also watching", () => {
+    const seen: ObserverEvent = {
+      id: "request_seen:1:42:fullstory",
+      tabId: 1,
+      origin: "https://example.test",
+      observedAt: 100,
+      source: "network",
+      trackerId: "fullstory",
+      companyId: "fullstory",
+      firstParty: false,
+      eventType: "request_seen",
+      blockability: "network_blockable",
+      status: "active",
+      confidence: "confirmed",
+      evidence: ["Request matched FullStory domain."]
+    }
+    const blocked: ObserverEvent = {
+      ...seen,
+      id: "request_blocked:1:42:fullstory",
+      eventType: "request_blocked",
+      status: "blocked"
+    }
+
+    let summary = upsertEvent(createEmptySiteSummary("https://example.test", 1), seen)
+    expect(summary.activeCompanies).toContain("fullstory")
+
+    summary = upsertEvent(supersedeEvent(summary, seen.id), blocked)
+    expect(summary.blockedCompanies).toContain("fullstory")
+    expect(summary.activeCompanies).not.toContain("fullstory")
+    expect(summary.events.map((event) => event.id)).toEqual(["request_blocked:1:42:fullstory"])
+  })
+
+  it("returns the same summary when nothing matches", () => {
+    const summary = createEmptySiteSummary("https://example.test", 1)
+    expect(supersedeEvent(summary, "missing")).toBe(summary)
   })
 })

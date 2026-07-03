@@ -103,7 +103,8 @@ describe("usd formatting", () => {
   it("formats dollars, cents, micro-amounts, ranges, and zero", () => {
     expect(formatUsd(460)).toBe("$460")
     expect(formatUsd(0.05)).toBe("$0.05")
-    expect(formatUsd(0.000768)).toBe("$0.000768")
+    expect(formatUsd(0.000768)).toBe("$0.00077")
+    expect(formatUsd(0.001305)).toBe("$0.0013")
     expect(formatUsd(0)).toBe("$0")
     expect(formatUsdRange(420, 500)).toBe("$420–$500")
     expect(formatUsdRange(0, 0)).toBe("$0")

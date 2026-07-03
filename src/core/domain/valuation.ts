@@ -83,7 +83,10 @@ export function formatUsd(value: number): string {
   if (value === 0) return "$0"
   if (value >= 1) return `$${Math.round(value).toLocaleString("en-US")}`
   if (value >= 0.01) return `$${value.toFixed(2)}`
-  return `$${value.toFixed(6).replace(/0+$/, "").replace(/\.$/, "")}`
+  // Sub-cent amounts: two significant digits, never exponential notation.
+  // "$0.0013" reads as a number; "$0.001305" reads as noise.
+  const digits = Math.min(8, Math.ceil(-Math.log10(value)) + 1)
+  return `$${value.toFixed(digits)}`
 }
 
 export function formatUsdRange(low: number, high: number): string {

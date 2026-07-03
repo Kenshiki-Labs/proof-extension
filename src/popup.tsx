@@ -122,61 +122,62 @@ function ObserverCard({
         <p className={`${TYPE.small} mt-1.5 text-muted-foreground`}>Blocking caution: {guidance.warning}</p>
       ) : null}
       {count > 1 ? <p className={`${TYPE.small} mt-1`}>Observed {count} times in this tab. Showing the latest instance.</p> : null}
-      <dl className="mt-2.5 grid grid-cols-[96px_1fr] gap-1.5">
-        <dt className={TYPE.small}>Observed</dt>
-        <dd className={TYPE.body}>{formatTime(event.observedAt)}</dd>
-        <dt className={TYPE.small}>Origin</dt>
-        <dd className={`${TYPE.body} break-all`}>{event.origin}</dd>
-        <dt className={TYPE.small}>Signal</dt>
-        <dd className={TYPE.body}>{titleCase(event.eventType)}</dd>
-        <dt className={TYPE.small}>Source</dt>
-        <dd className={TYPE.body}>{titleCase(event.source)}</dd>
-        <dt className={TYPE.small}>Party</dt>
-        <dd className={TYPE.body}>{event.firstParty ? "First party" : "Third party"}</dd>
-        <dt className={TYPE.small}>Confidence</dt>
-        <dd className={TYPE.body}>{titleCase(event.confidence)}</dd>
-        <dt className={TYPE.small}>Capability</dt>
-        <dd className={TYPE.body}>{blockabilitySummary(event)}</dd>
-        <dt className={TYPE.small}>Class</dt>
-        <dd className={TYPE.body}>{titleCase(event.blockability)}</dd>
-        {event.policyLabel ? (
-          <>
-            <dt className={TYPE.small}>Policy</dt>
-            <dd className={TYPE.body}>{titleCase(event.policyLabel)}</dd>
-          </>
-        ) : null}
-        {event.trackerId ? (
-          <>
-            <dt className={TYPE.small}>Tracker ID</dt>
-            <dd className={TYPE.body}>{event.trackerId}</dd>
-          </>
-        ) : null}
-        {event.companyId ? (
-          <>
-            <dt className={TYPE.small}>Company ID</dt>
-            <dd className={TYPE.body}>{event.companyId}</dd>
-          </>
-        ) : null}
-        {event.frameId !== undefined ? (
-          <>
-            <dt className={TYPE.small}>Frame</dt>
-            <dd className={TYPE.body}>{event.frameId}</dd>
-          </>
-        ) : null}
-        {details.map(([key, value]) => (
-          <Fragment key={key}>
-            <dt className={TYPE.small}>{formatDetailKey(key)}</dt>
-            <dd className={`${TYPE.body} break-all`}>{String(value)}</dd>
-          </Fragment>
-        ))}
-      </dl>
-      {event.evidence.length > 0 ? (
-        <ul className={`${TYPE.small} mt-2.5 list-disc pl-4`}>
-          {event.evidence.map((evidence) => (
-            <li key={evidence}>{evidence}</li>
+      {/* One meta line + one capability line. The full field dump lives
+          behind "Details and evidence" — receipts on demand, not a wall. */}
+      <p className={`${TYPE.small} mt-2`}>
+        {formatTime(event.observedAt)} · {event.firstParty ? "First party" : "Third party"} · {titleCase(event.confidence)} confidence
+      </p>
+      <p className={`${TYPE.body} mt-1`}>{blockabilitySummary(event)}</p>
+      <details className="mt-2">
+        <summary className={`${TYPE.small} cursor-pointer select-none text-muted-foreground`}>Details and evidence</summary>
+        <dl className="mt-2 grid grid-cols-[96px_1fr] gap-1.5">
+          <dt className={TYPE.small}>Origin</dt>
+          <dd className={`${TYPE.body} break-all`}>{event.origin}</dd>
+          <dt className={TYPE.small}>Signal</dt>
+          <dd className={TYPE.body}>{titleCase(event.eventType)}</dd>
+          <dt className={TYPE.small}>Source</dt>
+          <dd className={TYPE.body}>{titleCase(event.source)}</dd>
+          <dt className={TYPE.small}>Class</dt>
+          <dd className={TYPE.body}>{titleCase(event.blockability)}</dd>
+          {event.policyLabel ? (
+            <>
+              <dt className={TYPE.small}>Policy</dt>
+              <dd className={TYPE.body}>{titleCase(event.policyLabel)}</dd>
+            </>
+          ) : null}
+          {event.trackerId ? (
+            <>
+              <dt className={TYPE.small}>Tracker ID</dt>
+              <dd className={TYPE.body}>{event.trackerId}</dd>
+            </>
+          ) : null}
+          {event.companyId ? (
+            <>
+              <dt className={TYPE.small}>Company ID</dt>
+              <dd className={TYPE.body}>{event.companyId}</dd>
+            </>
+          ) : null}
+          {event.frameId !== undefined ? (
+            <>
+              <dt className={TYPE.small}>Frame</dt>
+              <dd className={TYPE.body}>{event.frameId}</dd>
+            </>
+          ) : null}
+          {details.map(([key, value]) => (
+            <Fragment key={key}>
+              <dt className={TYPE.small}>{formatDetailKey(key)}</dt>
+              <dd className={`${TYPE.body} break-all`}>{String(value)}</dd>
+            </Fragment>
           ))}
-        </ul>
-      ) : null}
+        </dl>
+        {event.evidence.length > 0 ? (
+          <ul className={`${TYPE.small} mt-2.5 list-disc pl-4`}>
+            {event.evidence.map((evidence) => (
+              <li key={evidence}>{evidence}</li>
+            ))}
+          </ul>
+        ) : null}
+      </details>
       {remediation ? (
         <section className="mt-3 border-t border-border pt-3">
           <h3 className={TYPE.label}>Stop at source</h3>
@@ -248,7 +249,7 @@ function ValueSection({ events }: { events: ObserverEvent[] }) {
             <>
               <dt className={TYPE.small}>Ad value/yr</dt>
               <dd className={TYPE.body}>
-                {formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)} across {rollup.revenueTrackerCount} revenue-model {rollup.revenueTrackerCount === 1 ? "tracker" : "trackers"}
+                {formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)} across {rollup.revenueTrackerCount} {rollup.revenueTrackerCount === 1 ? "company that profits from you" : "companies that profit from you"}
               </dd>
             </>
           ) : null}
@@ -304,6 +305,8 @@ function RollingValueSection({
         <dl className="grid grid-cols-[128px_1fr] gap-1.5">
           <dt className={TYPE.small}>Sites</dt>
           <dd className={TYPE.body}>{rollup.siteCount}</dd>
+          <dt className={TYPE.small}>Visits</dt>
+          <dd className={TYPE.body}>{rollup.visitCount}</dd>
           <dt className={TYPE.small}>Trackers</dt>
           <dd className={TYPE.body}>{rollup.trackerCount}</dd>
           <dt className={TYPE.small}>This period</dt>
@@ -474,6 +477,10 @@ function IndexPopup() {
     await browser.tabs.create({ url: browser.runtime.getURL(`tabs/report.html?tabId=${summary.tabId}`) })
   }
 
+  async function openValueLedger() {
+    await browser.tabs.create({ url: browser.runtime.getURL("tabs/value-ledger.html") })
+  }
+
   async function requestFullReport() {
     if (settings.skipReportOpenConfirm) {
       await openFullReport()
@@ -511,6 +518,7 @@ function IndexPopup() {
         <SiteLogo textClass="text-base" sublabel="Pulse Observer" />
         <div className="flex flex-wrap justify-end gap-2">
           <Button onClick={() => requestFullReport().catch(() => undefined)} disabled={summary.tabId < 0}>Full report</Button>
+          <Button onClick={() => openValueLedger().catch(() => undefined)} variant="secondary">Value ledger</Button>
           <Button onClick={() => copyOutput().catch(() => setCopyState("failed"))}>
             {copyState === "copied" ? "Copied" : copyState === "failed" ? "Copy failed" : "Copy output"}
           </Button>
@@ -568,27 +576,23 @@ function IndexPopup() {
         <p className={`${TYPE.body} mt-1 break-all`}>{summary.origin}</p>
       </section>
 
-      <section aria-label="Observation summary" className="mt-2.5 grid grid-cols-5 gap-2">
-        <Metric label="Signals" title="Distinct observations after grouping repeats — one per observer and signal type" value={displayEvents.length} />
-        <Metric label="Events" title="Every raw event recorded on this tab before grouping" value={summary.events.length} />
+      {/* Three company-oriented numbers. Signal/event counts are detail, not
+          headline — they live in the Recent observations line and the report. */}
+      <section aria-label="Observation summary" className="mt-2.5 grid grid-cols-3 gap-2">
         <Metric label="Watching" title="Companies whose collection on this tab is still happening" value={summary.activeCompanies.length} />
         <Metric label="Blocked" title="Companies actually blocked by a rule you enabled — nothing blocks by default" value={summary.blockedCompanies.length} />
-        <Metric label="Unblockable" title="Signals the browser cannot block at all" value={summary.cannotBlockSignals.length} />
+        <Metric label="Can't block" title="Signals no browser tool can block at all" value={summary.cannotBlockSignals.length} />
       </section>
 
       <details className="mt-1.5">
         <summary className={`${TYPE.small} cursor-pointer select-none text-muted-foreground`}>What do these numbers mean?</summary>
         <dl className={`mt-2 ${UI.subtlePanel} grid grid-cols-[92px_1fr] gap-1.5 p-3`}>
-          <dt className={TYPE.small}>Signals</dt>
-          <dd className={TYPE.small}>Distinct observations, grouped — one line per observer and signal type. 20 pings from one pixel count once here.</dd>
-          <dt className={TYPE.small}>Events</dt>
-          <dd className={TYPE.small}>Every raw event recorded on this tab before grouping.</dd>
           <dt className={TYPE.small}>Watching</dt>
-          <dd className={TYPE.small}>Companies whose collection is still happening — observed, not blocked, not mitigated.</dd>
+          <dd className={TYPE.small}>Companies whose collection is still happening — observed, not blocked, not limited.</dd>
           <dt className={TYPE.small}>Blocked</dt>
           <dd className={TYPE.small}>Companies whose requests a rule actually stopped. Rules exist only where you clicked Block; nothing blocks by default.</dd>
-          <dt className={TYPE.small}>Unblockable</dt>
-          <dd className={TYPE.small}>Signals no extension can block: your IP address, connection fingerprint, and anything the server records on its side.</dd>
+          <dt className={TYPE.small}>Can't block</dt>
+          <dd className={TYPE.small}>Signals no browser tool can block: your internet address, how your connection looks, and anything a company records on its own servers.</dd>
         </dl>
       </details>
 

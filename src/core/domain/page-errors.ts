@@ -5,8 +5,15 @@
 // whole reason the page-error observer exists). Shared between the
 // main-world reporter (stop recording new ones) and summary normalization
 // (drop stale ones already persisted by older builds).
-const IGNORED_ERROR_MESSAGES = [
-  "Uncaught error",
+// Exact matches: browser-censored messages with zero information content.
+// "Script error." is what cross-origin scripts report when the browser
+// withholds detail; bare "Uncaught error" is our own fallback with no
+// location. When a location IS present ("Script error. (site.js:1:2)")
+// the entry carries real information and must NOT be dropped — which is
+// why these are exact matches, not substrings.
+const IGNORED_EXACT_MESSAGES = new Set(["Uncaught error", "Script error."])
+
+const IGNORED_SUBSTRING_MESSAGES = [
   "ResizeObserver loop completed with undelivered notifications.",
   "ResizeObserver loop limit exceeded",
   // No longer captured at all (page async noise, not extension breakage) —
@@ -15,5 +22,6 @@ const IGNORED_ERROR_MESSAGES = [
 ]
 
 export function isIgnoredPageError(message: string) {
-  return IGNORED_ERROR_MESSAGES.some((ignored) => message === ignored || message.includes(ignored))
+  if (IGNORED_EXACT_MESSAGES.has(message.trim())) return true
+  return IGNORED_SUBSTRING_MESSAGES.some((ignored) => message.includes(ignored))
 }

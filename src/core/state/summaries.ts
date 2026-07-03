@@ -100,6 +100,16 @@ export function normalizeSiteSummary(summary: Partial<SiteSummary>, origin = "un
   }
 }
 
+// A DNR block and the webRequest observer both see the same request: the
+// observer records request_seen (status active) before the block outcome is
+// known. When the block outcome arrives, the seen-event for that same
+// request must be superseded — otherwise one blocked request counts its
+// company as both "watching" and "blocked".
+export function supersedeEvent(summary: SiteSummary, eventId: string): SiteSummary {
+  if (!summary.events.some((item) => item.id === eventId)) return summary
+  return rebuildSummary(summary, summary.events.filter((item) => item.id !== eventId))
+}
+
 export function upsertEvent(
   summary: SiteSummary,
   event: ObserverEvent,

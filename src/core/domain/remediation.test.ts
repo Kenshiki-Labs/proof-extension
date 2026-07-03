@@ -28,7 +28,7 @@ describe("getObserverRemediation", () => {
 
     expect(details?.observerName).toBe("FullStory")
     expect(details?.categoryLabels).toContain("session replay")
-    expect(details?.collects).toContain("scrolls")
+    expect(details?.collects.some((item) => item.toLowerCase().includes("scroll"))).toBe(true)
     expect(details?.futureCollectionUrl).toContain("fullstory.com")
     expect(details?.deletionUrl).toContain("fullstory.com")
     expect(details?.explanation.displayName).toBe("FullStory")

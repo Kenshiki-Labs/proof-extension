@@ -94,13 +94,85 @@ export type UserSettings = {
   skipReportOpenConfirm: boolean
 }
 
+export type ValuationPeriod = "day" | "week" | "month" | "all"
+
+export type ValuationSnapshot = {
+  sourceFindingIds: string[]
+  valueType: "revenue" | "cost"
+  monetizationFlow: "platform_ads" | "programmatic" | "identity_infra" | "operator_saas"
+  perVisitMicrodollars: number
+  annualLowUsd: number
+  annualHighUsd: number
+  confidence: "sourced" | "estimated"
+}
+
+export type SiteVisitLedgerEntry = {
+  day: string
+  visitId: string
+  siteOrigin: string
+  firstVisitedAt: number
+  lastVisitedAt: number
+  visits: number
+}
+
+export type TrackerPresenceLedgerEntry = {
+  day: string
+  visitId: string
+  siteOrigin: string
+  trackerId: string
+  companyId?: string | undefined
+  firstObservedAt: number
+  lastObservedAt: number
+  observations: number
+  pageVisitsWithTracker: number
+  valuation: ValuationSnapshot
+}
+
+export type ValuationLedger = {
+  schemaVersion: 1
+  siteVisits: SiteVisitLedgerEntry[]
+  trackerPresence: TrackerPresenceLedgerEntry[]
+}
+
+export type RollingValuationItem = {
+  id: string
+  siteCount?: number | undefined
+  visitCount?: number | undefined
+  trackerCount?: number | undefined
+  observations: number
+  thisPeriodVisitUsd: number
+  annualLowUsd?: number | undefined
+  annualHighUsd?: number | undefined
+}
+
+export type RollingValuationSummary = {
+  period: ValuationPeriod
+  siteCount: number
+  visitCount: number
+  trackerCount: number
+  observations: number
+  thisPeriodVisitUsd: number
+  annualRevenueLowUsd: number
+  annualRevenueHighUsd: number
+  revenueTrackerCount: number
+  annualOperatorCostLowUsd: number
+  annualOperatorCostHighUsd: number
+  costTrackerCount: number
+  topTrackers: RollingValuationItem[]
+  topSites: RollingValuationItem[]
+  disclaimer: string
+}
+
 export type RuntimeMessage =
   | { type: "OBSERVED_EVENT"; payload: ObserverEvent }
   | { type: "PAGE_ERROR_OBSERVED"; payload: Omit<PageError, "id"> }
   | { type: "GET_SITE_SUMMARY"; tabId: number }
   | { type: "SITE_SUMMARY"; payload: SiteSummary }
+  | { type: "GET_VALUATION_ROLLUP"; period: ValuationPeriod }
+  | { type: "VALUATION_ROLLUP"; payload: RollingValuationSummary }
   | { type: "REFRESH_TAB_SCAN"; tabId: number }
   | { type: "GET_SETTINGS" }
   | { type: "SETTINGS"; payload: UserSettings }
   | { type: "UPDATE_SETTINGS"; payload: Partial<UserSettings> }
+  | { type: "CLEAR_VALUATION_LEDGER" }
   | { type: "CLEAR_LOCAL_DATA" }

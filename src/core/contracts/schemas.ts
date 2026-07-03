@@ -89,15 +89,89 @@ export const UserSettingsSchema = z.object({
   skipReportOpenConfirm: z.boolean()
 })
 
+export const ValuationPeriodSchema = z.enum(["day", "week", "month", "all"])
+
+export const ValuationSnapshotSchema = z.object({
+  sourceFindingIds: z.array(z.string().min(1)).min(1),
+  valueType: z.enum(["revenue", "cost"]),
+  monetizationFlow: z.enum(["platform_ads", "programmatic", "identity_infra", "operator_saas"]),
+  perVisitMicrodollars: z.number().min(0),
+  annualLowUsd: z.number().min(0),
+  annualHighUsd: z.number().min(0),
+  confidence: z.enum(["sourced", "estimated"])
+})
+
+const DayKeySchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
+
+export const SiteVisitLedgerEntrySchema = z.object({
+  day: DayKeySchema,
+  visitId: z.string().min(1),
+  siteOrigin: z.string().min(1),
+  firstVisitedAt: z.number().int().nonnegative(),
+  lastVisitedAt: z.number().int().nonnegative(),
+  visits: z.number().int().positive()
+})
+
+export const TrackerPresenceLedgerEntrySchema = z.object({
+  day: DayKeySchema,
+  visitId: z.string().min(1),
+  siteOrigin: z.string().min(1),
+  trackerId: z.string().min(1),
+  companyId: z.string().min(1).optional(),
+  firstObservedAt: z.number().int().nonnegative(),
+  lastObservedAt: z.number().int().nonnegative(),
+  observations: z.number().int().positive(),
+  pageVisitsWithTracker: z.number().int().positive(),
+  valuation: ValuationSnapshotSchema
+})
+
+export const ValuationLedgerSchema = z.object({
+  schemaVersion: z.literal(1),
+  siteVisits: z.array(SiteVisitLedgerEntrySchema),
+  trackerPresence: z.array(TrackerPresenceLedgerEntrySchema)
+})
+
+export const RollingValuationItemSchema = z.object({
+  id: z.string().min(1),
+  siteCount: z.number().int().nonnegative().optional(),
+  visitCount: z.number().int().nonnegative().optional(),
+  trackerCount: z.number().int().nonnegative().optional(),
+  observations: z.number().int().nonnegative(),
+  thisPeriodVisitUsd: z.number().nonnegative(),
+  annualLowUsd: z.number().nonnegative().optional(),
+  annualHighUsd: z.number().nonnegative().optional()
+})
+
+export const RollingValuationSummarySchema = z.object({
+  period: ValuationPeriodSchema,
+  siteCount: z.number().int().nonnegative(),
+  visitCount: z.number().int().nonnegative(),
+  trackerCount: z.number().int().nonnegative(),
+  observations: z.number().int().nonnegative(),
+  thisPeriodVisitUsd: z.number().nonnegative(),
+  annualRevenueLowUsd: z.number().nonnegative(),
+  annualRevenueHighUsd: z.number().nonnegative(),
+  revenueTrackerCount: z.number().int().nonnegative(),
+  annualOperatorCostLowUsd: z.number().nonnegative(),
+  annualOperatorCostHighUsd: z.number().nonnegative(),
+  costTrackerCount: z.number().int().nonnegative(),
+  topTrackers: z.array(RollingValuationItemSchema),
+  topSites: z.array(RollingValuationItemSchema),
+  disclaimer: z.string().min(1)
+})
+
 export const RuntimeMessageSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("OBSERVED_EVENT"), payload: ObserverEventSchema }),
   z.object({ type: z.literal("PAGE_ERROR_OBSERVED"), payload: PageErrorSchema.omit({ id: true }) }),
   z.object({ type: z.literal("GET_SITE_SUMMARY"), tabId: z.number().int() }),
   z.object({ type: z.literal("SITE_SUMMARY"), payload: SiteSummarySchema }),
+  z.object({ type: z.literal("GET_VALUATION_ROLLUP"), period: ValuationPeriodSchema }),
+  z.object({ type: z.literal("VALUATION_ROLLUP"), payload: RollingValuationSummarySchema }),
   z.object({ type: z.literal("REFRESH_TAB_SCAN"), tabId: z.number().int() }),
   z.object({ type: z.literal("GET_SETTINGS") }),
   z.object({ type: z.literal("SETTINGS"), payload: UserSettingsSchema }),
   z.object({ type: z.literal("UPDATE_SETTINGS"), payload: UserSettingsSchema.partial() }),
+  z.object({ type: z.literal("CLEAR_VALUATION_LEDGER") }),
   z.object({ type: z.literal("CLEAR_LOCAL_DATA") })
 ])
 
