@@ -39,7 +39,10 @@ export const SDK_GLOBAL_SIGNATURES: SdkGlobalSignature[] = [
   { global: "obApi", trackerId: "outbrain", sdkName: "Outbrain", confidence: "confirmed" },
   { global: "_qevents", trackerId: "quantcast", sdkName: "Quantcast Measure", confidence: "confirmed" },
   { global: "appboy", trackerId: "braze", sdkName: "Braze (Appboy)", confidence: "confirmed" },
-  { global: "_linkedin_partner_id", trackerId: "linkedin-insight", sdkName: "LinkedIn Insight Tag", confidence: "confirmed" }
+  // Set by the site's own inline config snippet before (and regardless of
+  // whether) the Insight Tag script actually loads — proves intent to load
+  // LinkedIn tooling, not that the SDK ran. Same reasoning as dataLayer.
+  { global: "_linkedin_partner_id", trackerId: "linkedin-insight", sdkName: "LinkedIn Insight Tag", confidence: "probable" }
 ]
 
 const SIGNATURES_BY_GLOBAL = new Map(SDK_GLOBAL_SIGNATURES.map((signature) => [signature.global, signature]))
@@ -63,11 +66,14 @@ export function enrichSdkDetection(event: ObserverEvent, trackers: TrackerRecord
   const signature = globalName ? matchSdkGlobal(globalName) : null
   const tracker = signature ? trackers.find((item) => item.id === signature.trackerId) : undefined
   if (!signature || !tracker) {
-    // Unknown or forged global names carry no vendor claim at all.
+    // Unknown or forged global names carry no vendor claim at all — and no
+    // block claim either: without a tracker match there is no DNR rule, so
+    // "network block available" would be false certainty.
     return {
       ...event,
       trackerId: undefined,
       companyId: undefined,
+      blockability: "observable_only",
       confidence: "weak",
       evidence: [`Global variable ${globalName ?? "unknown"} was reported but matches no known SDK signature.`]
     }

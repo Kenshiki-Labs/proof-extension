@@ -39,6 +39,7 @@ describe("SDK global signatures", () => {
   it("matches known globals and rejects unknown ones", () => {
     expect(matchSdkGlobal("fbq")).toMatchObject({ trackerId: "meta-pixel", confidence: "confirmed" })
     expect(matchSdkGlobal("dataLayer")).toMatchObject({ trackerId: "google-tag-manager", confidence: "probable" })
+    expect(matchSdkGlobal("_linkedin_partner_id")).toMatchObject({ trackerId: "linkedin-insight", confidence: "probable" })
     expect(matchSdkGlobal("myOwnGlobal")).toBeNull()
   })
 })
@@ -63,6 +64,9 @@ describe("enrichSdkDetection", () => {
     expect(enriched.trackerId).toBeUndefined()
     expect(enriched.companyId).toBeUndefined()
     expect(enriched.confidence).toBe("weak")
+    // No tracker match means no DNR rule — claiming a block is available
+    // would be false certainty.
+    expect(enriched.blockability).toBe("observable_only")
     expect(enriched.evidence[0]).toContain("matches no known SDK signature")
   })
 
