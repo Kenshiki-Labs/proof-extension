@@ -20,15 +20,15 @@
     "companyId": "fullstory",
     "category": "session-replay",
     "collects": [
-      "scrolls",
-      "clicks",
-      "navigation",
-      "potential form interaction metadata"
+      "how far you scroll",
+      "where you click",
+      "which pages you visit",
+      "signs of activity near forms (not always the text itself)"
     ],
     "monetization": [
-      "UX analytics",
-      "conversion optimization",
-      "behavior replay"
+      "selling site-improvement insights built from your behavior",
+      "helping sites get more people to buy",
+      "selling replays of how people use the site"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -119,15 +119,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 40,
-        "dollars": 4e-05,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.00004,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.5,
         "high_usd": 5,
         "midpoint_usd": 2.75
       },
-      "valueNote": "Enterprise session replay cost paid by the site.",
+      "valueNote": "The site pays to replay visits like yours, move by move.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "fullstory-valuation-2026"
@@ -158,15 +158,15 @@
     "companyId": "google",
     "category": "analytics",
     "collects": [
-      "page views",
-      "events",
-      "session identifiers",
-      "device/browser metadata"
+      "which pages you view",
+      "actions you take on the page",
+      "an ID tag for your visit",
+      "details about your device and browser"
     ],
     "monetization": [
-      "site analytics",
-      "audience measurement",
-      "Google Ads remarketing lists"
+      "measuring how visitors use the site",
+      "measuring audiences for advertisers",
+      "adding you to Google ad audiences"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -258,14 +258,14 @@
       "perVisit": {
         "microdollars": 0,
         "dollars": 0,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0,
         "high_usd": 0,
         "midpoint_usd": 0
       },
-      "valueNote": "Free tool; GA audiences feed Google remarketing (value under Google Ads).",
+      "valueNote": "Free to the site — but what it learns about you feeds Google's ad business, counted under Google Ads.",
       "sourceNote": "Proton 2025",
       "sourceFindingIds": [
         "google-analytics-valuation-2026"
@@ -292,10 +292,10 @@
     "companyId": "google-tag-manager",
     "category": "tag-manager",
     "collects": [
-      "arbitrary tags configured by the site operator, which can include third-party pixels"
+      "whatever trackers the site chose to load through it"
     ],
     "monetization": [
-      "indirect \u2014 GTM is a delivery mechanism for other vendors' tags"
+      "free to the site; it is the delivery van for other companies' trackers"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -365,7 +365,7 @@
       ]
     },
     "userImpact": {
-      "plainSummary": "Google Tag Manager lets a site send tag manager events to Alphabet Inc. for indirect \u2014 GTM is a delivery mechanism for other vendors' tags.",
+      "plainSummary": "Google Tag Manager lets a site send tag manager events to Alphabet Inc. for indirect — GTM is a delivery mechanism for other vendors' tags.",
       "whyItMatters": [
         "A tag manager can load or coordinate other tracking scripts.",
         "What it collects depends on the site configuration and downstream tags.",
@@ -388,14 +388,14 @@
       "perVisit": {
         "microdollars": 0,
         "dollars": 0,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0,
         "high_usd": 0,
         "midpoint_usd": 0
       },
-      "valueNote": "Free tag delivery mechanism; value is the trackers it loads.",
+      "valueNote": "Free to the site; it is the delivery van that brings in other companies' trackers.",
       "sourceNote": "Proton 2025",
       "sourceFindingIds": [
         "google-tag-manager-valuation-2026"
@@ -427,14 +427,14 @@
     "companyId": "google-ads",
     "category": "advertising",
     "collects": [
-      "conversion events",
-      "ad click identifiers",
-      "cross-site interest signals"
+      "what you buy or sign up for",
+      "which ads you clicked",
+      "your interests, gathered across websites"
     ],
     "monetization": [
-      "ad retargeting",
-      "conversion attribution",
-      "audience-based ad pricing"
+      "following you with ads for things you viewed",
+      "working out which ad gets credit for your purchase",
+      "charging advertisers more to reach people like you"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -526,14 +526,14 @@
       "perVisit": {
         "microdollars": 768,
         "dollars": 0.000768,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 420,
         "high_usd": 500,
         "midpoint_usd": 460
       },
-      "valueNote": "Google US ARPU ~$460/yr. Present on a large share of the web.",
+      "valueNote": "Google makes roughly $460 a year from the average American's attention, and it is present on most of the web.",
       "sourceNote": "Proton 2025: ~$460 US ARPU; Mediapost 2026: $1,605 engaged desktop user",
       "sourceFindingIds": [
         "google-ads-valuation-2026"
@@ -563,14 +563,14 @@
     "companyId": "meta",
     "category": "advertising",
     "collects": [
-      "page views",
-      "custom conversion events",
-      "hashed contact info when advanced matching is enabled"
+      "which pages you view",
+      "actions the site chose to report, like purchases or sign-ups",
+      "a scrambled version of your email or phone, when the site turns that on"
     ],
     "monetization": [
-      "ad retargeting",
-      "conversion attribution",
-      "lookalike audience building"
+      "following you with ads for things you viewed",
+      "working out which ad gets credit for your purchase",
+      "finding more people who behave like you"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -662,14 +662,14 @@
       "perVisit": {
         "microdollars": 420,
         "dollars": 0.00042,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 185,
         "high_usd": 250,
         "midpoint_usd": 217.5
       },
-      "valueNote": "Meta US/CA ARPU; the pixel extends monetization to off-Facebook browsing.",
+      "valueNote": "Meta makes this from showing you ads — the pixel keeps that running even when you are not on Facebook or Instagram.",
       "sourceNote": "Proton 2025: ~$217 US estimate; Statista Jan 2025: $49.63 global ARPU 2024",
       "sourceFindingIds": [
         "meta-pixel-valuation-2026"
@@ -696,12 +696,12 @@
     "companyId": "tiktok",
     "category": "advertising",
     "collects": [
-      "page views",
-      "custom conversion events"
+      "which pages you view",
+      "actions the site chose to report, like purchases or sign-ups"
     ],
     "monetization": [
-      "ad retargeting",
-      "conversion attribution"
+      "following you with ads for things you viewed",
+      "working out which ad gets credit for your purchase"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -793,14 +793,14 @@
       "perVisit": {
         "microdollars": 220,
         "dollars": 0.00022,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 80,
         "high_usd": 140,
         "midpoint_usd": 110
       },
-      "valueNote": "ByteDance US ARPU estimates.",
+      "valueNote": "TikTok earns this from showing ads to people like you.",
       "sourceNote": "Surff.io 2026 brand-by-brand analysis",
       "sourceFindingIds": [
         "tiktok-pixel-valuation-2026"
@@ -829,13 +829,13 @@
     "companyId": "linkedin",
     "category": "advertising",
     "collects": [
-      "page views",
-      "conversion events",
-      "employer/job-title inference for B2B targeting"
+      "which pages you view",
+      "what you buy or sign up for",
+      "guesses about your employer and job title"
     ],
     "monetization": [
-      "B2B ad retargeting",
-      "conversion attribution"
+      "showing your company ads after you visit",
+      "working out which ad gets credit for your purchase"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -927,14 +927,14 @@
       "perVisit": {
         "microdollars": 200,
         "dollars": 0.0002,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 80,
         "high_usd": 120,
         "midpoint_usd": 100
       },
-      "valueNote": "LinkedIn revenue over active users; B2B ad premium.",
+      "valueNote": "LinkedIn earns a premium on you because advertisers pay extra to reach professionals.",
       "sourceNote": "Surff.io 2026 brand-by-brand analysis",
       "sourceFindingIds": [
         "linkedin-insight-valuation-2026"
@@ -963,14 +963,14 @@
     "companyId": "hotjar",
     "category": "session-replay",
     "collects": [
-      "mouse movement",
-      "clicks",
-      "scroll depth",
-      "session recordings"
+      "how your mouse moves",
+      "where you click",
+      "how far you scroll",
+      "a replay of your visit — mouse moves, clicks, and typing rhythm"
     ],
     "monetization": [
-      "UX analytics",
-      "heatmap products sold to the site operator"
+      "selling site-improvement insights built from your behavior",
+      "the site pays to see where visitors click and scroll"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -1062,15 +1062,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000008,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.1,
         "high_usd": 1,
         "midpoint_usd": 0.55
       },
-      "valueNote": "Per-session replay/heatmap cost paid by the site.",
+      "valueNote": "The site pays a small fee to watch replays and heatmaps of visits like yours.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "hotjar-valuation-2026"
@@ -1100,12 +1100,12 @@
     "companyId": "mixpanel",
     "category": "product-analytics",
     "collects": [
-      "events",
-      "user properties",
-      "session identifiers"
+      "actions you take on the page",
+      "facts the site records about you",
+      "an ID tag for your visit"
     ],
     "monetization": [
-      "product analytics sold to the site operator"
+      "the site pays to study how you use its product"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -1196,15 +1196,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 0.2,
-        "dollars": 2.0000000000000002e-07,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 2.0000000000000002e-7,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.002,
         "high_usd": 0.04,
         "midpoint_usd": 0.021
       },
-      "valueNote": "Per-event/per-user product analytics pricing.",
+      "valueNote": "The site pays a small fee per person to study how you use its product.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "mixpanel-valuation-2026"
@@ -1234,12 +1234,12 @@
     "companyId": "segment",
     "category": "customer-data-platform",
     "collects": [
-      "events",
-      "identity resolution keys",
-      "forwarded to other configured destinations"
+      "actions you take on the page",
+      "keys used to work out who you are",
+      "whatever it collects can be forwarded to other companies the site chose"
     ],
     "monetization": [
-      "customer data platform fees paid by the site operator"
+      "the site pays to organize what it knows about you"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -1333,15 +1333,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 0.5,
-        "dollars": 5e-07,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 5e-7,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.002,
         "high_usd": 0.1,
         "midpoint_usd": 0.051000000000000004
       },
-      "valueNote": "Per monthly-tracked-user CDP pricing.",
+      "valueNote": "The site pays per tracked person to organize what it knows about you.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "segment-valuation-2026"
@@ -1369,12 +1369,12 @@
     "companyId": "amplitude",
     "category": "product-analytics",
     "collects": [
-      "events",
-      "user properties",
-      "session identifiers"
+      "actions you take on the page",
+      "facts the site records about you",
+      "an ID tag for your visit"
     ],
     "monetization": [
-      "product analytics sold to the site operator"
+      "the site pays to study how you use its product"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -1465,15 +1465,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 0.3,
-        "dollars": 3e-07,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 3e-7,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.003,
         "high_usd": 0.05,
         "midpoint_usd": 0.026500000000000003
       },
-      "valueNote": "Per-event/per-user product analytics tiers.",
+      "valueNote": "The site pays a small fee per person to study how you use its product.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "amplitude-valuation-2026"
@@ -1502,13 +1502,13 @@
     "companyId": "criteo",
     "category": "advertising",
     "collects": [
-      "product views",
-      "cart events",
-      "cross-site browsing for retargeting"
+      "which products you look at",
+      "what you add to shopping carts",
+      "which products you looked at, so ads can follow you"
     ],
     "monetization": [
-      "dynamic retargeting ads",
-      "programmatic ad auctions"
+      "ads that show you the exact products you viewed",
+      "auctioning the ad space you see"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -1599,15 +1599,15 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 50,
-        "dollars": 5e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.00005,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 2,
         "high_usd": 8,
         "midpoint_usd": 5
       },
-      "valueNote": "Commerce-media retargeting share of CPM auctions.",
+      "valueNote": "Earns by following you with ads for products you looked at.",
       "sourceNote": "Criteo IR Sept 2025; ZipDo 2026",
       "sourceFindingIds": [
         "criteo-valuation-2026"
@@ -1636,12 +1636,12 @@
     "companyId": "adobe",
     "category": "analytics",
     "collects": [
-      "page views",
-      "events",
-      "session identifiers"
+      "which pages you view",
+      "actions you take on the page",
+      "an ID tag for your visit"
     ],
     "monetization": [
-      "site analytics sold to the site operator"
+      "the site pays to measure how you use it"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -1732,15 +1732,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 30,
-        "dollars": 3e-05,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.00003,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.5,
         "high_usd": 5,
         "midpoint_usd": 2.75
       },
-      "valueNote": "Enterprise analytics SaaS pricing paid by the site.",
+      "valueNote": "The site pays Adobe to study how visitors like you behave.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "adobe-analytics-valuation-2026"
@@ -1768,12 +1768,12 @@
     "companyId": "braze",
     "category": "behavioral-profiling",
     "collects": [
-      "events",
-      "push/email engagement",
-      "in-app behavior for segmentation"
+      "actions you take on the page",
+      "whether you open their notifications and emails",
+      "how you use the product, to sort you into groups"
     ],
     "monetization": [
-      "customer engagement platform fees paid by the site operator"
+      "the site pays to message you; your behavior decides what you get"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -1866,15 +1866,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 15,
-        "dollars": 1.5e-05,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000015,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.2,
         "high_usd": 2,
         "midpoint_usd": 1.1
       },
-      "valueNote": "Per-MAU engagement platform pricing paid by the operator.",
+      "valueNote": "The site pays per person to send you messages shaped by your behavior.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "braze-valuation-2026"
@@ -1902,12 +1902,12 @@
     "companyId": "intercom",
     "category": "customer-messaging",
     "collects": [
-      "chat transcripts",
-      "page views",
-      "device/browser metadata"
+      "what you type into the chat window",
+      "which pages you view",
+      "details about your device and browser"
     ],
     "monetization": [
-      "customer messaging platform fees paid by the site operator"
+      "the site pays for the chat tool; conversations feed its records"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -2000,15 +2000,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 5,
-        "dollars": 5e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000005,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.05,
         "high_usd": 1,
         "midpoint_usd": 0.525
       },
-      "valueNote": "Per-seat/contact messaging platform pricing.",
+      "valueNote": "The site pays for the support chat; your conversations feed its records.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "intercom-valuation-2026"
@@ -2035,12 +2035,12 @@
     "companyId": "drift",
     "category": "customer-messaging",
     "collects": [
-      "chat transcripts",
-      "page views",
-      "visitor identity when provided"
+      "what you type into the chat window",
+      "which pages you view",
+      "your name or email, when the site passes it along"
     ],
     "monetization": [
-      "customer messaging platform fees paid by the site operator"
+      "the site pays for the chat tool; conversations feed its records"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -2133,15 +2133,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 3,
-        "dollars": 3e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000003,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.05,
         "high_usd": 0.5,
         "midpoint_usd": 0.275
       },
-      "valueNote": "B2B sales messaging tool pricing.",
+      "valueNote": "The site pays for the chat window; your conversations feed its sales process.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "drift-valuation-2026"
@@ -2169,11 +2169,11 @@
     "companyId": "optimizely",
     "category": "experimentation",
     "collects": [
-      "experiment/variation assignment",
-      "conversion events"
+      "which test version of the page you were shown",
+      "what you buy or sign up for"
     ],
     "monetization": [
-      "A/B testing and personalization platform fees paid by the site operator"
+      "the site pays for testing tools; your behavior is the raw material"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -2265,15 +2265,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 1,
-        "dollars": 1e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000001,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.01,
         "high_usd": 0.1,
         "midpoint_usd": 0.055
       },
-      "valueNote": "Per-visitor experimentation pricing.",
+      "valueNote": "The site pays per visitor to test page versions on you.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "optimizely-valuation-2026"
@@ -2300,12 +2300,12 @@
     "companyId": "crazyegg",
     "category": "session-replay",
     "collects": [
-      "mouse movement",
-      "clicks",
-      "scroll depth heatmaps"
+      "how your mouse moves",
+      "where you click",
+      "how far people scroll on each page"
     ],
     "monetization": [
-      "heatmap/UX analytics products sold to the site operator"
+      "the site pays to see where visitors click and scroll"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -2397,15 +2397,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 0.5,
-        "dollars": 5e-07,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 5e-7,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.01,
         "high_usd": 0.05,
         "midpoint_usd": 0.030000000000000002
       },
-      "valueNote": "Heatmap SaaS cost paid by the site.",
+      "valueNote": "The site pays a small fee to see where visitors click and scroll.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "crazyegg-valuation-2026"
@@ -2433,12 +2433,12 @@
     "companyId": "quantcast",
     "category": "advertising",
     "collects": [
-      "page views",
-      "audience segment inference"
+      "which pages you view",
+      "guesses about which audience groups you belong to"
     ],
     "monetization": [
-      "audience measurement",
-      "programmatic ad targeting"
+      "measuring audiences for advertisers",
+      "buying ad space aimed at you"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -2529,15 +2529,15 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 30,
-        "dollars": 3e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.00003,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
         "high_usd": 5,
         "midpoint_usd": 3
       },
-      "valueNote": "Audience measurement plus programmatic share.",
+      "valueNote": "Earns by measuring audiences and helping aim ads at people like you.",
       "sourceNote": "ZipDo 2026",
       "sourceFindingIds": [
         "quantcast-valuation-2026"
@@ -2565,12 +2565,12 @@
     "companyId": "taboola",
     "category": "advertising",
     "collects": [
-      "content engagement",
-      "cross-site interest signals"
+      "which content holds your attention",
+      "your interests, gathered across websites"
     ],
     "monetization": [
-      "native ad recommendations",
-      "programmatic ad auctions"
+      "the 'around the web' story ads you see",
+      "auctioning the ad space you see"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -2661,15 +2661,15 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 60,
-        "dollars": 6e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.00006,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 2,
         "high_usd": 8,
         "midpoint_usd": 5
       },
-      "valueNote": "Native content-recommendation CPM economics.",
+      "valueNote": "Earns from the 'around the web' story ads you see at the bottom of articles.",
       "sourceNote": "ZipDo 2026: US CPMs $2.30-$9.20",
       "sourceFindingIds": [
         "taboola-valuation-2026"
@@ -2697,12 +2697,12 @@
     "companyId": "outbrain",
     "category": "advertising",
     "collects": [
-      "content engagement",
-      "cross-site interest signals"
+      "which content holds your attention",
+      "your interests, gathered across websites"
     ],
     "monetization": [
-      "native ad recommendations",
-      "programmatic ad auctions"
+      "the 'around the web' story ads you see",
+      "auctioning the ad space you see"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -2793,15 +2793,15 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 45,
-        "dollars": 4.5e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.000045,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 2,
         "high_usd": 6,
         "midpoint_usd": 4
       },
-      "valueNote": "Native content-recommendation CPM economics.",
+      "valueNote": "Earns from the 'around the web' story ads you see at the bottom of articles.",
       "sourceNote": "ZipDo 2026",
       "sourceFindingIds": [
         "outbrain-valuation-2026"
@@ -2829,12 +2829,12 @@
     "companyId": "snap",
     "category": "advertising",
     "collects": [
-      "page views",
-      "custom conversion events"
+      "which pages you view",
+      "actions the site chose to report, like purchases or sign-ups"
     ],
     "monetization": [
-      "ad retargeting",
-      "conversion attribution"
+      "following you with ads for things you viewed",
+      "working out which ad gets credit for your purchase"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -2925,15 +2925,15 @@
       "monetizationFlow": "platform_ads",
       "perVisit": {
         "microdollars": 28,
-        "dollars": 2.8e-05,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "dollars": 0.000028,
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 10,
         "high_usd": 18,
         "midpoint_usd": 14
       },
-      "valueNote": "Snap quarterly ARPU annualized.",
+      "valueNote": "Snap earns about $14 a year from an average user's attention.",
       "sourceNote": "Statista Feb 2025: $3.44/quarter Q4 2024",
       "sourceFindingIds": [
         "snap-pixel-valuation-2026"
@@ -2962,12 +2962,12 @@
     "companyId": "pinterest",
     "category": "advertising",
     "collects": [
-      "page views",
-      "custom conversion events"
+      "which pages you view",
+      "actions the site chose to report, like purchases or sign-ups"
     ],
     "monetization": [
-      "ad retargeting",
-      "conversion attribution"
+      "following you with ads for things you viewed",
+      "working out which ad gets credit for your purchase"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -3058,15 +3058,15 @@
       "monetizationFlow": "platform_ads",
       "perVisit": {
         "microdollars": 72,
-        "dollars": 7.2e-05,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "dollars": 0.000072,
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 28,
         "high_usd": 44,
         "midpoint_usd": 36
       },
-      "valueNote": "Pinterest US/CA quarterly ARPU ~$9 annualized.",
+      "valueNote": "Pinterest earns about $36 a year from an average US user's attention.",
       "sourceNote": "Statista Feb 2025: $9/quarter US/CA Q4 2024",
       "sourceFindingIds": [
         "pinterest-tag-valuation-2026"
@@ -3094,12 +3094,12 @@
     "companyId": "twitter",
     "category": "advertising",
     "collects": [
-      "page views",
-      "custom conversion events"
+      "which pages you view",
+      "actions the site chose to report, like purchases or sign-ups"
     ],
     "monetization": [
-      "ad retargeting",
-      "conversion attribution"
+      "following you with ads for things you viewed",
+      "working out which ad gets credit for your purchase"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -3190,15 +3190,15 @@
       "monetizationFlow": "platform_ads",
       "perVisit": {
         "microdollars": 52,
-        "dollars": 5.2e-05,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "dollars": 0.000052,
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 20,
         "high_usd": 32,
         "midpoint_usd": 26
       },
-      "valueNote": "Post-acquisition ARPU decline from ~$6.50/quarter global pre-2022.",
+      "valueNote": "X earns this from ads; the amount has dropped since 2022.",
       "sourceNote": "Surff.io 2026",
       "sourceFindingIds": [
         "twitter-pixel-valuation-2026"
@@ -3227,12 +3227,12 @@
     "companyId": "yandex",
     "category": "session-replay",
     "collects": [
-      "page views",
-      "session recordings",
-      "click maps"
+      "which pages you view",
+      "a replay of your visit — mouse moves, clicks, and typing rhythm",
+      "where you click on the page"
     ],
     "monetization": [
-      "site analytics sold to the site operator"
+      "the site pays to measure how you use it"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -3324,15 +3324,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 2,
-        "dollars": 2e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000002,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0,
         "high_usd": 0.5,
         "midpoint_usd": 0.25
       },
-      "valueNote": "Free analytics product; feeds Yandex advertising ecosystem.",
+      "valueNote": "Free to the site; what it learns feeds Yandex's ad business.",
       "sourceNote": "Vendor docs",
       "sourceFindingIds": [
         "yandex-metrica-valuation-2026"
@@ -3359,13 +3359,13 @@
     "companyId": "microsoft-clarity",
     "category": "session-replay",
     "collects": [
-      "mouse movement",
-      "clicks",
-      "session recordings",
-      "heatmaps"
+      "how your mouse moves",
+      "where you click",
+      "a replay of your visit — mouse moves, clicks, and typing rhythm",
+      "where you look, hover, and click"
     ],
     "monetization": [
-      "free product; underlying data may inform Microsoft Advertising"
+      "free to the site; what it learns can feed Microsoft's ad business"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -3457,15 +3457,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 2,
-        "dollars": 2e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000002,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0,
         "high_usd": 0.5,
         "midpoint_usd": 0.25
       },
-      "valueNote": "Free session replay; enriches Microsoft Advertising.",
+      "valueNote": "Free to the site — what it learns can feed Microsoft's ad business.",
       "sourceNote": "Vendor docs",
       "sourceFindingIds": [
         "microsoft-clarity-valuation-2026"
@@ -3492,12 +3492,12 @@
     "companyId": "datadog",
     "category": "performance-monitoring",
     "collects": [
-      "page performance metrics",
-      "session replay frames when enabled",
-      "error traces"
+      "how fast pages load for you",
+      "a replay of your visit, when the site turns that on",
+      "errors that happen while you use the page"
     ],
     "monetization": [
-      "infrastructure monitoring platform fees paid by the site operator"
+      "the site pays to watch its own performance; your visits are the sample"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -3587,15 +3587,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000008,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.1,
         "high_usd": 1,
         "midpoint_usd": 0.55
       },
-      "valueNote": "Per-session real-user-monitoring pricing paid by the site.",
+      "valueNote": "The site pays to watch its own speed; your visits are the sample.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "datadog-rum-valuation-2026"
@@ -3622,15 +3622,15 @@
     "companyId": "the-trade-desk",
     "category": "advertising",
     "collects": [
-      "browsing behavior across sites",
-      "interest segments",
-      "cookie and device identifiers",
-      "bid-request context"
+      "what you do across many websites",
+      "which interest groups you get sorted into",
+      "ID tags stored in your browser, plus device details",
+      "details about the page and your browser, used to auction ad space"
     ],
     "monetization": [
-      "programmatic ad targeting",
-      "audience segment sales",
-      "retargeting"
+      "buying ad space aimed at you",
+      "selling lists of people like you",
+      "following you with ads for things you viewed"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -3721,15 +3721,15 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 18,
-        "dollars": 1.8e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.000018,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 3,
         "high_usd": 15,
         "midpoint_usd": 9
       },
-      "valueNote": "DSP revenue over addressable US users.",
+      "valueNote": "Buys ad space aimed at you in auctions across most of the web.",
       "sourceNote": "TTD Q4 FY2025: $2.9B revenue",
       "sourceFindingIds": [
         "the-trade-desk-valuation-2026"
@@ -3756,14 +3756,14 @@
     "companyId": "pubmatic",
     "category": "advertising",
     "collects": [
-      "page context",
-      "cookie identifiers",
-      "device characteristics",
-      "ad interaction"
+      "what page you are on",
+      "ID tags stored in your browser",
+      "details about your device",
+      "how you interact with ads"
     ],
     "monetization": [
-      "supply-side ad auctions",
-      "audience targeting"
+      "auctioning the ad space you see",
+      "aiming ads at people like you"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -3854,15 +3854,15 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 10,
-        "dollars": 1e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.00001,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
         "high_usd": 5,
         "midpoint_usd": 3
       },
-      "valueNote": "Supply-side fraction of CPM per impression.",
+      "valueNote": "Earns a small slice each time your attention is auctioned to advertisers.",
       "sourceNote": "ZipDo 2026",
       "sourceFindingIds": [
         "pubmatic-valuation-2026"
@@ -3890,14 +3890,14 @@
     "companyId": "magnite",
     "category": "advertising",
     "collects": [
-      "page context",
-      "cookie identifiers",
-      "device characteristics",
-      "ad interaction"
+      "what page you are on",
+      "ID tags stored in your browser",
+      "details about your device",
+      "how you interact with ads"
     ],
     "monetization": [
-      "supply-side ad auctions",
-      "audience targeting"
+      "auctioning the ad space you see",
+      "aiming ads at people like you"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -3988,15 +3988,15 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 10,
-        "dollars": 1e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.00001,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
         "high_usd": 5,
         "midpoint_usd": 3
       },
-      "valueNote": "Supply-side fraction of CPM per impression; CTV growing.",
+      "valueNote": "Earns a small slice each time your attention is auctioned to advertisers.",
       "sourceNote": "ZipDo 2026",
       "sourceFindingIds": [
         "magnite-valuation-2026"
@@ -4023,13 +4023,13 @@
     "companyId": "openx",
     "category": "advertising",
     "collects": [
-      "page context",
-      "cookie identifiers",
-      "device characteristics"
+      "what page you are on",
+      "ID tags stored in your browser",
+      "details about your device"
     ],
     "monetization": [
-      "supply-side ad auctions",
-      "audience targeting"
+      "auctioning the ad space you see",
+      "aiming ads at people like you"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -4120,15 +4120,15 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.000008,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
         "high_usd": 4,
         "midpoint_usd": 2.5
       },
-      "valueNote": "Supply-side share of CPM economics.",
+      "valueNote": "Earns a small slice each time your attention is auctioned to advertisers.",
       "sourceNote": "ZipDo 2026 CPM baseline",
       "sourceFindingIds": [
         "openx-valuation-2026"
@@ -4156,13 +4156,12 @@
     "companyId": "index-exchange",
     "category": "advertising",
     "collects": [
-      "page context",
-      "cookie identifiers",
-      "ad interaction"
+      "what page you are on",
+      "ID tags stored in your browser",
+      "how you interact with ads"
     ],
     "monetization": [
-      "supply-side ad auctions",
-      "header bidding"
+      "auctioning the ad space you see"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -4253,15 +4252,15 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.000008,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
         "high_usd": 4,
         "midpoint_usd": 2.5
       },
-      "valueNote": "Header-bidding infrastructure share of CPM economics.",
+      "valueNote": "Earns a small slice each time your attention is auctioned to advertisers.",
       "sourceNote": "ZipDo 2026 CPM baseline",
       "sourceFindingIds": [
         "index-exchange-valuation-2026"
@@ -4288,13 +4287,13 @@
     "companyId": "lotame",
     "category": "data-management-platform",
     "collects": [
-      "interest segments",
-      "cookie identifiers",
-      "cross-site behavior"
+      "which interest groups you get sorted into",
+      "ID tags stored in your browser",
+      "what you do across many websites"
     ],
     "monetization": [
-      "audience segment sales",
-      "data management platform services"
+      "selling lists of people like you",
+      "organizing and selling audience data"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -4385,15 +4384,15 @@
       "monetizationFlow": "identity_infra",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "per-record licensing \u00f7 estimated annual match events"
+        "dollars": 0.000008,
+        "basis": "per-record licensing ÷ estimated annual match events"
       },
       "annual": {
         "low_usd": 0.5,
         "high_usd": 3,
         "midpoint_usd": 1.75
       },
-      "valueNote": "Audience segment sales via DMP.",
+      "valueNote": "Earns by sorting you into audience lists and selling them.",
       "sourceNote": "Surff.io 2026",
       "sourceFindingIds": [
         "lotame-valuation-2026"
@@ -4420,14 +4419,14 @@
     "companyId": "liveramp",
     "category": "identity-resolution",
     "collects": [
-      "hashed identifiers",
-      "cookie-to-identity links",
-      "cross-device identity graph signals"
+      "scrambled versions of identifying details",
+      "links between browser ID tags and your real identity",
+      "clues that connect your phone, laptop, and other devices"
     ],
     "monetization": [
-      "identity resolution",
-      "offline-to-online data onboarding",
-      "audience matching"
+      "working out who you are across sites and devices",
+      "connecting offline records (name, address) to your online activity",
+      "matching you against advertisers' customer lists"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -4518,15 +4517,15 @@
       "monetizationFlow": "identity_infra",
       "perVisit": {
         "microdollars": 12,
-        "dollars": 1.2e-05,
-        "basis": "per-record licensing \u00f7 estimated annual match events"
+        "dollars": 0.000012,
+        "basis": "per-record licensing ÷ estimated annual match events"
       },
       "annual": {
         "low_usd": 0.5,
         "high_usd": 5,
         "midpoint_usd": 2.75
       },
-      "valueNote": "Offline-to-online identity matching charged per record/match.",
+      "valueNote": "Charges per match to connect your offline identity (name, address) to what you do online.",
       "sourceNote": "LiveRamp identity-resolution value materials",
       "sourceFindingIds": [
         "liveramp-valuation-2026"
@@ -4553,12 +4552,12 @@
     "companyId": "id5",
     "category": "identity-resolution",
     "collects": [
-      "shared universal ID",
-      "cookie identifiers",
-      "cross-site sync events"
+      "one shared ID used to recognize you across many sites",
+      "ID tags stored in your browser",
+      "moments when your ID is handed between tracking companies"
     ],
     "monetization": [
-      "identity resolution for programmatic advertising"
+      "recognizing you inside ad auctions"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -4649,15 +4648,15 @@
       "monetizationFlow": "identity_infra",
       "perVisit": {
         "microdollars": 3,
-        "dollars": 3e-06,
-        "basis": "per-record licensing \u00f7 estimated annual match events"
+        "dollars": 0.000003,
+        "basis": "per-record licensing ÷ estimated annual match events"
       },
       "annual": {
         "low_usd": 0.1,
         "high_usd": 1,
         "midpoint_usd": 0.55
       },
-      "valueNote": "Shared-ID infrastructure; value flows to publishers/buyers.",
+      "valueNote": "Runs one shared ID that lets many ad companies recognize you; the money flows to them.",
       "sourceNote": "Surff.io 2026",
       "sourceFindingIds": [
         "id5-valuation-2026"
@@ -4685,13 +4684,13 @@
     "companyId": "33across",
     "category": "advertising",
     "collects": [
-      "page engagement",
-      "copy/paste behavior (Tynt heritage)",
-      "cookie identifiers"
+      "how long and how deeply you engage with the page",
+      "what you copy from the page",
+      "ID tags stored in your browser"
     ],
     "monetization": [
-      "audience targeting",
-      "addressability services"
+      "aiming ads at people like you",
+      "helping advertisers keep recognizing you as cookies disappear"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -4782,15 +4781,15 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 5,
-        "dollars": 5e-06,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.000005,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
         "high_usd": 3,
         "midpoint_usd": 2
       },
-      "valueNote": "Cookieless addressability share of CPM economics.",
+      "valueNote": "Earns a small slice each time your attention is auctioned to advertisers.",
       "sourceNote": "ZipDo 2026 CPM baseline",
       "sourceFindingIds": [
         "33across-valuation-2026"
@@ -4817,13 +4816,13 @@
     "companyId": "tapad",
     "category": "cross-device-tracking",
     "collects": [
-      "device graph signals",
-      "cookie identifiers",
-      "cross-device identity links"
+      "clues that connect your devices to one another",
+      "ID tags stored in your browser",
+      "connections between your different devices"
     ],
     "monetization": [
-      "cross-device ad targeting",
-      "identity graph licensing (Experian)"
+      "following you from one device to another with ads",
+      "renting out the map of your devices (owned by Experian)"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -4914,15 +4913,15 @@
       "monetizationFlow": "identity_infra",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "per-record licensing \u00f7 estimated annual match events"
+        "dollars": 0.000008,
+        "basis": "per-record licensing ÷ estimated annual match events"
       },
       "annual": {
         "low_usd": 0.5,
         "high_usd": 3,
         "midpoint_usd": 1.75
       },
-      "valueNote": "Cross-device graph licensing (Experian).",
+      "valueNote": "Rents out the map that connects your phone, laptop, and TV — owned by Experian.",
       "sourceNote": "Surff.io 2026",
       "sourceFindingIds": [
         "tapad-valuation-2026"
@@ -4949,13 +4948,13 @@
     "companyId": "6sense",
     "category": "behavioral-profiling",
     "collects": [
-      "company/IP-derived firmographics",
-      "page engagement",
-      "B2B intent signals"
+      "your employer, guessed from your network address",
+      "how long and how deeply you engage with the page",
+      "signs your company is shopping for business software"
     ],
     "monetization": [
-      "B2B intent data sales",
-      "account-based marketing"
+      "selling companies' buying interest to salespeople",
+      "aiming ads at your company"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -5045,15 +5044,15 @@
       "monetizationFlow": "identity_infra",
       "perVisit": {
         "microdollars": 20,
-        "dollars": 2e-05,
-        "basis": "per-record licensing \u00f7 estimated annual match events"
+        "dollars": 0.00002,
+        "basis": "per-record licensing ÷ estimated annual match events"
       },
       "annual": {
         "low_usd": 1,
         "high_usd": 5,
         "midpoint_usd": 3
       },
-      "valueNote": "B2B intent and IP-level firmographic data sold at account level.",
+      "valueNote": "Sells companies a heads-up that someone at your employer is shopping.",
       "sourceNote": "Surff.io 2026",
       "sourceFindingIds": [
         "6sense-valuation-2026"
@@ -5083,15 +5082,15 @@
     "companyId": "hubspot",
     "category": "marketing-automation",
     "collects": [
-      "page views",
-      "form interactions",
-      "email-click linkage",
-      "CRM enrichment identifiers"
+      "which pages you view",
+      "how you fill out forms",
+      "which marketing emails you clicked to get here",
+      "ID tags that link your visit to a sales database profile"
     ],
     "monetization": [
-      "marketing automation",
-      "CRM enrichment (Clearbit)",
-      "lead attribution"
+      "automating the marketing you receive",
+      "filling in sales databases with details about you",
+      "working out which marketing brought you in"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -5186,15 +5185,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 3,
-        "dollars": 3e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000003,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.01,
         "high_usd": 0.5,
         "midpoint_usd": 0.255
       },
-      "valueNote": "Per-contact marketing automation pricing at scale.",
+      "valueNote": "The site pays per contact to automate the marketing you receive.",
       "sourceNote": "Vendor pricing tiers",
       "sourceFindingIds": [
         "hubspot-valuation-2026"
@@ -5221,13 +5220,13 @@
     "companyId": "microsoft-ads",
     "category": "advertising",
     "collects": [
-      "page views",
-      "conversion events",
-      "search-click linkage"
+      "which pages you view",
+      "what you buy or sign up for",
+      "which search ads brought you here"
     ],
     "monetization": [
-      "search ad conversion measurement",
-      "retargeting"
+      "proving search ads led to your purchase",
+      "following you with ads for things you viewed"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -5318,15 +5317,15 @@
       "monetizationFlow": "platform_ads",
       "perVisit": {
         "microdollars": 60,
-        "dollars": 6e-05,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "dollars": 0.00006,
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 20,
         "high_usd": 40,
         "midpoint_usd": 30
       },
-      "valueNote": "Microsoft search/news ad revenue over estimated users.",
+      "valueNote": "Microsoft earns this from search and news ads shown to people like you.",
       "sourceNote": "Proton 2025",
       "sourceFindingIds": [
         "microsoft-ads-valuation-2026"
@@ -5353,15 +5352,15 @@
     "companyId": "amazon-ads",
     "category": "advertising",
     "collects": [
-      "page context",
-      "cookie identifiers",
-      "ad interaction",
-      "purchase-intent signals"
+      "what page you are on",
+      "ID tags stored in your browser",
+      "how you interact with ads",
+      "signs you are about to buy something"
     ],
     "monetization": [
-      "retail media advertising",
-      "retargeting",
-      "audience targeting"
+      "selling ads based on what you shop for",
+      "following you with ads for things you viewed",
+      "aiming ads at people like you"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -5453,14 +5452,14 @@
       "perVisit": {
         "microdollars": 320,
         "dollars": 0.00032,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 120,
         "high_usd": 200,
         "midpoint_usd": 160
       },
-      "valueNote": "Amazon retail media ad revenue per customer; higher for Prime members.",
+      "valueNote": "Amazon earns this from showing you ads; more if you have Prime.",
       "sourceNote": "Surff.io 2026 brand-by-brand analysis",
       "sourceFindingIds": [
         "amazon-ads-valuation-2026"
@@ -5487,13 +5486,13 @@
     "companyId": "reddit",
     "category": "advertising",
     "collects": [
-      "page views",
-      "conversion events",
-      "reddit-account linkage where logged in"
+      "which pages you view",
+      "what you buy or sign up for",
+      "a link to your Reddit account when you are logged in"
     ],
     "monetization": [
-      "ad conversion measurement",
-      "retargeting"
+      "proving to advertisers that their ads made you act",
+      "following you with ads for things you viewed"
     ],
     "browserAction": {
       "blockability": "network_blockable",
@@ -5584,15 +5583,15 @@
       "monetizationFlow": "platform_ads",
       "perVisit": {
         "microdollars": 62,
-        "dollars": 6.2e-05,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "dollars": 0.000062,
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 25,
         "high_usd": 38,
         "midpoint_usd": 31.5
       },
-      "valueNote": "Reddit US ARPU annualized.",
+      "valueNote": "Reddit earns about $31 a year from an average US user's attention.",
       "sourceNote": "Reddit Q2 2025 earnings: $7.87/quarter US",
       "sourceFindingIds": [
         "reddit-pixel-valuation-2026"

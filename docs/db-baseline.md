@@ -7,18 +7,19 @@ lastReviewed: 2026-07-03
 status: generated
 ---
 
-> Generated from commit `ebe811e` by `pnpm db:baseline`. Do not hand-edit.
+> Generated from commit `2b9b9af` by `pnpm db:baseline`. Do not hand-edit.
 
 ## Summary
 
 - Trackers: **42** (Phase 1 minimum: 25)
 - Companies: **42**, remediation records: **40**
-- SDK-global signatures: **24/42** trackers covered
+- SDK-global signatures: **29/42** trackers covered
 - Provenance: **42** seed / **0** source-backed
 - Remediation: deletion link **42/42**, opt-out link **42/42**
 - Explanation coverage: **42/42**
 - Blocking-limit coverage: **42/42**
 - Not-visible-to-extension coverage: **42/42**
+- Valuation coverage: **42/42** (21 sourced / 21 estimated)
 - Blockability classes in use: `network_blockable` (42)
 
 ### By category
@@ -69,7 +70,7 @@ status: generated
 | yandex-metrica | session-replay | Yandex N.V. | 1 | 2 | yes | seed | manual_seed | yes | yes | low | 2026-07-01 | no |
 | microsoft-clarity | session-replay | Microsoft Corporation | 1 | 1 | yes | seed | manual_seed | yes | yes | medium | 2026-07-01 | yes |
 | datadog-rum | performance-monitoring | Datadog, Inc. | 1 | 1 | yes | seed | manual_seed | yes | yes | unknown | 2026-07-01 | no |
-| the-trade-desk | advertising | The Trade Desk, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| the-trade-desk | advertising | The Trade Desk, Inc. | 1 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | pubmatic | advertising | PubMatic, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | magnite | advertising | Magnite, Inc. | 2 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | openx | advertising | OpenX Technologies, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
@@ -80,19 +81,20 @@ status: generated
 | 33across | advertising | 33Across, Inc. | 2 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | tapad | cross-device-tracking | Experian plc | 1 | 0 | no | seed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
 | 6sense | behavioral-profiling | 6sense Insights, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
-| hubspot | marketing-automation | HubSpot, Inc. | 4 | 0 | no | seed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
-| microsoft-ads | advertising | Microsoft Corporation | 1 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| amazon-ads | advertising | Amazon.com, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | no |
-| reddit-pixel | advertising | Reddit, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | medium | 2026-07-03 | no |
+| hubspot | marketing-automation | HubSpot, Inc. | 4 | 0 | yes | seed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
+| microsoft-ads | advertising | Microsoft Corporation | 1 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| amazon-ads | advertising | Amazon.com, Inc. | 1 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | no |
+| reddit-pixel | advertising | Reddit, Inc. | 1 | 0 | yes | seed | manual_seed | yes | yes | medium | 2026-07-03 | no |
 
 ## Gap register
 
 - **Provenance**: 42 of 42 records are hand-authored seeds pending Tracker Radar / EasyPrivacy source backing (Phase 3).
 - **All trackers are network_blockable** — no `content_mitigatable` or `observable_only` records exist yet, so only one of six blockability classes is exercised by the DB.
-- **No SDK-global signature** (18): google-ads, segment, adobe-analytics, the-trade-desk, pubmatic, magnite, openx, index-exchange, lotame, liveramp, id5, 33across, tapad, 6sense, hubspot, microsoft-ads, amazon-ads, reddit-pixel.
+- **No SDK-global signature** (13): google-ads, segment, adobe-analytics, pubmatic, magnite, openx, index-exchange, lotame, liveramp, id5, 33across, tapad, 6sense.
 - **Unknown remediation friction** (6): tiktok-pixel, braze, drift, optimizely, crazyegg, datadog-rum.
 - **Missing privacy contact** (13): tiktok-pixel, linkedin-insight, segment, braze, drift, optimizely, crazyegg, pinterest-tag, twitter-pixel, yandex-metrica, datadog-rum, amazon-ads, reddit-pixel.
 - **Missing explanation coverage** (0): none.
 - **Missing blocking-limit coverage** (0): none.
 - **Missing not-visible-to-extension coverage** (0): none.
+- **Missing valuation coverage** (0): none.
 - **Shared remediation records**: `google-default` used by 3 trackers.

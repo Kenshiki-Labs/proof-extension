@@ -42,6 +42,10 @@
       "sha256": "d8fcda9efc6444d9b7f8d4b0fb264903cf2894e1e894359cefb333ee3a9b11c0"
     },
     {
+      "path": "intelligence/normalized/valuations.json",
+      "sha256": "f36b508de3584fa0315c32e0948b35c027c9c6688a084f788787159e9cdccfe5"
+    },
+    {
       "path": "intelligence/quarantine/research-entities.json",
       "sha256": "1ca603b4697898a1306c52404dbab4c206df1e2727246c9dc305474f7846708a"
     },

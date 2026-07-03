@@ -1,0 +1,1183 @@
+{
+  "schemaVersion": 1,
+  "generatedFromRuntimeBaselineAt": "2026-07-03",
+  "notes": "Baseline valuation research corpus. Findings are structured independently from trackers; projection.appliesToTrackerIds controls runtime promotion.",
+  "findings": [
+    {
+      "id": "33across-valuation-2026",
+      "subjectEntityId": "33across-inc",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 5,
+      "perVisitBasis": "CPM auction share \u00f7 estimated annual impressions",
+      "annualLowUsd": 1,
+      "annualHighUsd": 3,
+      "valueNote": "Earns a small slice each time your attention is auctioned to advertisers.",
+      "sourceNote": "ZipDo 2026 CPM baseline",
+      "publisher": "ZipDo 2026 CPM baseline",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "33across"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for 33Across; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "6sense-valuation-2026",
+      "subjectEntityId": "6sense-insights-inc",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "identity_infra",
+      "perVisitMicrodollars": 20,
+      "perVisitBasis": "per-record licensing \u00f7 estimated annual match events",
+      "annualLowUsd": 1,
+      "annualHighUsd": 5,
+      "valueNote": "Sells companies a heads-up that someone at your employer is shopping.",
+      "sourceNote": "Surff.io 2026",
+      "publisher": "Surff.io 2026",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "6sense"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for 6sense; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "adobe-analytics-valuation-2026",
+      "subjectEntityId": "adobe-analytics",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 30,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.5,
+      "annualHighUsd": 5,
+      "valueNote": "The site pays Adobe to study how visitors like you behave.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "adobe-analytics"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Adobe Analytics; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "amazon-ads-valuation-2026",
+      "subjectEntityId": "amazon-ads",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisitMicrodollars": 320,
+      "perVisitBasis": "annualARPU \u00f7 estimated annual signals",
+      "annualLowUsd": 120,
+      "annualHighUsd": 200,
+      "valueNote": "Amazon earns this from showing you ads; more if you have Prime.",
+      "sourceNote": "Surff.io 2026 brand-by-brand analysis",
+      "publisher": "Surff.io 2026 brand-by-brand analysis",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "amazon-ads"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Amazon Ads; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "amplitude-valuation-2026",
+      "subjectEntityId": "amplitude",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 0.3,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.003,
+      "annualHighUsd": 0.05,
+      "valueNote": "The site pays a small fee per person to study how you use its product.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "amplitude"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Amplitude; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "braze-valuation-2026",
+      "subjectEntityId": "braze",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 15,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.2,
+      "annualHighUsd": 2,
+      "valueNote": "The site pays per person to send you messages shaped by your behavior.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "braze"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Braze; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "crazyegg-valuation-2026",
+      "subjectEntityId": "crazy-egg",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 0.5,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.01,
+      "annualHighUsd": 0.05,
+      "valueNote": "The site pays a small fee to see where visitors click and scroll.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "crazyegg"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Crazy Egg; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "criteo-valuation-2026",
+      "subjectEntityId": "criteo",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 50,
+      "perVisitBasis": "CPM auction share \u00f7 estimated annual impressions",
+      "annualLowUsd": 2,
+      "annualHighUsd": 8,
+      "valueNote": "Earns by following you with ads for products you looked at.",
+      "sourceNote": "Criteo IR Sept 2025; ZipDo 2026",
+      "publisher": "Criteo IR Sept 2025",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "criteo"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Criteo; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "datadog-rum-valuation-2026",
+      "subjectEntityId": "datadog-rum",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 8,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.1,
+      "annualHighUsd": 1,
+      "valueNote": "The site pays to watch its own speed; your visits are the sample.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "datadog-rum"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Datadog RUM; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "drift-valuation-2026",
+      "subjectEntityId": "drift",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 3,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.05,
+      "annualHighUsd": 0.5,
+      "valueNote": "The site pays for the chat window; your conversations feed its sales process.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "drift"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Drift; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "fullstory-valuation-2026",
+      "subjectEntityId": "fullstory",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 40,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.5,
+      "annualHighUsd": 5,
+      "valueNote": "The site pays to replay visits like yours, move by move.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "fullstory"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for FullStory; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "google-ads-valuation-2026",
+      "subjectEntityId": "google-ads-doubleclick",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisitMicrodollars": 768,
+      "perVisitBasis": "annualARPU \u00f7 estimated annual signals",
+      "annualLowUsd": 420,
+      "annualHighUsd": 500,
+      "valueNote": "Google makes roughly $460 a year from the average American's attention, and it is present on most of the web.",
+      "sourceNote": "Proton 2025: ~$460 US ARPU; Mediapost 2026: $1,605 engaged desktop user",
+      "publisher": "Proton 2025",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "google-ads"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Google Ads / DoubleClick; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "google-analytics-valuation-2026",
+      "subjectEntityId": "google-analytics",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 0,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0,
+      "annualHighUsd": 0,
+      "valueNote": "Free to the site \u2014 but what it learns about you feeds Google's ad business, counted under Google Ads.",
+      "sourceNote": "Proton 2025",
+      "publisher": "Proton 2025",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "google-analytics"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Google Analytics; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "google-tag-manager-valuation-2026",
+      "subjectEntityId": "google-analytics",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 0,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0,
+      "annualHighUsd": 0,
+      "valueNote": "Free to the site; it is the delivery van that brings in other companies' trackers.",
+      "sourceNote": "Proton 2025",
+      "publisher": "Proton 2025",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "google-tag-manager"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Google Tag Manager; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "hotjar-valuation-2026",
+      "subjectEntityId": "hotjar",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 8,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.1,
+      "annualHighUsd": 1,
+      "valueNote": "The site pays a small fee to watch replays and heatmaps of visits like yours.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "hotjar"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Hotjar; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "hubspot-valuation-2026",
+      "subjectEntityId": "hubspot-inc",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 3,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.01,
+      "annualHighUsd": 0.5,
+      "valueNote": "The site pays per contact to automate the marketing you receive.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "hubspot"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for HubSpot; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "id5-valuation-2026",
+      "subjectEntityId": "id5-technology-ltd",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "identity_infra",
+      "perVisitMicrodollars": 3,
+      "perVisitBasis": "per-record licensing \u00f7 estimated annual match events",
+      "annualLowUsd": 0.1,
+      "annualHighUsd": 1,
+      "valueNote": "Runs one shared ID that lets many ad companies recognize you; the money flows to them.",
+      "sourceNote": "Surff.io 2026",
+      "publisher": "Surff.io 2026",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "id5"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for ID5; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "index-exchange-valuation-2026",
+      "subjectEntityId": "index-exchange-inc",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 8,
+      "perVisitBasis": "CPM auction share \u00f7 estimated annual impressions",
+      "annualLowUsd": 1,
+      "annualHighUsd": 4,
+      "valueNote": "Earns a small slice each time your attention is auctioned to advertisers.",
+      "sourceNote": "ZipDo 2026 CPM baseline",
+      "publisher": "ZipDo 2026 CPM baseline",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "index-exchange"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Index Exchange; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "intercom-valuation-2026",
+      "subjectEntityId": "intercom",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 5,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.05,
+      "annualHighUsd": 1,
+      "valueNote": "The site pays for the support chat; your conversations feed its records.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "intercom"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Intercom; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "linkedin-insight-valuation-2026",
+      "subjectEntityId": "linkedin-insight-tag-2",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisitMicrodollars": 200,
+      "perVisitBasis": "annualARPU \u00f7 estimated annual signals",
+      "annualLowUsd": 80,
+      "annualHighUsd": 120,
+      "valueNote": "LinkedIn earns a premium on you because advertisers pay extra to reach professionals.",
+      "sourceNote": "Surff.io 2026 brand-by-brand analysis",
+      "publisher": "Surff.io 2026 brand-by-brand analysis",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "linkedin-insight"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for LinkedIn Insight Tag; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "liveramp-valuation-2026",
+      "subjectEntityId": "liveramp-holdings-inc",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "identity_infra",
+      "perVisitMicrodollars": 12,
+      "perVisitBasis": "per-record licensing \u00f7 estimated annual match events",
+      "annualLowUsd": 0.5,
+      "annualHighUsd": 5,
+      "valueNote": "Charges per match to connect your offline identity (name, address) to what you do online.",
+      "sourceNote": "LiveRamp identity-resolution value materials",
+      "publisher": "LiveRamp identity-resolution value materials",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "liveramp"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for LiveRamp; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "lotame-valuation-2026",
+      "subjectEntityId": "lotame-solutions-inc",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "identity_infra",
+      "perVisitMicrodollars": 8,
+      "perVisitBasis": "per-record licensing \u00f7 estimated annual match events",
+      "annualLowUsd": 0.5,
+      "annualHighUsd": 3,
+      "valueNote": "Earns by sorting you into audience lists and selling them.",
+      "sourceNote": "Surff.io 2026",
+      "publisher": "Surff.io 2026",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "lotame"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Lotame; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "magnite-valuation-2026",
+      "subjectEntityId": "magnite-inc",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 10,
+      "perVisitBasis": "CPM auction share \u00f7 estimated annual impressions",
+      "annualLowUsd": 1,
+      "annualHighUsd": 5,
+      "valueNote": "Earns a small slice each time your attention is auctioned to advertisers.",
+      "sourceNote": "ZipDo 2026",
+      "publisher": "ZipDo 2026",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "magnite"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Magnite; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "meta-pixel-valuation-2026",
+      "subjectEntityId": "meta-pixel-2",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisitMicrodollars": 420,
+      "perVisitBasis": "annualARPU \u00f7 estimated annual signals",
+      "annualLowUsd": 185,
+      "annualHighUsd": 250,
+      "valueNote": "Meta makes this from showing you ads \u2014 the pixel keeps that running even when you are not on Facebook or Instagram.",
+      "sourceNote": "Proton 2025: ~$217 US estimate; Statista Jan 2025: $49.63 global ARPU 2024",
+      "publisher": "Proton 2025",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "meta-pixel"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Meta Pixel; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "microsoft-ads-valuation-2026",
+      "subjectEntityId": "microsoft-advertising-uet",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisitMicrodollars": 60,
+      "perVisitBasis": "annualARPU \u00f7 estimated annual signals",
+      "annualLowUsd": 20,
+      "annualHighUsd": 40,
+      "valueNote": "Microsoft earns this from search and news ads shown to people like you.",
+      "sourceNote": "Proton 2025",
+      "publisher": "Proton 2025",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "microsoft-ads"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Microsoft Advertising (UET); generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "microsoft-clarity-valuation-2026",
+      "subjectEntityId": "microsoft-clarity",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 2,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0,
+      "annualHighUsd": 0.5,
+      "valueNote": "Free to the site \u2014 what it learns can feed Microsoft's ad business.",
+      "sourceNote": "Vendor docs",
+      "publisher": "Vendor docs",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "microsoft-clarity"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Microsoft Clarity; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "mixpanel-valuation-2026",
+      "subjectEntityId": "mixpanel",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 0.2,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.002,
+      "annualHighUsd": 0.04,
+      "valueNote": "The site pays a small fee per person to study how you use its product.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "mixpanel"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Mixpanel; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "openx-valuation-2026",
+      "subjectEntityId": "openx-technologies-inc",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 8,
+      "perVisitBasis": "CPM auction share \u00f7 estimated annual impressions",
+      "annualLowUsd": 1,
+      "annualHighUsd": 4,
+      "valueNote": "Earns a small slice each time your attention is auctioned to advertisers.",
+      "sourceNote": "ZipDo 2026 CPM baseline",
+      "publisher": "ZipDo 2026 CPM baseline",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "openx"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for OpenX; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "optimizely-valuation-2026",
+      "subjectEntityId": "optimizely",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 1,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.01,
+      "annualHighUsd": 0.1,
+      "valueNote": "The site pays per visitor to test page versions on you.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "optimizely"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Optimizely; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "outbrain-valuation-2026",
+      "subjectEntityId": "outbrain",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 45,
+      "perVisitBasis": "CPM auction share \u00f7 estimated annual impressions",
+      "annualLowUsd": 2,
+      "annualHighUsd": 6,
+      "valueNote": "Earns from the 'around the web' story ads you see at the bottom of articles.",
+      "sourceNote": "ZipDo 2026",
+      "publisher": "ZipDo 2026",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "outbrain"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Outbrain; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "pinterest-tag-valuation-2026",
+      "subjectEntityId": "pinterest-tag",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisitMicrodollars": 72,
+      "perVisitBasis": "annualARPU \u00f7 estimated annual signals",
+      "annualLowUsd": 28,
+      "annualHighUsd": 44,
+      "valueNote": "Pinterest earns about $36 a year from an average US user's attention.",
+      "sourceNote": "Statista Feb 2025: $9/quarter US/CA Q4 2024",
+      "publisher": "Statista Feb 2025",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "pinterest-tag"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Pinterest Tag; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "pubmatic-valuation-2026",
+      "subjectEntityId": "pubmatic-inc",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 10,
+      "perVisitBasis": "CPM auction share \u00f7 estimated annual impressions",
+      "annualLowUsd": 1,
+      "annualHighUsd": 5,
+      "valueNote": "Earns a small slice each time your attention is auctioned to advertisers.",
+      "sourceNote": "ZipDo 2026",
+      "publisher": "ZipDo 2026",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "pubmatic"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for PubMatic; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "quantcast-valuation-2026",
+      "subjectEntityId": "quantcast",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 30,
+      "perVisitBasis": "CPM auction share \u00f7 estimated annual impressions",
+      "annualLowUsd": 1,
+      "annualHighUsd": 5,
+      "valueNote": "Earns by measuring audiences and helping aim ads at people like you.",
+      "sourceNote": "ZipDo 2026",
+      "publisher": "ZipDo 2026",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "quantcast"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Quantcast; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "reddit-pixel-valuation-2026",
+      "subjectEntityId": "reddit-pixel",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisitMicrodollars": 62,
+      "perVisitBasis": "annualARPU \u00f7 estimated annual signals",
+      "annualLowUsd": 25,
+      "annualHighUsd": 38,
+      "valueNote": "Reddit earns about $31 a year from an average US user's attention.",
+      "sourceNote": "Reddit Q2 2025 earnings: $7.87/quarter US",
+      "publisher": "Reddit Q2 2025 earnings",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "reddit-pixel"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Reddit Pixel; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "segment-valuation-2026",
+      "subjectEntityId": "segment",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 0.5,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0.002,
+      "annualHighUsd": 0.1,
+      "valueNote": "The site pays per tracked person to organize what it knows about you.",
+      "sourceNote": "Vendor pricing tiers",
+      "publisher": "Vendor pricing tiers",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "segment"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Segment; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "snap-pixel-valuation-2026",
+      "subjectEntityId": "snapchat-pixel",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisitMicrodollars": 28,
+      "perVisitBasis": "annualARPU \u00f7 estimated annual signals",
+      "annualLowUsd": 10,
+      "annualHighUsd": 18,
+      "valueNote": "Snap earns about $14 a year from an average user's attention.",
+      "sourceNote": "Statista Feb 2025: $3.44/quarter Q4 2024",
+      "publisher": "Statista Feb 2025",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "snap-pixel"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Snapchat Pixel; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "taboola-valuation-2026",
+      "subjectEntityId": "taboola",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 60,
+      "perVisitBasis": "CPM auction share \u00f7 estimated annual impressions",
+      "annualLowUsd": 2,
+      "annualHighUsd": 8,
+      "valueNote": "Earns from the 'around the web' story ads you see at the bottom of articles.",
+      "sourceNote": "ZipDo 2026: US CPMs $2.30-$9.20",
+      "publisher": "ZipDo 2026",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "taboola"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Taboola; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "tapad-valuation-2026",
+      "subjectEntityId": "tapad",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "identity_infra",
+      "perVisitMicrodollars": 8,
+      "perVisitBasis": "per-record licensing \u00f7 estimated annual match events",
+      "annualLowUsd": 0.5,
+      "annualHighUsd": 3,
+      "valueNote": "Rents out the map that connects your phone, laptop, and TV \u2014 owned by Experian.",
+      "sourceNote": "Surff.io 2026",
+      "publisher": "Surff.io 2026",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "tapad"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Tapad; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "the-trade-desk-valuation-2026",
+      "subjectEntityId": "the-trade-desk",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 18,
+      "perVisitBasis": "CPM auction share \u00f7 estimated annual impressions",
+      "annualLowUsd": 3,
+      "annualHighUsd": 15,
+      "valueNote": "Buys ad space aimed at you in auctions across most of the web.",
+      "sourceNote": "TTD Q4 FY2025: $2.9B revenue",
+      "publisher": "TTD Q4 FY2025",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "the-trade-desk"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for The Trade Desk; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "tiktok-pixel-valuation-2026",
+      "subjectEntityId": "tiktok-pixel",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisitMicrodollars": 220,
+      "perVisitBasis": "annualARPU \u00f7 estimated annual signals",
+      "annualLowUsd": 80,
+      "annualHighUsd": 140,
+      "valueNote": "TikTok earns this from showing ads to people like you.",
+      "sourceNote": "Surff.io 2026 brand-by-brand analysis",
+      "publisher": "Surff.io 2026 brand-by-brand analysis",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "tiktok-pixel"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for TikTok Pixel; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "twitter-pixel-valuation-2026",
+      "subjectEntityId": "x-twitter-pixel",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "platform_ads",
+      "perVisitMicrodollars": 52,
+      "perVisitBasis": "annualARPU \u00f7 estimated annual signals",
+      "annualLowUsd": 20,
+      "annualHighUsd": 32,
+      "valueNote": "X earns this from ads; the amount has dropped since 2022.",
+      "sourceNote": "Surff.io 2026",
+      "publisher": "Surff.io 2026",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "sourced",
+      "projection": {
+        "appliesToTrackerIds": [
+          "twitter-pixel"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for X (Twitter) Pixel; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "yandex-metrica-valuation-2026",
+      "subjectEntityId": "yandex-metrica",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 2,
+      "perVisitBasis": "operator SaaS pricing \u00f7 tracked users",
+      "annualLowUsd": 0,
+      "annualHighUsd": 0.5,
+      "valueNote": "Free to the site; what it learns feeds Yandex's ad business.",
+      "sourceNote": "Vendor docs",
+      "publisher": "Vendor docs",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-03",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "yandex-metrica"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Baseline projection for Yandex Metrica; generated from runtime perPersonValue before market-research promotion."
+      }
+    }
+  ]
+}
