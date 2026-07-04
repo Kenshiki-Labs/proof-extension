@@ -27,6 +27,14 @@ The extension UI must use one vocabulary across popup, report, and value-ledger 
 | `Ad-market value to trackers/yr` | Annual revenue-model estimate represented by observed trackers. Supply-chain meaning: advertiser/ad-market value captured by tracker/ad-tech companies, not a payment to the user. |
 | `Site-paid tool fees/yr` | Annual operator-cost estimate represented by observed tools. Payer/recipient meaning: sites pay tracking-tool vendors; this is not user revenue. |
 | `Value supply chain` | Full report section for modeled value flows. Use instead of pie-chart or one-pot allocation language. |
+| `Bill of materials` | Value-ledger stage map for extraction, refining, audience parts, auction assembly, wholesale/exchange, retail surface, and the missing input contract. |
+| `Extraction / mining` | Stage label for raw behavioral-event collection from the browser. |
+| `Refining` | Stage label for turning raw events into identity, measurement, attribution, analytics, or profile material. |
+| `Audience parts` | Stage label for segments, cohorts, scores, retargeting lists, and reusable targeting components. |
+| `Auction assembly` | Stage label for the just-in-time ad impression factory. |
+| `Wholesale / exchange` | Stage label for DSP, exchange, SSP, identity, and measurement intermediary movement. |
+| `Retail surface` | Stage label for the publisher page as storefront shelf. |
+| `Missing input contract` | Stage label for the unpaid raw-material source: the observed user. |
 | `Advertiser-funded ad rail` | Demand-side money flow through walled gardens, DSPs, exchanges, SSPs, identity/measurement layers, and publisher inventory. |
 | `Publisher-side tools` | Site-paid analytics, replay, CDP, experimentation, support, monitoring, and tag-management tools. |
 | `Walled gardens / ad platforms` | Vertically integrated ad systems that may combine demand, supply, exchange, measurement, and data roles. |

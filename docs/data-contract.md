@@ -58,6 +58,7 @@ displayed count:
 | Can't block | signals no browser tool can block | `cannotBlockSignals` |
 | Stored events | everything in storage incl. diagnostics (diagnostics panel only) | `storedEvents` |
 | Who it serves | per-tracker beneficiary class: a feature you use / works for the site / ads with claimed relevance trade / only their business | `whoItServes` on the tracker record; rollup `servesCounts` + `onlyTheirBusiness*` |
+| Supply-chain role | per-tracker position in the ad-money flow: mineshaft / concentrator / refinery / parts / assembly / wholesale / impulse rack / vertically integrated / outside the ad rail | `supplyChainRole` on the tracker record; `groupBySupplyChainStage` for display |
 
 Rules:
 

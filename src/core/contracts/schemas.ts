@@ -320,6 +320,20 @@ export const TrackerRecordSchema = z.object({
   sources: z.array(TrackerSourceSchema).min(1),
   review: TrackerReviewSchema,
   perPersonValue: PerPersonValueSchema,
+  // Position in the ad-money supply chain, from raw behavioral events to
+  // the ad you see. site_tooling sits outside the ad-money rail (the site
+  // pays it); vertically_integrated owns every stage (Google/Amazon/Meta).
+  supplyChainRole: z.enum([
+    "mine_infrastructure",
+    "concentrator",
+    "refinery",
+    "parts_supplier",
+    "assembly",
+    "wholesale",
+    "retail_shelf",
+    "vertically_integrated",
+    "site_tooling"
+  ]),
   // Who this tracker actually serves — the user-benefit axis. A heatmap
   // tool and an identity broker both "track"; this field is what separates
   // them honestly in the UI.

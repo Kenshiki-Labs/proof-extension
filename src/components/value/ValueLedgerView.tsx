@@ -1,6 +1,7 @@
 import { Activity, Building2, CalendarDays, CircleDollarSign, Globe2, MousePointerClick, Radar, type LucideIcon } from "lucide-react"
 
 import { formatUsd, formatUsdRange, SERVES_LABELS } from "~core/domain/valuation"
+import { groupBySupplyChainStage } from "~core/domain/supply-chain"
 import TrackerGraph from "~components/value/TrackerGraph"
 import type { MonetizationFlow, RollingValuationSummary, ValuationFlowRollup, ValuationPeriod } from "~core/domain/types"
 import { TYPE, UI } from "~components/system/tokens"
@@ -40,6 +41,87 @@ const FLOW_ROLE_COPY: Record<MonetizationFlow, { label: string; money: string; n
     note: "This is the ad-tech tax rail. The publisher may receive residual revenue, but this extension does not estimate the site's share.",
     position: "Intermediary ad rail"
   }
+}
+
+function formatCount(value: number) {
+  return value.toLocaleString("en-US")
+}
+
+function findFlowRollup(rollup: RollingValuationSummary, flow: MonetizationFlow) {
+  return rollup.flowRollups.find((flowRollup) => flowRollup.flow === flow) ?? { annualHighUsd: 0, annualLowUsd: 0, flow, observations: 0, thisPeriodVisitUsd: 0, trackerCount: 0 }
+}
+
+function BillOfMaterials({ rollup }: { rollup: RollingValuationSummary }) {
+  const platformAds = findFlowRollup(rollup, "platform_ads")
+  const programmatic = findFlowRollup(rollup, "programmatic")
+  const identityInfra = findFlowRollup(rollup, "identity_infra")
+  const operatorSaas = findFlowRollup(rollup, "operator_saas")
+  const advertiserRailLow = platformAds.annualLowUsd + programmatic.annualLowUsd
+  const advertiserRailHigh = platformAds.annualHighUsd + programmatic.annualHighUsd
+  const stages = [
+    {
+      label: "Extraction / mining",
+      metric: `${formatCount(rollup.observations)} observations`,
+      role: `${formatCount(rollup.trackerCount)} trackers across ${formatCount(rollup.siteCount)} sites`,
+      note: "Raw page views, clicks, scripts, pixels, SDKs, and device/browser signals enter the system. The browser user is the source and receives no royalty."
+    },
+    {
+      label: "Refining",
+      metric: formatUsdRange(identityInfra.annualLowUsd, identityInfra.annualHighUsd),
+      role: `${identityInfra.trackerCount} identity or measurement ${identityInfra.trackerCount === 1 ? "tracker" : "trackers"}`,
+      note: "Raw events become cleaner identity, attribution, analytics, or measurement material. Some value is priced here; broader profile enrichment is flagged, not separately priced."
+    },
+    {
+      label: "Audience parts",
+      metric: "Not separately priced",
+      role: "Segments, cohorts, scores, and retargeting lists",
+      note: "Refined profiles can become reusable audience components. The ledger avoids inventing a hidden dollar amount for downstream segment reuse."
+    },
+    {
+      label: "Auction assembly",
+      metric: formatUsdRange(advertiserRailLow, advertiserRailHigh),
+      role: `${platformAds.trackerCount + programmatic.trackerCount} ad-market ${platformAds.trackerCount + programmatic.trackerCount === 1 ? "tracker" : "trackers"}`,
+      note: "A page load can become a just-in-time auction: profile signal, advertiser demand, publisher context, creative, and price assembled into one impression."
+    },
+    {
+      label: "Wholesale / exchange",
+      metric: formatUsdRange(programmatic.annualLowUsd, programmatic.annualHighUsd),
+      role: `${programmatic.trackerCount} open-web programmatic ${programmatic.trackerCount === 1 ? "intermediary" : "intermediaries"}`,
+      note: "DSPs, exchanges, SSPs, identity, and measurement layers can all touch the same impression. This ledger does not allocate take rates."
+    },
+    {
+      label: "Retail surface",
+      metric: formatUsdRange(operatorSaas.annualLowUsd, operatorSaas.annualHighUsd),
+      role: `${operatorSaas.trackerCount} publisher-side ${operatorSaas.trackerCount === 1 ? "tool" : "tools"}`,
+      note: "The site is the shelf and may earn ad revenue, but it also pays for analytics, tag management, experimentation, replay, support, and monitoring tools."
+    }
+  ]
+
+  return (
+    <section className="mt-4">
+      <h4 className={TYPE.label}>Bill of materials</h4>
+      <p className={`${TYPE.body} mt-2 max-w-4xl`}>The ledger is an invoice for the raw material and the factory stages around it, not a clean split of one payment.</p>
+      <ol className="mt-3 grid gap-3 lg:grid-cols-2">
+        {stages.map((stage) => (
+          <li className={`${UI.subtlePanel} p-3`} key={stage.label}>
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h5 className={TYPE.label}>{stage.label}</h5>
+              <div className="font-display text-base font-semibold tabular-nums">{stage.metric}</div>
+            </div>
+            <p className={`${TYPE.body} mt-2`}>{stage.role}</p>
+            <p className={`${TYPE.small} mt-2`}>{stage.note}</p>
+          </li>
+        ))}
+      </ol>
+      <div className={`${UI.subtlePanel} mt-3 p-3`}>
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h5 className={TYPE.label}>Missing input contract</h5>
+          <div className="font-display text-base font-semibold tabular-nums">$0 to you</div>
+        </div>
+        <p className={`${TYPE.body} mt-2`}>The unusual part is not that the factory exists. It is that the raw-material source sits outside the ledger: observed, priced, optimized against, and unpaid.</p>
+      </div>
+    </section>
+  )
 }
 
 function Metric({
@@ -129,6 +211,7 @@ function SupplyChainMap({ rollup }: { rollup: RollingValuationSummary }) {
       <p className={`${TYPE.body} mt-2 max-w-4xl`}>
         Not a pie. The same observation can help sell one ad, measure a conversion, enrich an identity graph, optimize a page, or feed the next auction. This ledger prices only defensible rails and labels the rest as not estimated.
       </p>
+      <BillOfMaterials rollup={rollup} />
       <div className="mt-4 grid gap-3">
         <FlowRow
           amount={formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)}
@@ -167,6 +250,27 @@ function SupplyChainMap({ rollup }: { rollup: RollingValuationSummary }) {
           <p className={TYPE.small}>Basic collection can feed identity graphs, attribution, optimization, and future targeting.</p>
         </div>
       </dl>
+      {(() => {
+        const stages = groupBySupplyChainStage(rollup.edges.map((edge) => edge.trackerId))
+        if (stages.length === 0) return null
+        return (
+          <div className="mt-4">
+            <h4 className={TYPE.label}>The chain that ran on your browsing</h4>
+            <ol className="mt-2 grid gap-2">
+              {stages.map((stage, index) => (
+                <li className={`${UI.subtlePanel} p-3`} key={stage.role}>
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className={`${TYPE.label} text-signal`}>{String(index + 1).padStart(2, "0")}</span>
+                    <span className={TYPE.label}>{stage.label}</span>
+                    <span className={`${TYPE.small}`}>{stage.trackerIds.join(", ")}</span>
+                  </div>
+                  <p className={`${TYPE.small} mt-1`}>{stage.description}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )
+      })()}
     </section>
   )
 }

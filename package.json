@@ -1,7 +1,7 @@
 {
   "name": "proof-extension",
   "displayName": "Proof Extension",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A browser-local observer panel for tracker detection, mitigation status, and source-level remediation routing.",
   "private": false,
   "license": "MIT",
@@ -35,6 +35,7 @@
     "pretest:e2e": "pnpm build:chrome",
     "test:e2e": "playwright test",
     "qa": "pnpm lint && pnpm design:check && pnpm vocab:check && pnpm typecheck && pnpm test:coverage && pnpm intel:check && pnpm intel:promote:check && pnpm build:chrome",
+    "qa:refresh": "node scripts/refresh-and-qa.mjs",
     "qa:full": "pnpm qa && pnpm test:browser && pnpm test:e2e && pnpm build:firefox && pnpm build:edge",
     "db:baseline": "node scripts/db-baseline.mjs",
     "intel:normalize": "node scripts/normalize-intelligence.mjs",

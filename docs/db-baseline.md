@@ -3,11 +3,11 @@ title: "Tracker DB Baseline"
 description: "Generated snapshot of tracker database coverage, provenance, remediation, and SDK-signature state. Regenerate with pnpm db:baseline."
 owner: Kenshiki
 section: docs
-lastReviewed: 2026-07-03
+lastReviewed: 2026-07-04
 status: generated
 ---
 
-> Generated from commit `2b9b9af` by `pnpm db:baseline`. Do not hand-edit.
+> Generated from commit `57d0ba1` by `pnpm db:baseline`. Do not hand-edit.
 
 ## Summary
 

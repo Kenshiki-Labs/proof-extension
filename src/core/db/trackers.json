@@ -119,8 +119,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 40,
-        "dollars": 4e-05,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.00004,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.5,
@@ -138,7 +138,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Replays visits so the site can fix problems. You benefit indirectly, if the site improves."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "google-analytics",
@@ -262,14 +263,14 @@
       "perVisit": {
         "microdollars": 0,
         "dollars": 0,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0,
         "high_usd": 0,
         "midpoint_usd": 0
       },
-      "valueNote": "Free to the site \u2014 but what it learns about you feeds Google's ad business, counted under Google Ads.",
+      "valueNote": "Free to the site — but what it learns about you feeds Google's ad business, counted under Google Ads.",
       "sourceNote": "Proton 2025",
       "sourceFindingIds": [
         "google-analytics-valuation-2026"
@@ -280,7 +281,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Helps the site understand visitors. You benefit indirectly, if the site improves."
-    }
+    },
+    "supplyChainRole": "refinery"
   },
   {
     "id": "google-tag-manager",
@@ -373,7 +375,7 @@
       ]
     },
     "userImpact": {
-      "plainSummary": "Google Tag Manager lets a site send tag manager events to Alphabet Inc. for indirect \u2014 GTM is a delivery mechanism for other vendors' tags.",
+      "plainSummary": "Google Tag Manager lets a site send tag manager events to Alphabet Inc. for indirect — GTM is a delivery mechanism for other vendors' tags.",
       "whyItMatters": [
         "A tag manager can load or coordinate other tracking scripts.",
         "What it collects depends on the site configuration and downstream tags.",
@@ -396,7 +398,7 @@
       "perVisit": {
         "microdollars": 0,
         "dollars": 0,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0,
@@ -413,8 +415,9 @@
     },
     "whoItServes": {
       "category": "the_site",
-      "note": "Delivery mechanism for the site's chosen tools \u2014 including its trackers."
-    }
+      "note": "Delivery mechanism for the site's chosen tools — including its trackers."
+    },
+    "supplyChainRole": "mine_infrastructure"
   },
   {
     "id": "google-ads",
@@ -538,7 +541,7 @@
       "perVisit": {
         "microdollars": 768,
         "dollars": 0.000768,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 420,
@@ -556,7 +559,8 @@
     "whoItServes": {
       "category": "advertisers_and_maybe_you",
       "note": "The claimed trade: ads more relevant to you. The certain trade: Google profiles you across most of the web."
-    }
+    },
+    "supplyChainRole": "vertically_integrated"
   },
   {
     "id": "meta-pixel",
@@ -678,14 +682,14 @@
       "perVisit": {
         "microdollars": 420,
         "dollars": 0.00042,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 185,
         "high_usd": 250,
         "midpoint_usd": 217.5
       },
-      "valueNote": "Meta makes this from showing you ads \u2014 the pixel keeps that running even when you are not on Facebook or Instagram.",
+      "valueNote": "Meta makes this from showing you ads — the pixel keeps that running even when you are not on Facebook or Instagram.",
       "sourceNote": "Proton 2025: ~$217 US estimate; Statista Jan 2025: $49.63 global ARPU 2024",
       "sourceFindingIds": [
         "meta-pixel-valuation-2026"
@@ -696,7 +700,8 @@
     "whoItServes": {
       "category": "advertisers_and_maybe_you",
       "note": "The claimed trade: ads more relevant to you. The certain trade: Meta follows you beyond its own apps."
-    }
+    },
+    "supplyChainRole": "vertically_integrated"
   },
   {
     "id": "tiktok-pixel",
@@ -813,7 +818,7 @@
       "perVisit": {
         "microdollars": 220,
         "dollars": 0.00022,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 80,
@@ -831,7 +836,8 @@
     "whoItServes": {
       "category": "advertisers_and_maybe_you",
       "note": "The claimed trade: relevant ads. The certain trade: ByteDance links this site to your profile."
-    }
+    },
+    "supplyChainRole": "vertically_integrated"
   },
   {
     "id": "linkedin-insight",
@@ -951,7 +957,7 @@
       "perVisit": {
         "microdollars": 200,
         "dollars": 0.0002,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 80,
@@ -969,7 +975,8 @@
     "whoItServes": {
       "category": "advertisers_and_maybe_you",
       "note": "The claimed trade: relevant professional ads. The certain trade: LinkedIn links this site to your work identity."
-    }
+    },
+    "supplyChainRole": "vertically_integrated"
   },
   {
     "id": "hotjar",
@@ -994,7 +1001,7 @@
       "how your mouse moves",
       "where you click",
       "how far you scroll",
-      "a replay of your visit \u2014 mouse moves, clicks, and typing rhythm"
+      "a replay of your visit — mouse moves, clicks, and typing rhythm"
     ],
     "monetization": [
       "selling site-improvement insights built from your behavior",
@@ -1090,8 +1097,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000008,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.1,
@@ -1109,7 +1116,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Shows the site where visitors struggle. You benefit indirectly, if the site improves."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "mixpanel",
@@ -1228,8 +1236,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 0.2,
-        "dollars": 2.0000000000000002e-07,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 2.0000000000000002e-7,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.002,
@@ -1247,7 +1255,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Helps the site study how its product is used. You benefit indirectly, if the product improves."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "segment",
@@ -1369,8 +1378,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 0.5,
-        "dollars": 5e-07,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 5e-7,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.002,
@@ -1388,7 +1397,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Organizes the site's data about you and routes it to other tools the site chose."
-    }
+    },
+    "supplyChainRole": "concentrator"
   },
   {
     "id": "amplitude",
@@ -1505,8 +1515,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 0.3,
-        "dollars": 3e-07,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 3e-7,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.003,
@@ -1524,7 +1534,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Helps the site study how its product is used. You benefit indirectly, if the product improves."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "criteo",
@@ -1643,8 +1654,8 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 50,
-        "dollars": 5e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.00005,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 2,
@@ -1662,7 +1673,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Follows you with product ads and auctions your attention. The relevance serves the advertiser's sale, not you."
-    }
+    },
+    "supplyChainRole": "assembly"
   },
   {
     "id": "adobe-analytics",
@@ -1780,8 +1792,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 30,
-        "dollars": 3e-05,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.00003,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.5,
@@ -1799,7 +1811,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Helps the site understand visitors. You benefit indirectly, if the site improves."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "braze",
@@ -1918,8 +1931,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 15,
-        "dollars": 1.5e-05,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000015,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.2,
@@ -1937,7 +1950,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Shapes the marketing messages the site sends you. The site decides what you get."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "intercom",
@@ -2056,8 +2070,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 5,
-        "dollars": 5e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000005,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.05,
@@ -2075,7 +2089,8 @@
     "whoItServes": {
       "category": "you_and_the_site",
       "note": "The chat window is a feature you can use; the tracking around it serves the site."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "drift",
@@ -2193,8 +2208,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 3,
-        "dollars": 3e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000003,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.05,
@@ -2212,7 +2227,8 @@
     "whoItServes": {
       "category": "you_and_the_site",
       "note": "The chat window is a feature you can use; the tracking around it serves the site."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "optimizely",
@@ -2329,8 +2345,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 1,
-        "dollars": 1e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000001,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.01,
@@ -2348,7 +2364,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Tests page versions on you so the site can raise sales. Any benefit to you is incidental."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "crazyegg",
@@ -2465,8 +2482,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 0.5,
-        "dollars": 5e-07,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 5e-7,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.01,
@@ -2484,7 +2501,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Shows the site where visitors click. You benefit indirectly, if the site improves."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "quantcast",
@@ -2601,8 +2619,8 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 30,
-        "dollars": 3e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.00003,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
@@ -2620,7 +2638,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Measures and sells audiences. Nothing flows back to you."
-    }
+    },
+    "supplyChainRole": "parts_supplier"
   },
   {
     "id": "taboola",
@@ -2737,8 +2756,8 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 60,
-        "dollars": 6e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.00006,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 2,
@@ -2756,7 +2775,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Fills the 'around the web' ad slots. You get clickbait; they get paid."
-    }
+    },
+    "supplyChainRole": "retail_shelf"
   },
   {
     "id": "outbrain",
@@ -2873,8 +2893,8 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 45,
-        "dollars": 4.5e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.000045,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 2,
@@ -2892,7 +2912,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Fills the 'around the web' ad slots. You get clickbait; they get paid."
-    }
+    },
+    "supplyChainRole": "retail_shelf"
   },
   {
     "id": "snap-pixel",
@@ -3009,8 +3030,8 @@
       "monetizationFlow": "platform_ads",
       "perVisit": {
         "microdollars": 28,
-        "dollars": 2.8e-05,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "dollars": 0.000028,
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 10,
@@ -3028,7 +3049,8 @@
     "whoItServes": {
       "category": "advertisers_and_maybe_you",
       "note": "The claimed trade: relevant ads. The certain trade: Snap links this site to your profile."
-    }
+    },
+    "supplyChainRole": "vertically_integrated"
   },
   {
     "id": "pinterest-tag",
@@ -3146,8 +3168,8 @@
       "monetizationFlow": "platform_ads",
       "perVisit": {
         "microdollars": 72,
-        "dollars": 7.2e-05,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "dollars": 0.000072,
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 28,
@@ -3165,7 +3187,8 @@
     "whoItServes": {
       "category": "advertisers_and_maybe_you",
       "note": "The claimed trade: relevant ads. The certain trade: Pinterest links this site to your profile."
-    }
+    },
+    "supplyChainRole": "vertically_integrated"
   },
   {
     "id": "twitter-pixel",
@@ -3282,8 +3305,8 @@
       "monetizationFlow": "platform_ads",
       "perVisit": {
         "microdollars": 52,
-        "dollars": 5.2e-05,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "dollars": 0.000052,
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 20,
@@ -3301,7 +3324,8 @@
     "whoItServes": {
       "category": "advertisers_and_maybe_you",
       "note": "The claimed trade: relevant ads. The certain trade: X links this site to your profile."
-    }
+    },
+    "supplyChainRole": "vertically_integrated"
   },
   {
     "id": "yandex-metrica",
@@ -3324,7 +3348,7 @@
     "category": "session-replay",
     "collects": [
       "which pages you view",
-      "a replay of your visit \u2014 mouse moves, clicks, and typing rhythm",
+      "a replay of your visit — mouse moves, clicks, and typing rhythm",
       "where you click on the page"
     ],
     "monetization": [
@@ -3420,8 +3444,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 2,
-        "dollars": 2e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000002,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0,
@@ -3439,7 +3463,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Analytics for the site; what it learns also feeds Yandex's ad business."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "microsoft-clarity",
@@ -3461,7 +3486,7 @@
     "collects": [
       "how your mouse moves",
       "where you click",
-      "a replay of your visit \u2014 mouse moves, clicks, and typing rhythm",
+      "a replay of your visit — mouse moves, clicks, and typing rhythm",
       "where you look, hover, and click"
     ],
     "monetization": [
@@ -3557,15 +3582,15 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 2,
-        "dollars": 2e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000002,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0,
         "high_usd": 0.5,
         "midpoint_usd": 0.25
       },
-      "valueNote": "Free to the site \u2014 what it learns can feed Microsoft's ad business.",
+      "valueNote": "Free to the site — what it learns can feed Microsoft's ad business.",
       "sourceNote": "Vendor docs",
       "sourceFindingIds": [
         "microsoft-clarity-valuation-2026"
@@ -3576,7 +3601,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Free replay tool for the site; what it learns can also feed Microsoft's ad business."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "datadog-rum",
@@ -3691,8 +3717,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000008,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.1,
@@ -3710,7 +3736,8 @@
     "whoItServes": {
       "category": "the_site",
       "note": "Watches site speed and errors. You benefit indirectly through a faster site."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "the-trade-desk",
@@ -3829,8 +3856,8 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 18,
-        "dollars": 1.8e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.000018,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 3,
@@ -3848,7 +3875,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Buys ad space aimed at you in auctions. You are the inventory, not the customer."
-    }
+    },
+    "supplyChainRole": "assembly"
   },
   {
     "id": "pubmatic",
@@ -3966,8 +3994,8 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 10,
-        "dollars": 1e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.00001,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
@@ -3985,7 +4013,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Auctions the ad space you see. You are the inventory, not the customer."
-    }
+    },
+    "supplyChainRole": "wholesale"
   },
   {
     "id": "magnite",
@@ -4104,8 +4133,8 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 10,
-        "dollars": 1e-05,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.00001,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
@@ -4123,7 +4152,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Auctions the ad space you see. You are the inventory, not the customer."
-    }
+    },
+    "supplyChainRole": "wholesale"
   },
   {
     "id": "openx",
@@ -4240,8 +4270,8 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.000008,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
@@ -4259,7 +4289,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Auctions the ad space you see. You are the inventory, not the customer."
-    }
+    },
+    "supplyChainRole": "wholesale"
   },
   {
     "id": "index-exchange",
@@ -4376,8 +4407,8 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.000008,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
@@ -4395,7 +4426,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Auctions the ad space you see. You are the inventory, not the customer."
-    }
+    },
+    "supplyChainRole": "wholesale"
   },
   {
     "id": "lotame",
@@ -4512,8 +4544,8 @@
       "monetizationFlow": "identity_infra",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "per-record licensing \u00f7 estimated annual match events"
+        "dollars": 0.000008,
+        "basis": "per-record licensing ÷ estimated annual match events"
       },
       "annual": {
         "low_usd": 0.5,
@@ -4531,7 +4563,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Sorts you into audience lists and sells them. Nothing flows back to you."
-    }
+    },
+    "supplyChainRole": "parts_supplier"
   },
   {
     "id": "liveramp",
@@ -4649,8 +4682,8 @@
       "monetizationFlow": "identity_infra",
       "perVisit": {
         "microdollars": 12,
-        "dollars": 1.2e-05,
-        "basis": "per-record licensing \u00f7 estimated annual match events"
+        "dollars": 0.000012,
+        "basis": "per-record licensing ÷ estimated annual match events"
       },
       "annual": {
         "low_usd": 0.5,
@@ -4668,7 +4701,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Connects your offline identity to your online life and rents out the result. Nothing flows back to you."
-    }
+    },
+    "supplyChainRole": "refinery"
   },
   {
     "id": "id5",
@@ -4784,8 +4818,8 @@
       "monetizationFlow": "identity_infra",
       "perVisit": {
         "microdollars": 3,
-        "dollars": 3e-06,
-        "basis": "per-record licensing \u00f7 estimated annual match events"
+        "dollars": 0.000003,
+        "basis": "per-record licensing ÷ estimated annual match events"
       },
       "annual": {
         "low_usd": 0.1,
@@ -4803,7 +4837,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Runs a shared ID so ad companies keep recognizing you. Nothing flows back to you."
-    }
+    },
+    "supplyChainRole": "refinery"
   },
   {
     "id": "33across",
@@ -4921,8 +4956,8 @@
       "monetizationFlow": "programmatic",
       "perVisit": {
         "microdollars": 5,
-        "dollars": 5e-06,
-        "basis": "CPM auction share \u00f7 estimated annual impressions"
+        "dollars": 0.000005,
+        "basis": "CPM auction share ÷ estimated annual impressions"
       },
       "annual": {
         "low_usd": 1,
@@ -4940,7 +4975,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Keeps you recognizable to advertisers as cookies disappear. Nothing flows back to you."
-    }
+    },
+    "supplyChainRole": "refinery"
   },
   {
     "id": "tapad",
@@ -5057,15 +5093,15 @@
       "monetizationFlow": "identity_infra",
       "perVisit": {
         "microdollars": 8,
-        "dollars": 8e-06,
-        "basis": "per-record licensing \u00f7 estimated annual match events"
+        "dollars": 0.000008,
+        "basis": "per-record licensing ÷ estimated annual match events"
       },
       "annual": {
         "low_usd": 0.5,
         "high_usd": 3,
         "midpoint_usd": 1.75
       },
-      "valueNote": "Rents out the map that connects your phone, laptop, and TV \u2014 owned by Experian.",
+      "valueNote": "Rents out the map that connects your phone, laptop, and TV — owned by Experian.",
       "sourceNote": "Surff.io 2026",
       "sourceFindingIds": [
         "tapad-valuation-2026"
@@ -5076,7 +5112,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Maps which devices are yours and licenses the map (Experian). Nothing flows back to you."
-    }
+    },
+    "supplyChainRole": "refinery"
   },
   {
     "id": "6sense",
@@ -5192,8 +5229,8 @@
       "monetizationFlow": "identity_infra",
       "perVisit": {
         "microdollars": 20,
-        "dollars": 2e-05,
-        "basis": "per-record licensing \u00f7 estimated annual match events"
+        "dollars": 0.00002,
+        "basis": "per-record licensing ÷ estimated annual match events"
       },
       "annual": {
         "low_usd": 1,
@@ -5211,7 +5248,8 @@
     "whoItServes": {
       "category": "only_their_business",
       "note": "Tells salespeople your employer is shopping. Nothing flows back to you."
-    }
+    },
+    "supplyChainRole": "parts_supplier"
   },
   {
     "id": "hubspot",
@@ -5337,8 +5375,8 @@
       "monetizationFlow": "operator_saas",
       "perVisit": {
         "microdollars": 3,
-        "dollars": 3e-06,
-        "basis": "operator SaaS pricing \u00f7 tracked users"
+        "dollars": 0.000003,
+        "basis": "operator SaaS pricing ÷ tracked users"
       },
       "annual": {
         "low_usd": 0.01,
@@ -5356,7 +5394,8 @@
     "whoItServes": {
       "category": "you_and_the_site",
       "note": "Forms and chat are features you can use; the profile-building behind them serves the site's marketing."
-    }
+    },
+    "supplyChainRole": "site_tooling"
   },
   {
     "id": "microsoft-ads",
@@ -5473,8 +5512,8 @@
       "monetizationFlow": "platform_ads",
       "perVisit": {
         "microdollars": 60,
-        "dollars": 6e-05,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "dollars": 0.00006,
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 20,
@@ -5492,7 +5531,8 @@
     "whoItServes": {
       "category": "advertisers_and_maybe_you",
       "note": "The claimed trade: relevant search ads. The certain trade: your visits feed Microsoft's ad measurement."
-    }
+    },
+    "supplyChainRole": "vertically_integrated"
   },
   {
     "id": "amazon-ads",
@@ -5612,7 +5652,7 @@
       "perVisit": {
         "microdollars": 320,
         "dollars": 0.00032,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 120,
@@ -5630,7 +5670,8 @@
     "whoItServes": {
       "category": "advertisers_and_maybe_you",
       "note": "The claimed trade: ads matched to what you shop for. The certain trade: your browsing feeds Amazon's ad business."
-    }
+    },
+    "supplyChainRole": "vertically_integrated"
   },
   {
     "id": "reddit-pixel",
@@ -5747,8 +5788,8 @@
       "monetizationFlow": "platform_ads",
       "perVisit": {
         "microdollars": 62,
-        "dollars": 6.2e-05,
-        "basis": "annualARPU \u00f7 estimated annual signals"
+        "dollars": 0.000062,
+        "basis": "annualARPU ÷ estimated annual signals"
       },
       "annual": {
         "low_usd": 25,
@@ -5766,6 +5807,7 @@
     "whoItServes": {
       "category": "advertisers_and_maybe_you",
       "note": "The claimed trade: relevant ads. The certain trade: Reddit links this site to your account when logged in."
-    }
+    },
+    "supplyChainRole": "vertically_integrated"
   }
 ]

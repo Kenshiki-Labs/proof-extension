@@ -55,7 +55,7 @@ Runtime `perPersonValue` blocks in `src/core/db/trackers.json` are promoted proj
 ## `valueType`: Which Economic Rail Is Being Priced?
 
 | Value | Meaning | Examples |
-|-------|---------|---------|
+| --- | --- | --- |
 | `"revenue"` | Ad-market or data-market value captured by tracker/ad-tech companies | Google Ads, Meta Pixel, Criteo, LiveRamp |
 | `"cost"` | Site-paid software/tooling spend paid to tracking-tool vendors | Hotjar, Mixpanel, Segment, Braze |
 
@@ -87,12 +87,26 @@ The product should therefore answer `who gets paid?` as:
 | Money to user | Always `$0` in the current model. | We do not imply the user is compensated. |
 | Ecosystem feedback | Data exhaust that may improve identity, attribution, optimization, and future targeting. | We flag this as unpriced; we do not add a hidden dollar amount. |
 
+### Bill of Materials View
+
+The full value-ledger surface should explain the supply chain as stages, because that is the missing user model. Use the stage map to show what the extension observes, prices, and refuses to overclaim:
+
+| Stage | Product meaning | What the ledger may show |
+| --- | --- | --- |
+| Extraction / mining | Raw behavioral events enter from the browser: page views, clicks, scripts, pixels, SDKs, and device/browser signals. | Observation count, tracker count, site count, and `$0 to you`. |
+| Refining | Raw events become identity, attribution, measurement, analytics, or profile material. | `identity_infra` valuation rollup when present; broader profile enrichment stays unpriced. |
+| Audience parts | Refined profiles become segments, cohorts, scores, retargeting lists, and other reusable parts. | `Not separately priced`; no hidden dollar amount. |
+| Auction assembly | Signals, demand, publisher context, creative, and price are assembled into one targeted impression. | Combined `platform_ads` and `programmatic` ad-market rollups. |
+| Wholesale / exchange | DSPs, exchanges, SSPs, identity, and measurement layers move impressions in bulk. | `programmatic` rollup; no take-rate allocation. |
+| Retail surface | The publisher page is the storefront shelf. Sites can earn residual ad revenue and pay tracking-tool vendors. | `operator_saas` site-paid tool-fee rollup; site revenue share remains not estimated. |
+| Missing input contract | The raw-material source is the user, but the user is outside the payment ledger. | `$0 to you`; do not imply compensation. |
+
 ---
 
 ## `monetizationFlow`: Economic Model Taxonomy
 
 | Flow | Description | Trackers |
-|------|-------------|---------|
+| --- | --- | --- |
 | `platform_ads` | Walled garden: user ARPU directly attributable to ad revenue | Google Ads, Meta Pixel, Amazon Ads, TikTok, LinkedIn, Pinterest, Snap, Reddit, X, Microsoft Ads |
 | `programmatic` | Open-web CPM auctions: fractional per-impression value | The Trade Desk, Criteo, PubMatic, Magnite, OpenX, Index Exchange, Taboola, Outbrain, Quantcast, 33Across |
 | `identity_infra` | Data broker / identity graph licensing | LiveRamp, Tapad, ID5, Lotame, 6sense |
@@ -105,7 +119,7 @@ The product should therefore answer `who gets paid?` as:
 ### Platform Ads (highest per-user value)
 
 | Tracker | Annual Low | Annual High | Per-Visit µ$ | Confidence |
-|---------|-----------|------------|--------------|------------|
+| --- | --- | --- | --- | --- |
 | Google Ads / DoubleClick | $420 | $500 | 768 | sourced |
 | Meta Pixel | $185 | $250 | 420 | sourced |
 | Amazon Ads | $120 | $200 | 320 | sourced |
@@ -120,7 +134,7 @@ The product should therefore answer `who gets paid?` as:
 ### Programmatic (fractional CPM-basis)
 
 | Tracker | Annual Low | Annual High | Per-Visit µ$ | Confidence |
-|---------|-----------|------------|--------------|------------|
+| --- | --- | --- | --- | --- |
 | Taboola | $2 | $8 | 60 | sourced |
 | Criteo | $2 | $8 | 50 | sourced |
 | Outbrain | $2 | $6 | 45 | sourced |
@@ -135,7 +149,7 @@ The product should therefore answer `who gets paid?` as:
 ### Identity Infrastructure
 
 | Tracker | Annual Low | Annual High | Per-Visit µ$ | Confidence |
-|---------|-----------|------------|--------------|------------|
+| --- | --- | --- | --- | --- |
 | 6sense | $1 | $5 | 20 | estimated |
 | LiveRamp | $0.50 | $5 | 12 | sourced |
 | Lotame | $0.50 | $3 | 8 | estimated |
@@ -145,7 +159,7 @@ The product should therefore answer `who gets paid?` as:
 ### Operator SaaS (cost to site per user)
 
 | Tracker | Cost Low | Cost High | Per-Visit µ$ |
-|---------|----------|----------|--------------|
+| --- | --- | --- | --- |
 | Adobe Analytics | $0.50 | $5.00 | 30 |
 | FullStory | $0.50 | $5.00 | 40 |
 | Braze | $0.20 | $2.00 | 15 |
@@ -168,7 +182,7 @@ The product should therefore answer `who gets paid?` as:
 
 ## Rollup Logic
 
-```
+```text
 thisVisit_dollars = Σ(tracker.perPersonValue.perVisit.microdollars) / 1,000,000
 
 annualFromThisSite = thisVisit_dollars × estimatedAnnualVisitsToThisSite
@@ -186,7 +200,7 @@ totalAnnual_mid  = (low + high) / 2
 ## Theoretical Maximums (all 42 trackers active)
 
 | Metric | Value |
-|--------|-------|
+| --- | --- |
 | Annual value (low) | $1,007 |
 | Annual value (high) | $1,479 |
 | Per-visit total | 2,615.5 µ$ ($0.002616) |
@@ -198,7 +212,7 @@ This aligns well with Proton's finding that a fully-engaged US desktop user is w
 ## Data Sources
 
 | Tracker | Source | Data Point |
-|---------|--------|-----------|
+| --- | --- | --- |
 | Google Ads | Proton (2025) | ~$460 US ARPU |
 | Google Ads (high) | Mediapost (2026) | $1,605 engaged desktop user |
 | Meta Pixel | Statista (Jan 2025) | $49.63 global ARPU 2024 |

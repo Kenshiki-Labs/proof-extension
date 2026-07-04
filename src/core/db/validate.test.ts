@@ -40,6 +40,7 @@ const tracker = {
     method: "network-block",
     siteBreakage: { risk: "low", affects: [], note: "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only." }
   },
+  supplyChainRole: "site_tooling",
   whoItServes: { category: "the_site", note: "Replays visits so the site can fix problems. You benefit indirectly, if the site improves." },
   confidence: "confirmed",
   evidenceTemplate: ["Request matched FullStory domain."],

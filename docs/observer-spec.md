@@ -34,8 +34,8 @@ Current implemented product surfaces:
 - Popup and report share canonical vocabulary enforced by `pnpm vocab:check`.
 - Full report uses a segmented `Evidence` / `Value ledger` view.
 - Value ledger is stored locally in extension storage, not cookies or page storage.
-- Value ledger tracks top-level visits, tracker presence per visit, raw observations, period estimates, annual ad-value ranges, and site-tooling ranges.
-- Value ledger includes a `How we calculate this` section that states counting rules and limitations.
+- Value ledger tracks top-level visits, tracker presence per visit, raw observations, period estimates, ad-market value to trackers, site-paid tool fees, and flow-level supply-chain roles.
+- Value ledger includes `Value supply chain`, `Bill of materials`, `Who they serve`, local tracker/site connections, and `How we calculate this` sections that state counting rules and limitations.
 - Current-tab valuation and rolling value ledger keep revenue and operator-cost estimates separate.
 - Runtime valuation blocks are promoted from `intelligence/normalized/valuations.json`; hand drift is blocked by `pnpm intel:promote:check`.
 - Design primitive drift is blocked by `pnpm design:check`.
@@ -888,11 +888,14 @@ The exposure-scan section must be labeled as extension-run local visibility. It 
 Value-ledger mode sections:
 
 1. `Local value ledger` summary with period selector: `Today`, `7 days`, `30 days`, `All`.
-2. Top trackers table: tracker, sites, visits, observations, this-period estimate, annual estimate.
-3. Top sites table: site, trackers, visits, observations, this-period estimate.
-4. `How we calculate this` methodology section.
+2. `Value supply chain`: bill-of-materials stage map for extraction/mining, refining, audience parts, auction assembly, wholesale/exchange, retail surface, and the missing input contract; then advertiser-funded ad rail, site-paid tool-fee rail, monetization-flow role cards, money-to-user `$0`, site-share-not-estimated, and unpriced ecosystem feedback.
+3. `Who they serve`: counts by benefit category.
+4. Local site/tracker connection graph.
+5. Top trackers table: tracker, sites, visits, observations, this-period estimate, annual estimate.
+6. Top sites table: site, trackers, visits, observations, this-period estimate.
+7. `How we calculate this` methodology section.
 
-Value-ledger copy must say estimates, not measurements. It must not use `You monetized`, `What you are worth`, `They earned`, or `sold your data` language.
+Value-ledger copy must say estimates, not measurements. It must frame money as supply-chain rails, not a simple pie or one-pot allocation. It must not use `You monetized`, `What you are worth`, `They earned`, or `sold your data` language.
 
 ### Card fields
 
@@ -967,6 +970,7 @@ The ledger stores:
 - tracker presence keyed by `visitId + trackerId`
 - raw observation counts
 - valuation snapshots active at observation time
+- `flowRollups` for `platform_ads`, `programmatic`, `identity_infra`, and `operator_saas`
 
 The ledger must not use cookies, page localStorage, or page sessionStorage. It must be cleared by `CLEAR_LOCAL_DATA`, and `CLEAR_VALUATION_LEDGER` may clear only the ledger. Retention pruning follows the user's `retentionDays` setting.
 
@@ -977,6 +981,7 @@ Counting rules:
 - `observation` means raw evidence count.
 - repeated raw requests increase `observations` but do not multiply per-visit value.
 - annual estimates dedupe by tracker within the selected period.
+- monetization-flow rollups count unique trackers for annual estimates and raw period entries for observations/this-period value.
 
 ### Retention
 
