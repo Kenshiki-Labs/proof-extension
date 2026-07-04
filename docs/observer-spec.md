@@ -9,6 +9,61 @@ version: "0.0.1"
 status: draft
 ---
 
+## Current Implementation Baseline
+
+As of 2026-07-03, the implementation is beyond the original Phase 1 seed state in UI fidelity, valuation, local ledgering, and QA guardrails, but it is still not source-backed at tracker-claim level.
+
+Current runtime state:
+
+- 42 runtime tracker records in `src/core/db/trackers.json`.
+- 42/42 tracker records use `schemaVersion: 2` high-fidelity explanation fields.
+- 42/42 tracker records include `perPersonValue` valuation blocks promoted from normalized market research.
+- 42/42 tracker records have remediation links; 40 remediation records back 42 trackers.
+- 42/42 tracker records remain `review.status: seed` for tracker identity/collection/blocking claims.
+- 0/42 tracker records are source-backed for tracker claims.
+- 42/42 tracker records include `market_research` provenance for valuation only; this must not satisfy tracker identity, collection, blocking, or remediation provenance.
+- 29/42 trackers have SDK/global signatures.
+- All 42 trackers are currently `network_blockable`; no runtime DB records yet exercise `content_mitigatable`, `observable_only`, `pre_request_unblockable`, `server_side_unblockable`, or `user_action_required`.
+- The extension-scoped entity SSOT has 41 runtime entities and 9 extension-scoped entity conflicts needing review.
+- Research-only entities remain quarantined under `intelligence/quarantine/`.
+
+Current implemented product surfaces:
+
+- Popup renders icon-only actions with visible hover/focus tooltips: full report, value ledger, copy output.
+- Popup and report share headline summary math through `src/core/report/metrics.ts`.
+- Popup and report share canonical vocabulary enforced by `pnpm vocab:check`.
+- Full report uses a segmented `Evidence` / `Value ledger` view.
+- Value ledger is stored locally in extension storage, not cookies or page storage.
+- Value ledger tracks top-level visits, tracker presence per visit, raw observations, period estimates, annual ad-value ranges, and site-tooling ranges.
+- Value ledger includes a `How we calculate this` section that states counting rules and limitations.
+- Current-tab valuation and rolling value ledger keep revenue and operator-cost estimates separate.
+- Runtime valuation blocks are promoted from `intelligence/normalized/valuations.json`; hand drift is blocked by `pnpm intel:promote:check`.
+- Design primitive drift is blocked by `pnpm design:check`.
+- Vocabulary drift is blocked by `pnpm vocab:check`.
+
+Current QA gate:
+
+```bash
+pnpm lint
+pnpm design:check
+pnpm vocab:check
+pnpm typecheck
+pnpm test:coverage
+pnpm intel:check
+pnpm intel:promote:check
+pnpm build:chrome
+```
+
+`pnpm qa` currently runs the full gate above. Last known run passed with 150 tests and Chrome MV3 build.
+
+Primary remaining credibility gaps:
+
+- Source-back tracker identity, ownership, collection, and blocking claims for the existing 42 records.
+- Reclassify any records that should not be represented as plain `network_blockable`.
+- Add missing SDK/global signatures for the 13 uncovered trackers where browser-visible signatures exist.
+- Resolve 9 extension-scoped entity conflicts before using entity-linked claims beyond the runtime DB.
+- Keep valuation language as estimates, not measurements or actual revenue.
+
 ## Objective
 
 Build a cross-browser browser extension that detects passive observation, explains who is observing the current session, blocks what can be blocked, and routes the user toward source-level suppression rather than false reassurance.
@@ -169,6 +224,8 @@ Required capabilities:
 - DuckDuckGo Tracker Radar metadata importer.
 - EasyPrivacy import/normalization pipeline.
 - Ghostery TrackerDB / WhoTracks.Me source evaluation for taxonomy, company metadata, prevalence language, and correction workflow patterns, with runtime use blocked until license approval.
+- Market-research valuation source corpus normalized into `intelligence/normalized/valuations.json` and promoted into runtime only through `pnpm intel:promote`.
+- Promotion drift checks for every runtime field projected from normalized intelligence.
 - Source family, source version/date, license notes, and transform notes on records.
 - Required `sources` and `review` metadata for every tracker record before it can affect runtime blocking or claims.
 - Snapshot tests for imported rule transforms.
@@ -644,7 +701,8 @@ Each record must include:
 ```json
 {
   "id": "fullstory",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
+  "displayName": "FullStory",
   "match": {
     "domains": ["fullstory.com", "edge.fullstory.com"],
     "paths": ["/s/fs.js", "/rec/page"],
@@ -665,7 +723,29 @@ Each record must include:
   ],
   "browserAction": {
     "blockability": "network_blockable",
-    "method": "network-block"
+    "method": "network-block",
+    "siteBreakage": {
+      "risk": "low",
+      "affects": ["session replay recording"],
+      "note": "Blocking may reduce FullStory recording but should not break core site navigation."
+    },
+    "whatBlockingChanges": [
+      "Blocks future browser requests matching FullStory domains and ingest paths."
+    ],
+    "whatBlockingDoesNotChange": [
+      "Does not delete prior recordings held by FullStory or the site."
+    ]
+  },
+  "observes": {
+    "browserVisible": ["session replay script request URL", "recording ingest request URL"],
+    "siteProvided": ["clicks", "scroll distance", "navigation events"],
+    "notVisibleToExtension": ["masked-field policy choices made by the site"]
+  },
+  "userImpact": {
+    "plainSummary": "FullStory lets a site collect product analytics and session replay events.",
+    "whyItMatters": ["Session replay tooling can capture detailed interaction patterns on a page."],
+    "riskLevel": "high",
+    "riskReasons": ["session replay", "behavioral analytics"]
   },
   "confidence": "confirmed",
   "evidenceTemplate": [
@@ -687,9 +767,34 @@ Each record must include:
     "last_reviewed_at": "2026-07-02",
     "reviewer": "Kenshiki",
     "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+  },
+  "perPersonValue": {
+    "schemaVersion": 1,
+    "currency": "USD",
+    "geography": "US",
+    "userProfile": "average_adult_internet_user",
+    "valueType": "cost",
+    "monetizationFlow": "operator_saas",
+    "perVisit": {
+      "microdollars": 40,
+      "dollars": 0.00004,
+      "basis": "operator SaaS pricing divided by tracked users"
+    },
+    "annual": {
+      "low_usd": 0.5,
+      "high_usd": 5,
+      "midpoint_usd": 2.75
+    },
+    "valueNote": "Enterprise session replay cost paid by the site.",
+    "sourceNote": "Vendor pricing tiers",
+    "sourceFindingIds": ["fullstory-valuation-2026"],
+    "lastUpdated": "2026-07-03",
+    "confidence": "estimated"
   }
 }
 ```
+
+`market_research` provenance backs only `perPersonValue` claims. It must not be counted as tracker identity, ownership, collection, blocking, or remediation provenance.
 
 ### companies.json
 
@@ -726,6 +831,8 @@ Each record must include:
 - Additions must include source notes or a reproducible reason for classification.
 - Every tracker must include `sources` and `review` metadata.
 - Network-blockable trackers must include a blocking-policy source family such as `manual_seed`, `manual_fixture`, `vendor_docs`, `easyprivacy`, `easylist`, or `first_party_evidence`.
+- `schemaVersion: 2` tracker records must include display name, browser-visible observation fields, user-impact language, blocking-change language, blocking-limit language, site-breakage guidance, and valuation data.
+- Runtime valuation data must be promoted from `intelligence/normalized/valuations.json` and checked by `pnpm intel:promote:check`.
 - The test suite must reject duplicate tracker ids, duplicate company ids, invalid remediation references, missing provenance, malformed domains, malformed paths, and path-only rules.
 - False-positive reports must be reproducible with a test page or captured event fixture.
 - Remote DB updates are not required in v1. If added later, updates must be signed and verified before use.
@@ -738,22 +845,35 @@ Each record must include:
 Top-level sections, in this order:
 
 1. `Watching now`
-2. `Blocked`
-3. `Still exposed`
-4. `Cannot block`
-5. `What blocking changes`
+2. `Estimated data value`
+3. `Local value ledger`
+4. `Recent observations`
+5. `Blocked`
+6. `Still exposed`
+7. `Cannot block`
+8. `Stop at source`
+9. `What blocking changes`
 
 This is the canonical top-level popup IA. Roadmap phases, acceptance criteria, and implementation tickets must preserve these user-facing concepts. `Cannot block` is required because non-blockable exposures are first-class evidence, not empty state copy. `What blocking changes` is required because browser blocking does not delete historical or source-held records.
 
+The popup header uses compact icon-only actions with visible hover/focus tooltips and `aria-label`s: full report, value ledger, and copy output. The value-ledger action opens the report tab in `Value ledger` mode; there is no separate value-ledger route.
+
 `Stop at source` is not a page-breakage state. It means source-level remediation: opt-out links, deletion request links, verification requirements, friction class, and reminder intervals for the company or first-party origin that collected data. It may appear inside expanded observer cards or as a dedicated remediation section when there are enough remediation items to summarize.
+
+Popup/report headline numbers must come from `src/core/report/metrics.ts`. UI files must not recompute headline metrics inline under the same labels.
 
 ### Full report tab
 
-The popup is a compact controller. Detailed evidence belongs in a full extension tab opened from the popup after inline confirmation.
+The popup is a compact controller. Detailed evidence and rolling value history belong in the full extension tab opened from the popup after inline confirmation.
 
 The report tab must use normalized background state only. It must not own observation state independently of the background service worker.
 
-Report sections, in this order (user-facing titles follow the tone rules — plain language, no mechanism names; internal identifiers in parentheses are stable for tests and tickets):
+The report has a segmented control with two modes:
+
+- `Evidence`: current-tab evidence and remediation.
+- `Value ledger`: local rolling value history across observed browsing.
+
+Evidence mode sections, in this order (user-facing titles follow the tone rules — plain language, no mechanism names; internal identifiers in parentheses are stable for tests and tickets):
 
 1. `Summary` (summary)
 2. `What could be read about you` (exposure-scan)
@@ -764,6 +884,15 @@ Report sections, in this order (user-facing titles follow the tone rules — pla
 7. `Diagnostics` (diagnostics)
 
 The exposure-scan section must be labeled as extension-run local visibility. It must not imply the current page queried those fields. The observe-block matrix must exclude exposure-scan and extension-diagnostic events so it answers what page activity was actually observed and what can be blocked or mitigated.
+
+Value-ledger mode sections:
+
+1. `Local value ledger` summary with period selector: `Today`, `7 days`, `30 days`, `All`.
+2. Top trackers table: tracker, sites, visits, observations, this-period estimate, annual estimate.
+3. Top sites table: site, trackers, visits, observations, this-period estimate.
+4. `How we calculate this` methodology section.
+
+Value-ledger copy must say estimates, not measurements. It must not use `You monetized`, `What you are worth`, `They earned`, or `sold your data` language.
 
 ### Card fields
 
@@ -827,6 +956,27 @@ Each failure state must use factual copy and must not imply complete protection.
 - page content
 - form values
 - secrets, tokens, or credentials
+
+### Rolling valuation ledger
+
+The extension may store a local value ledger in `browser.storage.local`. This is user-local runtime history, not product intelligence.
+
+The ledger stores:
+
+- top-level site visits with generated `visitId`s
+- tracker presence keyed by `visitId + trackerId`
+- raw observation counts
+- valuation snapshots active at observation time
+
+The ledger must not use cookies, page localStorage, or page sessionStorage. It must be cleared by `CLEAR_LOCAL_DATA`, and `CLEAR_VALUATION_LEDGER` may clear only the ledger. Retention pruning follows the user's `retentionDays` setting.
+
+Counting rules:
+
+- `visit` means a top-level page visit.
+- `tracker presence` means a tracker appeared at least once during a visit.
+- `observation` means raw evidence count.
+- repeated raw requests increase `observations` but do not multiply per-visit value.
+- annual estimates dedupe by tracker within the selected period.
 
 ### Retention
 
@@ -982,12 +1132,17 @@ Wrap the exact CLI form in `package.json` scripts so the project uses one stable
     "build:firefox": "plasmo build --target=firefox-mv2",
     "build:edge": "plasmo build --target=edge-mv3",
     "lint": "eslint . --ext .ts,.tsx",
+    "design:check": "node scripts/check-design-primitives.mjs",
+    "vocab:check": "node scripts/analyze-vocabulary.mjs --check",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:browser": "vitest --config vitest.browser.config.ts run",
     "test:e2e": "playwright test",
-    "qa": "pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm build:chrome",
+    "intel:check": "node scripts/check-intelligence-fresh.mjs",
+    "intel:promote": "node scripts/promote-intelligence.mjs",
+    "intel:promote:check": "node scripts/promote-intelligence.mjs --check",
+    "qa": "pnpm lint && pnpm design:check && pnpm vocab:check && pnpm typecheck && pnpm test:coverage && pnpm intel:check && pnpm intel:promote:check && pnpm build:chrome",
     "qa:full": "pnpm qa && pnpm test:browser && pnpm test:e2e && pnpm build:firefox && pnpm build:edge"
   }
 }
@@ -1070,10 +1225,13 @@ export type RuntimeMessage =
   | { type: "PAGE_ERROR_OBSERVED"; payload: Omit<PageError, "id"> }
   | { type: "GET_SITE_SUMMARY"; tabId: number }
   | { type: "SITE_SUMMARY"; payload: SiteSummary }
+  | { type: "GET_VALUATION_ROLLUP"; period: "day" | "week" | "month" | "all" }
+  | { type: "VALUATION_ROLLUP"; payload: RollingValuationSummary }
   | { type: "REFRESH_TAB_SCAN"; tabId: number }
   | { type: "GET_SETTINGS" }
   | { type: "SETTINGS"; payload: UserSettings }
   | { type: "UPDATE_SETTINGS"; payload: Partial<UserSettings> }
+  | { type: "CLEAR_VALUATION_LEDGER" }
   | { type: "CLEAR_LOCAL_DATA" }
 ```
 
@@ -1373,8 +1531,14 @@ Use `identity consistency indicator` language for this family. Do not claim loca
 - Unit tests for matching.
 - Unit tests for blockability and status resolution.
 - Unit tests for first-party policy labels.
+- Unit tests for shared summary metrics; popup and report must not recompute headline counts inline.
+- Unit tests for valuation ledger visit, tracker-presence, period, and pruning rules.
 - DB schema tests.
 - DB referential integrity tests.
+- Design primitive drift guard.
+- Vocabulary contract drift guard.
+- Intelligence freshness guard.
+- Runtime intelligence promotion drift guard.
 - EasyPrivacy transform snapshot tests.
 - Tracker Radar transform snapshot tests.
 - Browser-mode tests for DOM hooks.

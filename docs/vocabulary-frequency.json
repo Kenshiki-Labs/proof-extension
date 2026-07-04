@@ -3,15 +3,15 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "9aa092cd0df06e829e36bf9c7e1c98c830f2c6e01e851a4e97ab14703273a6ce"
+      "sha256": "175fc79a945db91296109e782d9ba8f232a3e1df295752e1dc5fcaf56362c525"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "41a3af16f1ceffd6e208158048e5555a56a59d1fefa5235bfd8e2d4860157541"
+      "sha256": "63437b16ab31e7692ba0250ee907b64cdf43cc3834708a2f5247a6765151a205"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
-      "sha256": "fc52ee61917edd5d583c754c0d0e3b86b820757f774ec9a23a3573f057b6cfe4"
+      "sha256": "3d1699773e46f314503870750f491b1d972009ca025c38763d5292241393b780"
     },
     {
       "file": "src/core/report/display.ts",
@@ -19,18 +19,14 @@
     },
     {
       "file": "src/core/domain/valuation.ts",
-      "sha256": "127b0df220dd566ed23fd39376407ed04ec6a0d118a66c073eebbd838991fdf1"
+      "sha256": "3a90705098192766703f8c500a93894c7875f47711347b66243e186c32f905fb"
     }
   ],
   "canonicalTerms": [
     {
       "term": "Ad value/yr",
-      "total": 5,
-      "files": {
-        "src/popup.tsx": 2,
-        "src/tabs/report.tsx": 1,
-        "src/components/value/ValueLedgerView.tsx": 2
-      }
+      "total": 0,
+      "files": {}
     },
     {
       "term": "Blocked",
@@ -135,10 +131,8 @@
     },
     {
       "term": "Observed tracker presence",
-      "total": 1,
-      "files": {
-        "src/popup.tsx": 1
-      }
+      "total": 0,
+      "files": {}
     },
     {
       "term": "Observations",
@@ -152,18 +146,16 @@
     },
     {
       "term": "Site tooling/yr",
-      "total": 3,
-      "files": {
-        "src/popup.tsx": 1,
-        "src/components/value/ValueLedgerView.tsx": 2
-      }
+      "total": 0,
+      "files": {}
     },
     {
       "term": "Sites",
-      "total": 6,
+      "total": 12,
       "files": {
-        "src/popup.tsx": 1,
-        "src/components/value/ValueLedgerView.tsx": 4,
+        "src/popup.tsx": 2,
+        "src/tabs/report.tsx": 1,
+        "src/components/value/ValueLedgerView.tsx": 8,
         "src/core/domain/valuation.ts": 1
       }
     },
@@ -185,20 +177,20 @@
     },
     {
       "term": "This period",
-      "total": 6,
+      "total": 7,
       "files": {
         "src/popup.tsx": 1,
-        "src/components/value/ValueLedgerView.tsx": 5
+        "src/components/value/ValueLedgerView.tsx": 6
       }
     },
     {
       "term": "Trackers",
-      "total": 10,
+      "total": 19,
       "files": {
-        "src/popup.tsx": 3,
-        "src/tabs/report.tsx": 1,
-        "src/components/value/ValueLedgerView.tsx": 4,
-        "src/core/domain/valuation.ts": 2
+        "src/popup.tsx": 5,
+        "src/tabs/report.tsx": 2,
+        "src/components/value/ValueLedgerView.tsx": 8,
+        "src/core/domain/valuation.ts": 4
       }
     },
     {
@@ -212,10 +204,10 @@
     },
     {
       "term": "Visits",
-      "total": 5,
+      "total": 6,
       "files": {
         "src/popup.tsx": 1,
-        "src/components/value/ValueLedgerView.tsx": 4
+        "src/components/value/ValueLedgerView.tsx": 5
       }
     },
     {
@@ -321,15 +313,19 @@
   "topWords": [
     {
       "word": "mt-",
-      "count": 52
+      "count": 57
     },
     {
       "word": "gap-",
-      "count": 35
+      "count": 39
     },
     {
       "word": "core",
       "count": 26
+    },
+    {
+      "word": "grid",
+      "count": 22
     },
     {
       "word": "grid-cols-",
@@ -341,22 +337,22 @@
     },
     {
       "word": "flex",
-      "count": 19
+      "count": 20
     },
     {
-      "word": "grid",
-      "count": 19
+      "word": "can",
+      "count": 16
     },
     {
       "word": "domain",
       "count": 15
     },
     {
-      "word": "border",
-      "count": 12
+      "word": "block",
+      "count": 13
     },
     {
-      "word": "can",
+      "word": "border",
       "count": 12
     },
     {
@@ -364,15 +360,31 @@
       "count": 12
     },
     {
-      "word": "block",
+      "word": "flex-wrap",
       "count": 11
+    },
+    {
+      "word": "page",
+      "count": 11
+    },
+    {
+      "word": "text-muted-foreground",
+      "count": 11
+    },
+    {
+      "word": "data",
+      "count": 10
     },
     {
       "word": "failed",
       "count": 10
     },
     {
-      "word": "flex-wrap",
+      "word": "font-display",
+      "count": 10
+    },
+    {
+      "word": "font-semibold",
       "count": 10
     },
     {
@@ -380,7 +392,7 @@
       "count": 10
     },
     {
-      "word": "page",
+      "word": "not",
       "count": 10
     },
     {
@@ -388,15 +400,27 @@
       "count": 10
     },
     {
+      "word": "revenue",
+      "count": 10
+    },
+    {
+      "word": "site",
+      "count": 10
+    },
+    {
+      "word": "you",
+      "count": 10
+    },
+    {
       "word": "blocked",
       "count": 9
     },
     {
-      "word": "rem",
+      "word": "components",
       "count": 9
     },
     {
-      "word": "text-muted-foreground",
+      "word": "rem",
       "count": 9
     },
     {
@@ -408,15 +432,15 @@
       "count": 8
     },
     {
-      "word": "components",
-      "count": 8
-    },
-    {
       "word": "copied",
       "count": 8
     },
     {
       "word": "evidence",
+      "count": 8
+    },
+    {
+      "word": "extension",
       "count": 8
     },
     {
@@ -440,15 +464,15 @@
       "count": 7
     },
     {
+      "word": "justify-between",
+      "count": 7
+    },
+    {
       "word": "min-w-",
       "count": 7
     },
     {
       "word": "network",
-      "count": 7
-    },
-    {
-      "word": "revenue",
       "count": 7
     },
     {
@@ -480,19 +504,11 @@
       "count": 6
     },
     {
-      "word": "extension",
-      "count": 6
-    },
-    {
       "word": "font-mono",
       "count": 6
     },
     {
       "word": "hover",
-      "count": 6
-    },
-    {
-      "word": "justify-between",
       "count": 6
     },
     {
@@ -504,7 +520,11 @@
       "count": 6
     },
     {
-      "word": "not",
+      "word": "rail",
+      "count": 6
+    },
+    {
+      "word": "tabular-nums",
       "count": 6
     },
     {
@@ -512,7 +532,7 @@
       "count": 6
     },
     {
-      "word": "you",
+      "word": "tracker",
       "count": 6
     },
     {
@@ -536,15 +556,19 @@
       "count": 5
     },
     {
+      "word": "cost",
+      "count": 5
+    },
+    {
       "word": "device",
       "count": 5
     },
     {
-      "word": "font-display",
+      "word": "identity",
       "count": 5
     },
     {
-      "word": "font-semibold",
+      "word": "only",
       "count": 5
     },
     {
@@ -556,7 +580,7 @@
       "count": 5
     },
     {
-      "word": "site",
+      "word": "still",
       "count": 5
     },
     {
@@ -572,7 +596,15 @@
       "count": 5
     },
     {
-      "word": "tracker",
+      "word": "that",
+      "count": 5
+    },
+    {
+      "word": "their",
+      "count": 5
+    },
+    {
+      "word": "tool",
       "count": 5
     },
     {
@@ -596,47 +628,7 @@
       "count": 4
     },
     {
-      "word": "all",
-      "count": 4
-    },
-    {
-      "word": "cannot",
-      "count": 4
-    },
-    {
-      "word": "contracts",
-      "count": 4
-    },
-    {
-      "word": "copy",
-      "count": 4
-    },
-    {
-      "word": "cost",
-      "count": 4
-    },
-    {
-      "word": "data",
-      "count": 4
-    },
-    {
-      "word": "days",
-      "count": 4
-    },
-    {
-      "word": "get",
-      "count": 4
-    },
-    {
-      "word": "ledger",
-      "count": 4
-    },
-    {
-      "word": "observer",
-      "count": 4
-    },
-    {
-      "word": "opacity-",
+      "word": "but",
       "count": 4
     }
   ]

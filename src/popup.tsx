@@ -317,7 +317,7 @@ function ObserverCard({
 // estimates only; the full per-tracker table with sources lives in the report
 // tab. Revenue and site-paid tooling are never summed into one number.
 const VALUE_LEDGER_EXPLAINER =
-  "Who gets the money? Not you. Tracker company value estimates value to tracker and ad-tech companies; site-paid tool fees estimate money sites pay to tracking-tool vendors."
+  "This is a supply-chain estimate, not a payout. Advertiser money enters through ad rails; site-paid fees enter through publisher tools; identity and measurement data can feed future auctions. You are observed, not paid."
 
 function ValueSection({ events }: { events: ObserverEvent[] }) {
   const rollup = rollupObservedValuations(events)
@@ -333,7 +333,7 @@ function ValueSection({ events }: { events: ObserverEvent[] }) {
           <dd className={TYPE.body}>{formatUsd(rollup.thisVisitUsd)} across {rollup.perTracker.length} observed {rollup.perTracker.length === 1 ? "tracker" : "trackers"}</dd>
           {rollup.revenueTrackerCount > 0 ? (
             <>
-              <dt className={TYPE.small}>Tracker company value/yr</dt>
+              <dt className={TYPE.small}>Ad-market value to trackers/yr</dt>
               <dd className={TYPE.body}>
                 {formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)} across {rollup.revenueTrackerCount} revenue-model {rollup.revenueTrackerCount === 1 ? "tracker" : "trackers"}
               </dd>
@@ -408,7 +408,7 @@ function RollingValueSection({
           <dd className={TYPE.body}>{formatUsd(rollup.thisPeriodVisitUsd)} observed presence estimate</dd>
           {rollup.revenueTrackerCount > 0 ? (
             <>
-              <dt className={TYPE.small}>Tracker company value/yr</dt>
+              <dt className={TYPE.small}>Ad-market value to trackers/yr</dt>
               <dd className={TYPE.body}>{formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)}</dd>
             </>
           ) : null}

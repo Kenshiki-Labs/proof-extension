@@ -190,7 +190,7 @@ function ExposureScanSection({ events }: { events: ObserverEvent[] }) {
 // cost are shown separately and every figure is labeled as an estimate — no
 // false certainty, no single conflated number.
 const ESTIMATED_VALUE_EXPLAINER =
-  "Who gets the money? Not you. Tracker company value estimates value to tracker and ad-tech companies; site-paid tool fees estimate money sites pay to tracking-tool vendors."
+  "This is a supply-chain estimate, not a payout. Advertiser money enters through ad rails; site-paid fees enter through publisher tools; identity and measurement data can feed future auctions. You are observed, not paid."
 
 function ValuationSection({ events }: { events: ObserverEvent[] }) {
   const rollup = rollupObservedValuations(events)
@@ -203,7 +203,7 @@ function ValuationSection({ events }: { events: ObserverEvent[] }) {
       <p className={`${TYPE.small} mt-2`}>{rollup.disclaimer}</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         <Metric
-          label={`Tracker company value/yr (${rollup.revenueTrackerCount} ${rollup.revenueTrackerCount === 1 ? "tracker" : "trackers"})`}
+          label={`Ad-market value to trackers/yr (${rollup.revenueTrackerCount} ${rollup.revenueTrackerCount === 1 ? "tracker" : "trackers"})`}
           value={formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)}
         />
         <Metric

@@ -1,9 +1,10 @@
 import { RollingValuationSummarySchema, ValuationLedgerSchema } from "~core/contracts/schemas"
-import { getTrackerValuation, VALUATION_DISCLAIMER } from "~core/domain/valuation"
+import { getTrackerServes, getTrackerValuation, VALUATION_DISCLAIMER } from "~core/domain/valuation"
 import { isPageActivityEvent } from "~core/state/summaries"
-import type { ObserverEvent, RollingValuationItem, RollingValuationSummary, TrackerPresenceLedgerEntry, ValuationLedger, ValuationPeriod, ValuationSnapshot } from "~core/domain/types"
+import type { MonetizationFlow, ObserverEvent, RollingValuationItem, RollingValuationSummary, TrackerPresenceLedgerEntry, ValuationLedger, ValuationPeriod, ValuationSnapshot } from "~core/domain/types"
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
+const MONETIZATION_FLOWS: MonetizationFlow[] = ["platform_ads", "programmatic", "identity_infra", "operator_saas"]
 
 export function createEmptyValuationLedger(): ValuationLedger {
   return { schemaVersion: 1, siteVisits: [], trackerPresence: [] }
@@ -177,6 +178,68 @@ function topSites(entries: TrackerPresenceLedgerEntry[]): RollingValuationItem[]
     .sort((left, right) => (right.trackerCount ?? 0) - (left.trackerCount ?? 0) || (right.visitCount ?? 0) - (left.visitCount ?? 0) || right.observations - left.observations || left.id.localeCompare(right.id))
 }
 
+// Site↔tracker edges for the network graph: one edge per pair in the
+// period, weighted by observations, colored by who the tracker serves.
+// Capped to keep message payloads and the SVG readable.
+const MAX_EDGES = 80
+
+function buildEdges(entries: TrackerPresenceLedgerEntry[]) {
+  const grouped = new Map<string, { siteOrigin: string; trackerId: string; observations: number; thisPeriodVisitUsd: number }>()
+  for (const entry of entries) {
+    const key = `${entry.siteOrigin}|${entry.trackerId}`
+    const existing = grouped.get(key) ?? { siteOrigin: entry.siteOrigin, trackerId: entry.trackerId, observations: 0, thisPeriodVisitUsd: 0 }
+    existing.observations += entry.observations
+    existing.thisPeriodVisitUsd += visitUsd(entry)
+    grouped.set(key, existing)
+  }
+  return [...grouped.values()]
+    .map((edge) => ({ ...edge, servesCategory: getTrackerServes(edge.trackerId)?.category ?? ("only_their_business" as const) }))
+    .sort((left, right) => right.observations - left.observations || left.siteOrigin.localeCompare(right.siteOrigin) || left.trackerId.localeCompare(right.trackerId))
+    .slice(0, MAX_EDGES)
+}
+
+function servesRollup(deduped: TrackerPresenceLedgerEntry[]) {
+  const servesCounts = { you_and_the_site: 0, the_site: 0, advertisers_and_maybe_you: 0, only_their_business: 0 }
+  let onlyTheirBusinessAnnualLowUsd = 0
+  let onlyTheirBusinessAnnualHighUsd = 0
+  for (const entry of deduped) {
+    const serves = getTrackerServes(entry.trackerId)
+    if (!serves) continue
+    servesCounts[serves.category] += 1
+    if (serves.category === "only_their_business") {
+      onlyTheirBusinessAnnualLowUsd += entry.valuation.annualLowUsd
+      onlyTheirBusinessAnnualHighUsd += entry.valuation.annualHighUsd
+    }
+  }
+  return { servesCounts, onlyTheirBusinessAnnualLowUsd, onlyTheirBusinessAnnualHighUsd }
+}
+
+function flowRollups(entries: TrackerPresenceLedgerEntry[], deduped: TrackerPresenceLedgerEntry[]) {
+  const byFlow = new Map(
+    MONETIZATION_FLOWS.map((flow) => [
+      flow,
+      { annualHighUsd: 0, annualLowUsd: 0, flow, observations: 0, thisPeriodVisitUsd: 0, trackerCount: 0 }
+    ])
+  )
+
+  for (const entry of deduped) {
+    const rollup = byFlow.get(entry.valuation.monetizationFlow)
+    if (!rollup) continue
+    rollup.trackerCount += 1
+    rollup.annualLowUsd += entry.valuation.annualLowUsd
+    rollup.annualHighUsd += entry.valuation.annualHighUsd
+  }
+
+  for (const entry of entries) {
+    const rollup = byFlow.get(entry.valuation.monetizationFlow)
+    if (!rollup) continue
+    rollup.observations += entry.observations
+    rollup.thisPeriodVisitUsd += visitUsd(entry)
+  }
+
+  return MONETIZATION_FLOWS.map((flow) => byFlow.get(flow)!)
+}
+
 export function rollupValuationLedger(ledger: ValuationLedger, period: ValuationPeriod, now = Date.now()): RollingValuationSummary {
   const entries = periodEntries(ledger, period, now)
   const deduped = latestByTracker(entries.trackerPresence)
@@ -198,8 +261,11 @@ export function rollupValuationLedger(ledger: ValuationLedger, period: Valuation
     annualOperatorCostLowUsd: sumAnnual(cost, "annualLowUsd"),
     annualOperatorCostHighUsd: sumAnnual(cost, "annualHighUsd"),
     costTrackerCount: cost.length,
+    flowRollups: flowRollups(entries.trackerPresence, deduped),
     topTrackers: topTrackers(entries.trackerPresence).slice(0, 10),
     topSites: topSites(entries.trackerPresence).slice(0, 10),
+    edges: buildEdges(entries.trackerPresence),
+    ...servesRollup(deduped),
     disclaimer: VALUATION_DISCLAIMER
   }
 

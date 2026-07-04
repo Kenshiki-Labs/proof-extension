@@ -96,10 +96,12 @@ export type UserSettings = {
 
 export type ValuationPeriod = "day" | "week" | "month" | "all"
 
+export type MonetizationFlow = "platform_ads" | "programmatic" | "identity_infra" | "operator_saas"
+
 export type ValuationSnapshot = {
   sourceFindingIds: string[]
   valueType: "revenue" | "cost"
-  monetizationFlow: "platform_ads" | "programmatic" | "identity_infra" | "operator_saas"
+  monetizationFlow: MonetizationFlow
   perVisitMicrodollars: number
   annualLowUsd: number
   annualHighUsd: number
@@ -145,6 +147,26 @@ export type RollingValuationItem = {
   annualHighUsd?: number | undefined
 }
 
+export type ValuationFlowRollup = {
+  flow: MonetizationFlow
+  trackerCount: number
+  observations: number
+  thisPeriodVisitUsd: number
+  annualLowUsd: number
+  annualHighUsd: number
+}
+
+// One site↔tracker connection in the selected period — the edge list that
+// powers the network graph. servesCategory colors the edge by who the
+// tracker actually serves.
+export type ValuationEdge = {
+  siteOrigin: string
+  trackerId: string
+  observations: number
+  thisPeriodVisitUsd: number
+  servesCategory: "you_and_the_site" | "the_site" | "advertisers_and_maybe_you" | "only_their_business"
+}
+
 export type RollingValuationSummary = {
   period: ValuationPeriod
   siteCount: number
@@ -158,8 +180,13 @@ export type RollingValuationSummary = {
   annualOperatorCostLowUsd: number
   annualOperatorCostHighUsd: number
   costTrackerCount: number
+  flowRollups: ValuationFlowRollup[]
   topTrackers: RollingValuationItem[]
   topSites: RollingValuationItem[]
+  edges: ValuationEdge[]
+  servesCounts: Record<ValuationEdge["servesCategory"], number>
+  onlyTheirBusinessAnnualLowUsd: number
+  onlyTheirBusinessAnnualHighUsd: number
   disclaimer: string
 }
 

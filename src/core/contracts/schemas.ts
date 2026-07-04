@@ -142,6 +142,15 @@ export const RollingValuationItemSchema = z.object({
   annualHighUsd: z.number().nonnegative().optional()
 })
 
+export const ValuationFlowRollupSchema = z.object({
+  flow: z.enum(["platform_ads", "programmatic", "identity_infra", "operator_saas"]),
+  trackerCount: z.number().int().nonnegative(),
+  observations: z.number().int().nonnegative(),
+  thisPeriodVisitUsd: z.number().nonnegative(),
+  annualLowUsd: z.number().nonnegative(),
+  annualHighUsd: z.number().nonnegative()
+})
+
 export const RollingValuationSummarySchema = z.object({
   period: ValuationPeriodSchema,
   siteCount: z.number().int().nonnegative(),
@@ -155,8 +164,26 @@ export const RollingValuationSummarySchema = z.object({
   annualOperatorCostLowUsd: z.number().nonnegative(),
   annualOperatorCostHighUsd: z.number().nonnegative(),
   costTrackerCount: z.number().int().nonnegative(),
+  flowRollups: z.array(ValuationFlowRollupSchema),
   topTrackers: z.array(RollingValuationItemSchema),
   topSites: z.array(RollingValuationItemSchema),
+  edges: z.array(
+    z.object({
+      siteOrigin: z.string().min(1),
+      trackerId: z.string().min(1),
+      observations: z.number().int().nonnegative(),
+      thisPeriodVisitUsd: z.number().min(0),
+      servesCategory: z.enum(["you_and_the_site", "the_site", "advertisers_and_maybe_you", "only_their_business"])
+    })
+  ),
+  servesCounts: z.object({
+    you_and_the_site: z.number().int().nonnegative(),
+    the_site: z.number().int().nonnegative(),
+    advertisers_and_maybe_you: z.number().int().nonnegative(),
+    only_their_business: z.number().int().nonnegative()
+  }),
+  onlyTheirBusinessAnnualLowUsd: z.number().min(0),
+  onlyTheirBusinessAnnualHighUsd: z.number().min(0),
   disclaimer: z.string().min(1)
 })
 

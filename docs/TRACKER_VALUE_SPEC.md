@@ -6,8 +6,9 @@ Every tracker record now includes a `perPersonValue` block that answers:
 > **What is one person's data worth to this company, per visit and per year?**
 
 This enables the Proof extension to show users:
-- **Per-visit**: "This visit is worth $0.0049 to 6 trackers"
-- **Annual rollup**: "You're worth ~$312/year to these companies"
+
+- **Per-visit**: "This visit produced $0.0049 in modeled tracker presence."
+- **Annual rollup**: "Observed trackers represent $312/year of modeled supply-chain value."
 
 ## Source of Truth
 
@@ -51,18 +52,40 @@ Runtime `perPersonValue` blocks in `src/core/db/trackers.json` are promoted proj
 
 ---
 
-## `valueType`: Who Captures the Money?
+## `valueType`: Which Economic Rail Is Being Priced?
 
 | Value | Meaning | Examples |
 |-------|---------|---------|
-| `"revenue"` | The tracker company makes money FROM the user's data | Google Ads, Meta Pixel, Criteo, LiveRamp |
-| `"cost"` | The site operator PAYS to track users with this tool | Hotjar, Mixpanel, Segment, Braze |
+| `"revenue"` | Ad-market or data-market value captured by tracker/ad-tech companies | Google Ads, Meta Pixel, Criteo, LiveRamp |
+| `"cost"` | Site-paid software/tooling spend paid to tracking-tool vendors | Hotjar, Mixpanel, Segment, Braze |
 
 **Consumer framing tip:**
-- `"revenue"` trackers → "X earns $Y from you"
-- `"cost"` trackers → "The site pays $Y to track your behavior here"
 
-Both are worth showing — one is about corporate extraction, the other reveals what your behavioral data is commercially worth to a site operator.
+- `"revenue"` trackers → "Ad-market value to trackers/ad-tech companies"
+- `"cost"` trackers → "Site-paid tool fees to tracking-tool vendors"
+
+Both are worth showing, but they are not one pot of money and should not be rendered as a simple pie. A tracker can sit inside a broader supply chain: advertiser spend, ad delivery, measurement, attribution, identity matching, site analytics, and future optimization feedback. This model prices only defensible rails and explicitly leaves site ad revenue, site margin, and unpriced ecosystem feedback as not estimated.
+
+---
+
+## Supply-Chain Interpretation
+
+The value ledger must not present tracker value as a clean split among the user, the site, and a tracker. The real system is a supply chain:
+
+- Advertiser money enters the ad rail first. Brands and agencies fund demand; DSPs, walled gardens, exchanges, SSPs, and publishers sit downstream.
+- Walled gardens can collapse many roles into one company: buyer interface, seller interface, auction, measurement, and data provider.
+- Open-web programmatic companies can sit on different sides of the same impression: DSPs buy access to an audience; SSPs help publishers sell slots; exchanges and identity/measurement layers take intermediary value.
+- Publisher-side tools are a separate rail. Sites pay SaaS/tool vendors for analytics, session replay, CDP, support, experimentation, tag management, monitoring, and optimization.
+- Basic collection can feed future value even when this ledger cannot price it directly: identity graphs, attribution models, conversion measurement, audience building, page optimization, and future targeting.
+
+The product should therefore answer `who gets paid?` as:
+
+| Bucket | What it means | What we do not claim |
+| --- | --- | --- |
+| Ad-market value to trackers/ad-tech companies | Modeled value on ad/data-market rails associated with observed trackers. | We do not estimate the site's ad revenue share, publisher margin, or exact take rate for each intermediary. |
+| Site-paid tool fees | Modeled site spend on tracking/analytics/tool vendors. | We do not claim the user receives this money or that the tool directly sells an ad. |
+| Money to user | Always `$0` in the current model. | We do not imply the user is compensated. |
+| Ecosystem feedback | Data exhaust that may improve identity, attribution, optimization, and future targeting. | We flag this as unpriced; we do not add a hidden dollar amount. |
 
 ---
 
