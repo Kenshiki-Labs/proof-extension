@@ -64,6 +64,10 @@ export function matchSdkGlobal(globalName: string) {
 // The vendor join happens here, against the signature table and the tracker
 // DB, so a page posting forged messages can at most claim a global name and
 // never inject its own trackerId, companyId, or confidence into evidence.
+// Status and blockability are owned here too: detecting a global is only
+// ever an observation, so status is always "active" — a page must not be
+// able to claim the extension mitigated or acted on anything — and
+// blockability comes from the tracker record, never the payload.
 export function enrichSdkDetection(event: ObserverEvent, trackers: TrackerRecord[]): ObserverEvent {
   if (event.eventType !== "sdk_detected") return event
 
@@ -79,6 +83,7 @@ export function enrichSdkDetection(event: ObserverEvent, trackers: TrackerRecord
       trackerId: undefined,
       companyId: undefined,
       blockability: "observable_only",
+      status: "active",
       confidence: "weak",
       evidence: [`Global variable ${globalName ?? "unknown"} was reported but matches no known SDK signature.`]
     }
@@ -90,6 +95,8 @@ export function enrichSdkDetection(event: ObserverEvent, trackers: TrackerRecord
     companyId: tracker.companyId,
     firstParty: false,
     policyLabel: undefined,
+    blockability: tracker.browserAction.blockability,
+    status: "active",
     confidence: signature.confidence,
     evidence: [
       `Global variable ${signature.global} characteristic of ${signature.sdkName} was present in the page.`,

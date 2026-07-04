@@ -76,6 +76,26 @@ describe("enrichSdkDetection", () => {
     expect(enriched.confidence).toBe("weak")
   })
 
+  // The isolated bridge rejects forged "blocked" status but forwards other
+  // page-supplied values — status and blockability must be re-derived here,
+  // or a hostile page could post a real global name with status "mitigated"
+  // and make the UI claim an action the extension never took.
+  it("overrides forged status and blockability on a matched global", () => {
+    const forged: ObserverEvent = { ...sdkEvent("FS"), status: "mitigated", blockability: "content_mitigatable" }
+    const enriched = enrichSdkDetection(forged, trackers)
+
+    expect(enriched.status).toBe("active")
+    expect(enriched.blockability).toBe("network_blockable")
+  })
+
+  it("overrides forged status on an unmatched global", () => {
+    const forged: ObserverEvent = { ...sdkEvent("definitelyNotATracker"), status: "mitigated" }
+    const enriched = enrichSdkDetection(forged, trackers)
+
+    expect(enriched.status).toBe("active")
+    expect(enriched.blockability).toBe("observable_only")
+  })
+
   it("leaves other event types untouched", () => {
     const other = { ...sdkEvent("fbq"), eventType: "script_injected" as const }
     expect(enrichSdkDetection(other, trackers)).toBe(other)
