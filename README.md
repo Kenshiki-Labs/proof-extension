@@ -85,6 +85,12 @@ pnpm lint
 pnpm test
 ```
 
+Refresh generated artifacts and run the full local gate:
+
+```bash
+pnpm qa:refresh
+```
+
 ## Repository Layout
 
 - `src/core`: shared product logic, types, status resolution, state, and DB seed files.
