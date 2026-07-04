@@ -254,11 +254,19 @@ test("blocking fullstory produces correct blocked states while others stay seen"
       await googlePage.goto(`${baseUrl}/google`)
       await expect.poll(() => stubs.hitCount("googleadservices.com"), { timeout: 15_000 }).toBeGreaterThan(0)
 
+      // Storage is eventually consistent now that background writes are
+      // coalesced — poll for the seen event instead of reading once.
+      await expect
+        .poll(async () => {
+          const events = await readAllEvents(worker)
+          return events.some(
+            (event) => event.eventType === "request_seen" && event.trackerId === "google-ads" && event.status === "active"
+          )
+        }, { timeout: 15_000 })
+        .toBe(true)
+
       const events = await readAllEvents(worker)
       expect(events.some((event) => event.eventType === "request_blocked" && event.trackerId !== "fullstory")).toBe(false)
-      expect(
-        events.some((event) => event.eventType === "request_seen" && event.trackerId === "google-ads" && event.status === "active")
-      ).toBe(true)
     })
   })
 })

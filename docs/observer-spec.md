@@ -22,7 +22,9 @@ Current runtime state:
 - 42/42 tracker records remain `review.status: seed` for tracker identity/collection/blocking claims.
 - 0/42 tracker records are source-backed for tracker claims.
 - 42/42 tracker records include `market_research` provenance for valuation only; this must not satisfy tracker identity, collection, blocking, or remediation provenance.
-- 29/42 trackers have SDK/global signatures (`src/core/signals/sdk-globals.ts`).
+- 40/42 trackers have SDK/global signatures (`src/core/signals/sdk-globals.ts`); segment (only global is the generic `window.analytics`, excluded by the false-attribution policy) and tapad (no browser-visible SDK global) are uncovered by design.
+- Network matching runs through an in-memory hostname suffix index (O(hostname labels) per request, not O(trackers × domains)), satisfying the constant-time host-lookup requirement ahead of Phase 3 imports; one request resolves to at most one match per tracker.
+- Background storage writes are coalesced (250ms window, flushed on suspend and before local-data clears) instead of serializing every tab summary and the valuation ledger on every event.
 - 42/42 tracker records carry `supplyChainRole` (position in the ad-money flow) and `whoItServes` (benefit-category classification with plain-language note) fields consumed by the attention model and value-ledger views.
 - 38 trackers are `network_blockable`; 4 high-breakage trackers (google-tag-manager, intercom, drift, hubspot) are `user_action_required` because the blocking-policy gate never offers or installs a block rule for them — validation now rejects any record that is both high-breakage and `network_blockable`. No runtime DB records yet exercise `content_mitigatable`, `observable_only`, `pre_request_unblockable`, or `server_side_unblockable`.
 - Tracker domain spaces are validated as disjoint across records: one request matches exactly one tracker record (a former google-analytics/google-tag-manager overlap double-counted gtag.js loads and could have installed a GTM-blocking rule via the Google Analytics toggle).
@@ -67,7 +69,7 @@ Primary remaining credibility gaps:
 
 - Source-back tracker identity, ownership, collection, and blocking claims for the existing 42 records. This requires live retrieval of vendor documentation (the license-clean `vendor_docs` source family); provenance must never be filled in from memory without retrieval.
 - Reclassification pass done 2026-07-04 for locally provable cases (high-breakage records now `user_action_required`); revisit remaining classes during source-backed review.
-- Add missing SDK/global signatures for the 13 uncovered trackers where browser-visible signatures exist.
+- Verify the 11 newly added SDK/global signatures against live vendor pages during the source-backed review (they follow the table's existing hand-authored policy; a wrong distinctive name is a silent miss, not a false attribution).
 - Extend persistence-surface observation beyond the implemented JS-visible subset: `HttpOnly` cookie metadata via the optional `cookies` permission, cache-validator header evidence, and keyed-digest respawn detection.
 - Resolve 9 extension-scoped entity conflicts before using entity-linked claims beyond the runtime DB.
 - Keep valuation language as estimates, not measurements or actual revenue.
