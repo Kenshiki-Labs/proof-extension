@@ -26,7 +26,7 @@ import {
 } from "~core/report/display"
 import { blockingGuidance } from "~core/domain/blocking-policy"
 import { summaryMetrics } from "~core/report/metrics"
-import { formatUsd, formatUsdRange, getTrackerValuation, rollupObservedValuations } from "~core/domain/valuation"
+import { formatUsd, getTrackerServes, formatUsdRange, getTrackerValuation, rollupObservedValuations } from "~core/domain/valuation"
 import type { ObserverEvent, RollingValuationSummary, SiteSummary, UserSettings, ValuationPeriod } from "~core/domain/types"
 import Button from "~components/system/Button"
 import SiteLogo from "~components/system/SiteLogo"
@@ -172,6 +172,10 @@ function ObserverCard({
         </div>
       </div>
       {remediation ? <p className={`${TYPE.small} mt-1`}>{remediation.parentCompany} · {remediation.categoryLabels.join(" · ")}</p> : null}
+      {(() => {
+        const serves = getTrackerServes(event.trackerId)
+        return serves ? <p className={`${TYPE.small} mt-1.5`}>{serves.note}</p> : null
+      })()}
       <p className={`${TYPE.body} mt-2`}>{eventSummary(event)}</p>
       {/* The two actions that matter most live at the top of the card, next
           to Block — not buried at the bottom of the remediation section. The
@@ -312,6 +316,9 @@ function ObserverCard({
 // Compact per-tab value rollup (docs/TRACKER_VALUE_SPEC.md). The popup shows
 // estimates only; the full per-tracker table with sources lives in the report
 // tab. Revenue and site-paid tooling are never summed into one number.
+const VALUE_LEDGER_EXPLAINER =
+  "Who gets the money? Not you. Tracker company value estimates value to tracker and ad-tech companies; site-paid tool fees estimate money sites pay to tracking-tool vendors."
+
 function ValueSection({ events }: { events: ObserverEvent[] }) {
   const rollup = rollupObservedValuations(events)
   if (rollup.perTracker.length === 0) return null
@@ -320,20 +327,29 @@ function ValueSection({ events }: { events: ObserverEvent[] }) {
     <section className="mt-4">
       <SectionHeading icon={CircleDollarSign}>Estimated data value</SectionHeading>
       <div className={`mt-2.5 ${UI.subtlePanel} p-3`}>
+        <p className={`${TYPE.body} mb-2`}>{VALUE_LEDGER_EXPLAINER}</p>
         <dl className="grid grid-cols-[128px_1fr] gap-1.5">
           <dt className={TYPE.small}>This visit</dt>
           <dd className={TYPE.body}>{formatUsd(rollup.thisVisitUsd)} across {rollup.perTracker.length} observed {rollup.perTracker.length === 1 ? "tracker" : "trackers"}</dd>
           {rollup.revenueTrackerCount > 0 ? (
             <>
-              <dt className={TYPE.small}>Ad value/yr</dt>
+              <dt className={TYPE.small}>Tracker company value/yr</dt>
               <dd className={TYPE.body}>
                 {formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)} across {rollup.revenueTrackerCount} revenue-model {rollup.revenueTrackerCount === 1 ? "tracker" : "trackers"}
               </dd>
             </>
           ) : null}
+          {rollup.servesCounts.only_their_business > 0 ? (
+            <>
+              <dt className={TYPE.small}>No trade</dt>
+              <dd className={TYPE.body}>
+                {rollup.servesCounts.only_their_business} of these serve only their own business — {formatUsdRange(rollup.onlyTheirBusinessAnnualLowUsd, rollup.onlyTheirBusinessAnnualHighUsd)}/yr with nothing flowing back to you
+              </dd>
+            </>
+          ) : null}
           {rollup.costTrackerCount > 0 ? (
             <>
-              <dt className={TYPE.small}>Site pays/yr</dt>
+              <dt className={TYPE.small}>Site-paid tool fees/yr</dt>
               <dd className={TYPE.body}>
                 {formatUsdRange(rollup.annualOperatorCostLowUsd, rollup.annualOperatorCostHighUsd)} for {rollup.costTrackerCount} tracking {rollup.costTrackerCount === 1 ? "tool" : "tools"}
               </dd>
@@ -380,6 +396,7 @@ function RollingValueSection({
         </div>
       </div>
       <div className={`mt-2.5 ${UI.subtlePanel} p-3`}>
+        <p className={`${TYPE.body} mb-2`}>{VALUE_LEDGER_EXPLAINER}</p>
         <dl className="grid grid-cols-[128px_1fr] gap-1.5">
           <dt className={TYPE.small}>Sites</dt>
           <dd className={TYPE.body}>{rollup.siteCount}</dd>
@@ -391,18 +408,17 @@ function RollingValueSection({
           <dd className={TYPE.body}>{formatUsd(rollup.thisPeriodVisitUsd)} observed presence estimate</dd>
           {rollup.revenueTrackerCount > 0 ? (
             <>
-              <dt className={TYPE.small}>Ad value/yr</dt>
+              <dt className={TYPE.small}>Tracker company value/yr</dt>
               <dd className={TYPE.body}>{formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)}</dd>
             </>
           ) : null}
           {rollup.costTrackerCount > 0 ? (
             <>
-              <dt className={TYPE.small}>Site tooling/yr</dt>
+              <dt className={TYPE.small}>Site-paid tool fees/yr</dt>
               <dd className={TYPE.body}>{formatUsdRange(rollup.annualOperatorCostLowUsd, rollup.annualOperatorCostHighUsd)}</dd>
             </>
           ) : null}
         </dl>
-        <p className={`${TYPE.small} mt-2`}>Local estimates from observed tracker presence. Not revenue measurements.</p>
       </div>
     </section>
   )

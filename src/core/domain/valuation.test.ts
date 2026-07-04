@@ -111,3 +111,24 @@ describe("usd formatting", () => {
     expect(formatUsdRange(1234, 5678)).toBe("$1,234–$5,678")
   })
 })
+
+describe("who-it-serves slice", () => {
+  it("splits the rollup by beneficiary and prices the no-trade subset", () => {
+    const rollup = rollupObservedValuations([
+      event("liveramp", "e1"),     // only_their_business, 0.5–5
+      event("tapad", "e2"),        // only_their_business, 0.5–3
+      event("google-ads", "e3"),   // advertisers_and_maybe_you
+      event("fullstory", "e4"),    // the_site
+      event("intercom", "e5")      // you_and_the_site
+    ])
+
+    expect(rollup.servesCounts).toEqual({
+      you_and_the_site: 1,
+      the_site: 1,
+      advertisers_and_maybe_you: 1,
+      only_their_business: 2
+    })
+    expect(rollup.onlyTheirBusinessAnnualLowUsd).toBe(1)
+    expect(rollup.onlyTheirBusinessAnnualHighUsd).toBe(8)
+  })
+})

@@ -292,7 +292,14 @@ export const TrackerRecordSchema = z.object({
   remediationId: z.string().min(1),
   sources: z.array(TrackerSourceSchema).min(1),
   review: TrackerReviewSchema,
-  perPersonValue: PerPersonValueSchema
+  perPersonValue: PerPersonValueSchema,
+  // Who this tracker actually serves — the user-benefit axis. A heatmap
+  // tool and an identity broker both "track"; this field is what separates
+  // them honestly in the UI.
+  whoItServes: z.object({
+    category: z.enum(["you_and_the_site", "the_site", "advertisers_and_maybe_you", "only_their_business"]),
+    note: z.string().min(1)
+  })
 })
 
 export type TrackerSource = z.infer<typeof TrackerSourceSchema>

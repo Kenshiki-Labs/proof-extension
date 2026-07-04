@@ -28,6 +28,29 @@ function perPersonValueByTrackerId(): Map<string, PerPersonValue> {
   return cachedByTrackerId
 }
 
+export type ServesCategory = "you_and_the_site" | "the_site" | "advertisers_and_maybe_you" | "only_their_business"
+
+export const SERVES_LABELS: Record<ServesCategory, string> = {
+  you_and_the_site: "A feature you use",
+  the_site: "Works for the site",
+  advertisers_and_maybe_you: "Ads — relevance is the claimed trade",
+  only_their_business: "Only their business"
+}
+
+let cachedServes: Map<string, { category: ServesCategory; note: string }> | null = null
+
+function servesByTrackerId() {
+  if (!cachedServes) {
+    cachedServes = new Map(validateTrackerDatabase().trackers.map((tracker) => [tracker.id, tracker.whoItServes]))
+  }
+  return cachedServes
+}
+
+export function getTrackerServes(trackerId: string | undefined): { category: ServesCategory; note: string } | null {
+  if (!trackerId) return null
+  return servesByTrackerId().get(trackerId) ?? null
+}
+
 export function getTrackerValuation(trackerId: string | undefined): PerPersonValue | null {
   if (!trackerId) return null
   return perPersonValueByTrackerId().get(trackerId) ?? null
@@ -46,6 +69,11 @@ export type ValuationRollup = {
   annualOperatorCostLowUsd: number
   annualOperatorCostHighUsd: number
   costTrackerCount: number
+  // The user-benefit slice: how many observed trackers serve you, the site,
+  // or only themselves — and what the only-their-business subset is worth.
+  servesCounts: Record<ServesCategory, number>
+  onlyTheirBusinessAnnualLowUsd: number
+  onlyTheirBusinessAnnualHighUsd: number
   disclaimer: string
 }
 
@@ -65,6 +93,17 @@ export function rollupObservedValuations(events: ObserverEvent[]): ValuationRoll
 
   const annualRevenueLowUsd = sum(revenue, (value) => value.annual.low_usd)
   const annualRevenueHighUsd = sum(revenue, (value) => value.annual.high_usd)
+  const servesCounts: Record<ServesCategory, number> = {
+    you_and_the_site: 0,
+    the_site: 0,
+    advertisers_and_maybe_you: 0,
+    only_their_business: 0
+  }
+  const onlyTheirs = perTracker.filter((entry) => getTrackerServes(entry.trackerId)?.category === "only_their_business")
+  for (const entry of perTracker) {
+    const serves = getTrackerServes(entry.trackerId)
+    if (serves) servesCounts[serves.category] += 1
+  }
   return {
     perTracker,
     thisVisitUsd: sum(perTracker, (value) => value.perVisit.microdollars) / 1_000_000,
@@ -75,6 +114,9 @@ export function rollupObservedValuations(events: ObserverEvent[]): ValuationRoll
     annualOperatorCostLowUsd: sum(cost, (value) => value.annual.low_usd),
     annualOperatorCostHighUsd: sum(cost, (value) => value.annual.high_usd),
     costTrackerCount: cost.length,
+    servesCounts,
+    onlyTheirBusinessAnnualLowUsd: sum(onlyTheirs, (value) => value.annual.low_usd),
+    onlyTheirBusinessAnnualHighUsd: sum(onlyTheirs, (value) => value.annual.high_usd),
     disclaimer: VALUATION_DISCLAIMER
   }
 }

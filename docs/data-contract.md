@@ -57,6 +57,7 @@ displayed count:
 | Blocked | companies with an actually-blocked request (evidence-backed) | `blockedCompanies` |
 | Can't block | signals no browser tool can block | `cannotBlockSignals` |
 | Stored events | everything in storage incl. diagnostics (diagnostics panel only) | `storedEvents` |
+| Who it serves | per-tracker beneficiary class: a feature you use / works for the site / ads with claimed relevance trade / only their business | `whoItServes` on the tracker record; rollup `servesCounts` + `onlyTheirBusiness*` |
 
 Rules:
 
