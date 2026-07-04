@@ -3,11 +3,11 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "175fc79a945db91296109e782d9ba8f232a3e1df295752e1dc5fcaf56362c525"
+      "sha256": "a7425adf68ca574ebe508123923684e699ad9e3938a28156d5a4699f3863cb44"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "63437b16ab31e7692ba0250ee907b64cdf43cc3834708a2f5247a6765151a205"
+      "sha256": "eb3f829e8ccd5981029565ad11708ee9502163dfee2d6b509909e6955ae9cc1d"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
@@ -151,10 +151,9 @@
     },
     {
       "term": "Sites",
-      "total": 12,
+      "total": 10,
       "files": {
-        "src/popup.tsx": 2,
-        "src/tabs/report.tsx": 1,
+        "src/popup.tsx": 1,
         "src/components/value/ValueLedgerView.tsx": 8,
         "src/core/domain/valuation.ts": 1
       }
