@@ -15,7 +15,7 @@
     },
     {
       "file": "src/core/report/display.ts",
-      "sha256": "33fc37682712962a09ef0bbd64025127fe9969a106917613f3d73e9e5a81fe2f"
+      "sha256": "32caa318151ab9860215541e395b8bf99c9cffd9bb8b0d218aa8e8c6696654b2"
     },
     {
       "file": "src/core/domain/valuation.ts",
@@ -204,10 +204,11 @@
     },
     {
       "term": "Visits",
-      "total": 6,
+      "total": 8,
       "files": {
         "src/popup.tsx": 1,
-        "src/components/value/ValueLedgerView.tsx": 5
+        "src/components/value/ValueLedgerView.tsx": 5,
+        "src/core/report/display.ts": 2
       }
     },
     {
@@ -341,10 +342,14 @@
     },
     {
       "word": "can",
-      "count": 19
+      "count": 20
     },
     {
       "word": "domain",
+      "count": 18
+    },
+    {
+      "word": "page",
       "count": 18
     },
     {
@@ -356,15 +361,23 @@
       "count": 14
     },
     {
-      "word": "page",
-      "count": 14
-    },
-    {
       "word": "block",
       "count": 13
     },
     {
+      "word": "browser",
+      "count": 13
+    },
+    {
+      "word": "site",
+      "count": 13
+    },
+    {
       "word": "border",
+      "count": 12
+    },
+    {
+      "word": "data",
       "count": 12
     },
     {
@@ -396,16 +409,8 @@
       "count": 11
     },
     {
-      "word": "site",
-      "count": 11
-    },
-    {
       "word": "text-muted-foreground",
       "count": 11
-    },
-    {
-      "word": "data",
-      "count": 10
     },
     {
       "word": "failed",
@@ -424,11 +429,11 @@
       "count": 10
     },
     {
-      "word": "blocked",
-      "count": 9
+      "word": "your",
+      "count": 10
     },
     {
-      "word": "browser",
+      "word": "blocked",
       "count": 9
     },
     {
@@ -500,6 +505,10 @@
       "count": 7
     },
     {
+      "word": "that",
+      "count": 7
+    },
+    {
       "word": "types",
       "count": 7
     },
@@ -556,10 +565,6 @@
       "count": 6
     },
     {
-      "word": "your",
-      "count": 6
-    },
-    {
       "word": "actors",
       "count": 5
     },
@@ -596,6 +601,10 @@
       "count": 5
     },
     {
+      "word": "observed",
+      "count": 5
+    },
+    {
       "word": "observer",
       "count": 5
     },
@@ -620,15 +629,7 @@
       "count": 5
     },
     {
-      "word": "summary",
-      "count": 5
-    },
-    {
-      "word": "text-left",
-      "count": 5
-    },
-    {
-      "word": "that",
+      "word": "storage",
       "count": 5
     }
   ]

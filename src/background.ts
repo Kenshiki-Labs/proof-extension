@@ -16,6 +16,7 @@ import {
   upsertValuationLedgerEvent
 } from "~core/domain/valuation-ledger"
 import { detectCookieSync } from "~core/signals/cookie-sync"
+import { normalizePersistenceEvent } from "~core/signals/persistence"
 import { enrichSdkDetection } from "~core/signals/sdk-globals"
 import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, supersedeEvent, upsertEvent } from "~core/state/summaries"
 import type { ObserverEvent, PageError, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
@@ -450,7 +451,7 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
       const event = { ...message.payload, tabId: sender.tab?.id ?? message.payload.tabId } as ObserverEvent
       if (!originMatchesSender(event, sender)) return { ok: false, error: "origin_mismatch" }
 
-      await recordEvent(enrichSdkDetection(enrichScriptInjection(event), trackers))
+      await recordEvent(normalizePersistenceEvent(enrichSdkDetection(enrichScriptInjection(event), trackers)))
       return { ok: true }
     }
 

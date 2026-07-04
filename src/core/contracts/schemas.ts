@@ -44,6 +44,11 @@ export const ObserverEventSchema = z.object({
     "webgl_query",
     "font_enumeration",
     "cookie_sync",
+    "cookie_observed",
+    "storage_write",
+    "indexeddb_access",
+    "cache_storage_access",
+    "service_worker_registered",
     "webrtc_probe"
   ]),
   blockability: BlockabilityClassSchema,

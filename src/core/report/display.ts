@@ -153,6 +153,11 @@ export function eventSummary(event: ObserverEvent) {
   if (event.eventType === "script_injected") return "A new script was added to this page after it loaded."
   if (event.eventType === "sdk_detected") return "A tracking company's software is running inside this page."
   if (event.eventType === "cookie_sync") return "Two tracking companies swapped IDs so they can combine what they know about you."
+  if (event.eventType === "cookie_observed") return "Cookie observed — the page saved a small record in your browser. Its name and size were noted; its contents were not read."
+  if (event.eventType === "storage_write") return "Storage write observed — the page saved, changed, or deleted data kept in your browser for this site."
+  if (event.eventType === "indexeddb_access") return "Durable storage observed — the page used a database in your browser that lasts between visits."
+  if (event.eventType === "cache_storage_access") return "Durable storage observed — the page used your browser's saved-files store, which lasts between visits."
+  if (event.eventType === "service_worker_registered") return "The site installed a background worker in your browser that can keep running and storing data after this page closes."
   if (event.eventType === "extension_diagnostic") return "A routine self-check by this extension — not something the page did."
   if (event.eventType === "browser_surface") return "Basic facts about your device (screen size, time zone, language) were readable by this page."
   return `${titleCase(event.eventType)} observed.`

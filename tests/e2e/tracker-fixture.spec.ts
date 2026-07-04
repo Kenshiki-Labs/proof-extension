@@ -7,6 +7,7 @@ import {
   INJECTOR_FIXTURE_HTML,
   META_PIXEL_FIXTURE_HTML,
   COOKIE_SYNC_FIXTURE_HTML,
+  PERSISTENCE_FIXTURE_HTML,
   PLAIN_FIXTURE_HTML,
   SDK_GLOBAL_FIXTURE_HTML,
   TRACKER_FIXTURE_HTML,
@@ -296,6 +297,48 @@ test("navigating to a new origin resets the tab summary", async () => {
         )
         expect(pageActivity).toEqual([])
       })
+    })
+  })
+})
+
+test("persistence surfaces produce metadata-only observations without stored values", async () => {
+  await withExtensionContext("persistence", async (context, worker) => {
+    await withFixtureServer(PERSISTENCE_FIXTURE_HTML, async (baseUrl) => {
+      const page = await context.newPage()
+      await page.goto(`${baseUrl}/`)
+
+      await expect
+        .poll(async () => {
+          const events = await readAllEvents(worker)
+          const types = new Set<string>(events.map((event) => event.eventType))
+          return ["cookie_observed", "storage_write", "indexeddb_access"].filter((type) => types.has(type))
+        }, { timeout: 15_000 })
+        .toEqual(["cookie_observed", "storage_write", "indexeddb_access"])
+
+      const events = await readAllEvents(worker)
+      const serialized = JSON.stringify(events)
+
+      // Values must never be stored — names, sizes, and timing only.
+      expect(serialized).not.toContain("secret-cookie-value")
+      expect(serialized).not.toContain("secret-local-value")
+      expect(serialized).not.toContain("secret-session-value")
+
+      const cookie = events.find((event) => event.eventType === "cookie_observed")
+      expect(cookie?.details?.name).toBe("fixture_pref")
+      expect(cookie?.details?.valueBytes).toBe("secret-cookie-value-123456".length)
+      expect(cookie?.trackerId).toBeUndefined()
+      expect(cookie?.status).toBe("active")
+      expect(cookie?.blockability).toBe("observable_only")
+
+      const storageOps = events
+        .filter((event) => event.eventType === "storage_write")
+        .map((event) => `${String(event.details?.area)}:${String(event.details?.op)}`)
+      expect(storageOps).toContain("localStorage:set")
+      expect(storageOps).toContain("localStorage:remove")
+      expect(storageOps).toContain("sessionStorage:set")
+
+      const database = events.find((event) => event.eventType === "indexeddb_access")
+      expect(database?.details?.database).toBe("fixture-db")
     })
   })
 })

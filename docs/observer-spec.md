@@ -43,7 +43,7 @@ Current implemented product surfaces:
 - Value ledger tracks top-level visits, tracker presence per visit, raw observations, period estimates, ad-market value to trackers, site-paid tool fees, and flow-level supply-chain roles.
 - Value ledger includes `Value supply chain`, `Bill of materials`, `Who they serve`, local tracker/site connections, and `How we calculate this` sections that state counting rules and limitations.
 - Current-tab valuation and rolling value ledger keep revenue and operator-cost estimates separate.
-- Persistence-surface observers for cookies, Web Storage, durable storage, cache validators, service workers, and supercookie-like respawn behavior are specified but not yet implemented.
+- Persistence-surface observers are implemented for the JavaScript-visible subset: `document.cookie` writes, `localStorage`/`sessionStorage` set/remove/clear, IndexedDB open/delete, Cache API open/delete/match/has, and service-worker registration. Metadata only — names redacted through a high-entropy mask, sizes and timing recorded, values never read; the privileged side re-redacts and rebuilds all evidence so the page channel cannot smuggle raw values or forge evidence. Cache validators (needs response-header observation), `HttpOnly` cookie metadata (needs the optional `cookies` permission), and respawn detection (needs keyed digests) remain unimplemented, and their event families are deliberately absent from the runtime schema until an emitter exists.
 - Runtime valuation blocks are promoted from `intelligence/normalized/valuations.json`; hand drift is blocked by `pnpm intel:promote:check`.
 - Design primitive drift is blocked by `pnpm design:check`.
 - Vocabulary drift is blocked by `pnpm vocab:check`.
@@ -68,7 +68,7 @@ Primary remaining credibility gaps:
 - Source-back tracker identity, ownership, collection, and blocking claims for the existing 42 records. This requires live retrieval of vendor documentation (the license-clean `vendor_docs` source family); provenance must never be filled in from memory without retrieval.
 - Reclassification pass done 2026-07-04 for locally provable cases (high-breakage records now `user_action_required`); revisit remaining classes during source-backed review.
 - Add missing SDK/global signatures for the 13 uncovered trackers where browser-visible signatures exist.
-- Implement persistence-surface observers without storing raw cookie, localStorage, sessionStorage, IndexedDB, Cache API, or service-worker payload values.
+- Extend persistence-surface observation beyond the implemented JS-visible subset: `HttpOnly` cookie metadata via the optional `cookies` permission, cache-validator header evidence, and keyed-digest respawn detection.
 - Resolve 9 extension-scoped entity conflicts before using entity-linked claims beyond the runtime DB.
 - Keep valuation language as estimates, not measurements or actual revenue.
 

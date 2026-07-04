@@ -1,6 +1,8 @@
 import type { PlasmoCSConfig } from "plasmo"
 
+import { installPersistenceHooks } from "~core/content/persistence-hooks"
 import { isIgnoredPageError } from "~core/domain/page-errors"
+import { createRateLimitedReporter } from "~core/signals/persistence"
 import { sdkGlobalNames } from "~core/signals/sdk-globals"
 
 export const config: PlasmoCSConfig = {
@@ -78,6 +80,41 @@ function observeSdkGlobals() {
 }
 
 observeSdkGlobals()
+
+// Persistence-surface observation (cookies, Web Storage, IndexedDB, Cache
+// API, service workers). The MAIN world reports bare metadata only — names,
+// sizes, timing, never values — and the privileged side re-redacts and
+// rebuilds evidence before anything is stored (normalizePersistenceEvent),
+// so this channel carries claims, not evidence. Rate-limited so a page
+// writing storage in a loop cannot become a message storm; repeats of the
+// same deterministic id merge into a count in the background.
+function observePersistenceSurfaces() {
+  type PersistencePayload = { eventType: string; details: Record<string, string | number> }
+
+  const send = createRateLimitedReporter<PersistencePayload>((id, { eventType, details }) => {
+    const payload = {
+      id,
+      origin: location.origin,
+      observedAt: Date.now(),
+      source: "api-hook",
+      firstParty: true,
+      policyLabel: "unknown_first_party",
+      eventType,
+      blockability: "observable_only",
+      status: "active",
+      confidence: "confirmed",
+      evidence: ["Reported by the persistence observer; evidence is rebuilt by the extension before recording."],
+      details
+    }
+    window.postMessage({ type: PAGE_EVENT_TYPE, payload }, location.origin)
+  })
+
+  installPersistenceHooks(({ eventType, key, details }) => {
+    send(`${eventType}:${location.origin}:${key}`, { eventType, details })
+  })
+}
+
+observePersistenceSurfaces()
 
 // We cannot reliably know whether a given page error was caused by our own
 // hooks or by a pre-existing bug in the page's own script (e.g. an anti-bot

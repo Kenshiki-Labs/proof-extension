@@ -47,6 +47,16 @@ export type ObserverEvent = {
     | "webgl_query"
     | "font_enumeration"
     | "cookie_sync"
+    // Persistence surfaces (JS-visible subset): metadata-only observations of
+    // storage the page wrote — names, sizes, timing; never values. The
+    // cache_validator_seen and storage_respawn_suspected families from the
+    // spec are deliberately absent until an emitter exists: a schema that
+    // accepts a type nothing emits is pure forgery surface.
+    | "cookie_observed"
+    | "storage_write"
+    | "indexeddb_access"
+    | "cache_storage_access"
+    | "service_worker_registered"
     | "webrtc_probe"
   blockability: BlockabilityClass
   status: ObservationStatus
