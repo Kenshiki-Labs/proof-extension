@@ -221,6 +221,23 @@ export const FIRST_PARTY_EXPOSURE_FIXTURE_HTML = `
 `
 
 /**
+ * Page that exercises every JS-visible persistence surface the observer
+ * hooks: a cookie write, localStorage set/remove, sessionStorage set, and an
+ * IndexedDB open. Values are deliberately secret-shaped so tests can assert
+ * they never appear anywhere in recorded events.
+ */
+export const PERSISTENCE_FIXTURE_HTML = `
+  <h1>Persistence fixture</h1>
+  <script>
+    document.cookie = "fixture_pref=secret-cookie-value-123456; Path=/"
+    localStorage.setItem("fixture-theme", "secret-local-value-123456")
+    localStorage.removeItem("fixture-old")
+    sessionStorage.setItem("fixture-draft", "secret-session-value-123456")
+    indexedDB.open("fixture-db", 1)
+  </script>
+`
+
+/**
  * Page that dynamically injects the FullStory script after load —
  * exercises the dom-watch MutationObserver and the background's
  * tracker-DB join on the injected src.

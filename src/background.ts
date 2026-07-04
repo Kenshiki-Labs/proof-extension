@@ -16,7 +16,9 @@ import {
   upsertValuationLedgerEvent
 } from "~core/domain/valuation-ledger"
 import { detectCookieSync } from "~core/signals/cookie-sync"
+import { normalizePersistenceEvent } from "~core/signals/persistence"
 import { enrichSdkDetection } from "~core/signals/sdk-globals"
+import { createCoalescedWriter } from "~core/state/coalesced-writer"
 import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, supersedeEvent, upsertEvent } from "~core/state/summaries"
 import type { ObserverEvent, PageError, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
 
@@ -71,6 +73,22 @@ async function persistValuationLedger() {
   await browser.storage.local.set({ [VALUATION_LEDGER_STORAGE_KEY]: valuationLedger })
 }
 
+// Every event used to await a full serialization of ALL tab summaries plus
+// the valuation ledger — a tracker-heavy page rewrites the whole map dozens
+// of times in a burst. Coalesced writers batch each burst into one write;
+// reads (popup, report) come from memory, so nothing user-visible waits on
+// storage. The 250ms window is far inside Chromium's ~30s service-worker
+// idle timeout, and onSuspend flushes as a belt-and-braces.
+const summaryWriter = createCoalescedWriter(persistSummaries)
+const ledgerWriter = createCoalescedWriter(persistValuationLedger)
+
+if (typeof chrome !== "undefined") {
+  chrome.runtime?.onSuspend?.addListener(() => {
+    summaryWriter.flush().catch(() => undefined)
+    ledgerWriter.flush().catch(() => undefined)
+  })
+}
+
 async function hydrateState() {
   const stored = await browser.storage.local.get([SUMMARY_STORAGE_KEY, SETTINGS_STORAGE_KEY, VALUATION_LEDGER_STORAGE_KEY])
   const storedSettings = stored[SETTINGS_STORAGE_KEY] as Partial<UserSettings> | undefined
@@ -92,12 +110,16 @@ async function ensureHydrated() {
 async function clearLocalData() {
   summaries.clear()
   await clearValuationLedger()
+  // Flush after clearing memory: a pending coalesced write now persists the
+  // empty state instead of resurrecting cleared data after the remove.
+  await summaryWriter.flush()
   await browser.storage.local.remove(SUMMARY_STORAGE_KEY)
 }
 
 async function clearValuationLedger() {
   valuationLedger = createEmptyValuationLedger()
   activeVisitByTabId.clear()
+  await ledgerWriter.flush()
   await browser.storage.local.remove(VALUATION_LEDGER_STORAGE_KEY)
 }
 
@@ -132,8 +154,8 @@ async function recordEvent(event: ObserverEvent) {
   summaries.set(event.tabId, upsertEvent(current, event, settings.maxEventsPerTab))
   const visit = await ensureSiteVisitForTab(event.tabId, summaries.get(event.tabId)?.origin ?? event.origin, event.observedAt)
   valuationLedger = pruneValuationLedger(upsertValuationLedgerEvent(valuationLedger, { ...event, origin: visit.origin }, visit.visitId), settings.retentionDays)
-  await persistSummaries()
-  await persistValuationLedger()
+  summaryWriter.schedule()
+  ledgerWriter.schedule()
 }
 
 type ActiveVisit = { origin: string; startedAt: number; visitId: string }
@@ -145,7 +167,7 @@ async function startSiteVisitForTab(tabId: number, origin: string, observedAt = 
   const visit = { origin, startedAt: observedAt, visitId: crypto.randomUUID() }
   activeVisitByTabId.set(tabId, visit)
   valuationLedger = pruneValuationLedger(recordSiteVisit(valuationLedger, visit.visitId, origin, observedAt), settings.retentionDays)
-  await persistValuationLedger()
+  ledgerWriter.schedule()
   return visit
 }
 
@@ -411,7 +433,7 @@ browser.runtime.onInstalled.addListener(() => {
 browser.tabs.onRemoved.addListener((tabId) => {
   summaries.delete(tabId)
   activeVisitByTabId.delete(tabId)
-  persistSummaries().catch(() => undefined)
+  summaryWriter.schedule()
 })
 
 // A summary describes the page the user is on now. When the tab's top-level
@@ -432,7 +454,8 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
   ensureHydrated()
     .then(() => {
       summaries.set(tabId, createEmptySiteSummary(origin, tabId))
-      return Promise.all([persistSummaries(), startSiteVisitForTab(tabId, origin)]).then(() => undefined)
+      summaryWriter.schedule()
+      return startSiteVisitForTab(tabId, origin).then(() => undefined)
     })
     .catch((error: unknown) => console.warn("Failed to reset summary on navigation", error))
 })
@@ -450,7 +473,7 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
       const event = { ...message.payload, tabId: sender.tab?.id ?? message.payload.tabId } as ObserverEvent
       if (!originMatchesSender(event, sender)) return { ok: false, error: "origin_mismatch" }
 
-      await recordEvent(enrichSdkDetection(enrichScriptInjection(event), trackers))
+      await recordEvent(normalizePersistenceEvent(enrichSdkDetection(enrichScriptInjection(event), trackers)))
       return { ok: true }
     }
 
@@ -461,7 +484,7 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
       const pageError: PageError = { id: crypto.randomUUID(), ...message.payload }
       const current = readSummary(tabId, senderOrigin(sender) ?? "unknown")
       summaries.set(tabId, recordPageError(current, pageError))
-      await persistSummaries()
+      summaryWriter.schedule()
       return { ok: true }
     }
 
@@ -476,7 +499,7 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
     if (message.type === "REFRESH_TAB_SCAN") {
       const summary = { ...(await recordActiveTabScan(message.tabId)), updatedAt: Date.now() }
       summaries.set(message.tabId, summary)
-      await persistSummaries()
+      summaryWriter.schedule()
       return { type: "SITE_SUMMARY", payload: summary }
     }
 

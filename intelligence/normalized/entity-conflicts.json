@@ -11,24 +11,44 @@
     }
   ],
   "review": {
-    "status": "false_positive_review",
+    "status": "source_backed",
     "last_reviewed_at": "2026-07-03",
     "reviewer": "Kenshiki",
-    "notes": "9 conflict records require manual review before promotion into runtime claims."
+    "notes": "0 conflict records require manual review before promotion into runtime claims."
   },
   "summary": {
     "scope": "extension_runtime",
-    "total": 9,
-    "needsReview": 9,
-    "adjudicated": 0,
-    "manualAdjudications": 0
+    "total": 10,
+    "needsReview": 0,
+    "adjudicated": 10,
+    "manualAdjudications": 10
   },
   "records": [
     {
-      "id": "resolver-conflict-0001",
+      "id": "runtime-conflict-0001",
       "type": "slug_owner_conflict",
       "severity": "high",
-      "status": "needs_review",
+      "status": "adjudicated",
+      "entityIds": [
+        "google-analytics",
+        "google-tag-manager"
+      ],
+      "facetKeys": [],
+      "details": {
+        "slug": "alphabet-inc",
+        "existingEntityId": "google-analytics",
+        "attemptedEntityId": "google-tag-manager",
+        "attemptedName": "Google Tag Manager"
+      },
+      "adjudicationIds": [
+        "adj-0001-alphabet-alias-google-tag-manager"
+      ]
+    },
+    {
+      "id": "runtime-conflict-0002",
+      "type": "slug_owner_conflict",
+      "severity": "high",
+      "status": "adjudicated",
       "entityIds": [
         "google-ads-doubleclick",
         "google-analytics"
@@ -39,13 +59,16 @@
         "existingEntityId": "google-analytics",
         "attemptedEntityId": "google-ads-doubleclick",
         "attemptedName": "Google Ads / DoubleClick"
-      }
+      },
+      "adjudicationIds": [
+        "adj-0002-alphabet-alias-google-ads"
+      ]
     },
     {
-      "id": "resolver-conflict-0002",
+      "id": "runtime-conflict-0003",
       "type": "slug_owner_conflict",
       "severity": "high",
-      "status": "needs_review",
+      "status": "adjudicated",
       "entityIds": [
         "linkedin-insight-tag",
         "microsoft-clarity"
@@ -56,13 +79,16 @@
         "existingEntityId": "linkedin-insight-tag",
         "attemptedEntityId": "microsoft-clarity",
         "attemptedName": "Microsoft Clarity"
-      }
+      },
+      "adjudicationIds": [
+        "adj-0003-microsoft-alias-clarity"
+      ]
     },
     {
-      "id": "resolver-conflict-0003",
+      "id": "runtime-conflict-0004",
       "type": "slug_owner_conflict",
       "severity": "high",
-      "status": "needs_review",
+      "status": "adjudicated",
       "entityIds": [
         "linkedin-insight-tag",
         "microsoft-advertising-uet"
@@ -73,13 +99,16 @@
         "existingEntityId": "linkedin-insight-tag",
         "attemptedEntityId": "microsoft-advertising-uet",
         "attemptedName": "Microsoft Advertising (UET)"
-      }
+      },
+      "adjudicationIds": [
+        "adj-0004-microsoft-alias-uet"
+      ]
     },
     {
-      "id": "resolver-conflict-0004",
+      "id": "runtime-conflict-0005",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
-      "status": "needs_review",
+      "status": "adjudicated",
       "entityIds": [
         "faraday-inc",
         "reddit-pixel"
@@ -101,13 +130,16 @@
           "faraday-inc",
           "reddit-pixel"
         ]
-      }
+      },
+      "adjudicationIds": [
+        "adj-0005-reddit-domain-near-multi"
+      ]
     },
     {
-      "id": "resolver-conflict-0005",
+      "id": "runtime-conflict-0006",
       "type": "domain_owner_conflict",
       "severity": "high",
-      "status": "needs_review",
+      "status": "adjudicated",
       "entityIds": [
         "faraday-inc",
         "reddit-pixel"
@@ -118,13 +150,16 @@
         "existingEntityId": "reddit-pixel",
         "attemptedEntityId": "faraday-inc",
         "attemptedName": "NEAR PTE LTD"
-      }
+      },
+      "adjudicationIds": [
+        "adj-0006-reddit-domain-near-owner"
+      ]
     },
     {
-      "id": "resolver-conflict-0006",
+      "id": "runtime-conflict-0007",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
-      "status": "needs_review",
+      "status": "adjudicated",
       "entityIds": [
         "date-detective-inc",
         "tiktok-pixel"
@@ -140,13 +175,16 @@
           "date-detective-inc",
           "tiktok-pixel"
         ]
-      }
+      },
+      "adjudicationIds": [
+        "adj-0007-tiktok-domain-datedetective-multi"
+      ]
     },
     {
-      "id": "resolver-conflict-0007",
+      "id": "runtime-conflict-0008",
       "type": "domain_owner_conflict",
       "severity": "high",
-      "status": "needs_review",
+      "status": "adjudicated",
       "entityIds": [
         "date-detective-inc",
         "tiktok-pixel"
@@ -157,13 +195,16 @@
         "existingEntityId": "tiktok-pixel",
         "attemptedEntityId": "date-detective-inc",
         "attemptedName": "DATE DETECTIVE Inc"
-      }
+      },
+      "adjudicationIds": [
+        "adj-0008-tiktok-domain-datedetective-owner"
+      ]
     },
     {
-      "id": "resolver-conflict-0008",
+      "id": "runtime-conflict-0009",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
-      "status": "needs_review",
+      "status": "adjudicated",
       "entityIds": [
         "faraday-inc",
         "reddit-pixel"
@@ -182,13 +223,16 @@
           "faraday-inc",
           "reddit-pixel"
         ]
-      }
+      },
+      "adjudicationIds": [
+        "adj-0009-reddit-domain-ubermedia-multi"
+      ]
     },
     {
-      "id": "resolver-conflict-0009",
+      "id": "runtime-conflict-0010",
       "type": "domain_owner_conflict",
       "severity": "high",
-      "status": "needs_review",
+      "status": "adjudicated",
       "entityIds": [
         "faraday-inc",
         "reddit-pixel"
@@ -199,7 +243,10 @@
         "existingEntityId": "reddit-pixel",
         "attemptedEntityId": "faraday-inc",
         "attemptedName": "Ubermedia"
-      }
+      },
+      "adjudicationIds": [
+        "adj-0010-reddit-domain-ubermedia-owner"
+      ]
     }
   ]
 }

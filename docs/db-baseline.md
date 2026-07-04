@@ -7,20 +7,20 @@ lastReviewed: 2026-07-04
 status: generated
 ---
 
-> Generated from commit `5029cf2` by `pnpm db:baseline`. Do not hand-edit.
+> Generated from commit `02d2c05` by `pnpm db:baseline`. Do not hand-edit.
 
 ## Summary
 
 - Trackers: **42** (Phase 1 minimum: 25)
 - Companies: **42**, remediation records: **40**
-- SDK-global signatures: **29/42** trackers covered
+- SDK-global signatures: **37/42** trackers covered
 - Provenance: **42** seed / **0** source-backed
 - Remediation: deletion link **42/42**, opt-out link **42/42**
 - Explanation coverage: **42/42**
 - Blocking-limit coverage: **42/42**
 - Not-visible-to-extension coverage: **42/42**
 - Valuation coverage: **42/42** (21 sourced / 21 estimated)
-- Blockability classes in use: `network_blockable` (42)
+- Blockability classes in use: `network_blockable` (38), `user_action_required` (4)
 
 ### By category
 
@@ -44,9 +44,9 @@ status: generated
 | Tracker | Category | Parent | Domains | Paths | SDK sig | Review | Source | Deletion | Opt-out | Friction | Verified | Privacy contact |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | fullstory | session-replay | FullStory | 2 | 2 | yes | seed | manual_seed | yes | yes | medium | 2026-07-01 | yes |
-| google-analytics | analytics | Alphabet Inc. | 2 | 3 | yes | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
+| google-analytics | analytics | Alphabet Inc. | 1 | 2 | yes | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
 | google-tag-manager | tag-manager | Alphabet Inc. | 1 | 2 | yes | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
-| google-ads | advertising | Alphabet Inc. | 3 | 2 | no | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
+| google-ads | advertising | Alphabet Inc. | 3 | 2 | yes | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
 | meta-pixel | advertising | Meta Platforms, Inc. | 2 | 2 | yes | seed | manual_seed | yes | yes | medium | 2026-07-01 | yes |
 | tiktok-pixel | advertising | ByteDance Ltd. | 1 | 1 | yes | seed | manual_seed | yes | yes | unknown | 2026-07-01 | no |
 | linkedin-insight | advertising | Microsoft Corporation | 2 | 1 | yes | seed | manual_seed | yes | yes | medium | 2026-07-01 | no |
@@ -55,7 +55,7 @@ status: generated
 | segment | customer-data-platform | Twilio Inc. | 2 | 3 | no | seed | manual_seed | yes | yes | medium | 2026-07-01 | no |
 | amplitude | product-analytics | Amplitude, Inc. | 2 | 1 | yes | seed | manual_seed | yes | yes | medium | 2026-07-01 | yes |
 | criteo | advertising | Criteo SA | 2 | 1 | yes | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
-| adobe-analytics | analytics | Adobe Inc. | 2 | 1 | no | seed | manual_seed | yes | yes | medium | 2026-07-01 | yes |
+| adobe-analytics | analytics | Adobe Inc. | 2 | 1 | yes | seed | manual_seed | yes | yes | medium | 2026-07-01 | yes |
 | braze | behavioral-profiling | Braze, Inc. | 2 | 1 | yes | seed | manual_seed | yes | yes | unknown | 2026-07-01 | no |
 | intercom | customer-messaging | Intercom, Inc. | 2 | 1 | yes | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
 | drift | customer-messaging | Salesloft, Inc. | 1 | 1 | yes | seed | manual_seed | yes | yes | unknown | 2026-07-01 | no |
@@ -71,12 +71,12 @@ status: generated
 | microsoft-clarity | session-replay | Microsoft Corporation | 1 | 1 | yes | seed | manual_seed | yes | yes | medium | 2026-07-01 | yes |
 | datadog-rum | performance-monitoring | Datadog, Inc. | 1 | 1 | yes | seed | manual_seed | yes | yes | unknown | 2026-07-01 | no |
 | the-trade-desk | advertising | The Trade Desk, Inc. | 1 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| pubmatic | advertising | PubMatic, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| magnite | advertising | Magnite, Inc. | 2 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| openx | advertising | OpenX Technologies, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| index-exchange | advertising | Index Exchange Inc. | 2 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| lotame | data-management-platform | Lotame Solutions, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| liveramp | identity-resolution | LiveRamp Holdings, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
+| pubmatic | advertising | PubMatic, Inc. | 1 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| magnite | advertising | Magnite, Inc. | 2 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| openx | advertising | OpenX Technologies, Inc. | 1 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| index-exchange | advertising | Index Exchange Inc. | 2 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| lotame | data-management-platform | Lotame Solutions, Inc. | 1 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| liveramp | identity-resolution | LiveRamp Holdings, Inc. | 1 | 0 | yes | seed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
 | id5 | identity-resolution | ID5 Technology Ltd | 1 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | 33across | advertising | 33Across, Inc. | 2 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | tapad | cross-device-tracking | Experian plc | 1 | 0 | no | seed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
@@ -90,7 +90,7 @@ status: generated
 
 - **Provenance**: 42 of 42 records are hand-authored seeds pending Tracker Radar / EasyPrivacy source backing (Phase 3).
 - **All trackers are network_blockable** — no `content_mitigatable` or `observable_only` records exist yet, so only one of six blockability classes is exercised by the DB.
-- **No SDK-global signature** (13): google-ads, segment, adobe-analytics, pubmatic, magnite, openx, index-exchange, lotame, liveramp, id5, 33across, tapad, 6sense.
+- **No SDK-global signature** (5): segment, id5, 33across, tapad, 6sense.
 - **Unknown remediation friction** (6): tiktok-pixel, braze, drift, optimizely, crazyegg, datadog-rum.
 - **Missing privacy contact** (13): tiktok-pixel, linkedin-insight, segment, braze, drift, optimizely, crazyegg, pinterest-tag, twitter-pixel, yandex-metrica, datadog-rum, amazon-ads, reddit-pixel.
 - **Missing explanation coverage** (0): none.

@@ -46,4 +46,29 @@ describe("matchTracker", () => {
 
     expect(matches).toEqual([])
   })
+
+  // The fullstory record lists both fullstory.com and edge.fullstory.com; a
+  // request to the subdomain hits both index entries but is ONE observation.
+  // The more specific domain must win the evidence string.
+  it("produces one match when a record lists both a domain and its subdomain", () => {
+    const matches = matchTrackerRequest({ type: "script", url: "https://edge.fullstory.com/s/fs.js" }, trackers)
+
+    expect(matches).toHaveLength(1)
+    expect(matches[0]?.evidence).toEqual(["Request matched fullstory domain edge.fullstory.com."])
+  })
+
+  it("matches case-insensitively against mixed-case hostnames", () => {
+    const match = matchTracker("https://Edge.FullStory.com/s/fs.js", trackers)
+    expect(match?.id).toBe("fullstory")
+  })
+
+  // Regression: google-analytics used to also claim www.googletagmanager.com,
+  // so one gtag.js load matched two records and double-counted. Domain spaces
+  // are disjoint now (enforced by validate.ts) — a googletagmanager.com load
+  // attributes to exactly one record.
+  it("matches a googletagmanager.com script load to exactly one record", () => {
+    const matches = matchTrackerRequest({ type: "script", url: "https://www.googletagmanager.com/gtag/js?id=G-XXXX" }, trackers)
+
+    expect(matches.map((match) => match.tracker.id)).toEqual(["google-tag-manager"])
+  })
 })

@@ -146,13 +146,11 @@
     "schemaVersion": 2,
     "match": {
       "domains": [
-        "google-analytics.com",
-        "www.googletagmanager.com"
+        "google-analytics.com"
       ],
       "paths": [
         "/g/collect",
-        "/collect",
-        "/gtag/js"
+        "/collect"
       ],
       "requestTypes": [
         "script",
@@ -216,9 +214,9 @@
     ],
     "review": {
       "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "last_reviewed_at": "2026-07-04",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review. Removed www.googletagmanager.com (and the /gtag/js path that only exists on that host) 2026-07-04: it suffix-overlaps the google-tag-manager record, so one request matched both records and double-counted, and a user enabling a Google Analytics block would have installed a rule blocking Google Tag Manager's tag delivery — the high-breakage outcome the blocking policy exists to prevent. Script loads from the googletagmanager.com host attribute to the google-tag-manager record; Google Analytics measurement beacons still match google-analytics.com."
     },
     "displayName": "Google Analytics",
     "observes": {
@@ -308,11 +306,11 @@
       "free to the site; it is the delivery van for other companies' trackers"
     ],
     "browserAction": {
-      "blockability": "network_blockable",
-      "method": "network-block",
+      "blockability": "user_action_required",
+      "method": "source-remediation",
       "whatBlockingChanges": [
-        "Blocks future browser requests matching Google Tag Manager domains and paths.",
-        "May reduce browser-side collection from this page."
+        "This extension does not offer a block for Google Tag Manager: it delivers the site's own tags, so blocking it breaks site features beyond tracking.",
+        "Stopping collection happens at the source — see Stop at source."
       ],
       "whatBlockingDoesNotChange": [
         "Does not delete prior records held by Google Tag Manager, its parent company, or the site.",
@@ -353,9 +351,9 @@
     ],
     "review": {
       "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "last_reviewed_at": "2026-07-04",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review. Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because it delivers the site's own tags and blocking breaks site features beyond tracking; the honest in-product capability is source-level remediation."
     },
     "displayName": "Google Tag Manager",
     "observes": {
@@ -1980,11 +1978,11 @@
       "the site pays for the chat tool; conversations feed its records"
     ],
     "browserAction": {
-      "blockability": "network_blockable",
-      "method": "network-block",
+      "blockability": "user_action_required",
+      "method": "source-remediation",
       "whatBlockingChanges": [
-        "Blocks future browser requests matching Intercom domains and paths.",
-        "May reduce browser-side collection from this page."
+        "This extension does not offer a block for Intercom: the messenger is the site's support channel, and blocking removes it.",
+        "Stopping collection happens at the source — see Stop at source."
       ],
       "whatBlockingDoesNotChange": [
         "Does not delete prior records held by Intercom, its parent company, or the site.",
@@ -2024,9 +2022,9 @@
     ],
     "review": {
       "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "last_reviewed_at": "2026-07-04",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review. Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because the messenger is the site's support channel and blocking removes it; the honest in-product capability is source-level remediation."
     },
     "displayName": "Intercom",
     "observes": {
@@ -2118,11 +2116,11 @@
       "the site pays for the chat tool; conversations feed its records"
     ],
     "browserAction": {
-      "blockability": "network_blockable",
-      "method": "network-block",
+      "blockability": "user_action_required",
+      "method": "source-remediation",
       "whatBlockingChanges": [
-        "Blocks future browser requests matching Drift domains and paths.",
-        "May reduce browser-side collection from this page."
+        "This extension does not offer a block for Drift: it renders the site's chat, and blocking removes it.",
+        "Stopping collection happens at the source — see Stop at source."
       ],
       "whatBlockingDoesNotChange": [
         "Does not delete prior records held by Drift, its parent company, or the site.",
@@ -2162,9 +2160,9 @@
     ],
     "review": {
       "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "last_reviewed_at": "2026-07-04",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review. Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because it renders the site's chat and blocking removes it; the honest in-product capability is source-level remediation."
     },
     "displayName": "Drift",
     "observes": {
@@ -5283,11 +5281,11 @@
       "working out which marketing brought you in"
     ],
     "browserAction": {
-      "blockability": "network_blockable",
-      "method": "network-block",
+      "blockability": "user_action_required",
+      "method": "source-remediation",
       "whatBlockingChanges": [
-        "Blocks future browser requests matching HubSpot domains and paths.",
-        "May reduce browser-side collection from this page."
+        "This extension does not offer a block for HubSpot: sites embed its forms and chat, and blocking makes those features disappear or throw errors.",
+        "Stopping collection happens at the source — see Stop at source."
       ],
       "whatBlockingDoesNotChange": [
         "Does not delete prior records held by HubSpot, its parent company, or the site.",
@@ -5329,9 +5327,9 @@
     ],
     "review": {
       "status": "seed",
-      "last_reviewed_at": "2026-07-03",
+      "last_reviewed_at": "2026-07-04",
       "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check. Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because sites embed its forms and chat which break when the loader is blocked; the honest in-product capability is source-level remediation."
     },
     "displayName": "HubSpot",
     "observes": {

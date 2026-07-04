@@ -47,8 +47,28 @@ export const SDK_GLOBAL_SIGNATURES: SdkGlobalSignature[] = [
   // Set by the site's own inline config snippet before (and regardless of
   // whether) the Insight Tag script actually loads — proves intent to load
   // LinkedIn tooling, not that the SDK ran. Same reasoning as dataLayer.
-  { global: "_linkedin_partner_id", trackerId: "linkedin-insight", sdkName: "LinkedIn Insight Tag", confidence: "probable" }
+  { global: "_linkedin_partner_id", trackerId: "linkedin-insight", sdkName: "LinkedIn Insight Tag", confidence: "probable" },
+  { global: "googletag", trackerId: "google-ads", sdkName: "Google Publisher Tag", confidence: "confirmed" },
+  // Adobe Launch/DTM's global, not window.s — the classic AppMeasurement `s`
+  // object is exactly the kind of generic name this table excludes.
+  { global: "_satellite", trackerId: "adobe-analytics", sdkName: "Adobe Experience Platform tags (_satellite)", confidence: "confirmed" },
+  { global: "PWT", trackerId: "pubmatic", sdkName: "PubMatic OpenWrap", confidence: "confirmed" },
+  { global: "rubicontag", trackerId: "magnite", sdkName: "Magnite/Rubicon FastLane", confidence: "confirmed" },
+  { global: "headertag", trackerId: "index-exchange", sdkName: "Index Exchange header tag", confidence: "confirmed" },
+  { global: "ID5", trackerId: "id5", sdkName: "ID5 identity API", confidence: "confirmed" },
+  { global: "Tynt", trackerId: "33across", sdkName: "33Across/Tynt engagement tag", confidence: "confirmed" },
+  { global: "_6si", trackerId: "6sense", sdkName: "6sense tag queue", confidence: "confirmed" },
+  // Short names a site could plausibly define itself — presence is a strong
+  // hint, not a known-library match, so these never claim "confirmed".
+  { global: "OX", trackerId: "openx", sdkName: "OpenX tag object", confidence: "probable" },
+  { global: "ats", trackerId: "liveramp", sdkName: "LiveRamp ATS", confidence: "probable" },
+  { global: "LOTCC", trackerId: "lotame", sdkName: "Lotame Crowd Control", confidence: "probable" }
 ]
+
+// Uncovered by design, not by omission:
+// - segment: its only global is window.analytics — a name ordinary sites
+//   define themselves, excluded by this table's false-attribution policy.
+// - tapad: pixel/server-side graph vendor with no browser-visible SDK global.
 
 const SIGNATURES_BY_GLOBAL = new Map(SDK_GLOBAL_SIGNATURES.map((signature) => [signature.global, signature]))
 
@@ -64,6 +84,10 @@ export function matchSdkGlobal(globalName: string) {
 // The vendor join happens here, against the signature table and the tracker
 // DB, so a page posting forged messages can at most claim a global name and
 // never inject its own trackerId, companyId, or confidence into evidence.
+// Status and blockability are owned here too: detecting a global is only
+// ever an observation, so status is always "active" — a page must not be
+// able to claim the extension mitigated or acted on anything — and
+// blockability comes from the tracker record, never the payload.
 export function enrichSdkDetection(event: ObserverEvent, trackers: TrackerRecord[]): ObserverEvent {
   if (event.eventType !== "sdk_detected") return event
 
@@ -79,6 +103,7 @@ export function enrichSdkDetection(event: ObserverEvent, trackers: TrackerRecord
       trackerId: undefined,
       companyId: undefined,
       blockability: "observable_only",
+      status: "active",
       confidence: "weak",
       evidence: [`Global variable ${globalName ?? "unknown"} was reported but matches no known SDK signature.`]
     }
@@ -90,6 +115,8 @@ export function enrichSdkDetection(event: ObserverEvent, trackers: TrackerRecord
     companyId: tracker.companyId,
     firstParty: false,
     policyLabel: undefined,
+    blockability: tracker.browserAction.blockability,
+    status: "active",
     confidence: signature.confidence,
     evidence: [
       `Global variable ${signature.global} characteristic of ${signature.sdkName} was present in the page.`,

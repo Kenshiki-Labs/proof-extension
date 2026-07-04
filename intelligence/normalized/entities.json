@@ -18,8 +18,8 @@
   },
   "adjudication": {
     "path": "intelligence/adjudication/entity-adjudications.json",
-    "records": 0,
-    "appliedRecords": 0
+    "records": 10,
+    "appliedRecords": 10
   },
   "conflictReport": "intelligence/normalized/entity-conflicts.json",
   "scope": {
@@ -489,6 +489,7 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
+            "adjudication adj-0002-alphabet-alias-google-ads confirmed by Kenshiki (agent-assisted, local evidence only)",
             "registrable domains: doubleclick.net, googleadservices.com, googlesyndication.com",
             "runtime company google-ads"
           ]
@@ -502,17 +503,14 @@
         "Alphabet Inc."
       ],
       "domains": [
-        "google-analytics.com",
-        "googletagmanager.com"
+        "google-analytics.com"
       ],
       "facets": {
         "companyIds": [
-          "google",
-          "google-tag-manager"
+          "google"
         ],
         "trackerIds": [
-          "google-analytics",
-          "google-tag-manager"
+          "google-analytics"
         ],
         "broker2025Ids": [],
         "caRegistry2026Ids": [],
@@ -525,16 +523,42 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
-            "registrable domains: google-analytics.com, googletagmanager.com",
+            "adjudication adj-0001-alphabet-alias-google-tag-manager confirmed by Kenshiki (agent-assisted, local evidence only)",
+            "adjudication adj-0002-alphabet-alias-google-ads confirmed by Kenshiki (agent-assisted, local evidence only)",
+            "registrable domains: google-analytics.com",
             "runtime company google"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "id": "google-tag-manager",
+      "canonicalName": "Google Tag Manager",
+      "aliases": [
+        "Alphabet Inc."
+      ],
+      "domains": [
+        "googletagmanager.com"
+      ],
+      "facets": {
+        "companyIds": [
+          "google-tag-manager"
+        ],
+        "trackerIds": [
+          "google-tag-manager"
+        ],
+        "broker2025Ids": [],
+        "caRegistry2026Ids": [],
+        "defenseDestinationIds": []
+      },
+      "joins": [
         {
           "key": "company:google-tag-manager",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
+          "method": "anchor",
+          "confidence": 1,
+          "confidenceLabel": "confirmed",
           "reasons": [
+            "adjudication adj-0001-alphabet-alias-google-tag-manager confirmed by Kenshiki (agent-assisted, local evidence only)",
             "registrable domains: googletagmanager.com",
             "runtime company google-tag-manager"
           ]
@@ -835,6 +859,8 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
+            "adjudication adj-0003-microsoft-alias-clarity confirmed by Kenshiki (agent-assisted, local evidence only)",
+            "adjudication adj-0004-microsoft-alias-uet confirmed by Kenshiki (agent-assisted, local evidence only)",
             "registrable domains: licdn.com, linkedin.com",
             "runtime company linkedin"
           ]
@@ -1069,6 +1095,7 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
+            "adjudication adj-0004-microsoft-alias-uet confirmed by Kenshiki (agent-assisted, local evidence only)",
             "registrable domains: bing.com",
             "runtime company microsoft-ads"
           ]
@@ -1102,6 +1129,7 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
+            "adjudication adj-0003-microsoft-alias-clarity confirmed by Kenshiki (agent-assisted, local evidence only)",
             "registrable domains: clarity.ms",
             "runtime company microsoft-clarity"
           ]
@@ -1449,6 +1477,10 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
+            "adjudication adj-0005-reddit-domain-near-multi confirmed by Kenshiki (agent-assisted, local evidence only)",
+            "adjudication adj-0006-reddit-domain-near-owner confirmed by Kenshiki (agent-assisted, local evidence only)",
+            "adjudication adj-0009-reddit-domain-ubermedia-multi confirmed by Kenshiki (agent-assisted, local evidence only)",
+            "adjudication adj-0010-reddit-domain-ubermedia-owner confirmed by Kenshiki (agent-assisted, local evidence only)",
             "registrable domains: reddit.com",
             "runtime company reddit"
           ]
@@ -1719,6 +1751,8 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
+            "adjudication adj-0007-tiktok-domain-datedetective-multi confirmed by Kenshiki (agent-assisted, local evidence only)",
+            "adjudication adj-0008-tiktok-domain-datedetective-owner confirmed by Kenshiki (agent-assisted, local evidence only)",
             "registrable domains: tiktok.com",
             "runtime company tiktok"
           ]

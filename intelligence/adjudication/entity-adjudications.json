@@ -1,4 +1,178 @@
 {
   "schemaVersion": 1,
-  "records": []
+  "records": [
+    {
+      "id": "adj-0001-alphabet-alias-google-tag-manager",
+      "status": "approved",
+      "action": "confirm",
+      "conflictId": "runtime-conflict-0001",
+      "facetKeys": [
+        "company:google",
+        "company:google-tag-manager"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Kenshiki (agent-assisted, local evidence only)",
+      "reviewed_at": "2026-07-04",
+      "evidence": [
+        "src/core/db/companies.json models google and google-tag-manager as separate companies sharing parentCompany",
+        "intelligence/normalized/valuations.json keys findings on per-product entity ids"
+      ],
+      "notes": "Alias slug alphabet-inc collision between the Google and Google Tag Manager runtime entities. The runtime DB deliberately models Alphabet products as separate companies (src/core/db/companies.json), with the shared parent recorded in parentCompany, and valuation findings key on per-product entity ids. Keep product-level entities separate; the alias collision is the expected artifact of a shared parentCompany alias, not a wrong join. A future reviewed decision could add explicit parent-entity modeling instead."
+    },
+    {
+      "id": "adj-0002-alphabet-alias-google-ads",
+      "status": "approved",
+      "action": "confirm",
+      "conflictId": "runtime-conflict-0002",
+      "facetKeys": [
+        "company:google",
+        "company:google-ads"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Kenshiki (agent-assisted, local evidence only)",
+      "reviewed_at": "2026-07-04",
+      "evidence": [
+        "src/core/db/companies.json models google and google-ads as separate companies sharing parentCompany"
+      ],
+      "notes": "Same decision as adj-0001 for the Google Ads / DoubleClick entity: product-level entities stay separate; shared parent is represented by companies.json parentCompany, not entity fusion."
+    },
+    {
+      "id": "adj-0003-microsoft-alias-clarity",
+      "status": "approved",
+      "action": "confirm",
+      "conflictId": "runtime-conflict-0003",
+      "facetKeys": [
+        "company:linkedin",
+        "company:microsoft-clarity"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Kenshiki (agent-assisted, local evidence only)",
+      "reviewed_at": "2026-07-04",
+      "evidence": [
+        "src/core/db/companies.json models linkedin and microsoft-clarity as separate companies sharing parentCompany"
+      ],
+      "notes": "Alias slug microsoft-corporation collision between the LinkedIn Insight and Microsoft Clarity runtime entities \u2014 same shape as adj-0001: separate Microsoft products stay separate entities; the shared parent lives in companies.json parentCompany."
+    },
+    {
+      "id": "adj-0004-microsoft-alias-uet",
+      "status": "approved",
+      "action": "confirm",
+      "conflictId": "runtime-conflict-0004",
+      "facetKeys": [
+        "company:linkedin",
+        "company:microsoft-ads"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Kenshiki (agent-assisted, local evidence only)",
+      "reviewed_at": "2026-07-04",
+      "evidence": [
+        "src/core/db/companies.json models linkedin and microsoft-ads as separate companies sharing parentCompany"
+      ],
+      "notes": "Same decision as adj-0003 for Microsoft Advertising (UET)."
+    },
+    {
+      "id": "adj-0005-reddit-domain-near-multi",
+      "status": "approved",
+      "action": "confirm",
+      "conflictId": "runtime-conflict-0005",
+      "facetKeys": [
+        "company:reddit",
+        "broker2025:nearpteltd_72652eab"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Kenshiki (agent-assisted, local evidence only)",
+      "reviewed_at": "2026-07-04",
+      "evidence": [
+        "intelligence/normalized/brokers.json record nearpteltd_72652eab websiteUrls contains https://www.reddit.com/r/nearprotocol/ (subreddit), https://github.com/near, https://t.me/cryptonear",
+        "src/core/db/trackers.json reddit-pixel matches alb.reddit.com as runtime evidence"
+      ],
+      "notes": "NEAR PTE LTD's registry record claims reddit.com among its domains, but the underlying URL in intelligence/normalized/brokers.json is https://www.reddit.com/r/nearprotocol/ \u2014 a subreddit link from a crawled link list (alongside github.com/near, t.me/cryptonear, notion.site). Platform profile URLs are not domain ownership. reddit.com identity evidence stays with the Reddit runtime entity."
+    },
+    {
+      "id": "adj-0006-reddit-domain-near-owner",
+      "status": "approved",
+      "action": "confirm",
+      "conflictId": "runtime-conflict-0006",
+      "facetKeys": [
+        "company:reddit",
+        "broker2025:nearpteltd_72652eab"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Kenshiki (agent-assisted, local evidence only)",
+      "reviewed_at": "2026-07-04",
+      "evidence": [
+        "Same source evidence as adj-0005"
+      ],
+      "notes": "Owner-conflict twin of adj-0005: the resolver correctly refused to hand reddit.com to the NEAR record; confirmed."
+    },
+    {
+      "id": "adj-0007-tiktok-domain-datedetective-multi",
+      "status": "approved",
+      "action": "confirm",
+      "conflictId": "runtime-conflict-0007",
+      "facetKeys": [
+        "company:tiktok",
+        "broker2025:schmermsllc_s_d7a166d9"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Kenshiki (agent-assisted, local evidence only)",
+      "reviewed_at": "2026-07-04",
+      "evidence": [
+        "intelligence/normalized/brokers.json record schmermsllc_s_d7a166d9 websiteUrls contains https://www.tiktok.com/@datedetectiveapp (profile URL)",
+        "src/core/db/trackers.json tiktok-pixel matches analytics.tiktok.com as runtime evidence"
+      ],
+      "notes": "DATE DETECTIVE Inc's registry record claims tiktok.com, but the underlying URL is https://www.tiktok.com/@datedetectiveapp \u2014 the company's own TikTok profile, not domain ownership. tiktok.com identity evidence stays with the TikTok runtime entity."
+    },
+    {
+      "id": "adj-0008-tiktok-domain-datedetective-owner",
+      "status": "approved",
+      "action": "confirm",
+      "conflictId": "runtime-conflict-0008",
+      "facetKeys": [
+        "company:tiktok",
+        "broker2025:schmermsllc_s_d7a166d9"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Kenshiki (agent-assisted, local evidence only)",
+      "reviewed_at": "2026-07-04",
+      "evidence": [
+        "Same source evidence as adj-0007"
+      ],
+      "notes": "Owner-conflict twin of adj-0007; the resolver's refusal is confirmed."
+    },
+    {
+      "id": "adj-0009-reddit-domain-ubermedia-multi",
+      "status": "approved",
+      "action": "confirm",
+      "conflictId": "runtime-conflict-0009",
+      "facetKeys": [
+        "company:reddit",
+        "broker2025:ubermedia_935be0c8"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Kenshiki (agent-assisted, local evidence only)",
+      "reviewed_at": "2026-07-04",
+      "evidence": [
+        "intelligence/normalized/brokers.json record ubermedia_935be0c8 websiteUrls contains https://www.reddit.com/r/nearprotocol/ and the same near.org/t.me link list as nearpteltd_72652eab"
+      ],
+      "notes": "Ubermedia's registry record carries the same crawled link list as the NEAR record (near.org pages, t.me/cryptonear, https://www.reddit.com/r/nearprotocol/), so its reddit.com claim is the same subreddit artifact rejected in adj-0005. This decision covers only reddit.com ownership; whether the NEAR/Ubermedia/Faraday records belong in one research entity is a quarantine-scope question left open."
+    },
+    {
+      "id": "adj-0010-reddit-domain-ubermedia-owner",
+      "status": "approved",
+      "action": "confirm",
+      "conflictId": "runtime-conflict-0010",
+      "facetKeys": [
+        "company:reddit",
+        "broker2025:ubermedia_935be0c8"
+      ],
+      "targetEntityId": null,
+      "reviewer": "Kenshiki (agent-assisted, local evidence only)",
+      "reviewed_at": "2026-07-04",
+      "evidence": [
+        "Same source evidence as adj-0009"
+      ],
+      "notes": "Owner-conflict twin of adj-0009; the resolver's refusal is confirmed."
+    }
+  ]
 }

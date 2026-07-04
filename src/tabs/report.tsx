@@ -296,7 +296,12 @@ function ObservationTable({
                   <td className={`${TYPE.body} p-3`}>{count}</td>
                   <td className={`${TYPE.body} p-3`}>{formatTime(event.observedAt)}</td>
                   <td className="p-3">
-                    {event.blockability === "network_blockable" && event.trackerId && !guidance.offerBlocking ? (
+                    {/* user_action_required covers high-breakage trackers the
+                        blocking policy never offers a toggle for — keep the
+                        reason visible in the table too. */}
+                    {(event.blockability === "network_blockable" || event.blockability === "user_action_required") &&
+                    event.trackerId &&
+                    !guidance.offerBlocking ? (
                       <p className={TYPE.small}>{"reason" in guidance ? guidance.reason : null}</p>
                     ) : null}
                     {canBlock && guidance.warning ? <p className={TYPE.small}>Blocking caution: {guidance.warning}</p> : null}
