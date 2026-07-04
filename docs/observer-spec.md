@@ -3,15 +3,15 @@ title: "Pulse Browser Extension - LLM Build Specification"
 description: "The full build specification for Pulse Observer: product definition, threat model, architecture, detection/blocking spec, and acceptance criteria."
 owner: Kenshiki
 section: docs
-lastReviewed: 2026-07-03
+lastReviewed: 2026-07-04
 nextReview: 2026-09-29
-version: "0.0.1"
+version: "0.0.2"
 status: draft
 ---
 
 ## Current Implementation Baseline
 
-As of 2026-07-03, the implementation is beyond the original Phase 1 seed state in UI fidelity, valuation, local ledgering, and QA guardrails, but it is still not source-backed at tracker-claim level.
+As of 2026-07-04 (repo version 0.3.1), the implementation is beyond the original Phase 1 seed state in UI fidelity, valuation, local ledgering, and QA guardrails, but it is still not source-backed at tracker-claim level.
 
 Current runtime state:
 
@@ -22,7 +22,8 @@ Current runtime state:
 - 42/42 tracker records remain `review.status: seed` for tracker identity/collection/blocking claims.
 - 0/42 tracker records are source-backed for tracker claims.
 - 42/42 tracker records include `market_research` provenance for valuation only; this must not satisfy tracker identity, collection, blocking, or remediation provenance.
-- 29/42 trackers have SDK/global signatures.
+- 29/42 trackers have SDK/global signatures (`src/core/signals/sdk-globals.ts`).
+- 42/42 tracker records carry `supplyChainRole` (position in the ad-money flow) and `whoItServes` (benefit-category classification with plain-language note) fields consumed by the attention model and value-ledger views.
 - All 42 trackers are currently `network_blockable`; no runtime DB records yet exercise `content_mitigatable`, `observable_only`, `pre_request_unblockable`, `server_side_unblockable`, or `user_action_required`.
 - The extension-scoped entity SSOT has 41 runtime entities and 9 extension-scoped entity conflicts needing review.
 - Research-only entities remain quarantined under `intelligence/quarantine/`.
@@ -32,7 +33,11 @@ Current implemented product surfaces:
 - Popup renders icon-only actions with visible hover/focus tooltips: full report, value ledger, copy output.
 - Popup and report share headline summary math through `src/core/report/metrics.ts`.
 - Popup and report share canonical vocabulary enforced by `pnpm vocab:check`.
+- An attention model (`src/core/domain/attention.ts`) ranks observers worst-first on every listing surface using who-it-serves category, confidence, valuation, and risk level, compressed into red/amber/gray tiers; ranking weights are part of `docs/data-contract.md`.
 - Full report uses a segmented `Evidence` / `Value ledger` view.
+- Report Evidence mode uses the overhauled IA shipped in 0.3.x: verdict banner, summary metrics, one ranked `Who is watching — worst first` list with four lenses (`Actors`, `Money`, `Network`, `Timeline`), a collapsed `Appendix — full evidence for auditors` (exposure scan, atomic observe/block matrix, per-company remediation dossiers), a `Clean up this page` batch remediation flow, and diagnostics. See the Full report tab section for the canonical structure.
+- The Phase 1.5 exportable remediation checklist is implemented: `Clean up this page` (`src/components/CleanupFlow.tsx`) turns per-card decisions into one worst-first checklist with tier chips, time/identity cost per row, session done-marks, and a copyable plain-text export.
+- Blocking is per-tracker via the `blockedTrackerIds` user setting; nothing is blocked by default, and block offers are breakage-aware.
 - Value ledger is stored locally in extension storage, not cookies or page storage.
 - Value ledger tracks top-level visits, tracker presence per visit, raw observations, period estimates, ad-market value to trackers, site-paid tool fees, and flow-level supply-chain roles.
 - Value ledger includes `Value supply chain`, `Bill of materials`, `Who they serve`, local tracker/site connections, and `How we calculate this` sections that state counting rules and limitations.
@@ -55,7 +60,7 @@ pnpm intel:promote:check
 pnpm build:chrome
 ```
 
-`pnpm qa` currently runs the full gate above. Last known run passed with 150 tests and Chrome MV3 build.
+`pnpm qa` currently runs the full gate above. Last verified run (2026-07-04) passed with 163 unit tests across 19 files and the Chrome MV3 build.
 
 Primary remaining credibility gaps:
 
@@ -873,6 +878,11 @@ Each record must include:
 
 `market_research` provenance backs only `perPersonValue` claims. It must not be counted as tracker identity, ownership, collection, blocking, or remediation provenance.
 
+Each record must also include two classification fields consumed by the attention model and value-ledger views:
+
+- `supplyChainRole`: the tracker's position in the ad-money flow. Current values: `mine_infrastructure`, `refinery`, `parts_supplier`, `concentrator`, `assembly`, `wholesale`, `retail_shelf`, `vertically_integrated`, `site_tooling`.
+- `whoItServes`: `{ "category": "you_and_the_site" | "the_site" | "advertisers_and_maybe_you" | "only_their_business", "note": "<plain-language benefit statement>" }`.
+
 ### companies.json
 
 Each record must include:
@@ -931,7 +941,7 @@ Top-level sections, in this order:
 8. `Stop at source`
 9. `What blocking changes`
 
-This is the canonical top-level popup IA. Roadmap phases, acceptance criteria, and implementation tickets must preserve these user-facing concepts. `Cannot block` is required because non-blockable exposures are first-class evidence, not empty state copy. `What blocking changes` is required because browser blocking does not delete historical or source-held records.
+This is the canonical top-level popup IA. Roadmap phases, acceptance criteria, and implementation tickets must preserve these user-facing concepts. Sections that list observers sort worst-first by the attention model; `Still exposed` renders as `Still exposed — worst first`. `Cannot block` is required because non-blockable exposures are first-class evidence, not empty state copy. `What blocking changes` is required because browser blocking does not delete historical or source-held records.
 
 The popup header uses compact icon-only actions with visible hover/focus tooltips and `aria-label`s: full report, value ledger, and copy output. The value-ledger action opens the report tab in `Value ledger` mode; there is no separate value-ledger route.
 
@@ -950,17 +960,16 @@ The report has a segmented control with two modes:
 - `Evidence`: current-tab evidence and remediation.
 - `Value ledger`: local rolling value history across observed browsing.
 
-Evidence mode sections, in this order (user-facing titles follow the tone rules — plain language, no mechanism names; internal identifiers in parentheses are stable for tests and tickets):
+Evidence mode structure, in this order (user-facing titles follow the tone rules — plain language, no mechanism names; internal identifiers in parentheses are stable for tests and tickets). This is the 0.3.x attention-model IA: one ranked observer list with switchable lenses replaced the earlier four stacked observer sections, and full per-company dossiers moved to a collapsed auditors' appendix:
 
-1. `Summary` (summary)
-2. `What could be read about you` (exposure-scan)
-3. `Signals seen — and what can be done` (observe-block-matrix)
-4. `Who is watching` (observer-details)
-5. `Stop at source` (remediation)
-6. `Timeline` (evidence-timeline)
-7. `Diagnostics` (diagnostics)
+1. Verdict banner (verdict): one-line plain-language verdict for the tab.
+2. `Summary` (summary): headline metrics from `src/core/report/metrics.ts`.
+3. `Who is watching — worst first` (observer-attention): one list ranked by the attention model, with a segmented lens control — `Actors` (ranked observer table with per-tracker block toggles), `Money` (valuation view), `Network` (site-to-tracker connection graph), `Timeline` (evidence timeline).
+4. `Appendix — full evidence for auditors` (collapsed by default): `What could be read about you` (exposure-scan), atomic signal matrix (observe-block-matrix), and full per-company remediation dossiers (remediation).
+5. `Clean up this page` (cleanup): worst-first batch remediation checklist with tier chips, per-row time and identity cost, session done-marks, and copyable plain-text export.
+6. `Diagnostics` (diagnostics).
 
-The exposure-scan section must be labeled as extension-run local visibility. It must not imply the current page queried those fields. The observe-block matrix must exclude exposure-scan and extension-diagnostic events so it answers what page activity was actually observed and what can be blocked or mitigated.
+The exposure-scan section must be labeled as extension-run local visibility. It must not imply the current page queried those fields. The observe-block matrix must exclude exposure-scan and extension-diagnostic events so it answers what page activity was actually observed and what can be blocked or mitigated. Moving a section into the appendix does not relax these rules.
 
 Value-ledger mode sections:
 
