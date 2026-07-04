@@ -29,6 +29,8 @@ import {
 } from "~core/report/display"
 import { blockingGuidance } from "~core/domain/blocking-policy"
 import { rankObservers } from "~core/domain/attention"
+import CleanupFlow from "~components/CleanupFlow"
+import TrackerGraph from "~components/value/TrackerGraph"
 import VerdictBanner from "~components/VerdictBanner"
 import { summaryMetrics } from "~core/report/metrics"
 import { formatUsd, formatUsdRange, getTrackerServes, MONETIZATION_FLOW_LABELS, rollupObservedValuations, SERVES_LABELS } from "~core/domain/valuation"
@@ -194,13 +196,13 @@ function ExposureScanSection({ events }: { events: ObserverEvent[] }) {
 const ESTIMATED_VALUE_EXPLAINER =
   "This is a supply-chain estimate, not a payout. Advertiser money enters through ad rails; site-paid fees enter through publisher tools; identity and measurement data can feed future auctions. You are observed, not paid."
 
-function ValuationSection({ events }: { events: ObserverEvent[] }) {
+function ValuationSection({ embedded = false, events }: { embedded?: boolean; events: ObserverEvent[] }) {
   const rollup = rollupObservedValuations(events)
   if (rollup.perTracker.length === 0) return null
 
   return (
-    <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-      <SectionTitle number="03b" title="Estimated data value" />
+    <section className={embedded ? "mt-4" : `mt-6 ${UI.panel} ${UI.reportInset}`}>
+      {embedded ? null : <SectionTitle number="03b" title="Estimated data value" />}
       <p className={`${TYPE.body} mt-2 max-w-4xl`}>{ESTIMATED_VALUE_EXPLAINER}</p>
       <p className={`${TYPE.small} mt-2`}>{rollup.disclaimer}</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -329,12 +331,12 @@ function ObservationTable({
   )
 }
 
-function EvidenceTimeline({ events }: { events: ObserverEvent[] }) {
+function EvidenceTimeline({ embedded = false, events }: { embedded?: boolean; events: ObserverEvent[] }) {
   const observations = compactEvents(events.filter((event) => event.source !== "extension-scan"))
 
   return (
-    <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-      <SectionTitle number="06" title="Timeline" />
+    <section className={embedded ? "mt-4" : `mt-6 ${UI.panel} ${UI.reportInset}`}>
+      {embedded ? null : <SectionTitle number="06" title="Timeline" />}
       <div className="mt-3 space-y-3">
         {observations.length === 0 ? <p className={TYPE.body}>No evidence events have been recorded for this tab yet.</p> : observations.map(({ event, count }) => (
           <div className="grid gap-2 border-t border-border pt-3 first:border-t-0 first:pt-0 sm:grid-cols-[120px_1fr]" key={displayEventKey(event)}>
@@ -461,6 +463,7 @@ function ReportTab() {
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle")
   const [reportView, setReportView] = useState<ReportView>(initialReportView)
   const { error: valuationError, period: valuationPeriod, refresh: refreshValuationRollup, rollup: valuationRollup, setPeriod: setValuationPeriod } = useValuationRollup("week")
+  const [lens, setLens] = useState<"actors" | "money" | "network" | "timeline">("actors")
 
   useEffect(() => {
     async function loadSummary() {
@@ -590,21 +593,55 @@ function ReportTab() {
               </div>
             </section>
 
-            <section className="mt-6">
-              <SectionTitle number="02" title="Who is watching — worst first" />
-              <ObservationTable blockedTrackerIds={settings.blockedTrackerIds} observations={observations} onToggleBlocking={toggleTrackerBlocking} />
+            <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <SectionTitle number="02" title="Who is watching — worst first" />
+                <div className="flex flex-wrap gap-1">
+                  {(
+                    [
+                      { label: "Actors", value: "actors" },
+                      { label: "Money", value: "money" },
+                      { label: "Network", value: "network" },
+                      { label: "Timeline", value: "timeline" }
+                    ] as const
+                  ).map((item) => (
+                    <button
+                      className={`${UI.segment} ${lens === item.value ? UI.segmentActive : UI.segmentIdle}`}
+                      key={item.value}
+                      onClick={() => setLens(item.value)}
+                      type="button">
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {lens === "actors" ? (
+                <ObservationTable blockedTrackerIds={settings.blockedTrackerIds} observations={observations} onToggleBlocking={toggleTrackerBlocking} />
+              ) : null}
+              {lens === "money" ? <ValuationSection embedded events={summary.events} /> : null}
+              {lens === "network" ? (
+                valuationRollup && valuationRollup.edges.length > 0 ? (
+                  <div className="mt-4">
+                    <TrackerGraph edges={valuationRollup.edges} />
+                  </div>
+                ) : (
+                  <p className={`${TYPE.body} mt-4`}>No site-to-tracker connections are in the local ledger for this period yet.</p>
+                )
+              ) : null}
+              {lens === "timeline" ? <EvidenceTimeline embedded events={summary.events} /> : null}
             </section>
-
-            <ValuationSection events={summary.events} />
 
             <details className="mt-6">
               <summary className={`${TYPE.label} cursor-pointer select-none`}>Appendix — full evidence for auditors</summary>
               <ExposureScanSection events={exposureEvents} />
               <AtomicSignalMatrix rows={rows} />
+              <RemediationPanel observations={observations} />
             </details>
 
-            <RemediationPanel observations={observations} />
-            <EvidenceTimeline events={summary.events} />
+            <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
+              <SectionTitle number="03" title="Clean up this page" />
+              <CleanupFlow events={summary.events} />
+            </section>
             <DiagnosticsPanel summary={summary} />
           </>
         ) : null}

@@ -7,7 +7,7 @@
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "11687ed0c35db86b525089393b144325f81e3a400643a81a4d6e2ffbf2a4c245"
+      "sha256": "af1da317ab85ae097fa595abcc643ada74da30106b42a4df2d79a6c522f0d6a8"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
@@ -176,9 +176,10 @@
     },
     {
       "term": "This period",
-      "total": 7,
+      "total": 8,
       "files": {
         "src/popup.tsx": 1,
+        "src/tabs/report.tsx": 1,
         "src/components/value/ValueLedgerView.tsx": 6
       }
     },
@@ -312,23 +313,23 @@
   "topWords": [
     {
       "word": "mt-",
-      "count": 63
+      "count": 65
     },
     {
       "word": "gap-",
-      "count": 43
+      "count": 45
     },
     {
       "word": "core",
       "count": 29
     },
     {
-      "word": "grid",
-      "count": 24
+      "word": "flex",
+      "count": 25
     },
     {
-      "word": "flex",
-      "count": 23
+      "word": "grid",
+      "count": 24
     },
     {
       "word": "grid-cols-",
@@ -348,6 +349,14 @@
     },
     {
       "word": "flex-wrap",
+      "count": 16
+    },
+    {
+      "word": "components",
+      "count": 14
+    },
+    {
+      "word": "page",
       "count": 14
     },
     {
@@ -355,15 +364,7 @@
       "count": 13
     },
     {
-      "word": "page",
-      "count": 13
-    },
-    {
       "word": "border",
-      "count": 12
-    },
-    {
-      "word": "components",
       "count": 12
     },
     {
@@ -381,6 +382,14 @@
     {
       "word": "text-",
       "count": 12
+    },
+    {
+      "word": "items-center",
+      "count": 11
+    },
+    {
+      "word": "network",
+      "count": 11
     },
     {
       "word": "revenue",
@@ -403,7 +412,7 @@
       "count": 10
     },
     {
-      "word": "items-center",
+      "word": "justify-between",
       "count": 10
     },
     {
@@ -424,10 +433,6 @@
     },
     {
       "word": "evidence",
-      "count": 9
-    },
-    {
-      "word": "justify-between",
       "count": 9
     },
     {
@@ -480,10 +485,6 @@
     },
     {
       "word": "min-w-",
-      "count": 7
-    },
-    {
-      "word": "network",
       "count": 7
     },
     {
@@ -559,6 +560,10 @@
       "count": 6
     },
     {
+      "word": "actors",
+      "count": 5
+    },
+    {
       "word": "blockable",
       "count": 5
     },
@@ -624,10 +629,6 @@
     },
     {
       "word": "that",
-      "count": 5
-    },
-    {
-      "word": "their",
       "count": 5
     }
   ]
