@@ -33,6 +33,10 @@ export function exposureScanEvents(events: ObserverEvent[]) {
   return events.filter(isExposureScanEvent)
 }
 
+export function diagnosticEvents(events: ObserverEvent[]) {
+  return events.filter(isDiagnosticEvent)
+}
+
 export const EMPTY_SUMMARY: SiteSummary = {
   origin: "unknown",
   tabId: -1,

@@ -5,7 +5,6 @@ import browser from "webextension-polyfill"
 
 import { RuntimeMessageSchema } from "~core/contracts/schemas"
 import { getObserverRemediation } from "~core/domain/remediation"
-import { isDiagnosticEvent } from "~core/state/summaries"
 import ValueLedgerView from "~components/value/ValueLedgerView"
 import { useValuationRollup } from "~hooks/useValuationRollup"
 import type { AtomicSignalRow, DisplayObservation } from "~core/report/display"
@@ -17,6 +16,7 @@ import {
   compactEvents,
   compactPageErrors,
   detailEntries,
+  diagnosticEvents,
   displayEventKey,
   eventSummary,
   exposureScanEvents,
@@ -28,6 +28,7 @@ import {
   visibleSignals
 } from "~core/report/display"
 import { blockingGuidance } from "~core/domain/blocking-policy"
+import { summaryMetrics } from "~core/report/metrics"
 import { formatUsd, formatUsdRange, MONETIZATION_FLOW_LABELS, rollupObservedValuations } from "~core/domain/valuation"
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import type { UserSettings } from "~core/domain/types"
@@ -105,12 +106,12 @@ function ReportViewSwitch({ onViewChange, view }: { onViewChange: (view: ReportV
 function AtomicSignalMatrix({ rows }: { rows: AtomicSignalRow[] }) {
   return (
     <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-      <SectionTitle number="03" title="Signals seen — and what can be done" />
+      <SectionTitle number="03" title="Evidence types seen — and what can be done" />
       <div className="mt-3 overflow-x-auto">
         <table className="w-full border-collapse text-left">
           <thead>
             <tr className="border-b border-border">
-              <th className={`${TYPE.label} p-2`}>Signal</th>
+              <th className={`${TYPE.label} p-2`}>Evidence type</th>
               <th className={`${TYPE.label} p-2`}>Observed</th>
               <th className={`${TYPE.label} p-2`}>Status</th>
               <th className={`${TYPE.label} p-2`}>Capability</th>
@@ -121,7 +122,7 @@ function AtomicSignalMatrix({ rows }: { rows: AtomicSignalRow[] }) {
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td className={`${TYPE.body} p-2 text-muted-foreground`} colSpan={6}>No page-observed signals yet.</td>
+                <td className={`${TYPE.body} p-2 text-muted-foreground`} colSpan={6}>No page-observed evidence types yet.</td>
               </tr>
             ) : rows.map((row) => (
               <tr className="border-b border-border last:border-b-0" key={row.signal}>
@@ -252,7 +253,7 @@ function ObservationTable({
         <thead>
           <tr className="border-b border-border bg-background/60">
             <th className={`${TYPE.label} p-3`}>Observer</th>
-            <th className={`${TYPE.label} p-3`}>Signal</th>
+            <th className={`${TYPE.label} p-3`}>Evidence type</th>
             <th className={`${TYPE.label} p-3`}>Capability</th>
             <th className={`${TYPE.label} p-3`}>Count</th>
             <th className={`${TYPE.label} p-3`}>Latest</th>
@@ -321,7 +322,7 @@ function ObservationTable({
 }
 
 function EvidenceTimeline({ events }: { events: ObserverEvent[] }) {
-  const observations = compactEvents(events.filter((event) => !isDiagnosticEvent(event) && event.source !== "extension-scan"))
+  const observations = compactEvents(events.filter((event) => event.source !== "extension-scan"))
 
   return (
     <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
@@ -409,7 +410,7 @@ function RemediationPanel({ observations }: { observations: DisplayObservation[]
 }
 
 function DiagnosticsPanel({ summary }: { summary: SiteSummary }) {
-  const diagnostics = summary.events.filter(isDiagnosticEvent)
+  const diagnostics = diagnosticEvents(summary.events)
   const pageErrors = compactPageErrors(summary.pageErrors)
 
   return (
@@ -422,7 +423,7 @@ function DiagnosticsPanel({ summary }: { summary: SiteSummary }) {
         <dd className={TYPE.body}>{formatTime(summary.updatedAt)}</dd>
         <dt className={TYPE.small}>Incomplete</dt>
         <dd className={TYPE.body}>{summary.incomplete ? "Yes" : "No"}</dd>
-        <dt className={TYPE.small}>Visible signals</dt>
+        <dt className={TYPE.small}>Visible evidence</dt>
         <dd className={TYPE.body}>{visibleSignals(summary).map(titleCase).join(", ") || "None"}</dd>
       </dl>
       {pageErrors.length > 0 ? (
@@ -522,6 +523,7 @@ function ReportTab() {
 
   const observations = compactEvents(summary.events)
   const rows = buildAtomicSignalRows(summary.events)
+  const metrics = summaryMetrics(summary)
   const exposureEvents = exposureScanEvents(summary.events)
 
   return (
@@ -570,12 +572,12 @@ function ReportTab() {
             <section aria-label="Report summary" className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
               <SectionTitle number="01" title="Summary" />
               <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-                <Metric label="Signals" value={rows.length} />
-                <Metric label="Events" value={summary.events.filter((event) => !isDiagnosticEvent(event) && event.source !== "extension-scan").length} />
-                <Metric label="Exposure" value={exposureEvents.length} />
-                <Metric label="Active" value={summary.activeCompanies.length} />
-                <Metric label="Blocked" value={summary.blockedCompanies.length} />
-                <Metric label="Cannot" value={summary.cannotBlockSignals.length} />
+                <Metric label="Observations" value={metrics.observations} />
+                <Metric label="Events" value={metrics.recordedEvents} />
+                <Metric label="Exposure" value={metrics.exposureEvents} />
+                <Metric label="Watching" value={metrics.watchingCompanies} />
+                <Metric label="Blocked" value={metrics.blockedCompanies} />
+                <Metric label="Can't block" value={metrics.cannotBlockSignals} />
               </div>
             </section>
 

@@ -13,6 +13,7 @@ import {
   compactEvents,
   compactPageErrors,
   detailEntries,
+  diagnosticEvents,
   displayEventKey,
   eventSummary,
   formatDetailKey,
@@ -24,8 +25,8 @@ import {
   type DisplayObservation
 } from "~core/report/display"
 import { blockingGuidance } from "~core/domain/blocking-policy"
+import { summaryMetrics } from "~core/report/metrics"
 import { formatUsd, formatUsdRange, getTrackerValuation, rollupObservedValuations } from "~core/domain/valuation"
-import { isDiagnosticEvent } from "~core/state/summaries"
 import type { ObserverEvent, RollingValuationSummary, SiteSummary, UserSettings, ValuationPeriod } from "~core/domain/types"
 import Button from "~components/system/Button"
 import SiteLogo from "~components/system/SiteLogo"
@@ -218,7 +219,7 @@ function ObserverCard({
         <dl className="mt-2 grid grid-cols-[96px_1fr] gap-1.5">
           <dt className={TYPE.small}>Origin</dt>
           <dd className={`${TYPE.body} break-all`}>{event.origin}</dd>
-          <dt className={TYPE.small}>Signal</dt>
+          <dt className={TYPE.small}>Evidence type</dt>
           <dd className={TYPE.body}>{titleCase(event.eventType)}</dd>
           <dt className={TYPE.small}>Source</dt>
           <dd className={TYPE.body}>{titleCase(event.source)}</dd>
@@ -408,6 +409,7 @@ function RollingValueSection({
 }
 
 function DiagnosticsSection({ diagnostics, summary }: { diagnostics: ObserverEvent[]; summary: SiteSummary }) {
+  const metrics = summaryMetrics(summary)
   const latestDiagnostics = diagnostics.slice(-4).reverse()
 
   return (
@@ -419,8 +421,8 @@ function DiagnosticsSection({ diagnostics, summary }: { diagnostics: ObserverEve
         <dt className={TYPE.small}>Updated</dt>
         <dd className={TYPE.body}>{formatTime(summary.updatedAt)}</dd>
         <dt className={TYPE.small}>Raw events</dt>
-        <dd className={TYPE.body}>{summary.events.length}</dd>
-        <dt className={TYPE.small}>Signals</dt>
+        <dd className={TYPE.body}>{metrics.storedEvents}</dd>
+        <dt className={TYPE.small}>Evidence</dt>
         <dd className={TYPE.body}><CompactList emptyLabel="None yet" items={visibleSignals(summary).map(titleCase)} /></dd>
         <dt className={TYPE.small}>Active</dt>
         <dd className={`${TYPE.body} break-all`}><CompactList emptyLabel="None" items={summary.activeCompanies} /></dd>
@@ -574,6 +576,8 @@ function IndexPopup() {
     await openFullReport()
   }
 
+  const metrics = summaryMetrics(summary)
+
   const displayEvents = compactEvents(summary.events)
   const pageErrors = compactPageErrors(summary.pageErrors)
   // Cap per section, not before the split — otherwise a burst of exposed
@@ -613,7 +617,7 @@ function IndexPopup() {
         <section className={`mt-3.5 ${UI.panel} ${UI.inset}`}>
           <h2 className={TYPE.label}>Open full report in a new tab?</h2>
           <p className={`${TYPE.small} mt-2`}>
-            The report opens an extension tab with detailed evidence, atomic signal capability, source remediation, and diagnostics for this page.
+            The report opens an extension tab with detailed evidence, atomic evidence capability, source remediation, and diagnostics for this page.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Button onClick={() => openFullReport().catch(() => undefined)}>Open report</Button>
@@ -627,7 +631,7 @@ function IndexPopup() {
           or mitigated) are the site's own bugs — reporting them here implied
           involvement we did not have and read as noise. Full detail stays in
           the report tab diagnostics for anyone investigating. */}
-      {pageErrors.length > 0 && (summary.blockedCompanies.length > 0 || summary.mitigatedCompanies.length > 0) ? (
+      {pageErrors.length > 0 && (metrics.blockedCompanies > 0 || metrics.mitigatedCompanies > 0) ? (
         <section className="mt-3.5 border border-danger bg-card p-3 shadow-sm" role="alert">
           <h2 className="flex items-center gap-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger"><AlertTriangle aria-hidden className="h-3 w-3 shrink-0" />Page error while this extension was active
           </h2>
@@ -662,9 +666,9 @@ function IndexPopup() {
       {/* Three company-oriented numbers. Signal/event counts are detail, not
           headline — they live in the Recent observations line and the report. */}
       <section aria-label="Observation summary" className="mt-2.5 grid grid-cols-3 gap-2">
-        <Metric label="Watching" tone="amber" title="Companies whose collection on this tab is still happening" value={summary.activeCompanies.length} />
-        <Metric label="Blocked" tone="emerald" title="Companies actually blocked by a rule you enabled — nothing blocks by default" value={summary.blockedCompanies.length} />
-        <Metric label="Can't block" tone="muted" title="Signals no browser tool can block at all" value={summary.cannotBlockSignals.length} />
+        <Metric label="Watching" tone="amber" title="Companies whose collection on this tab is still happening" value={metrics.watchingCompanies} />
+        <Metric label="Blocked" tone="emerald" title="Companies actually blocked by a rule you enabled — nothing blocks by default" value={metrics.blockedCompanies} />
+        <Metric label="Can't block" tone="muted" title="Things no browser tool can block at all" value={metrics.cannotBlockSignals} />
       </section>
 
       <details className="mt-1.5">
@@ -675,7 +679,7 @@ function IndexPopup() {
           <dt className={TYPE.small}>Blocked</dt>
           <dd className={TYPE.small}>Companies whose requests a rule actually stopped. Rules exist only where you clicked Block; nothing blocks by default.</dd>
           <dt className={TYPE.small}>Can't block</dt>
-          <dd className={TYPE.small}>Signals no browser tool can block: your internet address, how your connection looks, and anything a company records on its own servers.</dd>
+          <dd className={TYPE.small}>Things no browser tool can block: your internet address, how your connection looks, and anything a company records on its own servers.</dd>
         </dl>
       </details>
 
@@ -685,9 +689,9 @@ function IndexPopup() {
       <section className="mt-4">
         <SectionHeading icon={Activity}>Recent observations</SectionHeading>
         <p className={`${TYPE.body} mt-1`}>
-          {summary.events.length === 0
+          {metrics.storedEvents === 0
             ? "No observer events have been recorded for this tab yet."
-            : `${displayEvents.length} observation types from ${summary.events.length} raw events.`}
+            : `${metrics.observations} observations from ${metrics.recordedEvents} recorded events.`}
         </p>
       </section>
       <EventSection events={blockedEvents} title="Blocked" blockedTrackerIds={settings.blockedTrackerIds} onToggleBlocking={toggleTrackerBlocking} />
@@ -742,7 +746,7 @@ function IndexPopup() {
           Browser blocking can stop or reduce future browser-layer collection. It does not delete prior records, account-level data, server logs, IP visibility, or TLS fingerprints.
         </p>
       </section>
-      <DiagnosticsSection diagnostics={summary.events.filter(isDiagnosticEvent)} summary={summary} />
+      <DiagnosticsSection diagnostics={diagnosticEvents(summary.events)} summary={summary} />
       {summary.incomplete ? (
         <p className={`${TYPE.small} mt-4`}>This tab summary is incomplete until background and content events arrive.</p>
       ) : null}
