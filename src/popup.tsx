@@ -207,7 +207,11 @@ function ObserverCard({
           </span>
         </div>
       ) : null}
-      {event.blockability === "network_blockable" && event.trackerId && !guidance.offerBlocking ? (
+      {/* user_action_required covers high-breakage trackers the blocking
+          policy never offers a toggle for — the reason must stay visible. */}
+      {(event.blockability === "network_blockable" || event.blockability === "user_action_required") &&
+      event.trackerId &&
+      !guidance.offerBlocking ? (
         <p className={`${TYPE.small} mt-1.5 text-muted-foreground`}>{"reason" in guidance ? guidance.reason : null}</p>
       ) : null}
       {canBlock && guidance.offerBlocking && guidance.warning ? (

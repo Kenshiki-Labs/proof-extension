@@ -121,9 +121,43 @@ function assertTrackerValuation(tracker: TrackerRecord) {
   }
 }
 
+// The blocking-policy gate (src/core/domain/blocking-policy.ts) never offers
+// or installs a block rule for a high-breakage tracker. A record that is both
+// high-breakage and network_blockable therefore claims an in-product
+// capability the product deliberately never exercises — the honest class for
+// those records is user_action_required (source-level remediation).
+function assertBreakageGateConsistency(tracker: TrackerRecord) {
+  if (tracker.browserAction.siteBreakage.risk === "high" && tracker.browserAction.blockability === "network_blockable") {
+    throw new Error(
+      `Tracker ${tracker.id} is high-breakage (never offered blocking) but classified network_blockable; use user_action_required`
+    )
+  }
+}
+
+// matchTrackerRequest returns every record whose domains match a hostname, and
+// the background records one event per match — two records claiming the same
+// hostname space means one request double-counts as two observations (proven
+// by google-analytics claiming www.googletagmanager.com alongside the
+// google-tag-manager record). Domain spaces must stay disjoint across records.
+function assertDisjointDomainSpace(trackers: TrackerRecord[]) {
+  for (const tracker of trackers) {
+    for (const other of trackers) {
+      if (other.id === tracker.id) continue
+      for (const domain of tracker.match.domains) {
+        const collision = other.match.domains.find((otherDomain) => domain === otherDomain || domain.endsWith(`.${otherDomain}`))
+        if (collision) {
+          throw new Error(
+            `Tracker ${tracker.id} domain ${domain} overlaps tracker ${other.id} domain ${collision}; one request would match both records`
+          )
+        }
+      }
+    }
+  }
+}
+
 function assertBlockingLimitLanguage(tracker: TrackerRecord) {
   if (tracker.schemaVersion < 2) return
-  if (tracker.browserAction.blockability !== "network_blockable") return
+  if (tracker.browserAction.blockability !== "network_blockable" && tracker.browserAction.blockability !== "user_action_required") return
 
   const limits = tracker.browserAction.whatBlockingDoesNotChange.join(" ")
   if (!/does not delete/i.test(limits)) {
@@ -164,9 +198,12 @@ export function validateTrackerDatabaseRecords(rawTrackers: unknown, rawCompanie
     assertTrackerProvenance(tracker)
     assertHighFidelityTracker(tracker)
     assertTrackerValuation(tracker)
+    assertBreakageGateConsistency(tracker)
     assertBlockingLimitLanguage(tracker)
     assertNoReassuranceLanguage(tracker)
   }
+
+  assertDisjointDomainSpace(parsedTrackers)
 
   return {
     companies: parsedCompanies,

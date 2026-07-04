@@ -24,8 +24,9 @@ Current runtime state:
 - 42/42 tracker records include `market_research` provenance for valuation only; this must not satisfy tracker identity, collection, blocking, or remediation provenance.
 - 29/42 trackers have SDK/global signatures (`src/core/signals/sdk-globals.ts`).
 - 42/42 tracker records carry `supplyChainRole` (position in the ad-money flow) and `whoItServes` (benefit-category classification with plain-language note) fields consumed by the attention model and value-ledger views.
-- All 42 trackers are currently `network_blockable`; no runtime DB records yet exercise `content_mitigatable`, `observable_only`, `pre_request_unblockable`, `server_side_unblockable`, or `user_action_required`.
-- The extension-scoped entity SSOT has 41 runtime entities and 9 extension-scoped entity conflicts needing review.
+- 38 trackers are `network_blockable`; 4 high-breakage trackers (google-tag-manager, intercom, drift, hubspot) are `user_action_required` because the blocking-policy gate never offers or installs a block rule for them — validation now rejects any record that is both high-breakage and `network_blockable`. No runtime DB records yet exercise `content_mitigatable`, `observable_only`, `pre_request_unblockable`, or `server_side_unblockable`.
+- Tracker domain spaces are validated as disjoint across records: one request matches exactly one tracker record (a former google-analytics/google-tag-manager overlap double-counted gtag.js loads and could have installed a GTM-blocking rule via the Google Analytics toggle).
+- The extension-scoped entity SSOT has 42 runtime entities and 10 extension-scoped entity conflicts needing review. (The google-analytics/google-tag-manager entity fusion caused by the former domain overlap is un-fused; GTM's parent-company alias now surfaces the same Alphabet slug conflict its sibling Google entities already had.)
 - Research-only entities remain quarantined under `intelligence/quarantine/`.
 
 Current implemented product surfaces:
@@ -64,8 +65,8 @@ pnpm build:chrome
 
 Primary remaining credibility gaps:
 
-- Source-back tracker identity, ownership, collection, and blocking claims for the existing 42 records.
-- Reclassify any records that should not be represented as plain `network_blockable`.
+- Source-back tracker identity, ownership, collection, and blocking claims for the existing 42 records. This requires live retrieval of vendor documentation (the license-clean `vendor_docs` source family); provenance must never be filled in from memory without retrieval.
+- Reclassification pass done 2026-07-04 for locally provable cases (high-breakage records now `user_action_required`); revisit remaining classes during source-backed review.
 - Add missing SDK/global signatures for the 13 uncovered trackers where browser-visible signatures exist.
 - Implement persistence-surface observers without storing raw cookie, localStorage, sessionStorage, IndexedDB, Cache API, or service-worker payload values.
 - Resolve 9 extension-scoped entity conflicts before using entity-linked claims beyond the runtime DB.

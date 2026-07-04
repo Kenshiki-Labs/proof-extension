@@ -46,4 +46,14 @@ describe("matchTracker", () => {
 
     expect(matches).toEqual([])
   })
+
+  // Regression: google-analytics used to also claim www.googletagmanager.com,
+  // so one gtag.js load matched two records and double-counted. Domain spaces
+  // are disjoint now (enforced by validate.ts) — a googletagmanager.com load
+  // attributes to exactly one record.
+  it("matches a googletagmanager.com script load to exactly one record", () => {
+    const matches = matchTrackerRequest({ type: "script", url: "https://www.googletagmanager.com/gtag/js?id=G-XXXX" }, trackers)
+
+    expect(matches.map((match) => match.tracker.id)).toEqual(["google-tag-manager"])
+  })
 })

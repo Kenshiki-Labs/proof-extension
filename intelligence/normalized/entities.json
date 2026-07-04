@@ -502,17 +502,14 @@
         "Alphabet Inc."
       ],
       "domains": [
-        "google-analytics.com",
-        "googletagmanager.com"
+        "google-analytics.com"
       ],
       "facets": {
         "companyIds": [
-          "google",
-          "google-tag-manager"
+          "google"
         ],
         "trackerIds": [
-          "google-analytics",
-          "google-tag-manager"
+          "google-analytics"
         ],
         "broker2025Ids": [],
         "caRegistry2026Ids": [],
@@ -525,15 +522,38 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
-            "registrable domains: google-analytics.com, googletagmanager.com",
+            "registrable domains: google-analytics.com",
             "runtime company google"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "id": "google-tag-manager",
+      "canonicalName": "Google Tag Manager",
+      "aliases": [
+        "Alphabet Inc."
+      ],
+      "domains": [
+        "googletagmanager.com"
+      ],
+      "facets": {
+        "companyIds": [
+          "google-tag-manager"
+        ],
+        "trackerIds": [
+          "google-tag-manager"
+        ],
+        "broker2025Ids": [],
+        "caRegistry2026Ids": [],
+        "defenseDestinationIds": []
+      },
+      "joins": [
         {
           "key": "company:google-tag-manager",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
+          "method": "anchor",
+          "confidence": 1,
+          "confidenceLabel": "confirmed",
           "reasons": [
             "registrable domains: googletagmanager.com",
             "runtime company google-tag-manager"

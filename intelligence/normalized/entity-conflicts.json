@@ -14,18 +14,35 @@
     "status": "false_positive_review",
     "last_reviewed_at": "2026-07-03",
     "reviewer": "Kenshiki",
-    "notes": "9 conflict records require manual review before promotion into runtime claims."
+    "notes": "10 conflict records require manual review before promotion into runtime claims."
   },
   "summary": {
     "scope": "extension_runtime",
-    "total": 9,
-    "needsReview": 9,
+    "total": 10,
+    "needsReview": 10,
     "adjudicated": 0,
     "manualAdjudications": 0
   },
   "records": [
     {
       "id": "resolver-conflict-0001",
+      "type": "slug_owner_conflict",
+      "severity": "high",
+      "status": "needs_review",
+      "entityIds": [
+        "google-analytics",
+        "google-tag-manager"
+      ],
+      "facetKeys": [],
+      "details": {
+        "slug": "alphabet-inc",
+        "existingEntityId": "google-analytics",
+        "attemptedEntityId": "google-tag-manager",
+        "attemptedName": "Google Tag Manager"
+      }
+    },
+    {
+      "id": "resolver-conflict-0002",
       "type": "slug_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -42,7 +59,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0002",
+      "id": "resolver-conflict-0003",
       "type": "slug_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -59,7 +76,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0003",
+      "id": "resolver-conflict-0004",
       "type": "slug_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -76,7 +93,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0004",
+      "id": "resolver-conflict-0005",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -104,7 +121,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0005",
+      "id": "resolver-conflict-0006",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -121,7 +138,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0006",
+      "id": "resolver-conflict-0007",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -143,7 +160,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0007",
+      "id": "resolver-conflict-0008",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -160,7 +177,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0008",
+      "id": "resolver-conflict-0009",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -185,7 +202,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0009",
+      "id": "resolver-conflict-0010",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",

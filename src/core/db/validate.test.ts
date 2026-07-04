@@ -236,6 +236,49 @@ describe("validateTrackerDatabase", () => {
     ], [company], [remediation])).toThrow("blocking does not delete prior records")
   })
 
+  it("rejects high-breakage trackers classified as network_blockable", () => {
+    // The blocking-policy gate never offers blocking for high-breakage
+    // trackers, so a network_blockable class on one claims a capability the
+    // product never exercises.
+    expect(() => validateTrackerDatabaseRecords([
+      {
+        ...tracker,
+        browserAction: {
+          ...tracker.browserAction,
+          siteBreakage: { risk: "high", affects: ["support chat"], note: "Blocking removes the site's chat widget." }
+        }
+      }
+    ], [company], [remediation])).toThrow("high-breakage (never offered blocking) but classified network_blockable")
+
+    expect(() => validateTrackerDatabaseRecords([
+      {
+        ...tracker,
+        browserAction: {
+          ...tracker.browserAction,
+          blockability: "user_action_required",
+          method: "source-remediation",
+          siteBreakage: { risk: "high", affects: ["support chat"], note: "Blocking removes the site's chat widget." }
+        }
+      }
+    ], [company], [remediation])).not.toThrow()
+  })
+
+  it("rejects overlapping domain spaces across tracker records", () => {
+    const otherRemediation = { ...remediation, id: "acme-default" }
+    const otherCompany = { ...company, id: "acme", name: "Acme" }
+    const overlapping = {
+      ...tracker,
+      id: "acme-analytics",
+      companyId: "acme",
+      remediationId: "acme-default",
+      match: { ...tracker.match, domains: ["edge.fullstory.com"] }
+    }
+
+    expect(() =>
+      validateTrackerDatabaseRecords([tracker, overlapping], [company, otherCompany], [remediation, otherRemediation])
+    ).toThrow("overlaps tracker")
+  })
+
   it("rejects reassurance language in tracker explanations and blocking copy", () => {
     expect(() => validateTrackerDatabaseRecords([
       {

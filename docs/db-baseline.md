@@ -7,7 +7,7 @@ lastReviewed: 2026-07-04
 status: generated
 ---
 
-> Generated from commit `5029cf2` by `pnpm db:baseline`. Do not hand-edit.
+> Generated from commit `147276f` by `pnpm db:baseline`. Do not hand-edit.
 
 ## Summary
 
@@ -20,7 +20,7 @@ status: generated
 - Blocking-limit coverage: **42/42**
 - Not-visible-to-extension coverage: **42/42**
 - Valuation coverage: **42/42** (21 sourced / 21 estimated)
-- Blockability classes in use: `network_blockable` (42)
+- Blockability classes in use: `network_blockable` (38), `user_action_required` (4)
 
 ### By category
 
@@ -44,7 +44,7 @@ status: generated
 | Tracker | Category | Parent | Domains | Paths | SDK sig | Review | Source | Deletion | Opt-out | Friction | Verified | Privacy contact |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | fullstory | session-replay | FullStory | 2 | 2 | yes | seed | manual_seed | yes | yes | medium | 2026-07-01 | yes |
-| google-analytics | analytics | Alphabet Inc. | 2 | 3 | yes | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
+| google-analytics | analytics | Alphabet Inc. | 1 | 2 | yes | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
 | google-tag-manager | tag-manager | Alphabet Inc. | 1 | 2 | yes | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
 | google-ads | advertising | Alphabet Inc. | 3 | 2 | no | seed | manual_seed | yes | yes | low | 2026-07-01 | yes |
 | meta-pixel | advertising | Meta Platforms, Inc. | 2 | 2 | yes | seed | manual_seed | yes | yes | medium | 2026-07-01 | yes |

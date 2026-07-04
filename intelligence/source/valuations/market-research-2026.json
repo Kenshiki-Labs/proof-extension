@@ -369,7 +369,7 @@
     },
     {
       "id": "google-tag-manager-valuation-2026",
-      "subjectEntityId": "google-analytics",
+      "subjectEntityId": "google-tag-manager",
       "metric": "annual_operator_cost_us",
       "currency": "USD",
       "geography": "US",
