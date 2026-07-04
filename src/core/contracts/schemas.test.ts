@@ -48,4 +48,33 @@ describe("RuntimeMessageSchema", () => {
       type: "OBSERVED_EVENT"
     })
   })
+
+  it("accepts legacy valuation rollups and fills supply-chain defaults", () => {
+    const parsed = RuntimeMessageSchema.parse({
+      type: "VALUATION_ROLLUP",
+      payload: {
+        period: "week",
+        siteCount: 0,
+        visitCount: 0,
+        trackerCount: 0,
+        observations: 0,
+        thisPeriodVisitUsd: 0,
+        annualRevenueLowUsd: 0,
+        annualRevenueHighUsd: 0,
+        revenueTrackerCount: 0,
+        annualOperatorCostLowUsd: 0,
+        annualOperatorCostHighUsd: 0,
+        costTrackerCount: 0,
+        topTrackers: [],
+        topSites: [],
+        disclaimer: "Estimates, not measurements."
+      }
+    })
+
+    expect(parsed).toMatchObject({ type: "VALUATION_ROLLUP" })
+    if (parsed.type !== "VALUATION_ROLLUP") throw new Error("Expected valuation rollup")
+    expect(parsed.payload.flowRollups).toHaveLength(4)
+    expect(parsed.payload.edges).toEqual([])
+    expect(parsed.payload.servesCounts.only_their_business).toBe(0)
+  })
 })

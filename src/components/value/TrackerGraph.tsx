@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react"
 
 import { SERVES_LABELS } from "~core/domain/valuation"
+import { getTrackerSupplyChainRole, SUPPLY_CHAIN_STAGES, SUPPLY_CHAIN_LABELS, type SupplyChainRole } from "~core/domain/supply-chain"
 import type { ValuationEdge } from "~core/domain/types"
-import { TYPE } from "~components/system/tokens"
+import { TYPE, UI } from "~components/system/tokens"
 
 // Site ↔ tracker network, rendered as a deterministic bipartite SVG built in
 // real time from the user's local ledger. Sites on the left, trackers on the
@@ -20,6 +21,26 @@ const SERVES_CLASSES: Record<ValuationEdge["servesCategory"], { stroke: string; 
   only_their_business: { stroke: "stroke-danger", fill: "fill-danger", dot: "bg-danger" }
 }
 
+// Supply-chain mode: one hue per stage, ordered by position in the money
+// flow so the tracker column reads top-to-bottom as ore → ad.
+const STAGE_CLASSES: Record<SupplyChainRole, { stroke: string; fill: string; dot: string }> = {
+  mine_infrastructure: { stroke: "stroke-stone-500", fill: "fill-stone-500", dot: "bg-stone-500" },
+  concentrator: { stroke: "stroke-cyan-700", fill: "fill-cyan-700", dot: "bg-cyan-700" },
+  refinery: { stroke: "stroke-violet-700", fill: "fill-violet-700", dot: "bg-violet-700" },
+  parts_supplier: { stroke: "stroke-indigo-700", fill: "fill-indigo-700", dot: "bg-indigo-700" },
+  assembly: { stroke: "stroke-blue-700", fill: "fill-blue-700", dot: "bg-blue-700" },
+  wholesale: { stroke: "stroke-sky-700", fill: "fill-sky-700", dot: "bg-sky-700" },
+  retail_shelf: { stroke: "stroke-orange-600", fill: "fill-orange-600", dot: "bg-orange-600" },
+  vertically_integrated: { stroke: "stroke-danger", fill: "fill-danger", dot: "bg-danger" },
+  site_tooling: { stroke: "stroke-muted-foreground", fill: "fill-muted-foreground", dot: "bg-muted-foreground" }
+}
+
+const STAGE_ORDER: Record<SupplyChainRole, number> = Object.fromEntries(
+  SUPPLY_CHAIN_STAGES.map((stage, index) => [stage.role, index])
+) as Record<SupplyChainRole, number>
+
+type GraphMode = "serves" | "chain"
+
 const MAX_SITES = 8
 const MAX_TRACKERS = 14
 const ROW_HEIGHT = 34
@@ -31,6 +52,7 @@ function shortSite(origin: string) {
 
 export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
   const [focused, setFocused] = useState<string | null>(null)
+  const [mode, setMode] = useState<GraphMode>("serves")
 
   const { sites, trackers, visibleEdges, height } = useMemo(() => {
     const siteWeight = new Map<string, number>()
@@ -41,13 +63,19 @@ export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
     }
     const bySeverity = (a: [string, number], b: [string, number]) => b[1] - a[1] || a[0].localeCompare(b[0])
     const sites = [...siteWeight.entries()].sort(bySeverity).slice(0, MAX_SITES).map(([id]) => id)
-    const trackers = [...trackerWeight.entries()].sort(bySeverity).slice(0, MAX_TRACKERS).map(([id]) => id)
+    const byChain = (a: [string, number], b: [string, number]) =>
+      (STAGE_ORDER[getTrackerSupplyChainRole(a[0]) ?? "site_tooling"] - STAGE_ORDER[getTrackerSupplyChainRole(b[0]) ?? "site_tooling"]) || bySeverity(a, b)
+    const trackers = [...trackerWeight.entries()]
+      .sort(bySeverity)
+      .slice(0, MAX_TRACKERS)
+      .sort(mode === "chain" ? byChain : bySeverity)
+      .map(([id]) => id)
     const siteSet = new Set(sites)
     const trackerSet = new Set(trackers)
     const visibleEdges = edges.filter((edge) => siteSet.has(edge.siteOrigin) && trackerSet.has(edge.trackerId))
     const height = TOP_PAD + Math.max(sites.length, trackers.length) * ROW_HEIGHT + 10
     return { sites, trackers, visibleEdges, height }
-  }, [edges])
+  }, [edges, mode])
 
   if (visibleEdges.length === 0) return null
 
@@ -58,6 +86,22 @@ export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
 
   return (
     <div>
+      <div className="mb-2 flex flex-wrap gap-1">
+        {(
+          [
+            { label: "Who it serves", value: "serves" },
+            { label: "Supply chain", value: "chain" }
+          ] as Array<{ label: string; value: GraphMode }>
+        ).map((item) => (
+          <button
+            className={`${UI.segment} ${mode === item.value ? UI.segmentActive : UI.segmentIdle}`}
+            key={item.value}
+            onClick={() => setMode(item.value)}
+            type="button">
+            {item.label}
+          </button>
+        ))}
+      </div>
       <svg
         aria-label="Connections between sites you visited and the trackers observed on them"
         className="w-full"
@@ -72,7 +116,7 @@ export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
               d={`M 218 ${y1} C 360 ${y1}, 360 ${y2}, 500 ${y2}`}
               fill="none"
               key={`${edge.siteOrigin}|${edge.trackerId}`}
-              className={SERVES_CLASSES[edge.servesCategory].stroke}
+              className={mode === "chain" ? STAGE_CLASSES[getTrackerSupplyChainRole(edge.trackerId) ?? "site_tooling"].stroke : SERVES_CLASSES[edge.servesCategory].stroke}
               opacity={isDimmed(edge) ? 0.12 : 0.55}
               strokeWidth={width}
             />
@@ -94,13 +138,14 @@ export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
           </g>
         ))}
         {trackers.map((tracker) => {
-          const category = visibleEdges.find((edge) => edge.trackerId === tracker)?.servesCategory ?? "the_site"
+          const servesCategory = visibleEdges.find((edge) => edge.trackerId === tracker)?.servesCategory ?? "the_site"
+          const nodeClasses = mode === "chain" ? STAGE_CLASSES[getTrackerSupplyChainRole(tracker) ?? "site_tooling"] : SERVES_CLASSES[servesCategory]
           return (
             <g
               key={tracker}
               onMouseEnter={() => setFocused(tracker)}
               onMouseLeave={() => setFocused(null)}>
-              <circle className={SERVES_CLASSES[category].fill} cx="508" cy={trackerY(tracker)} r="4" />
+              <circle className={nodeClasses.fill} cx="508" cy={trackerY(tracker)} r="4" />
               <text
                 fontSize="12"
                 opacity={focused !== null && focused !== tracker && !visibleEdges.some((edge) => edge.siteOrigin === focused && edge.trackerId === tracker) ? 0.3 : 1}
@@ -119,12 +164,19 @@ export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
         </text>
       </svg>
       <div className={`mt-2 flex flex-wrap gap-x-4 gap-y-1 ${TYPE.small}`}>
-        {(Object.keys(SERVES_CLASSES) as Array<ValuationEdge["servesCategory"]>).map((category) => (
-          <span className="flex items-center gap-1.5" key={category}>
-            <span className={`inline-block h-2 w-2 rounded-full ${SERVES_CLASSES[category].dot}`} />
-            {SERVES_LABELS[category]}
-          </span>
-        ))}
+        {mode === "serves"
+          ? (Object.keys(SERVES_CLASSES) as Array<ValuationEdge["servesCategory"]>).map((category) => (
+              <span className="flex items-center gap-1.5" key={category}>
+                <span className={`inline-block h-2 w-2 rounded-full ${SERVES_CLASSES[category].dot}`} />
+                {SERVES_LABELS[category]}
+              </span>
+            ))
+          : SUPPLY_CHAIN_STAGES.map((stage) => (
+              <span className="flex items-center gap-1.5" key={stage.role}>
+                <span className={`inline-block h-2 w-2 rounded-full ${STAGE_CLASSES[stage.role].dot}`} />
+                {SUPPLY_CHAIN_LABELS[stage.role]}
+              </span>
+            ))}
       </div>
       <p className={`${TYPE.small} mt-1.5`}>
         Thicker lines mean more observations. Hover a site or tracker to isolate its connections.

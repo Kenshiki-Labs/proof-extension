@@ -569,11 +569,11 @@ function ReportTab() {
           </section>
         ) : null}
 
-        {reportView === "value" ? (
+        {reportView === "value" && !valuationError ? (
           <div className="mt-6">
             <ValueLedgerView onPeriodChange={setValuationPeriod} period={valuationPeriod} rollup={valuationRollup} showMethodology />
           </div>
-        ) : (
+        ) : reportView === "evidence" ? (
           <>
             <section aria-label="Report summary" className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
               <SectionTitle number="01" title="Summary" />
@@ -600,7 +600,7 @@ function ReportTab() {
             <EvidenceTimeline events={summary.events} />
             <DiagnosticsPanel summary={summary} />
           </>
-        )}
+        ) : null}
       </div>
     </main>
   )

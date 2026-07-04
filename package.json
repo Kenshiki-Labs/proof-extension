@@ -1,7 +1,7 @@
 {
   "name": "proof-extension",
   "displayName": "Proof Extension",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A browser-local observer panel for tracker detection, mitigation status, and source-level remediation routing.",
   "private": false,
   "license": "MIT",

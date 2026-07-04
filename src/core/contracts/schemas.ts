@@ -91,10 +91,20 @@ export const UserSettingsSchema = z.object({
 
 export const ValuationPeriodSchema = z.enum(["day", "week", "month", "all"])
 
+const MonetizationFlowSchema = z.enum(["platform_ads", "programmatic", "identity_infra", "operator_saas"])
+const EmptyValuationFlowRollups = MonetizationFlowSchema.options.map((flow) => ({
+  flow,
+  trackerCount: 0,
+  observations: 0,
+  thisPeriodVisitUsd: 0,
+  annualLowUsd: 0,
+  annualHighUsd: 0
+}))
+
 export const ValuationSnapshotSchema = z.object({
   sourceFindingIds: z.array(z.string().min(1)).min(1),
   valueType: z.enum(["revenue", "cost"]),
-  monetizationFlow: z.enum(["platform_ads", "programmatic", "identity_infra", "operator_saas"]),
+  monetizationFlow: MonetizationFlowSchema,
   perVisitMicrodollars: z.number().min(0),
   annualLowUsd: z.number().min(0),
   annualHighUsd: z.number().min(0),
@@ -143,7 +153,7 @@ export const RollingValuationItemSchema = z.object({
 })
 
 export const ValuationFlowRollupSchema = z.object({
-  flow: z.enum(["platform_ads", "programmatic", "identity_infra", "operator_saas"]),
+  flow: MonetizationFlowSchema,
   trackerCount: z.number().int().nonnegative(),
   observations: z.number().int().nonnegative(),
   thisPeriodVisitUsd: z.number().nonnegative(),
@@ -164,7 +174,7 @@ export const RollingValuationSummarySchema = z.object({
   annualOperatorCostLowUsd: z.number().nonnegative(),
   annualOperatorCostHighUsd: z.number().nonnegative(),
   costTrackerCount: z.number().int().nonnegative(),
-  flowRollups: z.array(ValuationFlowRollupSchema),
+  flowRollups: z.array(ValuationFlowRollupSchema).default(EmptyValuationFlowRollups),
   topTrackers: z.array(RollingValuationItemSchema),
   topSites: z.array(RollingValuationItemSchema),
   edges: z.array(
@@ -175,15 +185,15 @@ export const RollingValuationSummarySchema = z.object({
       thisPeriodVisitUsd: z.number().min(0),
       servesCategory: z.enum(["you_and_the_site", "the_site", "advertisers_and_maybe_you", "only_their_business"])
     })
-  ),
+  ).default([]),
   servesCounts: z.object({
     you_and_the_site: z.number().int().nonnegative(),
     the_site: z.number().int().nonnegative(),
     advertisers_and_maybe_you: z.number().int().nonnegative(),
     only_their_business: z.number().int().nonnegative()
-  }),
-  onlyTheirBusinessAnnualLowUsd: z.number().min(0),
-  onlyTheirBusinessAnnualHighUsd: z.number().min(0),
+  }).default({ you_and_the_site: 0, the_site: 0, advertisers_and_maybe_you: 0, only_their_business: 0 }),
+  onlyTheirBusinessAnnualLowUsd: z.number().min(0).default(0),
+  onlyTheirBusinessAnnualHighUsd: z.number().min(0).default(0),
   disclaimer: z.string().min(1)
 })
 
