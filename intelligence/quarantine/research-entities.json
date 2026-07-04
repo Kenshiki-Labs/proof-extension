@@ -18,8 +18,8 @@
   },
   "adjudication": {
     "path": "intelligence/adjudication/entity-adjudications.json",
-    "records": 0,
-    "appliedRecords": 0
+    "records": 10,
+    "appliedRecords": 10
   },
   "conflictReport": "intelligence/quarantine/research-entity-conflicts.json",
   "scope": {
@@ -8979,10 +8979,12 @@
         {
           "key": "broker2025:schmermsllc_s_d7a166d9",
           "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
+          "confidence": 1,
+          "confidenceLabel": "confirmed",
           "reasons": [
             "2025 registry merge record schmermsllc_s_d7a166d9",
+            "adjudication adj-0007-tiktok-domain-datedetective-multi confirmed by Kenshiki (agent-assisted, local evidence only)",
+            "adjudication adj-0008-tiktok-domain-datedetective-owner confirmed by Kenshiki (agent-assisted, local evidence only)",
             "name: DATE DETECTIVE Inc",
             "registrable domains: date-detective.app, tiktok.com"
           ]
@@ -12655,10 +12657,12 @@
         {
           "key": "broker2025:nearpteltd_72652eab",
           "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
+          "confidence": 1,
+          "confidenceLabel": "confirmed",
           "reasons": [
             "2025 registry merge record nearpteltd_72652eab",
+            "adjudication adj-0005-reddit-domain-near-multi confirmed by Kenshiki (agent-assisted, local evidence only)",
+            "adjudication adj-0006-reddit-domain-near-owner confirmed by Kenshiki (agent-assisted, local evidence only)",
             "name: NEAR PTE LTD",
             "registrable domains: github.com, near.ai, near.co, near.com, near.org, notion.site, reddit.com, t.me"
           ]
@@ -12666,10 +12670,12 @@
         {
           "key": "broker2025:ubermedia_935be0c8",
           "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
+          "confidence": 1,
+          "confidenceLabel": "confirmed",
           "reasons": [
             "2025 registry merge record ubermedia_935be0c8",
+            "adjudication adj-0009-reddit-domain-ubermedia-multi confirmed by Kenshiki (agent-assisted, local evidence only)",
+            "adjudication adj-0010-reddit-domain-ubermedia-owner confirmed by Kenshiki (agent-assisted, local evidence only)",
             "name: Ubermedia",
             "registrable domains: near.ai, near.org, reddit.com, t.me, ubermedia.com"
           ]

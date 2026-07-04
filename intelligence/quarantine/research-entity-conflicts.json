@@ -21,11 +21,11 @@
     "total": 67,
     "needsReview": 67,
     "adjudicated": 0,
-    "manualAdjudications": 0
+    "manualAdjudications": 10
   },
   "records": [
     {
-      "id": "resolver-conflict-0001",
+      "id": "research-conflict-0001",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -37,7 +37,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0002",
+      "id": "research-conflict-0002",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -49,7 +49,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0003",
+      "id": "research-conflict-0003",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -61,7 +61,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0004",
+      "id": "research-conflict-0004",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -73,7 +73,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0005",
+      "id": "research-conflict-0005",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -85,7 +85,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0006",
+      "id": "research-conflict-0006",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -97,7 +97,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0007",
+      "id": "research-conflict-0007",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -109,7 +109,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0008",
+      "id": "research-conflict-0008",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -121,7 +121,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0009",
+      "id": "research-conflict-0009",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -133,7 +133,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0010",
+      "id": "research-conflict-0010",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -145,7 +145,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0011",
+      "id": "research-conflict-0011",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -157,7 +157,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0012",
+      "id": "research-conflict-0012",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -169,7 +169,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0013",
+      "id": "research-conflict-0013",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -181,7 +181,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0014",
+      "id": "research-conflict-0014",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -193,7 +193,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0015",
+      "id": "research-conflict-0015",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -205,7 +205,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0016",
+      "id": "research-conflict-0016",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -217,7 +217,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0017",
+      "id": "research-conflict-0017",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -229,7 +229,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0018",
+      "id": "research-conflict-0018",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -241,7 +241,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0019",
+      "id": "research-conflict-0019",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -253,7 +253,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0020",
+      "id": "research-conflict-0020",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -265,7 +265,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0021",
+      "id": "research-conflict-0021",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -277,7 +277,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0022",
+      "id": "research-conflict-0022",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -289,7 +289,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0023",
+      "id": "research-conflict-0023",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -301,7 +301,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0024",
+      "id": "research-conflict-0024",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -313,7 +313,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0025",
+      "id": "research-conflict-0025",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -325,7 +325,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0026",
+      "id": "research-conflict-0026",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -337,7 +337,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0027",
+      "id": "research-conflict-0027",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -349,7 +349,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0028",
+      "id": "research-conflict-0028",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -361,7 +361,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0029",
+      "id": "research-conflict-0029",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -373,7 +373,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0030",
+      "id": "research-conflict-0030",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -385,7 +385,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0031",
+      "id": "research-conflict-0031",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -397,7 +397,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0032",
+      "id": "research-conflict-0032",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -409,7 +409,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0033",
+      "id": "research-conflict-0033",
       "type": "shared_infrastructure_domain",
       "severity": "medium",
       "status": "needs_review",
@@ -421,7 +421,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0034",
+      "id": "research-conflict-0034",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -444,7 +444,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0035",
+      "id": "research-conflict-0035",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -461,7 +461,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0036",
+      "id": "research-conflict-0036",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -486,7 +486,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0037",
+      "id": "research-conflict-0037",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -503,7 +503,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0038",
+      "id": "research-conflict-0038",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -520,7 +520,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0039",
+      "id": "research-conflict-0039",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -545,7 +545,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0040",
+      "id": "research-conflict-0040",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -562,7 +562,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0041",
+      "id": "research-conflict-0041",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -579,7 +579,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0042",
+      "id": "research-conflict-0042",
       "type": "slug_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -596,7 +596,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0043",
+      "id": "research-conflict-0043",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -618,7 +618,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0044",
+      "id": "research-conflict-0044",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -635,7 +635,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0045",
+      "id": "research-conflict-0045",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -664,7 +664,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0046",
+      "id": "research-conflict-0046",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -681,7 +681,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0047",
+      "id": "research-conflict-0047",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -698,7 +698,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0048",
+      "id": "research-conflict-0048",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -721,7 +721,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0049",
+      "id": "research-conflict-0049",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -738,7 +738,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0050",
+      "id": "research-conflict-0050",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -763,7 +763,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0051",
+      "id": "research-conflict-0051",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -780,7 +780,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0052",
+      "id": "research-conflict-0052",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -805,7 +805,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0053",
+      "id": "research-conflict-0053",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -822,7 +822,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0054",
+      "id": "research-conflict-0054",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -839,7 +839,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0055",
+      "id": "research-conflict-0055",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -861,7 +861,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0056",
+      "id": "research-conflict-0056",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -878,7 +878,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0057",
+      "id": "research-conflict-0057",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -901,7 +901,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0058",
+      "id": "research-conflict-0058",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -918,7 +918,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0059",
+      "id": "research-conflict-0059",
       "type": "domain_points_to_multiple_entities",
       "severity": "high",
       "status": "needs_review",
@@ -940,7 +940,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0060",
+      "id": "research-conflict-0060",
       "type": "domain_owner_conflict",
       "severity": "high",
       "status": "needs_review",
@@ -957,7 +957,7 @@
       }
     },
     {
-      "id": "resolver-conflict-0061",
+      "id": "research-conflict-0061",
       "type": "slug_owner_conflict",
       "severity": "high",
       "status": "needs_review",

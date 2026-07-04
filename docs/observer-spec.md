@@ -28,7 +28,7 @@ Current runtime state:
 - 42/42 tracker records carry `supplyChainRole` (position in the ad-money flow) and `whoItServes` (benefit-category classification with plain-language note) fields consumed by the attention model and value-ledger views.
 - 38 trackers are `network_blockable`; 4 high-breakage trackers (google-tag-manager, intercom, drift, hubspot) are `user_action_required` because the blocking-policy gate never offers or installs a block rule for them — validation now rejects any record that is both high-breakage and `network_blockable`. No runtime DB records yet exercise `content_mitigatable`, `observable_only`, `pre_request_unblockable`, or `server_side_unblockable`.
 - Tracker domain spaces are validated as disjoint across records: one request matches exactly one tracker record (a former google-analytics/google-tag-manager overlap double-counted gtag.js loads and could have installed a GTM-blocking rule via the Google Analytics toggle).
-- The extension-scoped entity SSOT has 42 runtime entities and 10 extension-scoped entity conflicts needing review. (The google-analytics/google-tag-manager entity fusion caused by the former domain overlap is un-fused; GTM's parent-company alias now surfaces the same Alphabet slug conflict its sibling Google entities already had.)
+- The extension-scoped entity SSOT has 42 runtime entities and 0 extension-scoped entity conflicts needing review: all 10 are adjudicated in `intelligence/adjudication/entity-adjudications.json` (4 parent-alias slug collisions confirmed as intentional product-level entity separation; 6 broker-registry claims to reddit.com/tiktok.com rejected as crawled social-profile links, provable from the registry source URLs). Conflict ids are scope-namespaced (`runtime-conflict-*` vs `research-conflict-*`) so an adjudication can never ambiguously match a same-numbered conflict in the quarantined research queue (67 research conflicts remain open there by design).
 - Research-only entities remain quarantined under `intelligence/quarantine/`.
 
 Current implemented product surfaces:
@@ -71,7 +71,7 @@ Primary remaining credibility gaps:
 - Reclassification pass done 2026-07-04 for locally provable cases (high-breakage records now `user_action_required`); revisit remaining classes during source-backed review.
 - Verify the 11 newly added SDK/global signatures against live vendor pages during the source-backed review (they follow the table's existing hand-authored policy; a wrong distinctive name is a silent miss, not a false attribution).
 - Extend persistence-surface observation beyond the implemented JS-visible subset: `HttpOnly` cookie metadata via the optional `cookies` permission, cache-validator header evidence, and keyed-digest respawn detection.
-- Resolve 9 extension-scoped entity conflicts before using entity-linked claims beyond the runtime DB.
+- Extension-scoped entity conflicts adjudicated 2026-07-04 (0 open); the 67 quarantined research conflicts stay open until research entities are promoted.
 - Keep valuation language as estimates, not measurements or actual revenue.
 
 ## Objective

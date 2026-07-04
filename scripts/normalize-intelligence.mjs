@@ -814,9 +814,16 @@ function applyAdjudications(records, adjudications) {
 function buildEntityConflictReport({ records, conflicts, adjudications, scope }) {
   const generated = []
 
+  // Conflict ids are namespaced by scope: the extension-runtime and
+  // quarantined-research reports each number from 0001, and adjudication
+  // records reference conflicts by id — an unscoped "resolver-conflict-0001"
+  // would ambiguously match one conflict in EACH report and silently
+  // adjudicate an unrelated research conflict.
+  const idPrefix = scope === "extension_runtime" ? "runtime-conflict" : "research-conflict"
+
   for (const [index, conflict] of conflicts.entries()) {
     generated.push({
-      id: `resolver-conflict-${String(index + 1).padStart(4, "0")}`,
+      id: `${idPrefix}-${String(index + 1).padStart(4, "0")}`,
       type: conflict.type,
       severity: conflict.type === "shared_infrastructure_domain" ? "medium" : "high",
       status: "needs_review",
