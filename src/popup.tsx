@@ -25,6 +25,8 @@ import {
   type DisplayObservation
 } from "~core/report/display"
 import { blockingGuidance } from "~core/domain/blocking-policy"
+import { rankObservers } from "~core/domain/attention"
+import VerdictBanner from "~components/VerdictBanner"
 import { summaryMetrics } from "~core/report/metrics"
 import { formatUsd, getTrackerServes, formatUsdRange, getTrackerValuation, rollupObservedValuations } from "~core/domain/valuation"
 import type { ObserverEvent, RollingValuationSummary, SiteSummary, UserSettings, ValuationPeriod } from "~core/domain/types"
@@ -599,7 +601,13 @@ function IndexPopup() {
   // Cap per section, not before the split — otherwise a burst of exposed
   // events pushes older blocked observations out of the Blocked section.
   const blockedEvents = displayEvents.filter(({ event }) => event.status === "blocked").slice(0, 12)
-  const exposedEvents = displayEvents.filter(({ event }) => event.status === "active" || event.status === "mitigated").slice(0, 12)
+  // Worst-first triage: the popup shows the top 3 by attention rank; the
+  // full ranked list lives in the report.
+  const rankedExposed = rankObservers(summary.events).filter(
+    ({ observation }) => observation.event.status === "active" || observation.event.status === "mitigated"
+  )
+  const exposedEvents = rankedExposed.slice(0, 3).map(({ observation }) => observation)
+  const exposedOverflow = Math.max(0, rankedExposed.length - 3)
   const cannotBlockEvents = displayEvents.filter(({ event }) => event.status === "cannot_block").slice(0, 12)
   const remediableObservers = [
     ...new Map(
@@ -699,7 +707,12 @@ function IndexPopup() {
         </dl>
       </details>
 
-      <ValueSection events={summary.events} />
+      <VerdictBanner compact summary={summary} />
+
+      <details className="mt-4">
+        <summary className={`${TYPE.small} cursor-pointer select-none text-muted-foreground`}>Money detail — what each watcher earns</summary>
+        <ValueSection events={summary.events} />
+      </details>
       <RollingValueSection onPeriodChange={setValuationPeriod} period={valuationPeriod} rollup={valuationRollup} />
 
       <section className="mt-4">
@@ -711,7 +724,10 @@ function IndexPopup() {
         </p>
       </section>
       <EventSection events={blockedEvents} title="Blocked" blockedTrackerIds={settings.blockedTrackerIds} onToggleBlocking={toggleTrackerBlocking} />
-      <EventSection events={exposedEvents} title="Still exposed" blockedTrackerIds={settings.blockedTrackerIds} onToggleBlocking={toggleTrackerBlocking} />
+      <EventSection events={exposedEvents} title="Still exposed — worst first" blockedTrackerIds={settings.blockedTrackerIds} onToggleBlocking={toggleTrackerBlocking} />
+      {exposedOverflow > 0 ? (
+        <p className={`${TYPE.small} mt-2`}>{exposedOverflow} more {exposedOverflow === 1 ? "observer" : "observers"} ranked in the full report.</p>
+      ) : null}
       <EventSection events={cannotBlockEvents} title="Cannot block" blockedTrackerIds={settings.blockedTrackerIds} onToggleBlocking={toggleTrackerBlocking} />
 
       {/* Non-blockable exposures are first-class evidence, not empty-state

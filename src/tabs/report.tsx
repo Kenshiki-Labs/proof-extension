@@ -28,6 +28,8 @@ import {
   visibleSignals
 } from "~core/report/display"
 import { blockingGuidance } from "~core/domain/blocking-policy"
+import { rankObservers } from "~core/domain/attention"
+import VerdictBanner from "~components/VerdictBanner"
 import { summaryMetrics } from "~core/report/metrics"
 import { formatUsd, formatUsdRange, getTrackerServes, MONETIZATION_FLOW_LABELS, rollupObservedValuations, SERVES_LABELS } from "~core/domain/valuation"
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
@@ -527,7 +529,7 @@ function ReportTab() {
     }
   }
 
-  const observations = compactEvents(summary.events)
+  const observations = rankObservers(summary.events).map(({ observation }) => observation)
   const rows = buildAtomicSignalRows(summary.events)
   const metrics = summaryMetrics(summary)
   const exposureEvents = exposureScanEvents(summary.events)
@@ -575,6 +577,7 @@ function ReportTab() {
           </div>
         ) : reportView === "evidence" ? (
           <>
+            <VerdictBanner summary={summary} />
             <section aria-label="Report summary" className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
               <SectionTitle number="01" title="Summary" />
               <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
@@ -587,14 +590,18 @@ function ReportTab() {
               </div>
             </section>
 
-            <ExposureScanSection events={exposureEvents} />
-            <AtomicSignalMatrix rows={rows} />
-            <ValuationSection events={summary.events} />
-
             <section className="mt-6">
-              <SectionTitle number="04" title="Who is watching" />
+              <SectionTitle number="02" title="Who is watching — worst first" />
               <ObservationTable blockedTrackerIds={settings.blockedTrackerIds} observations={observations} onToggleBlocking={toggleTrackerBlocking} />
             </section>
+
+            <ValuationSection events={summary.events} />
+
+            <details className="mt-6">
+              <summary className={`${TYPE.label} cursor-pointer select-none`}>Appendix — full evidence for auditors</summary>
+              <ExposureScanSection events={exposureEvents} />
+              <AtomicSignalMatrix rows={rows} />
+            </details>
 
             <RemediationPanel observations={observations} />
             <EvidenceTimeline events={summary.events} />

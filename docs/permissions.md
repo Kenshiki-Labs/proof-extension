@@ -51,6 +51,12 @@ A static content script (declared in the manifest, `document_start`) observes DO
 
 Lets the popup resolve the active tab so it can request that tab's summary from the background worker. Used for scoping the UI, not for extra content access.
 
+## Future persistence-observer permissions
+
+Persistence-surface observers are specified in `docs/observer-spec.md`, but the current manifest does not request `cookies`.
+
+If browser-level cookie observation ships later, the `cookies` permission must be reviewed and documented before release. It may be used only for cookie metadata and change events, including `HttpOnly` metadata where the browser exposes it. Raw cookie values must not be stored, exported, or uploaded. Any local keyed digest for respawn diagnostics must be retention-bound, cleared by `CLEAR_LOCAL_DATA`, and labeled as diagnostic evidence rather than a raw identifier.
+
 ## Why `activeTab` alone is insufficient
 
 The product's core claim is passive observation: telling the user who was already watching before the user suspected anything. `activeTab` grants access only after a user gesture on a specific tab, which means:

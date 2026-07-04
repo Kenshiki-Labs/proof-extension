@@ -3,11 +3,11 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "a7425adf68ca574ebe508123923684e699ad9e3938a28156d5a4699f3863cb44"
+      "sha256": "eb0df203bf5cc26571cd0d66441f7898557de85d137aa7ca5a0891b6f6a7ed6e"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "eb3f829e8ccd5981029565ad11708ee9502163dfee2d6b509909e6955ae9cc1d"
+      "sha256": "11687ed0c35db86b525089393b144325f81e3a400643a81a4d6e2ffbf2a4c245"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
@@ -91,10 +91,10 @@
     },
     {
       "term": "Evidence",
-      "total": 39,
+      "total": 41,
       "files": {
         "src/popup.tsx": 14,
-        "src/tabs/report.tsx": 21,
+        "src/tabs/report.tsx": 23,
         "src/core/report/display.ts": 4
       }
     },
@@ -115,9 +115,9 @@
     },
     {
       "term": "Full report",
-      "total": 3,
+      "total": 4,
       "files": {
-        "src/popup.tsx": 3
+        "src/popup.tsx": 4
       }
     },
     {
@@ -312,7 +312,7 @@
   "topWords": [
     {
       "word": "mt-",
-      "count": 61
+      "count": 63
     },
     {
       "word": "gap-",
@@ -320,7 +320,7 @@
     },
     {
       "word": "core",
-      "count": 27
+      "count": 29
     },
     {
       "word": "grid",
@@ -344,7 +344,7 @@
     },
     {
       "word": "domain",
-      "count": 16
+      "count": 18
     },
     {
       "word": "flex-wrap",
@@ -360,6 +360,10 @@
     },
     {
       "word": "border",
+      "count": 12
+    },
+    {
+      "word": "components",
       "count": 12
     },
     {
@@ -391,10 +395,6 @@
       "count": 11
     },
     {
-      "word": "components",
-      "count": 10
-    },
-    {
       "word": "data",
       "count": 10
     },
@@ -423,6 +423,10 @@
       "count": 9
     },
     {
+      "word": "evidence",
+      "count": 9
+    },
+    {
       "word": "justify-between",
       "count": 9
     },
@@ -440,10 +444,6 @@
     },
     {
       "word": "copied",
-      "count": 8
-    },
-    {
-      "word": "evidence",
       "count": 8
     },
     {
@@ -583,7 +583,15 @@
       "count": 5
     },
     {
+      "word": "first",
+      "count": 5
+    },
+    {
       "word": "items-baseline",
+      "count": 5
+    },
+    {
+      "word": "observer",
       "count": 5
     },
     {
@@ -620,14 +628,6 @@
     },
     {
       "word": "their",
-      "count": 5
-    },
-    {
-      "word": "tool",
-      "count": 5
-    },
-    {
-      "word": "tools",
       "count": 5
     }
   ]

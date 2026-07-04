@@ -7,7 +7,7 @@ lastReviewed: 2026-07-04
 status: generated
 ---
 
-> Generated from commit `57d0ba1` by `pnpm db:baseline`. Do not hand-edit.
+> Generated from commit `2a311f9` by `pnpm db:baseline`. Do not hand-edit.
 
 ## Summary
 

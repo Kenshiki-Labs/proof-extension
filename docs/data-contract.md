@@ -67,6 +67,19 @@ Rules:
   scans `popup.tsx` and `report.tsx` for banned patterns and fails the build.
 - The copy/export payload uses the same selector values (congruence test).
 
+## Attention model (ranking and tiers)
+
+`core/domain/attention.ts` is the only place importance is computed. Every
+surface that lists observers sorts by `rankObservers`; the popup and report
+verdict lines come from `buildVerdict`. Rules:
+
+- Tier dominates: red (only their business) > amber (ads trade) > gray
+  (site tooling, features, unattributed) — regardless of dollar value.
+- Within a tier, score orders by confidence, annual value (log-scaled),
+  and risk level; blocked observers sink (×0.3), mitigated halve.
+- Pinned by `attention.test.ts` (broker outranks walled garden; blocked
+  sinks; exposure scan excluded from ranking).
+
 ## Change protocol
 
 Adding or changing a displayed number:

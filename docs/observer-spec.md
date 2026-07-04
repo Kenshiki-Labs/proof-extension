@@ -37,6 +37,7 @@ Current implemented product surfaces:
 - Value ledger tracks top-level visits, tracker presence per visit, raw observations, period estimates, ad-market value to trackers, site-paid tool fees, and flow-level supply-chain roles.
 - Value ledger includes `Value supply chain`, `Bill of materials`, `Who they serve`, local tracker/site connections, and `How we calculate this` sections that state counting rules and limitations.
 - Current-tab valuation and rolling value ledger keep revenue and operator-cost estimates separate.
+- Persistence-surface observers for cookies, Web Storage, durable storage, cache validators, service workers, and supercookie-like respawn behavior are specified but not yet implemented.
 - Runtime valuation blocks are promoted from `intelligence/normalized/valuations.json`; hand drift is blocked by `pnpm intel:promote:check`.
 - Design primitive drift is blocked by `pnpm design:check`.
 - Vocabulary drift is blocked by `pnpm vocab:check`.
@@ -61,6 +62,7 @@ Primary remaining credibility gaps:
 - Source-back tracker identity, ownership, collection, and blocking claims for the existing 42 records.
 - Reclassify any records that should not be represented as plain `network_blockable`.
 - Add missing SDK/global signatures for the 13 uncovered trackers where browser-visible signatures exist.
+- Implement persistence-surface observers without storing raw cookie, localStorage, sessionStorage, IndexedDB, Cache API, or service-worker payload values.
 - Resolve 9 extension-scoped entity conflicts before using entity-linked claims beyond the runtime DB.
 - Keep valuation language as estimates, not measurements or actual revenue.
 
@@ -119,6 +121,18 @@ The differentiated product is not another tracker blocker. It is browser-local o
 - optional AI explanation, never AI evidence
 
 The extension should feel closer to a privacy inspector and remediation console than an ad blocker. It should tell the user what happened, what changed, what did not change, and what must be handled at the source.
+
+### Strategic relationship to Kenshiki
+
+Pulse Observer is Kenshiki's public proof artifact and top-of-funnel evidence demo, not the standalone company by default. Its job is to make Kenshiki's evidence discipline tangible in the browser: deterministic local evidence, explicit limits, economic interpretation, and source-level next steps.
+
+The strategic product rule is:
+
+> Pulse Observer exists to demonstrate Kenshiki's evidence discipline in the browser. It may become a standalone product only if Phase 1 proves repeatable demand without compromising local-first trust or requiring an unbounded tracker-intelligence operation.
+
+The extension must therefore optimize for proof quality over market breadth. Phase 1 done impeccably is the bounded product target: a normal user should understand in the first ten seconds who watched them, what was stopped, what could not be stopped, what persisted, who benefits economically, and where source-level remediation begins. The full report is the proof layer for skeptics, journalists, investors, and technical buyers; it must support the popup's claims, not become the primary user experience.
+
+Later roadmap phases are optional expansion paths. They must not be treated as company-scale commitments unless they clear demand, maintenance, platform-risk, and opportunity-cost review.
 
 ### Feature doctrine
 
@@ -207,6 +221,8 @@ Required capabilities:
 - WebGL query observation and mitigation only in opt-in diagnostic mode, never as an automatic page-load hook.
 - Audio fingerprint observation and mitigation only in opt-in diagnostic mode, never as an automatic page-load hook.
 - Font enumeration observation where feasible without mutating page APIs by default.
+- Persistence-surface observation for cookies, `localStorage`, `sessionStorage`, IndexedDB, Cache API, service workers, and cache validators, with values redacted by default.
+- Supercookie-like respawn indicators only when repeated local evidence supports the claim; otherwise label as durable storage or cache-identifier evidence, not a supercookie.
 - Options toggles that actually change runtime behavior.
 - Firefox adapter parity for core observation and status labels, including evaluating a Firefox MV3 migration (build currently targets `firefox-mv2`; see Build Commands).
 
@@ -310,6 +326,7 @@ Done when:
 - First-party fingerprint-relevant API use.
 - Dynamic script injection after page load.
 - Third-party cookie sync behavior where visible to the extension.
+- Cookie metadata, page-visible Web Storage activity, durable browser storage activity, cache validators, service-worker registration, and repeated storage respawn patterns where observable.
 - Tracker script and ingest URLs that match the local intelligence database.
 - Page-level use of high-risk browser APIs such as canvas, audio, WebGL, font enumeration, and optional WebRTC local IP exposure attempts.
 
@@ -323,6 +340,8 @@ Done when:
 - Authenticated account data held by the visited site.
 - Collection performed in native apps, other browsers, or other devices.
 - Collection hidden behind encrypted server-to-server integrations.
+- Raw cookie values, raw `localStorage` values, raw `sessionStorage` values, IndexedDB records, Cache API response bodies, and service-worker script bodies.
+- Definitive HSTS, TLS, browser-cache, or device-level supercookie proof where the browser does not expose enough local evidence.
 
 ### Required limitation language
 
@@ -363,6 +382,11 @@ Do not build separate product codebases for Chrome and Firefox. One shared core 
 - First-party fingerprint-relevant API use.
 - Dynamic script injection after page load.
 - Third-party cookie sync behavior where visible.
+- Cookie metadata and JavaScript-visible cookie writes.
+- Web Storage key/write/delete/clear metadata.
+- IndexedDB, Cache API, and service-worker persistence metadata.
+- HTTP cache validators and other cache-identifier headers where visible to request/response observers.
+- Supercookie-like respawn behavior only as a confidence-labeled pattern, not a certainty claim.
 - CNAME-cloaked or first-party-proxied tracker endpoints where detectable by DB rules or script behavior (best-effort; see Adversarial and evasion cases for the unsupported subset).
 
 ### Must classify
@@ -583,6 +607,14 @@ Required permissions must be documented with rationale:
 
 Optional permissions should be requested at the moment of need, not during installation, when the browser supports that pattern.
 
+Future persistence observers may require additional permission review:
+
+| Permission | Required for | Notes |
+| --- | --- | --- |
+| `cookies` | Browser-level cookie metadata and change events, including `HttpOnly` metadata where the browser exposes it | Must be optional or separately justified before release. Raw cookie values must not be stored; local keyed digests are allowed only for short-retention respawn diagnostics. |
+
+If `cookies` is not granted, cookie observation is limited to JavaScript-visible `document.cookie` behavior and request/response evidence. The UI must label this as lower visibility.
+
 ### Store-review permission posture
 
 The preferred permission posture is minimal, but the product goal may require broad host permissions for v1 because request observation and content-script evidence must work before the user knows which sites are risky. The extension must therefore maintain a store-review justification file or README section explaining:
@@ -657,6 +689,48 @@ Each content observation event must include:
 
 Invasive hooks must not be enabled by default. They must be treated as diagnostics or mitigation, not as the baseline observer path.
 
+### Persistence surface detection
+
+Persistence surfaces are a first-class evidence family because they answer whether the browser became durable raw material for future identification, measurement, retargeting, or attribution. They must be represented separately from network requests, SDK globals, fingerprinting reads, and security leak indicators.
+
+The observer may collect metadata for:
+
+- cookies: name, domain, path, expiry, `Secure`, `HttpOnly`, `SameSite`, partition key where exposed, approximate value byte length, write/change timing, and tracker/company match when known
+- JavaScript-visible cookie writes via `document.cookie`, without storing the assigned value
+- `localStorage` and `sessionStorage`: key name after redaction, operation type, approximate value byte length, frame origin, script origin where available, and write/delete/clear timing
+- IndexedDB: database name after redaction, object-store name where exposed, open/delete/version-change timing, frame origin, and tracker/company match when known
+- Cache API: cache name after redaction, request origin, method family, and timing, never response body contents
+- service workers: registration/update/unregister timing, scope origin, script origin, and scope path after URL redaction
+- cache validators: `ETag`, `If-None-Match`, `Last-Modified`, and related cache identifiers as header-name evidence, never raw identifier values by default
+
+The observer must not store raw values from cookies, Web Storage, IndexedDB, Cache API entries, service-worker scripts, authorization headers, form fields, or URL query parameters. If value-equivalence is needed to detect respawn behavior, use a local keyed digest with a per-install secret stored only in extension storage; clear it with `CLEAR_LOCAL_DATA`; never export or upload it; and keep the event confidence no stronger than `probable` unless the same digest reappears across multiple independent persistence surfaces after a clear/delete attempt.
+
+Required persistence event families:
+
+- `cookie_observed`: cookie metadata or JavaScript-visible cookie write/change observed.
+- `storage_write`: `localStorage` or `sessionStorage` set/delete/clear metadata observed.
+- `indexeddb_access`: IndexedDB open/delete/version metadata observed.
+- `cache_storage_access`: Cache API open/put/delete/match metadata observed.
+- `service_worker_registered`: service worker registration, update, or unregister metadata observed.
+- `cache_validator_seen`: cache-validator header evidence observed.
+- `storage_respawn_suspected`: the same local keyed digest or identifier pattern reappeared after a clear/delete attempt or across multiple storage surfaces.
+
+Confidence rules:
+
+- Use `confirmed` for the act of observing a cookie, storage write, service-worker registration, IndexedDB access, Cache API access, or cache-validator header.
+- Use `probable` for supercookie-like respawn behavior only when repeated local evidence supports recurrence.
+- Use `weak` for one-off durable-storage or cache-identifier hints that could be ordinary application state.
+
+UI language must distinguish:
+
+- `Cookie observed`
+- `Storage write observed`
+- `Durable storage observed`
+- `Cache identifier observed`
+- `Possible respawn behavior observed`
+
+The UI must not say `supercookie created` or `persistent identifier proven` unless the implementation can point to repeated, local, redacted evidence that survives an attempted clear/delete flow.
+
 ### Adversarial and evasion cases
 
 The implementation must explicitly handle or mark unsupported. This is the unsupported counterpart to the best-effort CNAME/proxy detection listed in Functional Scope and Network detection above — detect what DB rules and heuristics can catch, and document the rest here as a known limitation:
@@ -668,6 +742,9 @@ The implementation must explicitly handle or mark unsupported. This is the unsup
 - Tag manager indirection.
 - Consent-management events.
 - Service worker-mediated requests.
+- Storage respawn through browser internals that are not exposed to extensions.
+- HSTS, TLS, or cache-layer identifiers that cannot be inspected without privileged browser internals.
+- Same-device or cross-device re-identification that occurs entirely server-side.
 
 Unsupported cases must be documented in the UI or README as limitations.
 
@@ -1015,6 +1092,7 @@ Deterministic evidence comes first:
 - tracker DB records
 - security indicators
 - local storage state
+- persistence-surface metadata
 
 AI may then explain, summarize, prioritize, or draft remediation text from that evidence. AI must not create unverified claims, decide blocking, invent company ownership, invent remediation links, or silently receive browsing telemetry.
 
@@ -1051,6 +1129,10 @@ AI payloads may include only user-approved fields. The extension must never send
 - cookies
 - localStorage values
 - sessionStorage values
+- IndexedDB records
+- Cache API response bodies
+- service-worker script bodies
+- raw or stable storage identifiers
 - credentials
 - auth tokens
 - API keys
@@ -1187,6 +1269,13 @@ export type ObserverEvent = {
     | "webgl_query"
     | "font_enumeration"
     | "cookie_sync"
+    | "cookie_observed"
+    | "storage_write"
+    | "indexeddb_access"
+    | "cache_storage_access"
+    | "service_worker_registered"
+    | "cache_validator_seen"
+    | "storage_respawn_suspected"
     | "webrtc_probe"
   blockability: BlockabilityClass
   status: ObservationStatus
@@ -1414,6 +1503,23 @@ This backlog defines the larger product surface. Items must still pass threat-mo
 - Known risky script origin.
 - Extension messaging misuse indicators.
 
+### Persistence surfaces
+
+- Cookie metadata observed through request/response evidence, JavaScript-visible writes, or optional browser cookie APIs.
+- `HttpOnly` cookie metadata where the optional `cookies` permission exposes it; never raw values.
+- Partitioned cookie state where exposed by the browser.
+- `localStorage` set/delete/clear metadata.
+- `sessionStorage` set/delete/clear metadata.
+- IndexedDB database open/delete/version-change metadata.
+- Cache API open/put/delete/match metadata.
+- Service worker registration, update, unregister, and scope metadata.
+- `ETag`, `If-None-Match`, `Last-Modified`, and cache-validator header evidence.
+- Same identifier digest appearing across multiple persistence surfaces.
+- Same identifier digest reappearing after a user-triggered clear/delete attempt.
+- Tag-manager-assisted storage fanout, where one loader enables multiple downstream storage writers.
+
+Use `persistence surface` or `possible respawn behavior` language for this family. Do not claim a supercookie unless repeated, local, redacted evidence shows durable reappearance across storage surfaces or after a clear/delete attempt.
+
 ### Bot, automation, and identity-consistency indicators
 
 - WebDriver exposed.
@@ -1446,6 +1552,8 @@ Use `identity consistency indicator` language for this family. Do not claim loca
 - LocalStorage keys that look like tokens.
 - SessionStorage keys that look like tokens.
 - IndexedDB names suggesting identity or session storage.
+- Cache names suggesting identity or session storage.
+- Cookie names suggesting identity, auth, session, or cross-site correlation.
 - Cookies without `Secure`.
 - Cookies without `SameSite`.
 - Cookies accessible to JavaScript where likely auth-sensitive.
