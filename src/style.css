@@ -13,7 +13,9 @@
   --muted-foreground: 80 3% 38%;
   --signal: 175 39% 39%;
   --danger: 10 60% 49%;
-  --panel-shadow: 0 8px 24px rgb(31 41 55 / 0.07);
+  --panel-shadow-soft: 0 8px 18px rgb(31 41 55 / 0.06);
+  --panel-shadow: 0 16px 36px rgb(31 41 55 / 0.11);
+  --panel-shadow-raised: 0 22px 48px rgb(31 41 55 / 0.14);
   --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 

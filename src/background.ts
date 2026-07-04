@@ -7,15 +7,24 @@ import { validateTrackerDatabase } from "~core/db/validate"
 import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
 import { matchTrackerRequest } from "~core/domain/network-match"
 import { filterBlockableTrackerIds } from "~core/domain/blocking-policy"
+import {
+  createEmptyValuationLedger,
+  normalizeValuationLedger,
+  pruneValuationLedger,
+  recordSiteVisit,
+  rollupValuationLedger,
+  upsertValuationLedgerEvent
+} from "~core/domain/valuation-ledger"
 import { detectCookieSync } from "~core/signals/cookie-sync"
 import { enrichSdkDetection } from "~core/signals/sdk-globals"
-import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, upsertEvent } from "~core/state/summaries"
+import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, supersedeEvent, upsertEvent } from "~core/state/summaries"
 import type { ObserverEvent, PageError, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
 
 const summaries = new Map<number, SiteSummary>()
 const recentEventFingerprints = new Map<string, number>()
 const SUMMARY_STORAGE_KEY = "siteSummaries"
 const SETTINGS_STORAGE_KEY = "userSettings"
+const VALUATION_LEDGER_STORAGE_KEY = "valuationLedger"
 const CONTENT_EVENT_DEDUPE_TTL_MS = 750
 
 // This is primarily an observer, not a blocker: blockedTrackerIds starts
@@ -33,6 +42,7 @@ const DEFAULT_SETTINGS: UserSettings = {
 }
 
 let settings = DEFAULT_SETTINGS
+let valuationLedger = createEmptyValuationLedger()
 const hydration = hydrateState()
 
 function senderOrigin(sender: Runtime.MessageSender) {
@@ -57,10 +67,15 @@ async function persistSettings() {
   await browser.storage.local.set({ [SETTINGS_STORAGE_KEY]: settings })
 }
 
+async function persistValuationLedger() {
+  await browser.storage.local.set({ [VALUATION_LEDGER_STORAGE_KEY]: valuationLedger })
+}
+
 async function hydrateState() {
-  const stored = await browser.storage.local.get([SUMMARY_STORAGE_KEY, SETTINGS_STORAGE_KEY])
+  const stored = await browser.storage.local.get([SUMMARY_STORAGE_KEY, SETTINGS_STORAGE_KEY, VALUATION_LEDGER_STORAGE_KEY])
   const storedSettings = stored[SETTINGS_STORAGE_KEY] as Partial<UserSettings> | undefined
   settings = { ...DEFAULT_SETTINGS, ...storedSettings }
+  valuationLedger = pruneValuationLedger(normalizeValuationLedger(stored[VALUATION_LEDGER_STORAGE_KEY]), settings.retentionDays)
 
   const storedSummaries = stored[SUMMARY_STORAGE_KEY] as Record<string, Partial<SiteSummary>> | undefined
   summaries.clear()
@@ -76,7 +91,14 @@ async function ensureHydrated() {
 
 async function clearLocalData() {
   summaries.clear()
+  await clearValuationLedger()
   await browser.storage.local.remove(SUMMARY_STORAGE_KEY)
+}
+
+async function clearValuationLedger() {
+  valuationLedger = createEmptyValuationLedger()
+  activeVisitByTabId.clear()
+  await browser.storage.local.remove(VALUATION_LEDGER_STORAGE_KEY)
 }
 
 function originMatchesSender(event: ObserverEvent, sender: Runtime.MessageSender) {
@@ -108,7 +130,31 @@ async function recordEvent(event: ObserverEvent) {
 
   const current = readSummary(event.tabId, event.origin)
   summaries.set(event.tabId, upsertEvent(current, event, settings.maxEventsPerTab))
+  const visit = await ensureSiteVisitForTab(event.tabId, summaries.get(event.tabId)?.origin ?? event.origin, event.observedAt)
+  valuationLedger = pruneValuationLedger(upsertValuationLedgerEvent(valuationLedger, { ...event, origin: visit.origin }, visit.visitId), settings.retentionDays)
   await persistSummaries()
+  await persistValuationLedger()
+}
+
+type ActiveVisit = { origin: string; startedAt: number; visitId: string }
+
+const activeVisitByTabId = new Map<number, ActiveVisit>()
+
+async function startSiteVisitForTab(tabId: number, origin: string, observedAt = Date.now()): Promise<ActiveVisit | null> {
+  if (origin === "unknown") return null
+  const visit = { origin, startedAt: observedAt, visitId: crypto.randomUUID() }
+  activeVisitByTabId.set(tabId, visit)
+  valuationLedger = pruneValuationLedger(recordSiteVisit(valuationLedger, visit.visitId, origin, observedAt), settings.retentionDays)
+  await persistValuationLedger()
+  return visit
+}
+
+async function ensureSiteVisitForTab(tabId: number, origin: string, observedAt = Date.now()): Promise<ActiveVisit> {
+  const existing = activeVisitByTabId.get(tabId)
+  if (existing && existing.origin === origin) return existing
+
+  const started = await startSiteVisitForTab(tabId, origin, observedAt)
+  return started ?? { origin, startedAt: observedAt, visitId: `unknown:${tabId}:${observedAt}` }
 }
 
 function pruneRecentEventFingerprints(now: number) {
@@ -206,6 +252,7 @@ function enrichScriptInjection(event: ObserverEvent): ObserverEvent {
 async function recordActiveTabScan(tabId: number) {
   const tab = await browser.tabs.get(tabId)
   const origin = originFromUrl(tab.url)
+  await ensureSiteVisitForTab(tabId, origin)
   const evidence = ["Proof popup requested a live scan for this tab."]
   let scanReachedPage = true
 
@@ -301,6 +348,13 @@ function registerNetworkObserver() {
     const metadata = getDynamicBlockRuleMetadata(info.rule.ruleId)
     if (!metadata || info.request.tabId < 0) return
 
+    // The webRequest observer may have logged this same request as seen
+    // before the block outcome arrived — supersede it so one blocked
+    // request never counts its company as both watching and blocked.
+    const seenEventId = requestEventId("request_seen", info.request.tabId, info.request.requestId, metadata.tracker.id)
+    const current = summaries.get(info.request.tabId)
+    if (current) summaries.set(info.request.tabId, supersedeEvent(current, seenEventId))
+
     recordEvent({
       id: requestEventId("request_blocked", info.request.tabId, info.request.requestId, metadata.tracker.id),
       tabId: info.request.tabId,
@@ -356,6 +410,7 @@ browser.runtime.onInstalled.addListener(() => {
 
 browser.tabs.onRemoved.addListener((tabId) => {
   summaries.delete(tabId)
+  activeVisitByTabId.delete(tabId)
   persistSummaries().catch(() => undefined)
 })
 
@@ -377,7 +432,7 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
   ensureHydrated()
     .then(() => {
       summaries.set(tabId, createEmptySiteSummary(origin, tabId))
-      return persistSummaries()
+      return Promise.all([persistSummaries(), startSiteVisitForTab(tabId, origin)]).then(() => undefined)
     })
     .catch((error: unknown) => console.warn("Failed to reset summary on navigation", error))
 })
@@ -414,6 +469,10 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
       return { type: "SITE_SUMMARY", payload: readSummary(message.tabId) }
     }
 
+    if (message.type === "GET_VALUATION_ROLLUP") {
+      return { type: "VALUATION_ROLLUP", payload: rollupValuationLedger(valuationLedger, message.period) }
+    }
+
     if (message.type === "REFRESH_TAB_SCAN") {
       const summary = { ...(await recordActiveTabScan(message.tabId)), updatedAt: Date.now() }
       summaries.set(message.tabId, summary)
@@ -433,6 +492,11 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
       await persistSettings()
       if (blockingChanged) await syncBlockingRules()
       return { ok: true, payload: settings }
+    }
+
+    if (message.type === "CLEAR_VALUATION_LEDGER") {
+      await clearValuationLedger()
+      return { ok: true }
     }
 
     if (message.type === "CLEAR_LOCAL_DATA") {

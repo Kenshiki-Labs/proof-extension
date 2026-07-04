@@ -1,0 +1,643 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "file": "src/popup.tsx",
+      "sha256": "9aa092cd0df06e829e36bf9c7e1c98c830f2c6e01e851a4e97ab14703273a6ce"
+    },
+    {
+      "file": "src/tabs/report.tsx",
+      "sha256": "41a3af16f1ceffd6e208158048e5555a56a59d1fefa5235bfd8e2d4860157541"
+    },
+    {
+      "file": "src/components/value/ValueLedgerView.tsx",
+      "sha256": "fc52ee61917edd5d583c754c0d0e3b86b820757f774ec9a23a3573f057b6cfe4"
+    },
+    {
+      "file": "src/core/report/display.ts",
+      "sha256": "33fc37682712962a09ef0bbd64025127fe9969a106917613f3d73e9e5a81fe2f"
+    },
+    {
+      "file": "src/core/domain/valuation.ts",
+      "sha256": "127b0df220dd566ed23fd39376407ed04ec6a0d118a66c073eebbd838991fdf1"
+    }
+  ],
+  "canonicalTerms": [
+    {
+      "term": "Ad value/yr",
+      "total": 5,
+      "files": {
+        "src/popup.tsx": 2,
+        "src/tabs/report.tsx": 1,
+        "src/components/value/ValueLedgerView.tsx": 2
+      }
+    },
+    {
+      "term": "Blocked",
+      "total": 25,
+      "files": {
+        "src/popup.tsx": 18,
+        "src/tabs/report.tsx": 4,
+        "src/core/report/display.ts": 3
+      }
+    },
+    {
+      "term": "Blocking changes",
+      "total": 4,
+      "files": {
+        "src/popup.tsx": 3,
+        "src/tabs/report.tsx": 1
+      }
+    },
+    {
+      "term": "Blocking does not change",
+      "total": 2,
+      "files": {
+        "src/popup.tsx": 1,
+        "src/tabs/report.tsx": 1
+      }
+    },
+    {
+      "term": "Cannot block",
+      "total": 4,
+      "files": {
+        "src/popup.tsx": 4
+      }
+    },
+    {
+      "term": "Copy output",
+      "total": 1,
+      "files": {
+        "src/popup.tsx": 1
+      }
+    },
+    {
+      "term": "Current tab evidence",
+      "total": 1,
+      "files": {
+        "src/tabs/report.tsx": 1
+      }
+    },
+    {
+      "term": "Details and evidence",
+      "total": 2,
+      "files": {
+        "src/popup.tsx": 2
+      }
+    },
+    {
+      "term": "Estimated data value",
+      "total": 2,
+      "files": {
+        "src/popup.tsx": 1,
+        "src/tabs/report.tsx": 1
+      }
+    },
+    {
+      "term": "Evidence",
+      "total": 39,
+      "files": {
+        "src/popup.tsx": 14,
+        "src/tabs/report.tsx": 21,
+        "src/core/report/display.ts": 4
+      }
+    },
+    {
+      "term": "Evidence type",
+      "total": 3,
+      "files": {
+        "src/popup.tsx": 1,
+        "src/tabs/report.tsx": 2
+      }
+    },
+    {
+      "term": "Evidence types",
+      "total": 2,
+      "files": {
+        "src/tabs/report.tsx": 2
+      }
+    },
+    {
+      "term": "Full report",
+      "total": 3,
+      "files": {
+        "src/popup.tsx": 3
+      }
+    },
+    {
+      "term": "Local value ledger",
+      "total": 5,
+      "files": {
+        "src/popup.tsx": 1,
+        "src/tabs/report.tsx": 1,
+        "src/components/value/ValueLedgerView.tsx": 3
+      }
+    },
+    {
+      "term": "Observed tracker presence",
+      "total": 1,
+      "files": {
+        "src/popup.tsx": 1
+      }
+    },
+    {
+      "term": "Observations",
+      "total": 38,
+      "files": {
+        "src/popup.tsx": 5,
+        "src/tabs/report.tsx": 19,
+        "src/components/value/ValueLedgerView.tsx": 4,
+        "src/core/report/display.ts": 10
+      }
+    },
+    {
+      "term": "Site tooling/yr",
+      "total": 3,
+      "files": {
+        "src/popup.tsx": 1,
+        "src/components/value/ValueLedgerView.tsx": 2
+      }
+    },
+    {
+      "term": "Sites",
+      "total": 6,
+      "files": {
+        "src/popup.tsx": 1,
+        "src/components/value/ValueLedgerView.tsx": 4,
+        "src/core/domain/valuation.ts": 1
+      }
+    },
+    {
+      "term": "Still exposed",
+      "total": 3,
+      "files": {
+        "src/popup.tsx": 3
+      }
+    },
+    {
+      "term": "Stop at source",
+      "total": 4,
+      "files": {
+        "src/popup.tsx": 2,
+        "src/tabs/report.tsx": 1,
+        "src/core/report/display.ts": 1
+      }
+    },
+    {
+      "term": "This period",
+      "total": 6,
+      "files": {
+        "src/popup.tsx": 1,
+        "src/components/value/ValueLedgerView.tsx": 5
+      }
+    },
+    {
+      "term": "Trackers",
+      "total": 10,
+      "files": {
+        "src/popup.tsx": 3,
+        "src/tabs/report.tsx": 1,
+        "src/components/value/ValueLedgerView.tsx": 4,
+        "src/core/domain/valuation.ts": 2
+      }
+    },
+    {
+      "term": "Value ledger",
+      "total": 8,
+      "files": {
+        "src/popup.tsx": 2,
+        "src/tabs/report.tsx": 3,
+        "src/components/value/ValueLedgerView.tsx": 3
+      }
+    },
+    {
+      "term": "Visits",
+      "total": 5,
+      "files": {
+        "src/popup.tsx": 1,
+        "src/components/value/ValueLedgerView.tsx": 4
+      }
+    },
+    {
+      "term": "Watching",
+      "total": 6,
+      "files": {
+        "src/popup.tsx": 3,
+        "src/tabs/report.tsx": 2,
+        "src/core/domain/valuation.ts": 1
+      }
+    },
+    {
+      "term": "Can't block",
+      "total": 3,
+      "files": {
+        "src/popup.tsx": 2,
+        "src/tabs/report.tsx": 1
+      }
+    }
+  ],
+  "disallowedAliases": [
+    {
+      "phrase": "companies that profit from you",
+      "use": "revenue-model trackers",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "phrase": "company that profits from you",
+      "use": "revenue-model tracker",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "phrase": "rolling local value",
+      "use": "Local value ledger",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "phrase": "sold your data",
+      "use": "observed tracker presence",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "phrase": "they earned",
+      "use": "estimated value represented",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "phrase": "what you are worth",
+      "use": "Estimated data value",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "phrase": "you monetized",
+      "use": "Value ledger",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "phrase": "your value/yr",
+      "use": "Ad value/yr",
+      "total": 0,
+      "files": {}
+    }
+  ],
+  "disallowedSourcePatterns": [
+    {
+      "use": "Metric label=\"Watching\"",
+      "pattern": "Metric\\s+label=\"Active\"",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "use": "Metric label=\"Can't block\"",
+      "pattern": "Metric\\s+label=\"Cannot\"",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "use": "Metric label=\"Evidence types\"",
+      "pattern": "Metric\\s+label=\"Signals\"",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "use": "Evidence type",
+      "pattern": ">Signal<\\/th>|>Signal<\\/dt>",
+      "total": 0,
+      "files": {}
+    },
+    {
+      "use": "Evidence types",
+      "pattern": "title=\"Signals\\b",
+      "total": 0,
+      "files": {}
+    }
+  ],
+  "topWords": [
+    {
+      "word": "mt-",
+      "count": 52
+    },
+    {
+      "word": "gap-",
+      "count": 35
+    },
+    {
+      "word": "core",
+      "count": 26
+    },
+    {
+      "word": "grid-cols-",
+      "count": 21
+    },
+    {
+      "word": "border-border",
+      "count": 20
+    },
+    {
+      "word": "flex",
+      "count": 19
+    },
+    {
+      "word": "grid",
+      "count": 19
+    },
+    {
+      "word": "domain",
+      "count": 15
+    },
+    {
+      "word": "border",
+      "count": 12
+    },
+    {
+      "word": "can",
+      "count": 12
+    },
+    {
+      "word": "text-",
+      "count": 12
+    },
+    {
+      "word": "block",
+      "count": 11
+    },
+    {
+      "word": "failed",
+      "count": 10
+    },
+    {
+      "word": "flex-wrap",
+      "count": 10
+    },
+    {
+      "word": "items-center",
+      "count": 10
+    },
+    {
+      "word": "page",
+      "count": 10
+    },
+    {
+      "word": "report",
+      "count": 10
+    },
+    {
+      "word": "blocked",
+      "count": 9
+    },
+    {
+      "word": "rem",
+      "count": 9
+    },
+    {
+      "word": "text-muted-foreground",
+      "count": 9
+    },
+    {
+      "word": "bg-card",
+      "count": 8
+    },
+    {
+      "word": "border-t",
+      "count": 8
+    },
+    {
+      "word": "components",
+      "count": 8
+    },
+    {
+      "word": "copied",
+      "count": 8
+    },
+    {
+      "word": "evidence",
+      "count": 8
+    },
+    {
+      "word": "idle",
+      "count": 8
+    },
+    {
+      "word": "pt-",
+      "count": 8
+    },
+    {
+      "word": "uppercase",
+      "count": 8
+    },
+    {
+      "word": "bg-background",
+      "count": 7
+    },
+    {
+      "word": "browser",
+      "count": 7
+    },
+    {
+      "word": "min-w-",
+      "count": 7
+    },
+    {
+      "word": "network",
+      "count": 7
+    },
+    {
+      "word": "revenue",
+      "count": 7
+    },
+    {
+      "word": "seen",
+      "count": 7
+    },
+    {
+      "word": "settings",
+      "count": 7
+    },
+    {
+      "word": "system",
+      "count": 7
+    },
+    {
+      "word": "tab",
+      "count": 7
+    },
+    {
+      "word": "types",
+      "count": 7
+    },
+    {
+      "word": "valuation",
+      "count": 7
+    },
+    {
+      "word": "blank",
+      "count": 6
+    },
+    {
+      "word": "extension",
+      "count": 6
+    },
+    {
+      "word": "font-mono",
+      "count": 6
+    },
+    {
+      "word": "hover",
+      "count": 6
+    },
+    {
+      "word": "justify-between",
+      "count": 6
+    },
+    {
+      "word": "none",
+      "count": 6
+    },
+    {
+      "word": "noreferrer",
+      "count": 6
+    },
+    {
+      "word": "not",
+      "count": 6
+    },
+    {
+      "word": "text-danger",
+      "count": 6
+    },
+    {
+      "word": "you",
+      "count": 6
+    },
+    {
+      "word": "your",
+      "count": 6
+    },
+    {
+      "word": "blockable",
+      "count": 5
+    },
+    {
+      "word": "border-b",
+      "count": 5
+    },
+    {
+      "word": "border-danger",
+      "count": 5
+    },
+    {
+      "word": "company",
+      "count": 5
+    },
+    {
+      "word": "device",
+      "count": 5
+    },
+    {
+      "word": "font-display",
+      "count": 5
+    },
+    {
+      "word": "font-semibold",
+      "count": 5
+    },
+    {
+      "word": "request",
+      "count": 5
+    },
+    {
+      "word": "shadow-sm",
+      "count": 5
+    },
+    {
+      "word": "site",
+      "count": 5
+    },
+    {
+      "word": "summary",
+      "count": 5
+    },
+    {
+      "word": "surface",
+      "count": 5
+    },
+    {
+      "word": "text-left",
+      "count": 5
+    },
+    {
+      "word": "tracker",
+      "count": 5
+    },
+    {
+      "word": "tracking-",
+      "count": 5
+    },
+    {
+      "word": "tracking-tight",
+      "count": 5
+    },
+    {
+      "word": "w-full",
+      "count": 5
+    },
+    {
+      "word": "about",
+      "count": 4
+    },
+    {
+      "word": "alert",
+      "count": 4
+    },
+    {
+      "word": "all",
+      "count": 4
+    },
+    {
+      "word": "cannot",
+      "count": 4
+    },
+    {
+      "word": "contracts",
+      "count": 4
+    },
+    {
+      "word": "copy",
+      "count": 4
+    },
+    {
+      "word": "cost",
+      "count": 4
+    },
+    {
+      "word": "data",
+      "count": 4
+    },
+    {
+      "word": "days",
+      "count": 4
+    },
+    {
+      "word": "get",
+      "count": 4
+    },
+    {
+      "word": "ledger",
+      "count": 4
+    },
+    {
+      "word": "observer",
+      "count": 4
+    },
+    {
+      "word": "opacity-",
+      "count": 4
+    }
+  ]
+}

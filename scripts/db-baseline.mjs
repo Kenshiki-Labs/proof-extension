@@ -40,7 +40,9 @@ const rows = trackers.map((tracker) => {
     contact: Boolean(company.privacyContact),
     explanation: Boolean(tracker.displayName && tracker.observes?.browserVisible?.length && tracker.userImpact?.plainSummary),
     blockingLimits: Boolean(tracker.browserAction?.whatBlockingChanges?.length && tracker.browserAction?.whatBlockingDoesNotChange?.length),
-    notVisible: Boolean(tracker.observes?.notVisibleToExtension?.length)
+    notVisible: Boolean(tracker.observes?.notVisibleToExtension?.length),
+    valuation: Boolean(tracker.perPersonValue),
+    valuationSourced: tracker.perPersonValue?.confidence === "sourced"
   }
 })
 
@@ -67,6 +69,7 @@ lines.push(`- Remediation: deletion link **${count(rows, (r) => r.deletion)}/${t
 lines.push(`- Explanation coverage: **${count(rows, (r) => r.explanation)}/${trackers.length}**`)
 lines.push(`- Blocking-limit coverage: **${count(rows, (r) => r.blockingLimits)}/${trackers.length}**`)
 lines.push(`- Not-visible-to-extension coverage: **${count(rows, (r) => r.notVisible)}/${trackers.length}**`)
+lines.push(`- Valuation coverage: **${count(rows, (r) => r.valuation)}/${trackers.length}** (${count(rows, (r) => r.valuationSourced)} sourced / ${count(rows, (r) => r.valuation && !r.valuationSourced)} estimated)`)
 lines.push(`- Blockability classes in use: ${tally(trackers, (t) => t.browserAction.blockability).map(([k, v]) => `\`${k}\` (${v})`).join(", ")}`)
 lines.push("")
 lines.push("### By category")
@@ -90,6 +93,7 @@ const noContact = rows.filter((r) => !r.contact).map((r) => r.id)
 const noExplanation = rows.filter((r) => !r.explanation).map((r) => r.id)
 const noBlockingLimits = rows.filter((r) => !r.blockingLimits).map((r) => r.id)
 const noNotVisible = rows.filter((r) => !r.notVisible).map((r) => r.id)
+const noValuation = rows.filter((r) => !r.valuation).map((r) => r.id)
 const unknownFriction = rows.filter((r) => r.friction === "unknown").map((r) => r.id)
 const seedCount = count(rows, (r) => r.review === "seed")
 lines.push(`- **Provenance**: ${seedCount} of ${trackers.length} records are hand-authored seeds pending Tracker Radar / EasyPrivacy source backing (Phase 3).`)
@@ -100,6 +104,7 @@ lines.push(`- **Missing privacy contact** (${noContact.length}): ${noContact.joi
 lines.push(`- **Missing explanation coverage** (${noExplanation.length}): ${noExplanation.join(", ") || "none"}.`)
 lines.push(`- **Missing blocking-limit coverage** (${noBlockingLimits.length}): ${noBlockingLimits.join(", ") || "none"}.`)
 lines.push(`- **Missing not-visible-to-extension coverage** (${noNotVisible.length}): ${noNotVisible.join(", ") || "none"}.`)
+lines.push(`- **Missing valuation coverage** (${noValuation.length}): ${noValuation.join(", ") || "none"}.`)
 const sharedRemediation = tally(trackers, (t) => t.remediationId).filter(([, n]) => n > 1)
 lines.push(`- **Shared remediation records**: ${sharedRemediation.map(([k, v]) => `\`${k}\` used by ${v} trackers`).join(", ") || "none"}.`)
 lines.push("")

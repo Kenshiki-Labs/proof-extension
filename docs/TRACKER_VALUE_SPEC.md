@@ -9,6 +9,17 @@ This enables the Proof extension to show users:
 - **Per-visit**: "This visit is worth $0.0049 to 6 trackers"
 - **Annual rollup**: "You're worth ~$312/year to these companies"
 
+## Source of Truth
+
+This document defines the valuation model and interpretation rules. Numeric valuation findings live in:
+
+- `intelligence/source/valuations/market-research-2026.json`
+- `intelligence/normalized/valuations.json`
+
+Runtime `perPersonValue` blocks in `src/core/db/trackers.json` are promoted projections, not hand-authored source data. Run `pnpm intel:normalize && pnpm intel:promote` to update them. `pnpm intel:promote:check` fails if a runtime dollar figure drifts from the normalized valuation artifact.
+
+`market_research` provenance supports valuation estimates only. It must not be used as evidence for tracker identity, collection behavior, blocking policy, ownership, or remediation claims.
+
 ---
 
 ## `perPersonValue` Block Structure

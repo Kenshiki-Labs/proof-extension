@@ -10,6 +10,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs"
 import { getDomain } from "tldts"
 
 const SOURCE_DIR = "intelligence/source/defense-ai"
+const VALUATION_SOURCE_PATH = "intelligence/source/valuations/market-research-2026.json"
 const OUT_DIR = "intelligence/normalized"
 const QUARANTINE_DIR = "intelligence/quarantine"
 const RETRIEVED_AT = "2026-07-03"
@@ -1024,6 +1025,83 @@ function normalizeDefenseProductSurface() {
   }
 }
 
+function normalizeValuations({ entities }) {
+  const source = JSON.parse(readFileSync(VALUATION_SOURCE_PATH, "utf8"))
+  const trackers = JSON.parse(readFileSync("src/core/db/trackers.json", "utf8"))
+  const trackerIds = new Set(trackers.map((tracker) => tracker.id))
+  const entityById = new Map(entities.records.map((entity) => [entity.id, entity]))
+  const recordsByTrackerId = new Map()
+
+  for (const finding of source.findings) {
+    const entity = entityById.get(finding.subjectEntityId)
+    if (!entity) throw new Error(`Valuation finding ${finding.id} references unknown entity ${finding.subjectEntityId}`)
+
+    for (const trackerId of finding.projection.appliesToTrackerIds) {
+      if (!trackerIds.has(trackerId)) throw new Error(`Valuation finding ${finding.id} references unknown tracker ${trackerId}`)
+      if (!entity.facets.trackerIds.includes(trackerId)) {
+        throw new Error(`Valuation finding ${finding.id} projects to ${trackerId}, which is not joined to entity ${finding.subjectEntityId}`)
+      }
+      if (recordsByTrackerId.has(trackerId)) throw new Error(`Duplicate valuation projection for tracker ${trackerId}`)
+
+      const annualMidpointUsd = (finding.annualLowUsd + finding.annualHighUsd) / 2
+      recordsByTrackerId.set(trackerId, {
+        trackerId,
+        subjectEntityId: finding.subjectEntityId,
+        sourceFindingIds: [finding.id],
+        perPersonValue: {
+          schemaVersion: 1,
+          currency: finding.currency,
+          geography: finding.geography,
+          userProfile: finding.userProfile,
+          valueType: finding.valueType,
+          monetizationFlow: finding.monetizationFlow,
+          perVisit: {
+            microdollars: finding.perVisitMicrodollars,
+            dollars: finding.perVisitMicrodollars / 1_000_000,
+            basis: finding.perVisitBasis
+          },
+          annual: {
+            low_usd: finding.annualLowUsd,
+            high_usd: finding.annualHighUsd,
+            midpoint_usd: annualMidpointUsd
+          },
+          valueNote: finding.valueNote,
+          sourceNote: finding.sourceNote,
+          sourceFindingIds: [finding.id],
+          lastUpdated: finding.lastUpdated,
+          confidence: finding.confidence
+        }
+      })
+    }
+  }
+
+  const missingTrackerIds = [...trackerIds].filter((trackerId) => !recordsByTrackerId.has(trackerId)).sort()
+  if (missingTrackerIds.length > 0) throw new Error(`Missing valuation projections for trackers: ${missingTrackerIds.join(", ")}`)
+
+  return {
+    schemaVersion: 1,
+    sources: [
+      {
+        family: "market_research",
+        name: "Kenshiki market research valuation corpus",
+        version: "2026",
+        retrieved_at: RETRIEVED_AT,
+        license: "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        transform_notes:
+          "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      }
+    ],
+    review: {
+      status: "source_backed",
+      last_reviewed_at: RETRIEVED_AT,
+      reviewer: "Kenshiki",
+      notes: "Valuation estimates only. This artifact does not support tracker identity, collection behavior, blocking policy, or remediation claims."
+    },
+    sourceFindingCount: source.findings.length,
+    records: [...recordsByTrackerId.values()].sort((left, right) => left.trackerId.localeCompare(right.trackerId))
+  }
+}
+
 mkdirSync(OUT_DIR, { recursive: true })
 
 mkdirSync(QUARANTINE_DIR, { recursive: true })
@@ -1032,11 +1110,13 @@ const destinations = normalizeDefenseDestinations()
 const productSurface = normalizeDefenseProductSurface()
 const californiaBrokers = normalizeCaliforniaRegistry()
 const { entityIndex: entities, conflictReport, quarantinedEntities, quarantinedConflictReport } = buildEntities({ brokers, californiaBrokers, destinations })
+const valuations = normalizeValuations({ entities })
 const outputPaths = {
   brokers: `${OUT_DIR}/brokers.json`,
   destinations: `${OUT_DIR}/defense-destinations.json`,
   productSurface: `${OUT_DIR}/defense-product-surface.json`,
   californiaBrokers: `${OUT_DIR}/ca-brokers-2026.json`,
+  valuations: `${OUT_DIR}/valuations.json`,
   entities: `${OUT_DIR}/entities.json`,
   conflicts: `${OUT_DIR}/entity-conflicts.json`,
   quarantinedEntities: `${QUARANTINE_DIR}/research-entities.json`,
@@ -1048,6 +1128,7 @@ writeFileSync(outputPaths.brokers, JSON.stringify(brokers, null, 2) + "\n")
 writeFileSync(outputPaths.destinations, JSON.stringify(destinations, null, 2) + "\n")
 writeFileSync(outputPaths.productSurface, JSON.stringify(productSurface, null, 2) + "\n")
 writeFileSync(outputPaths.californiaBrokers, JSON.stringify(californiaBrokers, null, 2) + "\n")
+writeFileSync(outputPaths.valuations, JSON.stringify(valuations, null, 2) + "\n")
 writeFileSync(outputPaths.entities, JSON.stringify(entities, null, 2) + "\n")
 writeFileSync(outputPaths.conflicts, JSON.stringify(conflictReport, null, 2) + "\n")
 writeFileSync(outputPaths.quarantinedEntities, JSON.stringify(quarantinedEntities, null, 2) + "\n")
@@ -1057,6 +1138,7 @@ console.log(`Wrote ${OUT_DIR}/brokers.json (${brokers.records.length} brokers)`)
 console.log(`Wrote ${OUT_DIR}/defense-destinations.json (${destinations.records.length} destinations)`)
 console.log(`Wrote ${OUT_DIR}/defense-product-surface.json (${Object.keys(productSurface.destinations).length} destinations, full copy/routing/guardrails)`)
 console.log(`Wrote ${OUT_DIR}/ca-brokers-2026.json (${californiaBrokers.records.length} brokers)`)
+console.log(`Wrote ${OUT_DIR}/valuations.json (${valuations.records.length} tracker valuations from ${valuations.sourceFindingCount} findings)`)
 const multiFacet = entities.records.filter(
   (entity) => Object.values(entity.facets).filter((ids) => ids.length > 0).length > 1
 ).length

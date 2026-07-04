@@ -18,8 +18,8 @@ export const SPACE = {
 
 export const ELEVATION = {
   flat: "",
-  card: "shadow-sm",
-  raised: "shadow-sm hover:shadow"
+  card: "shadow-[var(--panel-shadow)]",
+  raised: "shadow-[var(--panel-shadow-raised)]"
 }
 
 export const INSET = {
@@ -28,9 +28,16 @@ export const INSET = {
 }
 
 export const UI = {
-  panel: "border border-border bg-card shadow-[var(--panel-shadow)]",
+  panel: `border border-border bg-card ${ELEVATION.card}`,
   inset: "p-3.5",
   reportInset: "p-4 sm:p-5",
-  subtlePanel: "border border-border bg-background/55",
+  subtlePanel: "border border-border bg-background/55 shadow-[var(--panel-shadow-soft)]",
+  metricCard: `border border-border bg-card p-4 ${ELEVATION.card}`,
+  tableShell: "overflow-x-auto border border-border bg-card p-4 shadow-[var(--panel-shadow-soft)]",
+  tableHeader: "border-b border-border bg-background/70",
+  tableRow: "border-t border-border align-top hover:bg-background/55",
+  segment: "border px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.08em] transition-colors",
+  segmentActive: "border-foreground bg-foreground text-background",
+  segmentIdle: "border-border bg-card text-muted-foreground hover:border-foreground hover:text-foreground",
   divider: "border-t border-border"
 }

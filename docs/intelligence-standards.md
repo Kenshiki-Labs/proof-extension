@@ -105,7 +105,7 @@ Every local tracker record must be defensible by at least one source:
 
 Every imported or manually authored tracker record must include:
 
-- source family: `manual_seed`, `manual_fixture`, `vendor_docs`, `easyprivacy`, `easylist`, `duckduckgo_tracker_radar`, `first_party_evidence`, `state_registry`, `kenshiki_defense_registry`, or `kenshiki_entity_index`
+- source family: `manual_seed`, `manual_fixture`, `vendor_docs`, `easyprivacy`, `easylist`, `duckduckgo_tracker_radar`, `first_party_evidence`, `state_registry`, `market_research`, `kenshiki_defense_registry`, or `kenshiki_entity_index`
 - source version/date when available
 - transformation notes when the source was converted into a local rule
 - license/attribution notes when the source imposes redistribution conditions
@@ -123,6 +123,7 @@ Local schema names are intentionally stable enum identifiers:
 | `duckduckgo_tracker_radar` | DuckDuckGo Tracker Radar metadata. |
 | `first_party_evidence` | First-party source-code or fixture evidence. |
 | `state_registry` | US state data-broker registry filings (Vermont, Oregon, Texas, California AG/CPPA). Public-record provenance for broker identity, opt-out, and contact data. |
+| `market_research` | Curated market/economic research used only for per-person valuation estimates. Does not support tracker identity, collection, or blocking claims. |
 | `kenshiki_defense_registry` | Kenshiki-authored defense destination registry and supply-chain research (`defense-registry.v3-harm`). First-party curated remediation intelligence. |
 | `kenshiki_entity_index` | Kenshiki-authored identity join index across runtime tracker DB records, normalized registry records, and defense/remediation destinations. Facts remain in the per-source artifacts. |
 
