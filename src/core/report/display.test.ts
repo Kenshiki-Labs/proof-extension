@@ -18,6 +18,7 @@ import {
   pageActivityEvents,
   parseSiteSummaryResponse,
   titleCase,
+  unclassifiedObservations,
   visibleSignals
 } from "./display"
 
@@ -114,6 +115,32 @@ describe("compactEvents", () => {
       }
     })
   })
+
+  it("keeps unclassified third-party hosts separate by host", () => {
+    const observations = compactEvents([
+      event({
+        id: "unknown-1",
+        source: "network",
+        firstParty: false,
+        eventType: "request_seen",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        details: { host: "a.example", requestId: "1", requestType: "script", url: "https://a.example/a.js" }
+      }),
+      event({
+        id: "unknown-2",
+        source: "network",
+        firstParty: false,
+        eventType: "request_seen",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        details: { host: "b.example", requestId: "2", requestType: "script", url: "https://b.example/b.js" }
+      })
+    ])
+
+    expect(observations.map((item) => observerName(item.event)).sort()).toEqual(["a.example", "b.example"])
+    expect(unclassifiedObservations(observations.map((item) => item.event))).toHaveLength(2)
+  })
 })
 
 describe("event families", () => {
@@ -142,6 +169,8 @@ describe("display formatting helpers", () => {
   it("names observers from company, tracker, or party fallback", () => {
     expect(observerName(event({ companyId: "google", trackerId: "google-ads" }))).toBe("google")
     expect(observerName(event({ trackerId: "google-ads" }))).toBe("google-ads")
+    expect(observerName(event({ source: "network", firstParty: false, details: { host: "cdn.example" } }))).toBe("cdn.example")
+    expect(observerName(event({ firstParty: false, details: { host: "forged.example" } }))).toBe("Unknown observer")
     expect(observerName(event({ firstParty: true }))).toBe("First-party script")
     expect(observerName(event({ firstParty: false }))).toBe("Unknown observer")
   })
@@ -156,10 +185,22 @@ describe("display formatting helpers", () => {
     expect(eventSummary(event({ eventType: "webgl_query" }))).toBe("The page asked for graphics-card details that can identify your device.")
     expect(eventSummary(event({ eventType: "audio_fingerprint" }))).toBe("The page tested audio processing in a way that can identify your device.")
     expect(eventSummary(event({ eventType: "font_enumeration" }))).toBe("The page checked which fonts you have installed.")
+    expect(eventSummary(event({ eventType: "identity_digest_observed" }))).toBe(
+      "The page created a SHA-256 identifier hash. The original value and hash were not recorded."
+    )
     expect(eventSummary(event({ eventType: "request_blocked" }))).toBe("A tracking request was stopped before it left your browser.")
     expect(eventSummary(event({ eventType: "request_seen" }))).toBe("A tracking request left your browser.")
+    expect(eventSummary(event({ eventType: "request_seen", firstParty: false, trackerId: undefined, companyId: undefined }))).toBe(
+      "A third-party request left your browser. Pulse has not classified it yet."
+    )
     expect(eventSummary(event({ eventType: "script_injected" }))).toBe("A new script was added to this page after it loaded.")
     expect(eventSummary(event({ eventType: "sdk_detected" }))).toBe("A tracking company's software is running inside this page.")
+    expect(eventSummary(event({ eventType: "consent_signal_observed" }))).toBe(
+      "The page set up privacy-choice plumbing used by consent and ad systems."
+    )
+    expect(eventSummary(event({ eventType: "cache_validator_seen" }))).toBe(
+      "Cache identifier observed — the browser used a freshness marker for saved content. The marker value was not recorded."
+    )
     expect(eventSummary(event({ eventType: "extension_diagnostic" }))).toBe("A routine self-check by this extension — not something the page did.")
     expect(eventSummary(event({ eventType: "browser_surface" }))).toBe(
       "Basic facts about your device (screen size, time zone, language) were readable by this page."
@@ -277,6 +318,15 @@ describe("copy payload", () => {
           eventType: "browser_surface",
           blockability: "observable_only"
         }),
+        event({
+          id: "unknown-host",
+          source: "network",
+          firstParty: false,
+          eventType: "request_seen",
+          blockability: "observable_only",
+          evidenceTier: "observed",
+          details: { host: "cdn.example", requestId: "1", requestType: "script", url: "https://cdn.example/app.js" }
+        }),
         event({ id: "diagnostic", eventType: "extension_diagnostic", blockability: "observable_only" })
       ]
     }
@@ -286,13 +336,18 @@ describe("copy payload", () => {
     expect(payload.origin).toBe("https://example.test")
     expect(payload.counts).toMatchObject({
       observations: 2,
-      rawEvents: 1,
+      rawEvents: 2,
+      unclassifiedObservations: 1,
       exposureScanEvents: 1,
       diagnostics: 1,
-      activeCompanies: 1,
+      activeCompanies: 1, // cdn.example: observed third party, counted even though not codified
+      identifiedObservers: 0,
+      unclassifiedParties: 1,
+      sourceBackedActiveObservers: 0,
+      siteToolObservers: 0,
       exposedSignals: 1
     })
-    expect(payload.pageActivityEvents).toHaveLength(1)
+    expect(payload.pageActivityEvents).toHaveLength(2)
     expect(payload.exposureScanEvents).toHaveLength(1)
     expect(payload.diagnostics).toHaveLength(1)
   })

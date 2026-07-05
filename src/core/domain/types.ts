@@ -10,6 +10,8 @@ export type ObservationStatus = "active" | "blocked" | "mitigated" | "cannot_blo
 
 export type DetectionConfidence = "confirmed" | "probable" | "weak"
 
+export type EvidenceTier = "observed" | "classified" | "attributed" | "explained" | "actionable"
+
 export type FirstPartyPolicyLabel =
   | "site_functionality"
   | "security_or_fraud"
@@ -37,6 +39,11 @@ export type ObserverEvent = {
     // Catches trackers whose network requests were cached, first-party
     // proxied, or CNAME-cloaked and therefore invisible to request matching.
     | "sdk_detected"
+    // Standardized consent/CMP APIs (IAB TCF, USP, GPP, Sourcepoint config)
+    // present in the page. These are not vendor SDK signatures: many CMPs
+    // expose the same API names, so this records privacy-signal plumbing
+    // without pretending to know the vendor unless separate evidence does.
+    | "consent_signal_observed"
     // The extension reporting on itself (bridge ready, hooks installed, scan
     // attempts) — never an observation of page behavior. Kept separate so
     // script_injected stays reserved for real dynamic-script detection.
@@ -46,21 +53,24 @@ export type ObserverEvent = {
     | "audio_fingerprint"
     | "webgl_query"
     | "font_enumeration"
+    | "identity_digest_observed"
     | "cookie_sync"
     // Persistence surfaces (JS-visible subset): metadata-only observations of
     // storage the page wrote — names, sizes, timing; never values. The
-    // cache_validator_seen and storage_respawn_suspected families from the
-    // spec are deliberately absent until an emitter exists: a schema that
-    // accepts a type nothing emits is pure forgery surface.
+    // storage_respawn_suspected from the spec is deliberately absent until
+    // an emitter exists: a schema that accepts a type nothing emits is pure
+    // forgery surface.
     | "cookie_observed"
     | "storage_write"
     | "indexeddb_access"
     | "cache_storage_access"
     | "service_worker_registered"
+    | "cache_validator_seen"
     | "webrtc_probe"
   blockability: BlockabilityClass
   status: ObservationStatus
   confidence: DetectionConfidence
+  evidenceTier?: EvidenceTier | undefined
   evidence: string[]
   // How many times this observation recurred; merged by upsertEvent when an
   // event with the same id is recorded again. Absent means 1.
@@ -175,6 +185,17 @@ export type ValuationEdge = {
   observations: number
   thisPeriodVisitUsd: number
   servesCategory: "you_and_the_site" | "the_site" | "advertisers_and_maybe_you" | "only_their_business"
+}
+
+// A site↔host connection the graph can show but cannot price or name — an
+// observed third party with no tracker-DB match. Kept as a separate type
+// (not a loosened ValuationEdge) because "unclassified" is a presentation
+// fact, not a valuation fact: it never carries a servesCategory or a price,
+// and must never be persisted into the valuation ledger as if it were one.
+export type UnclassifiedGraphEdge = {
+  siteOrigin: string
+  host: string
+  observations: number
 }
 
 export type RollingValuationSummary = {

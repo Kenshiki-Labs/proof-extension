@@ -1,0 +1,73 @@
+title: Page Source Gap Implementation Plan
+description: Ordered implementation plan for consent/CMP signals, vendor coverage, and hashed-email identity digest observation discovered from a local, uncommitted page-source capture.
+owner: Kenshiki
+status: implemented
+version: "0.2.0"
+lastReviewed: 2026-07-05
+nextReview: 2026-08-05
+source_artifact: docs/page-source.txt
+source_artifact_status: local_only_not_committed
+requirements:
+  execute_in_order: true
+  privacy_posture:
+    - never_store_cookie_or_storage_values
+    - never_store_digest_inputs_or_digest_outputs
+    - privileged_side_rebuilds_evidence
+    - page_channel_cannot_self_attribute_vendor_or_status
+items:
+  - id: 1
+    title: Consent and CMP signal observation
+    status: implemented
+    evidence:
+      - docs/page-source.txt#L4531: IAB TCF v2 __tcfapi stub and __tcfapiLocator frame
+      - docs/page-source.txt#L4532: US Privacy __uspapi stub and __uspapiLocator frame
+      - docs/page-source.txt#L4533: IAB GPP __gpp stub with supported privacy APIs
+      - docs/page-source.txt#L4535: Sourcepoint consent config global
+    implementation:
+      - add consent_signal_observed event type to TypeScript and Zod schemas
+      - add a dedicated consent signal module rather than SDK-global vendor attribution
+      - scan MAIN-world globals and report only known standardized/global names
+      - enrich evidence in privileged code before storage
+      - classify as observed metadata unless a separate vendor tracker record is matched
+    tests:
+      - consent signal matcher and enrichment tests
+      - message guard accepts non-network consent observations
+      - schema accepts the new event type
+  - id: 2
+    title: Vendor coverage for page-source evidenced parties
+    status: partially_implemented
+    evidence:
+      - docs/page-source.txt#L4884: Sourcepoint wrapper script from cdn.privacy-mgmt.com
+      - docs/page-source.txt#L8402-L8404: comScore ScorecardResearch beacon script
+      - docs/page-source.txt#L8523: ScorecardResearch noscript pixel fallback
+      - docs/page-source.txt#L4722: Permutive storage key reference
+      - docs/page-source.txt#L14078: Marfeel and BlueConic identity/analytics references
+    implementation:
+      - add safe tracker DB records only where browser-visible domains are evidenced
+      - use seed or first-party-evidence provenance when no live vendor retrieval happens in-session
+      - do not invent domains for vendors only visible as local variable or storage-key references
+      - update functional category mapping only if a new raw category is introduced
+      - keep blockability honest and avoid block toggles for high-breakage CMP/tag infrastructure
+    tests:
+      - tracker database validation
+      - SDK/global tests if new globals are added
+      - functional category coverage test remains green
+    excluded_for_now:
+      - Permutive: evidenced as a storage-key reference, but no browser-visible request domain was present in the captured source
+      - Marfeel: evidenced in inline page code/dataLayer pushes, but no browser-visible vendor domain was present in the captured source
+      - BlueConic: evidenced as an ID field reference, but no browser-visible vendor domain was present in the captured source
+  - id: 3
+    title: Hashed-email identity digest observation
+    status: implemented
+    evidence:
+      - docs/page-source.txt#L14078: SHA-256 email digest built beside GA client ID and gclid
+    implementation:
+      - add identity_digest_observed event type to TypeScript and Zod schemas
+      - hook SubtleCrypto.digest metadata-only in MAIN world
+      - report algorithm and input byte length only, never input or digest bytes
+      - privileged side normalizes evidence and forces observable_only active status
+      - classify as behavioral_profiling first-party policy evidence unless later attributed to a tracker
+    tests:
+      - content hook reports SHA-256 digest metadata without values
+      - normalizer strips forged evidence/status/details
+      - display summary explains identity digest behavior without exposing internals on product surfaces

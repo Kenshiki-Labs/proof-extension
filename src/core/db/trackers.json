@@ -102,13 +102,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "FullStory Browser SDK — Getting Started; iframe capture help article",
+        "url": "https://developer.fullstory.com/browser/getting-started/",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the fs.js snippet loads from edge.fullstory.com and that the SDK performs client-side session-replay capture (clicks, scrolls, navigation, form interaction metadata); supports match.domains, category, and collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: FullStory's own developer documentation confirms edge.fullstory.com as the SDK/ingest host and describes the session-replay collection this record claims."
     },
     "perPersonValue": {
       "schemaVersion": 1,
@@ -210,13 +218,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Google Tag Platform — Content Security Policy guide",
+        "url": "https://developers.google.com/tag-platform/security/guides/csp",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Google's own CSP allowlist guide names google-analytics.com as a required host for GA4/gtag measurement traffic, supporting match.domains and the analytics collection claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-04",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review. Removed www.googletagmanager.com (and the /gtag/js path that only exists on that host) 2026-07-04: it suffix-overlaps the google-tag-manager record, so one request matched both records and double-counted, and a user enabling a Google Analytics block would have installed a rule blocking Google Tag Manager's tag delivery — the high-breakage outcome the blocking policy exists to prevent. Script loads from the googletagmanager.com host attribute to the google-tag-manager record; Google Analytics measurement beacons still match google-analytics.com."
+      "notes": "Removed www.googletagmanager.com (and the /gtag/js path that only exists on that host) 2026-07-04: it suffix-overlaps the google-tag-manager record, so one request matched both records and double-counted, and a user enabling a Google Analytics block would have installed a rule blocking Google Tag Manager's tag delivery — the high-breakage outcome the blocking policy exists to prevent. Script loads from the googletagmanager.com host attribute to the google-tag-manager record; Google Analytics measurement beacons still match google-analytics.com. Source-backed 2026-07-05: Google's own CSP documentation confirms google-analytics.com as the GA4/gtag measurement host."
     },
     "displayName": "Google Analytics",
     "observes": {
@@ -347,13 +363,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Google Tag Platform — Content Security Policy guide",
+        "url": "https://developers.google.com/tag-platform/security/guides/csp",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Google's own CSP allowlist guide names googletagmanager.com as the GTM container/script host, supporting match.domains and the tag-delivery collection claim."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-04",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review. Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because it delivers the site's own tags and blocking breaks site features beyond tracking; the honest in-product capability is source-level remediation."
+      "notes": "Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because it delivers the site's own tags and blocking breaks site features beyond tracking; the honest in-product capability is source-level remediation. Source-backed 2026-07-05: Google's own CSP documentation confirms googletagmanager.com as the GTM host."
     },
     "displayName": "Google Tag Manager",
     "observes": {
@@ -488,13 +512,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Google Tag Platform CSP guide; Google Publisher Tag — Get started",
+        "url": "https://developers.google.com/tag-platform/security/guides/csp",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Google's own CSP allowlist guide names doubleclick.net, googleadservices.com, and googlesyndication.com (securepubads.g.doubleclick.net) as required ad-serving/conversion hosts, supporting match.domains and the retargeting/conversion collection claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Google's own CSP and Publisher Tag documentation confirms doubleclick.net, googleadservices.com, and googlesyndication.com as Google Ads/DoubleClick hosts matching this record's claims."
     },
     "displayName": "Google Ads / DoubleClick",
     "observes": {
@@ -629,13 +661,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Meta for Developers — Meta Pixel, Get Started",
+        "url": "https://developers.facebook.com/docs/meta-pixel/get-started",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms fbevents.js loads from connect.facebook.net, PageView is auto-tracked, and fbq() reports site-defined conversion events; supports match.domains and collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Meta's own developer documentation confirms connect.facebook.net as the Pixel host and describes the conversion-event collection this record claims."
     },
     "displayName": "Meta Pixel",
     "observes": {
@@ -904,13 +944,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "LinkedIn Help — Insight Tag conversion tracking and first-party cookies",
+        "url": "https://www.linkedin.com/help/lms/answer/a418880",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "LinkedIn's own help articles confirm the Insight Tag install flow and first-party-cookie conversion tracking; supports category and collects claims. The two match.domains hosts (snap.licdn.com, px.ads.linkedin.com) come from this project's own network observation, not verbatim from the retrieved text."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: LinkedIn's own help documentation confirms the Insight Tag product/mechanism this record describes; the specific CDN/pixel hostnames were confirmed via this project's network observation rather than verbatim vendor text."
     },
     "displayName": "LinkedIn Insight Tag",
     "observes": {
@@ -1184,13 +1232,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Mixpanel Docs — JavaScript SDK / tracking methods",
+        "url": "https://docs.mixpanel.com/docs/tracking-methods/sdks/javascript",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the JS SDK loads from cdn.mxpnl.com and reports events to api.mixpanel.com, with autocapture of page/click events; supports match.domains and collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Mixpanel's own SDK documentation confirms cdn.mxpnl.com and api.mixpanel.com as the script/collection hosts matching this record's claims."
     },
     "displayName": "Mixpanel",
     "observes": {
@@ -1326,13 +1382,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Twilio Segment Docs — Analytics.js website source",
+        "url": "https://www.twilio.com/docs/segment/connections/sources/catalog/libraries/website/javascript",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms Analytics.js loads from cdn.segment.com and reports events to api.segment.io, and states explicitly that Analytics.js sets only first-party cookies; supports match.domains and collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Segment's (Twilio) own documentation confirms cdn.segment.com and api.segment.io as the script/collection hosts matching this record's claims."
     },
     "displayName": "Segment",
     "observes": {
@@ -1463,13 +1527,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Amplitude Docs — Browser SDK 2",
+        "url": "https://amplitude.com/docs/sdks/analytics/browser/browser-sdk-2",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the Browser SDK loads from cdn.amplitude.com and its cookie/ingestion behavior; supports match.domains and collects claims. The api2.amplitude.com ingestion host is Amplitude's documented standard endpoint pattern, not verbatim-quoted in the retrieved page text."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Amplitude's own SDK documentation confirms cdn.amplitude.com as the script host; api2.amplitude.com is Amplitude's documented ingestion endpoint pattern."
     },
     "displayName": "Amplitude",
     "observes": {
@@ -1740,13 +1812,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Adobe Experience League — Implement Adobe Analytics",
+        "url": "https://experienceleague.adobe.com/en/docs/analytics/implementation/home",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms Adobe's own implementation architecture (Tags/Launch extension loader tag, legacy AppMeasurement.js, Edge Network forwarding to Adobe Analytics), supporting vendor identity and analytics-collection claims. Does not verbatim-confirm assets.adobedtm.com or sc.omtrdc.net in the retrieved text — these are Adobe's well-established Tags-CDN and legacy-collection hostname patterns (formerly DTM/Omniture), not independently re-verified as literal strings this session."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Adobe's own implementation guide confirms the Analytics product and its Tags/AppMeasurement.js/Edge Network collection architecture; the specific assets.adobedtm.com/sc.omtrdc.net hostnames are Adobe's well-known standard domains but were not verbatim-quoted in the retrieved page text."
     },
     "displayName": "Adobe Analytics",
     "observes": {
@@ -1880,13 +1960,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Braze Docs — Web SDK integration guide",
+        "url": "https://www.braze.com/docs/developer_guide/sdk_integration",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the Braze Web SDK's regional data-collection endpoint pattern (sdk.iad-XX.braze.com / sdk.fra-XX.braze.eu), matching this record's match.domains exactly; supports category and collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Braze's own SDK documentation confirms the sdk.iad-01.braze.com / sdk.fra-01.braze.eu regional endpoint pattern matching this record's claims."
     },
     "displayName": "Braze",
     "observes": {
@@ -2018,13 +2106,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Intercom Developer Docs — Installing Intercom on the web",
+        "url": "https://developers.intercom.com/installing-intercom/web/installation",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the Messenger widget loads from widget.intercom.io and reports events to api-iam.intercom.io; supports match.domains and collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-04",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review. Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because the messenger is the site's support channel and blocking removes it; the honest in-product capability is source-level remediation."
+      "notes": "Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because the messenger is the site's support channel and blocking removes it; the honest in-product capability is source-level remediation. Source-backed 2026-07-05: Intercom's own developer documentation confirms widget.intercom.io and api-iam.intercom.io as the widget/API hosts matching this record's claims."
     },
     "displayName": "Intercom",
     "observes": {
@@ -2156,13 +2252,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Drift Developer Docs — JS API overview",
+        "url": "https://devdocs.drift.com/docs/js-api-overview",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms Drift as a widget-based live-chat product loaded via a JS snippet; js.driftt.com is Drift's documented widget-delivery host."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-04",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review. Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because it renders the site's chat and blocking removes it; the honest in-product capability is source-level remediation."
+      "notes": "Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because it renders the site's chat and blocking removes it; the honest in-product capability is source-level remediation. Source-backed 2026-07-05: Drift's own developer documentation confirms the widget-script architecture and js.driftt.com host."
     },
     "displayName": "Drift",
     "observes": {
@@ -2845,9 +2949,9 @@
     ],
     "review": {
       "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review. Not verified 2026-07-05: attempted to retrieve Outbrain's publisher/pixel documentation directly (widgets.outbrain.com identity and outbrain.js behavior); the specific pixel-install page returned 404 and no vendor page confirming widgets.outbrain.com verbatim was successfully retrieved this session. Domains remain hand-authored, unconfirmed by vendor docs."
     },
     "displayName": "Outbrain",
     "observes": {
@@ -2978,13 +3082,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Snapchat Business Help — Install the Snap Pixel on your website",
+        "url": "https://businesshelp.snapchat.com/s/article/pixel-website-install",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the Snap Pixel install flow and its event-tracking script; sc-static.net and tr.snapchat.com are Snap's documented pixel-delivery and event-collection hosts."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Snap's own Business Help documentation confirms the Snap Pixel install flow matching this record's claims."
     },
     "displayName": "Snapchat Pixel",
     "observes": {
@@ -3116,13 +3228,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Pinterest Business Help — Install the Pinterest tag",
+        "url": "https://help.pinterest.com/en/business/article/install-the-pinterest-tag",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the Pinterest Tag product and its manual base-code/event-code install flow. Does not verbatim-confirm the specific ct.pinterest.com/s.pinimg.com hostnames in the retrieved text — these match Pinterest's known tag-delivery and CDN domains, not independently re-verified as literal strings this session."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Pinterest's own Business Help documentation confirms the Pinterest Tag product and install flow; the ct.pinterest.com/s.pinimg.com hostnames are Pinterest's well-known tag domains but were not verbatim-quoted in the retrieved page text."
     },
     "displayName": "Pinterest Tag",
     "observes": {
@@ -3253,13 +3373,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "X Business Help — Conversion tracking for websites",
+        "url": "https://business.x.com/en/help/campaign-measurement-and-analytics/conversion-tracking-for-websites.html",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms uwt.js loads from static.ads-twitter.com, and X's documented CSP allowlist names ads-twitter.com, ads-api.twitter.com, and analytics.twitter.com — an exact match to this record's domain family."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: X's own Business Help documentation confirms static.ads-twitter.com (uwt.js) and analytics.twitter.com as exact matches to this record's claims."
     },
     "displayName": "X (Twitter) Pixel",
     "observes": {
@@ -3391,13 +3519,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Yandex Metrica Support — Initialize the tag",
+        "url": "https://yandex.com/support/metrica/code/counter-initialize.html",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the Metrica tag initialization flow and its mc.yandex.ru counter/watch endpoint, including session-replay-style webvisor capture; supports match.domains and collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Yandex's own support documentation confirms mc.yandex.ru as the tag/counter host matching this record's claims."
     },
     "displayName": "Yandex Metrica",
     "observes": {
@@ -3529,13 +3665,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Microsoft Learn — Clarity setup and installation",
+        "url": "https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-setup",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the Clarity tag install flow and its www.clarity.ms tag-delivery host, and describes session-replay/heatmap capture behavior; supports match.domains and collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Microsoft's own Learn documentation confirms www.clarity.ms as the tag host matching this record's claims."
     },
     "displayName": "Microsoft Clarity",
     "observes": {
@@ -3666,13 +3810,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Datadog Docs — Browser RUM setup",
+        "url": "https://docs.datadoghq.com/real_user_monitoring/browser/setup/",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the Browser RUM SDK's intake endpoint pattern (browser-intake-datadoghq.com) and its /api/v2/rum ingestion path; supports match.domains and collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "notes": "Source-backed 2026-07-05: Datadog's own setup documentation confirms the browser-intake-datadoghq.com intake host matching this record's claims."
     },
     "displayName": "Datadog RUM",
     "observes": {
@@ -5323,13 +5475,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "HubSpot Knowledge Base — What cookies does HubSpot set in a visitor's browser?",
+        "url": "https://knowledge.hubspot.com/reports/what-cookies-does-hubspot-set-in-a-visitor-s-browser",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms HubSpot's own analytics/tracking domain family (hs-analytics.net, hs-scripts.com, hs-banner.com) matching this record's match.domains; supports collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-04",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check. Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because sites embed its forms and chat which break when the loader is blocked; the honest in-product capability is source-level remediation."
+      "notes": "Reclassified network_blockable -> user_action_required 2026-07-04: the blocking-policy gate (siteBreakage.risk=high, src/core/domain/blocking-policy.ts) means this product never offers or installs a block rule for it because sites embed its forms and chat which break when the loader is blocked; the honest in-product capability is source-level remediation. Source-backed 2026-07-05: HubSpot's own knowledge base confirms the hs-analytics.net/hs-scripts.com/hs-banner.com domain family matching this record's claims."
     },
     "displayName": "HubSpot",
     "observes": {
@@ -5460,13 +5620,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Microsoft Advertising Help — UET tag",
+        "url": "https://help.ads.microsoft.com/answers/17752/en",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the Universal Event Tracking (UET) tag and its bat.bing.com conversion-tracking host; supports match.domains and collects claims."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "notes": "Expansion batch record, source-backed 2026-07-05: Microsoft's own Advertising Help documentation confirms bat.bing.com as the UET host matching this record's claims."
     },
     "displayName": "Microsoft Advertising (UET)",
     "observes": {
@@ -5736,13 +5904,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Reddit Business Help — Reddit Pixel",
+        "url": "https://business.reddithelp.com/helpcenter/s/article/Install-the-Reddit-Pixel",
+        "retrieved_at": "2026-07-05",
+        "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
+        "transform_notes": "Confirms the Reddit Pixel conversion-tracking install flow; alb.reddit.com is Reddit's documented conversion-event endpoint."
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
       "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "notes": "Expansion batch record, source-backed 2026-07-05: Reddit's own Business Help documentation confirms the Reddit Pixel install flow matching this record's claims."
     },
     "displayName": "Reddit Pixel",
     "observes": {
@@ -5807,5 +5983,281 @@
       "note": "The claimed trade: relevant ads. The certain trade: Reddit links this site to your account when logged in."
     },
     "supplyChainRole": "vertically_integrated"
+  },
+  {
+    "id": "sourcepoint",
+    "schemaVersion": 2,
+    "displayName": "Sourcepoint",
+    "match": {
+      "domains": [
+        "cdn.privacy-mgmt.com"
+      ],
+      "paths": [
+        "/unified/"
+      ],
+      "requestTypes": [
+        "script"
+      ]
+    },
+    "companyId": "sourcepoint",
+    "category": "consent-management",
+    "collects": [
+      "privacy-choice state",
+      "consent framework metadata",
+      "publisher consent configuration"
+    ],
+    "monetization": [
+      "helping publishers run consent workflows for advertising and analytics vendors"
+    ],
+    "browserAction": {
+      "blockability": "user_action_required",
+      "method": "source-remediation",
+      "whatBlockingChanges": [
+        "This extension does not offer a block for Sourcepoint CMP scripts because they can control site consent flows and downstream tag loading.",
+        "Stopping collection happens at the source — see Stop at source."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by Sourcepoint, its parent company, or the site.",
+        "Does not change consent records already stored server-side.",
+        "Does not stop server-side events sent by the website."
+      ],
+      "siteBreakage": {
+        "risk": "high",
+        "affects": [
+          "consent dialogs",
+          "publisher privacy controls",
+          "tag-loading decisions"
+        ],
+        "note": "CMP scripts can control privacy dialogs and site tag behavior. Blocking them can break consent flows and site configuration."
+      }
+    },
+    "observes": {
+      "browserVisible": [
+        "CMP wrapper script request URL",
+        "page URL",
+        "publisher consent configuration globals"
+      ],
+      "siteProvided": [
+        "configured consent purposes",
+        "privacy-framework state exposed through IAB APIs"
+      ],
+      "notVisibleToExtension": [
+        "server-side consent records",
+        "downstream vendor decisions made after consent is evaluated",
+        "publisher-specific Sourcepoint account configuration"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "Sourcepoint provides consent-management infrastructure that helps a site collect and route privacy choices for advertising and analytics systems.",
+      "whyItMatters": [
+        "Consent-management code often controls which advertising and analytics systems can run.",
+        "It can expose standardized privacy signals to many downstream vendors on the page.",
+        "Blocking CMP infrastructure can break privacy-choice UI or alter site behavior, so this product observes and explains instead."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "consent routing",
+        "ad-tech coordination",
+        "site configuration"
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched Sourcepoint CMP wrapper host cdn.privacy-mgmt.com."
+    ],
+    "remediationId": "sourcepoint-default",
+    "sources": [
+      {
+        "family": "first_party_evidence",
+        "name": "Local Tom's Guide page-source capture (not committed)",
+        "version": "2026-07-05",
+        "retrieved_at": "2026-07-05",
+        "license": "Repository-owner supplied local page-source capture; used as first-party runtime evidence, not redistributed or committed as vendor documentation.",
+        "transform_notes": "Lines 4535, 4544, 4808, and 4884 show Sourcepoint configuration and a script request from cdn.privacy-mgmt.com/unified/wrapperMessagingWithoutDetection.js. This supports match.domains, category, and browser-visible observation claims only."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Placeholder zero-dollar operator-SaaS valuation until Sourcepoint-specific economics are promoted."
+      }
+    ],
+    "review": {
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
+      "reviewer": "Kenshiki",
+      "notes": "Source-backed by captured page-source evidence only: enough to codify the observed browser host and CMP role, not enough to claim additional domains or vendor-side data handling beyond this integration."
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisit": {
+        "microdollars": 0,
+        "dollars": 0,
+        "basis": "operator SaaS cost not yet priced per visit"
+      },
+      "annual": {
+        "low_usd": 0,
+        "high_usd": 0,
+        "midpoint_usd": 0
+      },
+      "valueNote": "Consent-management infrastructure is treated as site operator tooling until a sourced per-person valuation exists.",
+      "sourceNote": "No Sourcepoint-specific per-person economics promoted yet.",
+      "sourceFindingIds": [
+        "sourcepoint-valuation-placeholder-2026"
+      ],
+      "lastUpdated": "2026-07-05",
+      "confidence": "estimated"
+    },
+    "supplyChainRole": "site_tooling",
+    "whoItServes": {
+      "category": "the_site",
+      "note": "Helps the site operate privacy-choice and vendor-consent workflows."
+    }
+  },
+  {
+    "id": "comscore",
+    "schemaVersion": 2,
+    "displayName": "comScore / ScorecardResearch",
+    "match": {
+      "domains": [
+        "scorecardresearch.com"
+      ],
+      "paths": [
+        "/beacon.js",
+        "/cs/",
+        "/p/"
+      ],
+      "requestTypes": [
+        "script",
+        "image",
+        "ping"
+      ]
+    },
+    "companyId": "comscore",
+    "category": "analytics",
+    "collects": [
+      "which pages you view",
+      "audience-measurement beacon metadata",
+      "publisher and content identifiers"
+    ],
+    "monetization": [
+      "measuring publisher audiences for media and advertising markets",
+      "supporting audience analytics sold to publishers, agencies, and advertisers"
+    ],
+    "browserAction": {
+      "blockability": "network_blockable",
+      "method": "network-block",
+      "whatBlockingChanges": [
+        "Blocks future browser requests matching ScorecardResearch beacon domains and paths.",
+        "May reduce browser-side audience-measurement beacons from this page."
+      ],
+      "whatBlockingDoesNotChange": [
+        "Does not delete prior records held by comScore, its parent company, or the site.",
+        "Does not stop server-side events sent by the website.",
+        "Does not stop processing from other sessions, apps, or logged-in services."
+      ],
+      "siteBreakage": {
+        "risk": "low",
+        "affects": [],
+        "note": "No visible site functionality is known to depend on ScorecardResearch measurement beacons; blocking is expected to affect tracking only."
+      }
+    },
+    "observes": {
+      "browserVisible": [
+        "beacon script request URL",
+        "noscript pixel URL",
+        "publisher measurement identifier",
+        "page URL"
+      ],
+      "siteProvided": [
+        "publisher account identifier",
+        "content and video measurement parameters when configured by the site"
+      ],
+      "notVisibleToExtension": [
+        "server-side audience segments",
+        "measurement panels or model outputs",
+        "records already received before blocking was enabled"
+      ]
+    },
+    "userImpact": {
+      "plainSummary": "comScore/ScorecardResearch lets a publisher send audience-measurement beacons for analytics and advertising-market reporting.",
+      "whyItMatters": [
+        "Audience-measurement beacons can connect page views to publisher and campaign measurement systems.",
+        "The page source shows both JavaScript and noscript pixel paths, so measurement can continue without normal script execution.",
+        "Browser blocking reduces future browser-side beacons but does not delete prior records."
+      ],
+      "riskLevel": "medium",
+      "riskReasons": [
+        "audience measurement",
+        "publisher analytics",
+        "advertising reporting"
+      ]
+    },
+    "confidence": "confirmed",
+    "evidenceTemplate": [
+      "Request matched ScorecardResearch beacon host or path."
+    ],
+    "remediationId": "comscore-default",
+    "sources": [
+      {
+        "family": "first_party_evidence",
+        "name": "Local Tom's Guide page-source capture (not committed)",
+        "version": "2026-07-05",
+        "retrieved_at": "2026-07-05",
+        "license": "Repository-owner supplied local page-source capture; used as first-party runtime evidence, not redistributed or committed as vendor documentation.",
+        "transform_notes": "Lines 8361-8404 show the comScore integration, COMSCORE_ID, and ScorecardResearch beacon script; line 8523 shows the noscript pixel fallback. This supports match.domains, match.paths, category, and browser-visible observation claims only."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Placeholder estimated audience-measurement valuation until comScore-specific economics are promoted."
+      }
+    ],
+    "review": {
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-05",
+      "reviewer": "Kenshiki",
+      "notes": "Source-backed by captured page-source evidence only: enough to codify ScorecardResearch browser-visible beacon domains and paths, not enough to claim additional vendor-side processing beyond audience measurement."
+    },
+    "perPersonValue": {
+      "schemaVersion": 1,
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisit": {
+        "microdollars": 0,
+        "dollars": 0,
+        "basis": "zero placeholder pending promoted valuation source"
+      },
+      "annual": {
+        "low_usd": 0,
+        "high_usd": 0,
+        "midpoint_usd": 0
+      },
+      "valueNote": "Audience-measurement beacons support publisher analytics and advertising-market reporting; no comScore-specific per-person valuation is promoted yet.",
+      "sourceNote": "Zero placeholder pending comScore-specific valuation source promotion.",
+      "sourceFindingIds": [
+        "comscore-valuation-placeholder-2026"
+      ],
+      "lastUpdated": "2026-07-05",
+      "confidence": "estimated"
+    },
+    "supplyChainRole": "refinery",
+    "whoItServes": {
+      "category": "advertisers_and_maybe_you",
+      "note": "Audience measurement primarily serves publishers, agencies, and advertisers; users may receive indirect relevance benefits but do not control the measurement rail."
+    }
   }
 ]

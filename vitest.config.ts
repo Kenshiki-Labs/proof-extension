@@ -22,6 +22,11 @@ export default defineConfig({
       }
     },
     environment: "jsdom",
+    environmentOptions: {
+      jsdom: {
+        url: "https://example.test/"
+      }
+    },
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
     setupFiles: ["./vitest.setup.ts"]
   }

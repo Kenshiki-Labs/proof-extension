@@ -247,7 +247,8 @@ export function normalizePersistenceEvent(event: ObserverEvent): ObserverEvent {
     firstParty: true,
     policyLabel: "unknown_first_party",
     blockability: "observable_only",
-    status: "active"
+    status: "active",
+    evidenceTier: "observed"
   }
 
   if (!sanitized) {

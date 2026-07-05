@@ -29,9 +29,12 @@
     "vocab:analyze": "node scripts/analyze-vocabulary.mjs --write",
     "vocab:check": "node scripts/analyze-vocabulary.mjs --check",
     "typecheck": "tsc --noEmit",
+    "test:surface-congruence": "vitest run src/core/report/surface-metrics.test.ts src/core/report/metrics.test.ts src/core/report/ui-callchain.test.ts src/core/report/display.test.ts src/core/report/badge.test.ts src/core/report/watchers.test.ts src/core/report/vocabulary-guard.test.ts --coverage=false",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:browser": "vitest --config vitest.browser.config.ts run",
+    "prebuild": "pnpm test:surface-congruence && pnpm typecheck",
+    "prebuild:chrome": "pnpm test:surface-congruence && pnpm typecheck",
     "pretest:e2e": "pnpm build:chrome",
     "test:e2e": "playwright test",
     "qa": "pnpm lint && pnpm design:check && pnpm vocab:check && pnpm typecheck && pnpm test:coverage && pnpm intel:check && pnpm intel:promote:check && pnpm build:chrome",
@@ -84,6 +87,9 @@
       "scripting",
       "storage",
       "webRequest"
+    ],
+    "optional_permissions": [
+      "cookies"
     ],
     "host_permissions": [
       "<all_urls>"

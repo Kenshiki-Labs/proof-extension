@@ -3,9 +3,9 @@ title: "Data Contract: Observation → Store → Display"
 description: "The binding contract for every stage of the evidence pipeline — what each term means, which module owns it, and which test enforces it."
 owner: Kenshiki
 section: docs
-lastReviewed: 2026-07-03
+lastReviewed: 2026-07-05
 nextReview: 2026-09-29
-version: "0.0.1"
+version: "0.0.2"
 status: draft
 ---
 
@@ -32,6 +32,10 @@ displayed count:
 - **Page activity** — what the page or third parties actually did
   (`request_seen`, `request_blocked`, `script_injected`, `sdk_detected`,
   `cookie_sync`, hook events).
+- **Local page signals** (`isLocalPageSignalEvent`) — first-party page code
+  preparing consent/CMP plumbing or SHA-256 identifier hashes. They remain
+  page activity for evidence/copy/debug, but they never become active company
+  or watcher counts.
 - **Exposure scan** (`source: "extension-scan"`) — what Pulse could read
   locally. Never implies the page read those fields.
 - **Diagnostics** (`isDiagnosticEvent`) — the extension reporting on itself.
@@ -40,7 +44,8 @@ displayed count:
 ## Store derivation rules (stage 3)
 
 - `activeCompanies` / `blockedCompanies` / `mitigatedCompanies` derive ONLY
-  from page-activity events by status; rebuilt on every write.
+  from page-activity events by status; rebuilt on every write. Local page
+  signals and persistence-surface rows are excluded from company buckets.
 - One blocked request is one outcome: the DNR block supersedes the
   webRequest seen-event for the same requestId (`supersedeEvent`).
 - Same event id recurring = one observation with an incremented `count`.
@@ -56,6 +61,7 @@ displayed count:
 | Watching | companies whose collection is still happening | `watchingCompanies` |
 | Blocked | companies with an actually-blocked request (evidence-backed) | `blockedCompanies` |
 | Can't block | signals no browser tool can block | `cannotBlockSignals` |
+| Local page signals | grouped first-party consent/CMP and SHA-256 digest rows; appendix/debug only | `localPageSignals` |
 | Stored events | everything in storage incl. diagnostics (diagnostics panel only) | `storedEvents` |
 | Who it serves | per-tracker beneficiary class: a feature you use / works for the site / ads with claimed relevance trade / only their business | `whoItServes` on the tracker record; rollup `servesCounts` + `onlyTheirBusiness*` |
 | Supply-chain role | per-tracker position in the ad-money flow: mineshaft / concentrator / refinery / parts / assembly / wholesale / impulse rack / vertically integrated / outside the ad rail | `supplyChainRole` on the tracker record; `groupBySupplyChainStage` for display |

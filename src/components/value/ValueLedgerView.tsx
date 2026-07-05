@@ -370,33 +370,36 @@ export default function ValueLedgerView({
             <Metric icon={Activity} label="Observations" value={rollup.observations} />
           </div>
         )}
-        {!compact ? <SupplyChainMap rollup={rollup} /> : null}
-        {!compact ? (
-          <div className="mt-5">
-            <h3 className={TYPE.label}>Who they serve</h3>
-            <div className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {(Object.keys(rollup.servesCounts) as Array<keyof typeof rollup.servesCounts>).map((category) => (
-                <div className={`${UI.subtlePanel} p-3`} key={category}>
-                  <div className={TYPE.label}>{SERVES_LABELS[category]}</div>
-                  <div className="mt-1 font-display text-xl font-semibold tabular-nums">{rollup.servesCounts[category]}</div>
-                  {category === "only_their_business" && rollup.servesCounts[category] > 0 ? (
-                    <p className={`${TYPE.small} mt-1`}>
-                      {formatUsdRange(rollup.onlyTheirBusinessAnnualLowUsd, rollup.onlyTheirBusinessAnnualHighUsd)}/yr with nothing flowing back to you
-                    </p>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
         {!compact && rollup.edges.length > 0 ? (
           <div className="mt-5">
             <h3 className={TYPE.label}>Connections</h3>
-            <p className={`${TYPE.small} mt-1`}>Which trackers were waiting for you on which sites — built from this browser's local ledger.</p>
+            <p className={`${TYPE.small} mt-1`}>Which trackers were waiting for you on which sites — built from this browser's local ledger. Switch to "Who makes what" to see who profits, sized by estimated annual value.</p>
             <div className={`mt-2 ${UI.subtlePanel} p-4`}>
               <TrackerGraph edges={rollup.edges} />
             </div>
           </div>
+        ) : null}
+        {!compact ? (
+          <details className="mt-5">
+            <summary className={`${TYPE.label} cursor-pointer select-none`}>Show the math — how this money moves</summary>
+            <SupplyChainMap rollup={rollup} />
+            <div className="mt-5">
+              <h3 className={TYPE.label}>Who they serve</h3>
+              <div className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {(Object.keys(rollup.servesCounts) as Array<keyof typeof rollup.servesCounts>).map((category) => (
+                  <div className={`${UI.subtlePanel} p-3`} key={category}>
+                    <div className={TYPE.label}>{SERVES_LABELS[category]}</div>
+                    <div className="mt-1 font-display text-xl font-semibold tabular-nums">{rollup.servesCounts[category]}</div>
+                    {category === "only_their_business" && rollup.servesCounts[category] > 0 ? (
+                      <p className={`${TYPE.small} mt-1`}>
+                        {formatUsdRange(rollup.onlyTheirBusinessAnnualLowUsd, rollup.onlyTheirBusinessAnnualHighUsd)}/yr with nothing flowing back to you
+                      </p>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </details>
         ) : null}
         {!compact ? (
           <div className="mt-5 grid gap-5 lg:grid-cols-2">

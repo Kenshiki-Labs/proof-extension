@@ -101,6 +101,7 @@ describe("normalizePersistenceEvent", () => {
     )
 
     expect(event.confidence).toBe("confirmed")
+    expect(event.evidenceTier).toBe("observed")
     expect(event.evidence[0]).toContain('cookie "session"')
     expect(event.evidence[0]).toContain("~25 bytes")
     expect(event.evidence[1]).toContain("never recorded")
@@ -144,6 +145,7 @@ describe("normalizePersistenceEvent", () => {
     )
 
     expect(event.confidence).toBe("weak")
+    expect(event.evidenceTier).toBe("observed")
     expect(event.details).toBeUndefined()
     expect(event.evidence[0]).toContain("malformed metadata")
   })

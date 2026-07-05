@@ -59,14 +59,18 @@ describe("attention score", () => {
 })
 
 describe("rankObservers", () => {
-  it("returns worst-first and excludes the exposure scan", () => {
+  it("returns worst-first and excludes non-observer evidence families", () => {
     const ranked = rankObservers([
       event({ id: "e1", trackerId: "hotjar" }),
       event({ id: "e2", trackerId: "liveramp" }),
-      event({ id: "e3", source: "extension-scan", eventType: "browser_surface", blockability: "observable_only", firstParty: true })
+      event({ id: "e3", source: "extension-scan", eventType: "browser_surface", blockability: "observable_only", firstParty: true }),
+      event({ id: "e4", firstParty: false, trackerId: undefined, companyId: undefined, blockability: "observable_only", evidenceTier: "observed", details: { host: "cdn.example" } }),
+      event({ id: "e5", firstParty: true, eventType: "storage_write", blockability: "observable_only", evidenceTier: "observed", details: { area: "sessionStorage", op: "set", key: "theme" } }),
+      event({ id: "e6", firstParty: true, eventType: "cache_validator_seen", blockability: "observable_only", evidenceTier: "observed", details: { headerName: "ETag", host: "example.test" } })
     ])
     expect(ranked[0]?.observation.event.trackerId).toBe("liveramp")
     expect(ranked.some((item) => item.observation.event.source === "extension-scan")).toBe(false)
+    expect(ranked.map((item) => item.observation.event.id)).toEqual(["e2", "e1"])
   })
 })
 
@@ -86,11 +90,27 @@ describe("buildVerdict", () => {
 
   it("counts tiers once per tracker and prices the no-trade set", () => {
     const verdict = buildVerdict(summary)
-    expect(verdict.companiesWatching).toBe(3)
+    expect(verdict.companiesWatching).toBe(4) // all four observed third parties, tiered or not
     expect(verdict.tierCounts).toEqual({ red: 2, amber: 1, gray: 1 })
     expect(verdict.noTradeCount).toBe(2)
     expect(verdict.noTradeAnnualLowUsd).toBeCloseTo(0.5 + 2, 6)
     expect(verdict.topObservers).toHaveLength(3)
     expect(verdict.topObservers[0]?.tier).toBe("red")
+  })
+
+  it("does not turn storage or unclassified host evidence into verdict observers", () => {
+    const verdict = buildVerdict({
+      ...EMPTY_SUMMARY,
+      origin: "https://example.test",
+      tabId: 1,
+      events: [
+        event({ id: "unknown-host", firstParty: false, trackerId: undefined, companyId: undefined, blockability: "observable_only", evidenceTier: "observed", details: { host: "cdn.example" } }),
+        event({ id: "session-storage", firstParty: true, eventType: "storage_write", blockability: "observable_only", evidenceTier: "observed", details: { area: "sessionStorage", op: "set", key: "theme" } }),
+        event({ id: "cache-validator", firstParty: true, eventType: "cache_validator_seen", blockability: "observable_only", evidenceTier: "observed", details: { headerName: "ETag", host: "example.test" } })
+      ]
+    })
+
+    expect(verdict.tierCounts).toEqual({ red: 0, amber: 0, gray: 0 })
+    expect(verdict.topObservers).toEqual([])
   })
 })

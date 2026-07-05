@@ -3,30 +3,32 @@ title: "Pulse Browser Extension - LLM Build Specification"
 description: "The full build specification for Pulse Observer: product definition, threat model, architecture, detection/blocking spec, and acceptance criteria."
 owner: Kenshiki
 section: docs
-lastReviewed: 2026-07-04
+lastReviewed: 2026-07-05
 nextReview: 2026-09-29
-version: "0.0.2"
+version: "0.0.3"
 status: draft
 ---
 
 ## Current Implementation Baseline
 
-As of 2026-07-04 (repo version 0.3.1), the implementation is beyond the original Phase 1 seed state in UI fidelity, valuation, local ledgering, and QA guardrails, but it is still not source-backed at tracker-claim level.
+As of 2026-07-05 (repo version 0.3.1), the implementation is beyond the original Phase 1 seed state in UI fidelity, valuation, local ledgering, and QA guardrails, but most tracker claims are still not source-backed at tracker-claim level.
 
 Current runtime state:
 
-- 42 runtime tracker records in `src/core/db/trackers.json`.
-- 42/42 tracker records use `schemaVersion: 2` high-fidelity explanation fields.
+- 44 runtime tracker records in `src/core/db/trackers.json`.
+- 44/44 tracker records use `schemaVersion: 2` high-fidelity explanation fields.
 - 42/42 tracker records include `perPersonValue` valuation blocks promoted from normalized market research.
-- 42/42 tracker records have remediation links; 40 remediation records back 42 trackers.
+- 44/44 tracker records have remediation links.
 - 42/42 tracker records remain `review.status: seed` for tracker identity/collection/blocking claims.
 - 0/42 tracker records are source-backed for tracker claims.
 - 42/42 tracker records include `market_research` provenance for valuation only; this must not satisfy tracker identity, collection, blocking, or remediation provenance.
-- 40/42 trackers have SDK/global signatures (`src/core/signals/sdk-globals.ts`); segment (only global is the generic `window.analytics`, excluded by the false-attribution policy) and tapad (no browser-visible SDK global) are uncovered by design.
+- SDK/global signatures (`src/core/signals/sdk-globals.ts`) include distinctive vendor globals and deliberately exclude generic names. comScore/ScorecardResearch is covered by `_comscore`; segment (only global is the generic `window.analytics`, excluded by the false-attribution policy) and tapad (no browser-visible SDK global) are uncovered by design.
 - Network matching runs through an in-memory hostname suffix index (O(hostname labels) per request, not O(trackers × domains)), satisfying the constant-time host-lookup requirement ahead of Phase 3 imports; one request resolves to at most one match per tracker.
+- Unmatched third-party network requests are now retained as Tier 1 `observed` evidence with host-level details and no tracker/company attribution. They appear as `Observed, not yet classified` rather than inflating named watcher/company counts; this exposes Ghostery-style coverage gaps without inventing source-backed tracker claims. Third-party is decided by registrable-domain comparison (`src/core/domain/party.ts`), not exact hostname, so a site's own subdomain traffic is never claimed as third-party; unclassified events are host-keyed (repeats merge into `count`) and are evicted before classified tracker evidence when the per-tab event cap is exceeded. The page message channel cannot forge network-family evidence: `OBSERVED_EVENT` payloads claiming `source: "network"`, network-reserved event types (`request_seen`, `request_blocked`, `cookie_sync`), or `status: "blocked"` are rejected (`src/core/domain/message-guards.ts`), and unclassified host names render only for background-born network events.
+- Blocked-state reporting works in packed builds: `webRequest.onErrorOccurred` with `net::ERR_BLOCKED_BY_CLIENT` is treated as a deterministic block outcome only when the failed URL re-matches a dynamic rule this extension actually installed (`findInstalledBlockRuleMetadataForRequest` in `src/core/db/dnr.ts`) — another extension's block is never claimed. `onRuleMatchedDebug` remains the richer dev-build signal; both paths share one recorder, and a request confirmed by both signals is recorded once with `blockSignals` provenance (`rule_matched_debug`, `err_blocked_by_client`) on the event. E2E asserts the production signal fires and that blocked requests never double-count.
 - Background storage writes are coalesced (250ms window, flushed on suspend and before local-data clears) instead of serializing every tab summary and the valuation ledger on every event.
 - 42/42 tracker records carry `supplyChainRole` (position in the ad-money flow) and `whoItServes` (benefit-category classification with plain-language note) fields consumed by the attention model and value-ledger views.
-- 38 trackers are `network_blockable`; 4 high-breakage trackers (google-tag-manager, intercom, drift, hubspot) are `user_action_required` because the blocking-policy gate never offers or installs a block rule for them — validation now rejects any record that is both high-breakage and `network_blockable`. No runtime DB records yet exercise `content_mitigatable`, `observable_only`, `pre_request_unblockable`, or `server_side_unblockable`.
+- High-breakage trackers and consent-management infrastructure (including Sourcepoint) are `user_action_required` because the blocking-policy gate never offers or installs a block rule for them — validation rejects any record that is both high-breakage and `network_blockable`. No runtime DB records yet exercise `content_mitigatable`, `observable_only`, `pre_request_unblockable`, or `server_side_unblockable`.
 - Tracker domain spaces are validated as disjoint across records: one request matches exactly one tracker record (a former google-analytics/google-tag-manager overlap double-counted gtag.js loads and could have installed a GTM-blocking rule via the Google Analytics toggle).
 - The extension-scoped entity SSOT has 42 runtime entities and 0 extension-scoped entity conflicts needing review: all 10 are adjudicated in `intelligence/adjudication/entity-adjudications.json` (4 parent-alias slug collisions confirmed as intentional product-level entity separation; 6 broker-registry claims to reddit.com/tiktok.com rejected as crawled social-profile links, provable from the registry source URLs). Conflict ids are scope-namespaced (`runtime-conflict-*` vs `research-conflict-*`) so an adjudication can never ambiguously match a same-numbered conflict in the quarantined research queue (67 research conflicts remain open there by design).
 - Research-only entities remain quarantined under `intelligence/quarantine/`.
@@ -45,7 +47,8 @@ Current implemented product surfaces:
 - Value ledger tracks top-level visits, tracker presence per visit, raw observations, period estimates, ad-market value to trackers, site-paid tool fees, and flow-level supply-chain roles.
 - Value ledger includes `Value supply chain`, `Bill of materials`, `Who they serve`, local tracker/site connections, and `How we calculate this` sections that state counting rules and limitations.
 - Current-tab valuation and rolling value ledger keep revenue and operator-cost estimates separate.
-- Persistence-surface observers are implemented for the JavaScript-visible subset: `document.cookie` writes, `localStorage`/`sessionStorage` set/remove/clear, IndexedDB open/delete, Cache API open/delete/match/has, and service-worker registration. Metadata only — names redacted through a high-entropy mask, sizes and timing recorded, values never read; the privileged side re-redacts and rebuilds all evidence so the page channel cannot smuggle raw values or forge evidence. Cache validators (needs response-header observation), `HttpOnly` cookie metadata (needs the optional `cookies` permission), and respawn detection (needs keyed digests) remain unimplemented, and their event families are deliberately absent from the runtime schema until an emitter exists.
+- Persistence-surface observers are implemented for the JavaScript-visible subset: `document.cookie` writes, `localStorage`/`sessionStorage` set/remove/clear, IndexedDB open/delete, Cache API open/delete/match/has, and service-worker registration. Cache-validator header-name evidence (`ETag`, `If-None-Match`, `Last-Modified`, `If-Modified-Since`) is also emitted from request/response header observers without recording values. Metadata only — names redacted through a high-entropy mask, sizes and timing recorded, values never read; the privileged side re-redacts and rebuilds all page-channel evidence so the page cannot smuggle raw values or forge evidence. `HttpOnly` cookie metadata (needs the optional `cookies` permission) and respawn detection (needs keyed digests) remain unimplemented, and `storage_respawn_suspected` stays absent from the runtime schema until an emitter exists.
+- Local page-signal observation now records standardized consent/CMP plumbing (`consent_signal_observed`: IAB TCF `__tcfapi`, US Privacy `__uspapi`, IAB GPP `__gpp`/`__gpp_stub`, and Sourcepoint config) and SHA-256 identity-digest activity (`identity_digest_observed`) as first-party, observable-only page activity. These events are visible in the report appendix and debug view, but they do not inflate watcher/company counts. Identity-digest observation stores only algorithm and input byte length; neither the digest input nor digest output is recorded.
 - Runtime valuation blocks are promoted from `intelligence/normalized/valuations.json`; hand drift is blocked by `pnpm intel:promote:check`.
 - Design primitive drift is blocked by `pnpm design:check`.
 - Vocabulary drift is blocked by `pnpm vocab:check`.
@@ -70,7 +73,7 @@ Primary remaining credibility gaps:
 - Source-back tracker identity, ownership, collection, and blocking claims for the existing 42 records. This requires live retrieval of vendor documentation (the license-clean `vendor_docs` source family); provenance must never be filled in from memory without retrieval.
 - Reclassification pass done 2026-07-04 for locally provable cases (high-breakage records now `user_action_required`); revisit remaining classes during source-backed review.
 - Verify the 11 newly added SDK/global signatures against live vendor pages during the source-backed review (they follow the table's existing hand-authored policy; a wrong distinctive name is a silent miss, not a false attribution).
-- Extend persistence-surface observation beyond the implemented JS-visible subset: `HttpOnly` cookie metadata via the optional `cookies` permission, cache-validator header evidence, and keyed-digest respawn detection.
+- Extend persistence-surface observation beyond the implemented JS-visible subset and cache-validator header-name evidence: `HttpOnly` cookie metadata via the optional `cookies` permission and keyed-digest respawn detection.
 - Extension-scoped entity conflicts adjudicated 2026-07-04 (0 open); the 67 quarantined research conflicts stay open until research entities are promoted.
 - Keep valuation language as estimates, not measurements or actual revenue.
 
@@ -1274,12 +1277,14 @@ export type ObserverEvent = {
     | "request_blocked"
     | "script_injected"
     | "sdk_detected"
+    | "consent_signal_observed"
     | "extension_diagnostic"
     | "browser_surface"
     | "canvas_read"
     | "audio_fingerprint"
     | "webgl_query"
     | "font_enumeration"
+    | "identity_digest_observed"
     | "cookie_sync"
     | "cookie_observed"
     | "storage_write"

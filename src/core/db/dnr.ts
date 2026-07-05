@@ -31,6 +31,9 @@ export type DynamicBlockRuleMetadata = {
   ruleId: number
   tracker: TrackerRecord
   evidence: string
+  domain: string
+  path?: string | undefined
+  resourceTypes: readonly string[]
 }
 
 const DEFAULT_RESOURCE_TYPES: ResourceType[] = [
@@ -91,7 +94,9 @@ export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = 
       metadata.set(ruleId, {
         ruleId,
         tracker,
-        evidence: `Request matched ${tracker.id} domain ${domain}.`
+        evidence: `Request matched ${tracker.id} domain ${domain}.`,
+        domain,
+        resourceTypes
       })
     }
 
@@ -107,7 +112,10 @@ export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = 
         metadata.set(ruleId, {
           ruleId,
           tracker,
-          evidence: `Request matched ${tracker.id} path ${path} on ${domain}.`
+          evidence: `Request matched ${tracker.id} path ${path} on ${domain}.`,
+          domain,
+          path: path.startsWith("/") ? path : `/${path}`,
+          resourceTypes
         })
       }
     }
@@ -118,6 +126,44 @@ export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = 
 
 export function getDynamicBlockRuleMetadata(ruleId: number) {
   return installedDynamicBlockRuleMetadata.get(ruleId) ?? null
+}
+
+// Why: onRuleMatchedDebug only fires in unpacked dev builds. In a packed
+// build the deterministic block signal is webRequest.onErrorOccurred with
+// net::ERR_BLOCKED_BY_CLIENT — but that error alone could come from another
+// extension. The claim "Pulse blocked this" is only honest when the failed
+// request provably matches a rule this extension actually installed, so
+// this re-derives the match from the same domain/path/resource-type facts
+// the installed rules were built from. Pure map/string work: no chrome API
+// reads, safe on Firefox.
+export function findInstalledBlockRuleMetadataForRequest(url: string, resourceType: string): DynamicBlockRuleMetadata | null {
+  if (installedDynamicBlockRuleMetadata.size === 0) return null
+
+  let hostname: string
+  let pathname: string
+  try {
+    const parsed = new URL(url)
+    hostname = parsed.hostname.toLowerCase()
+    pathname = parsed.pathname
+  } catch {
+    return null
+  }
+
+  let domainOnlyMatch: DynamicBlockRuleMetadata | null = null
+  for (const metadata of installedDynamicBlockRuleMetadata.values()) {
+    if (!metadata.resourceTypes.includes(resourceType)) continue
+    const hostMatches = hostname === metadata.domain || hostname.endsWith(`.${metadata.domain}`)
+    if (!hostMatches) continue
+
+    if (metadata.path) {
+      if (pathname.startsWith(metadata.path)) return metadata
+      continue
+    }
+
+    domainOnlyMatch ??= metadata
+  }
+
+  return domainOnlyMatch
 }
 
 function hasDeclarativeNetRequest(): boolean {

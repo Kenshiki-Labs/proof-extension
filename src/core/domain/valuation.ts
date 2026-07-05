@@ -1,5 +1,7 @@
 import { validateTrackerDatabase } from "~core/db/validate"
-import type { ObserverEvent } from "~core/domain/types"
+import { hostForEvent, registrableDomain } from "~core/domain/party"
+import { isUnclassifiedObservation } from "~core/state/summaries"
+import type { ObserverEvent, UnclassifiedGraphEdge, ValuationEdge } from "~core/domain/types"
 import type { PerPersonValue } from "~core/contracts/schemas"
 
 // Per-person value rollups per docs/TRACKER_VALUE_SPEC.md. Every tracker
@@ -119,6 +121,58 @@ export function rollupObservedValuations(events: ObserverEvent[]): ValuationRoll
     onlyTheirBusinessAnnualHighUsd: sum(onlyTheirs, (value) => value.annual.high_usd),
     disclaimer: VALUATION_DISCLAIMER
   }
+}
+
+// Site↔tracker edges scoped to ONE tab, for the per-page Network graph. The
+// cross-site rolling ledger (rollupValuationLedger) already produces edges
+// for the all-time Value view; this is the honestly-scoped counterpart so
+// the per-tab report can show "who connected on THIS page" instead of
+// silently reusing the all-time graph under a page-scoped label. Only named
+// trackers can appear — an edge needs a servesCategory to color it, and only
+// the tracker DB provides that.
+export function buildTabValuationEdges(events: ObserverEvent[], origin: string): ValuationEdge[] {
+  const observationsByTracker = new Map<string, number>()
+  for (const event of events) {
+    if (!event.trackerId || event.firstParty) continue
+    observationsByTracker.set(event.trackerId, (observationsByTracker.get(event.trackerId) ?? 0) + (event.count ?? 1))
+  }
+
+  const edges: ValuationEdge[] = []
+  for (const [trackerId, observations] of observationsByTracker) {
+    const serves = getTrackerServes(trackerId)
+    if (!serves) continue
+    const value = getTrackerValuation(trackerId)
+    edges.push({
+      siteOrigin: origin,
+      trackerId,
+      observations,
+      thisPeriodVisitUsd: value ? value.perVisit.microdollars / 1_000_000 : 0,
+      servesCategory: serves.category
+    })
+  }
+  return edges
+}
+
+// The unnamed counterpart to buildTabValuationEdges: third parties observed
+// on this page with no tracker-DB match, so the graph can show them too
+// instead of silently dropping them — an ad-heavy page can have most of its
+// third-party contact be unmatched (comScore, header-bidding partners, etc.),
+// and a graph that only plots named trackers tells a much smaller story than
+// the "Watching" headline count, which already counts these (observer-counts.ts).
+// Folded by registrable domain so subdomains of the same host collapse to one
+// node, matching the headline count's folding.
+export function buildUnclassifiedGraphEdges(events: ObserverEvent[], origin: string): UnclassifiedGraphEdge[] {
+  const observationsByDomain = new Map<string, number>()
+  for (const event of events) {
+    if (event.firstParty || event.status !== "active" || !isUnclassifiedObservation(event)) continue
+    const host = hostForEvent(event)
+    if (!host) continue
+    const domain = registrableDomain(host)
+    if (!domain) continue
+    observationsByDomain.set(domain, (observationsByDomain.get(domain) ?? 0) + (event.count ?? 1))
+  }
+
+  return [...observationsByDomain.entries()].map(([host, observations]) => ({ siteOrigin: origin, host, observations }))
 }
 
 export function formatUsd(value: number): string {

@@ -83,16 +83,14 @@ baseline updated.
 
 ## 3. Complete the persistence family
 
-The JS-visible subset shipped 2026-07-04 (`src/core/signals/persistence.ts`,
-`src/core/content/persistence-hooks.ts`). Three families remain and are
-deliberately absent from the runtime schema until an emitter exists:
+The JS-visible subset and `cache_validator_seen` shipped 2026-07-04
+(`src/core/signals/persistence.ts`, `src/core/content/persistence-hooks.ts`,
+the response-header observer in `src/background.ts`). Two families remain:
 
 - `cookie_observed` via the optional `cookies` permission: browser-level
   cookie metadata incl. `HttpOnly` (names/expiry/SameSite/Secure only —
   never values). Request the permission at moment of need, never at
   install; UI must label the no-permission state as lower visibility.
-- `cache_validator_seen`: ETag / If-None-Match / Last-Modified as
-  header-NAME evidence from webRequest response observers, never values.
 - `storage_respawn_suspected`: per-install keyed digest (secret in
   extension storage, cleared by CLEAR_LOCAL_DATA, never exported);
   confidence `probable` only on recurrence per the spec's rules.
@@ -115,13 +113,20 @@ persistence fixture (assert secret values never stored).
 
 ## 5. Phase 2 (after 1–4)
 
-- Opt-in canvas/audio/WebGL mitigation hooks — the `mitigateCanvas/Audio/
-  Webgl` settings exist and sync to the page
-  (`data-proof-extension-mitigate-canvas`), but no hook reads them yet.
-  Hooks must be off by default, only mitigate when the setting is on, and
-  be dropped if they break the fixture set. `content_mitigatable` events
-  become `mitigated` only when a hook actually changed/constrained the
-  API result.
+- Canvas/audio/WebGL fingerprint detection + opt-in mitigation — the
+  `canvas_read`/`audio_fingerprint`/`webgl_query` event types, display
+  strings, and test fixtures exist, but there is no production emitter
+  anywhere in `src/contents/`: no hook wraps `toDataURL`/`getImageData`/
+  `AnalyserNode`/`getParameter`. The `mitigateCanvas/Audio/Webgl` settings
+  exist but only `mitigateCanvas` is synced to the page dataset
+  (`data-proof-extension-mitigate-canvas` in `src/contents/observer.ts`);
+  `mitigateAudio`/`mitigateWebgl` are live toggles in `options.tsx` that
+  currently do nothing and must stay disabled in the UI until wired.
+  Ship detection first (status `active` only, off by default is moot since
+  detection alone doesn't change page behavior); mitigation is a separate
+  pass and must only claim `mitigated` when a hook actually
+  changed/constrained the returned API result, never on setting-enabled
+  alone. Drop any hook that breaks the fixture set.
 - Firefox MV3 migration evaluation + parity pass (same normalized
   event/status model across browsers).
 - The 67 quarantined research-entity conflicts — only when research
@@ -137,7 +142,11 @@ Session log (update when a task completes):
       writes; 40/42 SDK signatures; 10/10 entity conflicts adjudicated
       (branch `claude/observer-spec-review-uv3nz9`).
 - [ ] Task 1 — source-backing (needs web access)
-- [ ] Task 2 — production blocked-state reporting
+- [x] Task 2 — production blocked-state reporting (2026-07-04:
+      onErrorOccurred + ERR_BLOCKED_BY_CLIENT matched against installed
+      dynamic rules via findInstalledBlockRuleMetadataForRequest; shared
+      recordBlockedOutcome with blockSignals provenance; E2E asserts the
+      production signal fires and blocked requests never double-count)
 - [ ] Task 3 — persistence completion
 - [ ] Task 4 — launch mechanics
 - [ ] Task 5 — Phase 2

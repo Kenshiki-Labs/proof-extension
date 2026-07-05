@@ -34,6 +34,10 @@ const summary: SiteSummary = {
     event({ id: "seen-1", trackerId: "meta-pixel", companyId: "meta" }),
     event({ id: "seen-2", trackerId: "meta-pixel", companyId: "meta", observedAt: 200 }),
     event({ id: "seen-3", trackerId: "fullstory", companyId: "fullstory" }),
+    event({ id: "unknown", blockability: "observable_only", evidenceTier: "observed", details: { host: "cdn.example" } }),
+    event({ id: "cache-validator", eventType: "cache_validator_seen", blockability: "observable_only", evidenceTier: "observed", firstParty: true, details: { headerName: "ETag", host: "example.test" } }),
+    event({ id: "consent", eventType: "consent_signal_observed", blockability: "observable_only", evidenceTier: "observed", firstParty: true, details: { global: "__tcfapi" } }),
+    event({ id: "digest", eventType: "identity_digest_observed", blockability: "observable_only", evidenceTier: "observed", firstParty: true, policyLabel: "behavioral_profiling", details: { algorithm: "SHA-256", inputBytes: 19 } }),
     event({ id: "exposure", source: "extension-scan", eventType: "browser_surface", blockability: "observable_only", firstParty: true }),
     event({ id: "diag", source: "content", eventType: "extension_diagnostic", blockability: "observable_only", firstParty: true })
   ]
@@ -42,10 +46,17 @@ const summary: SiteSummary = {
 describe("summaryMetrics — the single source of truth for headline numbers", () => {
   it("computes each metric per its documented definition", () => {
     const metrics = summaryMetrics(summary)
-    expect(metrics.observations).toBe(3) // meta grouped (2→1) + fullstory + exposure scan
-    expect(metrics.recordedEvents).toBe(3) // 3 seen; excludes diagnostic and exposure scan
+    expect(metrics.observations).toBe(6) // meta grouped (2→1) + fullstory + unknown host + cache validator + local page signals
+    expect(metrics.recordedEvents).toBe(7) // 7 page events; excludes diagnostic and exposure scan
     expect(metrics.exposureEvents).toBe(1)
-    expect(metrics.watchingCompanies).toBe(2)
+    expect(metrics.unclassifiedObservations).toBe(1)
+    expect(metrics.persistenceObservations).toBe(1)
+    expect(metrics.localPageSignals).toBe(2)
+    expect(metrics.watchingCompanies).toBe(3) // meta + fullstory (named) + cdn.example (observed, not codified)
+    expect(metrics.identifiedObservers).toBe(2)
+    expect(metrics.unclassifiedParties).toBe(1)
+    expect(metrics.sourceBackedActiveObservers).toBe(2)
+    expect(metrics.siteToolObservers).toBe(1)
     expect(metrics.blockedCompanies).toBe(1)
     expect(metrics.diagnostics).toBe(1)
   })
@@ -56,8 +67,13 @@ describe("summaryMetrics — the single source of truth for headline numbers", (
     expect(payload.counts.observations).toBe(metrics.observations)
     expect(payload.counts.rawEvents).toBe(metrics.recordedEvents)
     expect(payload.counts.exposureScanEvents).toBe(metrics.exposureEvents)
+    expect(payload.counts.unclassifiedObservations).toBe(metrics.unclassifiedObservations)
+    expect(payload.counts.persistenceObservations).toBe(metrics.persistenceObservations)
+    expect(payload.counts.localPageSignals).toBe(metrics.localPageSignals)
     expect(payload.counts.diagnostics).toBe(metrics.diagnostics)
     expect(payload.counts.activeCompanies).toBe(metrics.watchingCompanies)
+    expect(payload.counts.sourceBackedActiveObservers).toBe(metrics.sourceBackedActiveObservers)
+    expect(payload.counts.siteToolObservers).toBe(metrics.siteToolObservers)
     expect(payload.counts.blockedCompanies).toBe(metrics.blockedCompanies)
   })
 

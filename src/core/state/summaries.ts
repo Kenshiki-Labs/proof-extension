@@ -21,6 +21,25 @@ function unique(values: string[]) {
   return [...new Set(values)]
 }
 
+export function isUnclassifiedObservation(event: ObserverEvent) {
+  return !event.firstParty && !event.trackerId && !event.companyId
+}
+
+export function isPersistenceSurfaceEvent(event: ObserverEvent) {
+  return [
+    "cookie_observed",
+    "storage_write",
+    "indexeddb_access",
+    "cache_storage_access",
+    "service_worker_registered",
+    "cache_validator_seen"
+  ].includes(event.eventType)
+}
+
+export function isLocalPageSignalEvent(event: ObserverEvent) {
+  return event.eventType === "consent_signal_observed" || event.eventType === "identity_digest_observed"
+}
+
 // Housekeeping the extension emits about itself (isolated bridge ready,
 // main-world hooks installed, popup-triggered scans) — useful diagnostics,
 // but not observations of page behavior. They must never inflate company or
@@ -41,15 +60,18 @@ export function isPageActivityEvent(event: ObserverEvent) {
   return !isDiagnosticEvent(event) && !isExposureScanEvent(event)
 }
 
-function companyKey(event: ObserverEvent) {
+function companyKey(event: ObserverEvent): string | null {
+  if (isUnclassifiedObservation(event)) return null
+  if (isPersistenceSurfaceEvent(event)) return null
+  if (isLocalPageSignalEvent(event)) return null
   return event.companyId ?? event.trackerId ?? (event.firstParty ? event.origin : "unknown")
 }
 
-function rebuildSummary(summary: SiteSummary, events: ObserverEvent[]): SiteSummary {
+function rebuildSummary(summary: SiteSummary, events: ObserverEvent[], updatedAt = Date.now()): SiteSummary {
   const observations = events.filter(isPageActivityEvent)
-  const activeCompanies = observations.filter((item) => item.status === "active").map(companyKey)
-  const blockedCompanies = observations.filter((item) => item.status === "blocked").map(companyKey)
-  const mitigatedCompanies = observations.filter((item) => item.status === "mitigated").map(companyKey)
+  const activeCompanies = observations.filter((item) => item.status === "active").map(companyKey).filter((value): value is string => Boolean(value))
+  const blockedCompanies = observations.filter((item) => item.status === "blocked").map(companyKey).filter((value): value is string => Boolean(value))
+  const mitigatedCompanies = observations.filter((item) => item.status === "mitigated").map(companyKey).filter((value): value is string => Boolean(value))
   const exposedSignals = observations.map((item) => item.eventType)
   const cannotBlockSignals = observations.filter((item) => item.status === "cannot_block").map((item) => item.eventType)
 
@@ -61,7 +83,7 @@ function rebuildSummary(summary: SiteSummary, events: ObserverEvent[]): SiteSumm
     exposedSignals: unique(exposedSignals),
     cannotBlockSignals: unique(cannotBlockSignals),
     events,
-    updatedAt: Date.now()
+    updatedAt
   }
 }
 
@@ -82,7 +104,7 @@ export function createEmptySiteSummary(origin: string, tabId: number): SiteSumma
 }
 
 export function normalizeSiteSummary(summary: Partial<SiteSummary>, origin = "unknown", tabId = -1): SiteSummary {
-  return {
+  const normalized: SiteSummary = {
     origin: summary.origin ?? origin,
     tabId: summary.tabId ?? tabId,
     activeCompanies: summary.activeCompanies ?? [],
@@ -98,6 +120,11 @@ export function normalizeSiteSummary(summary: Partial<SiteSummary>, origin = "un
     incomplete: summary.incomplete ?? true,
     updatedAt: summary.updatedAt ?? Date.now()
   }
+
+  // Derived fields have changed over time as the observer model became more
+  // rigorous. Storage can still contain old buckets, so every read rebuilds
+  // the UI-facing counts from raw events instead of trusting persisted totals.
+  return rebuildSummary(normalized, normalized.events, normalized.updatedAt)
 }
 
 // A DNR block and the webRequest observer both see the same request: the
@@ -110,6 +137,49 @@ export function supersedeEvent(summary: SiteSummary, eventId: string): SiteSumma
   return rebuildSummary(summary, summary.events.filter((item) => item.id !== eventId))
 }
 
+// Updates one detail key on an existing event without touching its count —
+// used when a second deterministic signal confirms an outcome that was
+// already recorded (e.g. both block signals firing for one request in dev
+// builds). Recording again would double-count; dropping the second signal
+// would hide that it fired.
+export function annotateEventDetail(summary: SiteSummary, eventId: string, key: string, value: string): SiteSummary {
+  const event = summary.events.find((item) => item.id === eventId)
+  if (!event || event.details?.[key] === value) return summary
+
+  const events = summary.events.map((item) =>
+    item.id === eventId ? { ...item, details: { ...item.details, [key]: value } } : item
+  )
+  return { ...summary, events, updatedAt: Date.now() }
+}
+
+// When the per-tab cap is exceeded, Tier 1 `observed` evidence is evicted
+// (oldest first) before any attributed tracker evidence. A busy page can
+// surface dozens of unmatched third-party hosts AND hundreds of
+// cache-validator header observations — first-party ones too, which are not
+// "unclassified" — so evicting only unclassified events let that noise push
+// named, source-relevant evidence out of the fixed cap and zero the headline
+// counts. `evidenceTier === "observed"` is the purpose-built rank for this
+// (set by cache-validator, unclassified-request, and persistence observers);
+// attributed tracker evidence leaves it undefined and is never evicted here.
+function isEvictableObserved(event: ObserverEvent): boolean {
+  return event.evidenceTier === "observed" || isUnclassifiedObservation(event)
+}
+
+function capEvents(events: ObserverEvent[], maxEventsPerTab: number): ObserverEvent[] {
+  let overflow = events.length - maxEventsPerTab
+  if (overflow <= 0) return events
+
+  const afterObservedEviction = events.filter((event) => {
+    if (overflow > 0 && isEvictableObserved(event)) {
+      overflow -= 1
+      return false
+    }
+    return true
+  })
+
+  return afterObservedEviction.slice(-maxEventsPerTab)
+}
+
 export function upsertEvent(
   summary: SiteSummary,
   event: ObserverEvent,
@@ -120,7 +190,7 @@ export function upsertEvent(
   const existing = summary.events.find((item) => item.id === event.id)
   const merged = existing ? { ...event, count: (existing.count ?? 1) + (event.count ?? 1) } : event
   const nextEvents = [...summary.events.filter((item) => item.id !== event.id), merged]
-  const events = nextEvents.slice(-maxEventsPerTab)
+  const events = capEvents(nextEvents, maxEventsPerTab)
 
   // The summary origin is the tab's top-level document, set at creation and
   // on main-frame navigation. Events must not rename it — iframe and network

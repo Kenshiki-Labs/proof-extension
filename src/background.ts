@@ -2,10 +2,18 @@ import browser from "webextension-polyfill"
 import type { Runtime } from "webextension-polyfill"
 
 import { RuntimeMessageSchema } from "~core/contracts/schemas"
-import { getDynamicBlockRuleMetadata, installDynamicBlockRules, uninstallDynamicBlockRules } from "~core/db/dnr"
+import {
+  findInstalledBlockRuleMetadataForRequest,
+  getDynamicBlockRuleMetadata,
+  installDynamicBlockRules,
+  uninstallDynamicBlockRules,
+  type DynamicBlockRuleMetadata
+} from "~core/db/dnr"
 import { validateTrackerDatabase } from "~core/db/validate"
 import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
 import { matchTrackerRequest } from "~core/domain/network-match"
+import { untrustedObservedEventReason } from "~core/domain/message-guards"
+import { isSameSite } from "~core/domain/party"
 import { filterBlockableTrackerIds } from "~core/domain/blocking-policy"
 import {
   createEmptyValuationLedger,
@@ -16,10 +24,21 @@ import {
   upsertValuationLedgerEvent
 } from "~core/domain/valuation-ledger"
 import { detectCookieSync } from "~core/signals/cookie-sync"
+import { badgeTextForSummary } from "~core/report/badge"
+import { normalizeConsentSignal } from "~core/signals/consent-signals"
+import { normalizeIdentityDigestEvent } from "~core/signals/identity-digest"
 import { normalizePersistenceEvent } from "~core/signals/persistence"
 import { enrichSdkDetection } from "~core/signals/sdk-globals"
 import { createCoalescedWriter } from "~core/state/coalesced-writer"
-import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, supersedeEvent, upsertEvent } from "~core/state/summaries"
+import {
+  annotateEventDetail,
+  createEmptySiteSummary,
+  normalizeSiteSummary,
+  pruneExpiredEvents,
+  recordPageError,
+  supersedeEvent,
+  upsertEvent
+} from "~core/state/summaries"
 import type { ObserverEvent, PageError, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
 
 const summaries = new Map<number, SiteSummary>()
@@ -71,6 +90,16 @@ async function persistSettings() {
 
 async function persistValuationLedger() {
   await browser.storage.local.set({ [VALUATION_LEDGER_STORAGE_KEY]: valuationLedger })
+}
+
+function updateActionBadge(tabId: number, summary: SiteSummary) {
+  if (typeof chrome === "undefined" || !chrome.action?.setBadgeText) return
+
+  const text = badgeTextForSummary(summary)
+  Promise.resolve(chrome.action.setBadgeText({ tabId, text })).catch(() => undefined)
+  if (text) {
+    Promise.resolve(chrome.action.setBadgeBackgroundColor?.({ tabId, color: "#B85B12" })).catch(() => undefined)
+  }
 }
 
 // Every event used to await a full serialization of ALL tab summaries plus
@@ -151,8 +180,10 @@ async function recordEvent(event: ObserverEvent) {
   if (isDuplicateContentEvent(event)) return
 
   const current = readSummary(event.tabId, event.origin)
-  summaries.set(event.tabId, upsertEvent(current, event, settings.maxEventsPerTab))
-  const visit = await ensureSiteVisitForTab(event.tabId, summaries.get(event.tabId)?.origin ?? event.origin, event.observedAt)
+  const summary = upsertEvent(current, event, settings.maxEventsPerTab)
+  summaries.set(event.tabId, summary)
+  updateActionBadge(event.tabId, summary)
+  const visit = await ensureSiteVisitForTab(event.tabId, summary.origin ?? event.origin, event.observedAt)
   valuationLedger = pruneValuationLedger(upsertValuationLedgerEvent(valuationLedger, { ...event, origin: visit.origin }, visit.visitId), settings.retentionDays)
   summaryWriter.schedule()
   ledgerWriter.schedule()
@@ -220,6 +251,8 @@ ensureHydrated()
   .catch((error: unknown) => console.warn("Failed to sync DNR rules", error))
 
 const { trackers } = validateTrackerDatabase()
+const UNCLASSIFIED_REQUEST_TYPES = new Set(["script", "xmlhttprequest", "image", "ping", "media", "sub_frame", "websocket"])
+const CACHE_VALIDATOR_HEADERS = new Set(["etag", "if-none-match", "last-modified", "if-modified-since"])
 
 function requestOrigin(details: { initiator?: string | undefined; url: string }): string {
   const source = details.initiator && details.initiator !== "null" ? details.initiator : details.url
@@ -244,6 +277,107 @@ function originFromUrl(url: string | undefined) {
     return new URL(url).origin
   } catch {
     return "unknown"
+  }
+}
+
+function hostnameFromUrl(url: string) {
+  try {
+    return new URL(url).hostname.toLowerCase()
+  } catch {
+    return "unknown"
+  }
+}
+
+function isThirdPartyRequest(origin: string, url: string) {
+  if (origin === "unknown") return false
+  try {
+    // Registrable-domain comparison, not exact hostname: media.cnn.com on
+    // www.cnn.com is the site's own infrastructure, and calling it a
+    // "third-party request" would be a false claim.
+    return !isSameSite(new URL(origin).hostname, new URL(url).hostname)
+  } catch {
+    return false
+  }
+}
+
+// First/third-party must be judged against the TOP-LEVEL tab origin, not the
+// request initiator. A request the Stripe iframe makes to js.stripe.com has
+// initiator js.stripe.com, so an initiator-relative check calls it
+// first-party and launders an embedded third party into the site itself.
+// The tab's pinned top origin (set on main-frame navigation) is the honest
+// reference; fall back to the initiator only before it is known.
+function tabTopOrigin(tabId: number, fallback: string): string {
+  const pinned = summaries.get(tabId)?.origin
+  return pinned && pinned !== "unknown" ? pinned : fallback
+}
+
+function shouldRecordUnclassifiedRequest(details: chrome.webRequest.WebRequestBodyDetails, topOrigin: string) {
+  if (!UNCLASSIFIED_REQUEST_TYPES.has(details.type)) return false
+  return isThirdPartyRequest(topOrigin, details.url)
+}
+
+type HeaderLike = { name: string }
+
+function cacheValidatorHeaderNames(headers: HeaderLike[] | undefined): string[] {
+  return [
+    ...new Set(
+      (headers ?? [])
+        .map((header) => header.name)
+        .filter((name) => CACHE_VALIDATOR_HEADERS.has(name.toLowerCase()))
+    )
+  ]
+}
+
+function recordCacheValidatorEvents(
+  details: {
+    frameId: number
+    initiator?: string | undefined
+    requestId: string
+    tabId: number
+    timeStamp: number
+    type: string
+    url: string
+  },
+  headers: HeaderLike[] | undefined,
+  direction: "request" | "response"
+) {
+  if (details.tabId < 0) return
+
+  const headerNames = cacheValidatorHeaderNames(headers)
+  if (headerNames.length === 0) return
+
+  const origin = requestOrigin(details)
+  const host = hostnameFromUrl(details.url)
+  const firstParty = !isThirdPartyRequest(tabTopOrigin(details.tabId, origin), details.url)
+
+  for (const headerName of headerNames) {
+    recordEvent({
+      // Keyed by host + header, not requestId: nearly every static asset on
+      // an ordinary page carries cache validators, and a request-keyed id
+      // would flood the per-tab cap with one event per resource (evicting
+      // classified tracker evidence). Host-keyed repeats merge into count.
+      id: `cache_validator_seen:${details.tabId}:${host}:${direction}:${headerName.toLowerCase()}`,
+      tabId: details.tabId,
+      frameId: details.frameId,
+      origin,
+      observedAt: Math.round(details.timeStamp),
+      source: "network",
+      firstParty,
+      ...(firstParty ? { policyLabel: "unknown_first_party" as const } : {}),
+      eventType: "cache_validator_seen",
+      blockability: "observable_only",
+      status: "active",
+      confidence: "confirmed",
+      evidenceTier: "observed",
+      evidence: [`${direction === "request" ? "Request" : "Response"} used cache validator header ${headerName} for ${host}. Header values are never recorded.`],
+      details: {
+        direction,
+        headerName,
+        host,
+        requestId: details.requestId,
+        requestType: details.type
+      }
+    }).catch((error: unknown) => console.warn("Failed to record cache validator event", error))
   }
 }
 
@@ -314,17 +448,56 @@ async function recordActiveTabScan(tabId: number) {
 }
 
 function registerNetworkObserver() {
+  chrome.webRequest?.onBeforeSendHeaders?.addListener(
+    (details) => recordCacheValidatorEvents(details, details.requestHeaders, "request"),
+    { urls: ["<all_urls>"] },
+    ["requestHeaders"]
+  )
+
+  chrome.webRequest?.onHeadersReceived?.addListener(
+    (details) => recordCacheValidatorEvents(details, details.responseHeaders, "response"),
+    { urls: ["<all_urls>"] },
+    ["responseHeaders"]
+  )
+
   chrome.webRequest?.onBeforeRequest?.addListener(
     (details: chrome.webRequest.WebRequestBodyDetails) => {
       if (details.tabId < 0) return
       const matches = matchTrackerRequest({ type: details.type, url: details.url }, trackers)
+      const origin = requestOrigin(details)
+      const topOrigin = tabTopOrigin(details.tabId, origin)
+
+      if (matches.length === 0 && shouldRecordUnclassifiedRequest(details, topOrigin)) {
+        const host = hostnameFromUrl(details.url)
+        // Keyed by host, not requestId: repeats merge into count via
+        // upsertEvent. A request-keyed id would store every unmatched
+        // request as a new event and let a busy page evict classified
+        // tracker evidence out of the maxEventsPerTab cap.
+        recordEvent({
+          id: `request_unclassified:${details.tabId}:${host}`,
+          tabId: details.tabId,
+          frameId: details.frameId,
+          origin,
+          observedAt: Math.round(details.timeStamp),
+          source: "network",
+          firstParty: false,
+          eventType: "request_seen",
+          blockability: "observable_only",
+          status: "active",
+          confidence: "confirmed",
+          evidenceTier: "observed",
+          evidence: [`Third-party request observed to ${host}; no tracker record matched it.`],
+          details: { ...requestDetails(details.url, details.type, details.requestId), host }
+        }).catch((error: unknown) => console.warn("Failed to record unclassified network event", error))
+        return
+      }
 
       for (const match of matches) {
         recordEvent({
           id: requestEventId("request_seen", details.tabId, details.requestId, match.tracker.id),
           tabId: details.tabId,
           frameId: details.frameId,
-          origin: requestOrigin(details),
+          origin,
           observedAt: Math.round(details.timeStamp),
           source: "network",
           trackerId: match.tracker.id,
@@ -347,7 +520,7 @@ function registerNetworkObserver() {
             id: requestEventId("cookie_sync", details.tabId, details.requestId, match.tracker.id),
             tabId: details.tabId,
             frameId: details.frameId,
-            origin: requestOrigin(details),
+            origin,
             observedAt: Math.round(details.timeStamp),
             source: "network",
             trackerId: match.tracker.id,
@@ -366,22 +539,44 @@ function registerNetworkObserver() {
     { urls: ["<all_urls>"] }
   )
 
-  chrome.declarativeNetRequest?.onRuleMatchedDebug?.addListener((info) => {
-    const metadata = getDynamicBlockRuleMetadata(info.rule.ruleId)
-    if (!metadata || info.request.tabId < 0) return
+  // Shared by both deterministic block signals: onRuleMatchedDebug (richer,
+  // unpacked dev builds only) and onErrorOccurred + ERR_BLOCKED_BY_CLIENT
+  // matched against an installed rule (packed/store builds). One recorder so
+  // the two paths can never drift in how they supersede the seen-event or
+  // shape the blocked event. Both fire for the same request in dev builds:
+  // the first records, the second only annotates blockSignals — one blocked
+  // request never counts twice, and the stored event shows every
+  // deterministic signal that confirmed it.
+  function recordBlockedOutcome(
+    metadata: DynamicBlockRuleMetadata,
+    request: { frameId: number; requestId: string; tabId: number; type: string; url: string; initiator?: string | undefined },
+    signal: "rule_matched_debug" | "err_blocked_by_client"
+  ) {
+    const blockedEventId = requestEventId("request_blocked", request.tabId, request.requestId, metadata.tracker.id)
+    const current = summaries.get(request.tabId)
+    const existingBlocked = current?.events.find((event) => event.id === blockedEventId)
 
-    // The webRequest observer may have logged this same request as seen
-    // before the block outcome arrived — supersede it so one blocked
-    // request never counts its company as both watching and blocked.
-    const seenEventId = requestEventId("request_seen", info.request.tabId, info.request.requestId, metadata.tracker.id)
-    const current = summaries.get(info.request.tabId)
-    if (current) summaries.set(info.request.tabId, supersedeEvent(current, seenEventId))
+    if (existingBlocked && current) {
+      const signals = new Set(
+        String(existingBlocked.details?.blockSignals ?? "")
+          .split(",")
+          .filter(Boolean)
+      )
+      if (signals.has(signal)) return
+      signals.add(signal)
+      summaries.set(request.tabId, annotateEventDetail(current, blockedEventId, "blockSignals", [...signals].sort().join(",")))
+      summaryWriter.schedule()
+      return
+    }
+
+    const seenEventId = requestEventId("request_seen", request.tabId, request.requestId, metadata.tracker.id)
+    if (current) summaries.set(request.tabId, supersedeEvent(current, seenEventId))
 
     recordEvent({
-      id: requestEventId("request_blocked", info.request.tabId, info.request.requestId, metadata.tracker.id),
-      tabId: info.request.tabId,
-      frameId: info.request.frameId,
-      origin: requestOrigin(info.request),
+      id: blockedEventId,
+      tabId: request.tabId,
+      frameId: request.frameId,
+      origin: requestOrigin(request),
       observedAt: Date.now(),
       source: "network",
       trackerId: metadata.tracker.id,
@@ -392,9 +587,34 @@ function registerNetworkObserver() {
       status: "blocked",
       confidence: metadata.tracker.confidence,
       evidence: [metadata.evidence],
-      details: requestDetails(info.request.url, info.request.type, info.request.requestId)
+      details: { ...requestDetails(request.url, request.type, request.requestId), blockSignals: signal }
     }).catch((error: unknown) => console.warn("Failed to record blocked network event", error))
+  }
+
+  chrome.declarativeNetRequest?.onRuleMatchedDebug?.addListener((info) => {
+    const metadata = getDynamicBlockRuleMetadata(info.rule.ruleId)
+    if (!metadata || info.request.tabId < 0) return
+
+    recordBlockedOutcome(metadata, info.request, "rule_matched_debug")
   })
+
+  // Production blocked-state signal: onRuleMatchedDebug never fires in a
+  // packed build, but DNR cancellation surfaces as onErrorOccurred with
+  // net::ERR_BLOCKED_BY_CLIENT. That error alone is not proof — another
+  // extension could have blocked the request — so blocked is only claimed
+  // when the URL provably matches a rule this extension installed. Anything
+  // else stays seen/active per the spec's deterministic-signal rule.
+  chrome.webRequest?.onErrorOccurred?.addListener(
+    (details) => {
+      if (details.tabId < 0 || details.error !== "net::ERR_BLOCKED_BY_CLIENT") return
+
+      const metadata = findInstalledBlockRuleMetadataForRequest(details.url, details.type)
+      if (!metadata) return
+
+      recordBlockedOutcome(metadata, details, "err_blocked_by_client")
+    },
+    { urls: ["<all_urls>"] }
+  )
 }
 
 registerNetworkObserver()
@@ -453,7 +673,9 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
   ensureHydrated()
     .then(() => {
-      summaries.set(tabId, createEmptySiteSummary(origin, tabId))
+      const summary = createEmptySiteSummary(origin, tabId)
+      summaries.set(tabId, summary)
+      updateActionBadge(tabId, summary)
       summaryWriter.schedule()
       return startSiteVisitForTab(tabId, origin).then(() => undefined)
     })
@@ -473,7 +695,10 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
       const event = { ...message.payload, tabId: sender.tab?.id ?? message.payload.tabId } as ObserverEvent
       if (!originMatchesSender(event, sender)) return { ok: false, error: "origin_mismatch" }
 
-      await recordEvent(normalizePersistenceEvent(enrichSdkDetection(enrichScriptInjection(event), trackers)))
+      const untrustedReason = untrustedObservedEventReason(event)
+      if (untrustedReason) return { ok: false, error: untrustedReason }
+
+      await recordEvent(normalizePersistenceEvent(normalizeIdentityDigestEvent(normalizeConsentSignal(enrichSdkDetection(enrichScriptInjection(event), trackers)))))
       return { ok: true }
     }
 
@@ -483,7 +708,9 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
 
       const pageError: PageError = { id: crypto.randomUUID(), ...message.payload }
       const current = readSummary(tabId, senderOrigin(sender) ?? "unknown")
-      summaries.set(tabId, recordPageError(current, pageError))
+      const summary = recordPageError(current, pageError)
+      summaries.set(tabId, summary)
+      updateActionBadge(tabId, summary)
       summaryWriter.schedule()
       return { ok: true }
     }
@@ -499,6 +726,7 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
     if (message.type === "REFRESH_TAB_SCAN") {
       const summary = { ...(await recordActiveTabScan(message.tabId)), updatedAt: Date.now() }
       summaries.set(message.tabId, summary)
+      updateActionBadge(message.tabId, summary)
       summaryWriter.schedule()
       return { type: "SITE_SUMMARY", payload: summary }
     }

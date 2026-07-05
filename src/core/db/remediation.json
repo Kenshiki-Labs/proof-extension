@@ -478,5 +478,29 @@
     "notes": "Reddit account privacy settings control ad personalization; off-Reddit pixel data rights via the privacy policy process.",
     "jurisdiction_notes": "CCPA/GDPR rights described in Reddit privacy policy.",
     "last_verified_at": "2026-07-03"
+  },
+  {
+    "id": "sourcepoint-default",
+    "future_collection_url": "https://sourcepoint.com/privacy-policy/",
+    "deletion_url": "https://sourcepoint.com/privacy-policy/",
+    "identity_verification_required": true,
+    "estimated_time_minutes": 20,
+    "recheck_interval_days": 180,
+    "friction_class": "medium",
+    "notes": "Sourcepoint is observed here as consent-management infrastructure. Visitor rights may need to go through the site operator and Sourcepoint's privacy process.",
+    "jurisdiction_notes": "Rights vary by jurisdiction and by the publisher's Sourcepoint configuration.",
+    "last_verified_at": "2026-07-05"
+  },
+  {
+    "id": "comscore-default",
+    "future_collection_url": "https://www.comscore.com/About/Privacy-Policy",
+    "deletion_url": "https://www.comscore.com/About/Privacy-Policy",
+    "identity_verification_required": true,
+    "estimated_time_minutes": 20,
+    "recheck_interval_days": 180,
+    "friction_class": "medium",
+    "notes": "comScore/ScorecardResearch audience-measurement collection is controlled through comScore privacy rights processes and site integration choices.",
+    "jurisdiction_notes": "CCPA/GDPR and other privacy rights depend on jurisdiction and available identity verification.",
+    "last_verified_at": "2026-07-05"
   }
 ]

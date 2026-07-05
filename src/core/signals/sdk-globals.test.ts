@@ -40,6 +40,7 @@ describe("SDK global signatures", () => {
     expect(matchSdkGlobal("fbq")).toMatchObject({ trackerId: "meta-pixel", confidence: "confirmed" })
     expect(matchSdkGlobal("dataLayer")).toMatchObject({ trackerId: "google-tag-manager", confidence: "probable" })
     expect(matchSdkGlobal("_linkedin_partner_id")).toMatchObject({ trackerId: "linkedin-insight", confidence: "probable" })
+    expect(matchSdkGlobal("_comscore")).toMatchObject({ trackerId: "comscore", confidence: "confirmed" })
     expect(matchSdkGlobal("myOwnGlobal")).toBeNull()
   })
 })

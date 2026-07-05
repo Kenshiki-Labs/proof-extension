@@ -2,6 +2,8 @@ import { compactEvents, type DisplayObservation } from "~core/report/display"
 import { getObserverRemediation } from "~core/domain/remediation"
 import { getTrackerServes, getTrackerValuation, rollupObservedValuations } from "~core/domain/valuation"
 import { blockingGuidance } from "~core/domain/blocking-policy"
+import { countWatchingObservers } from "~core/domain/observer-counts"
+import { isPersistenceSurfaceEvent, isUnclassifiedObservation } from "~core/state/summaries"
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 
 // The importance model. Every surface that lists observers sorts by this
@@ -70,6 +72,8 @@ const TIER_ORDER: Record<AttentionTier, number> = { red: 0, amber: 1, gray: 2 }
 export function rankObservers(events: ObserverEvent[]): RankedObserver[] {
   return compactEvents(events)
     .filter((observation) => observation.event.source !== "extension-scan")
+    .filter((observation) => !isUnclassifiedObservation(observation.event))
+    .filter((observation) => !isPersistenceSurfaceEvent(observation.event))
     .map((observation) => ({
       observation,
       score: attentionScore(observation.event),
@@ -100,11 +104,12 @@ export type Verdict = {
 
 export function buildVerdict(summary: SiteSummary, topN = 3): Verdict {
   const ranked = rankObservers(summary.events)
+  const activeRanked = ranked.filter((item) => item.observation.event.status === "active")
   const tierCounts: Record<AttentionTier, number> = { red: 0, amber: 0, gray: 0 }
   const countedTrackers = new Set<string>()
   let quickActionCount = 0
 
-  for (const item of ranked) {
+  for (const item of activeRanked) {
     const trackerId = item.observation.event.trackerId
     const key = trackerId ?? item.observation.event.id
     if (countedTrackers.has(key)) continue
@@ -118,14 +123,15 @@ export function buildVerdict(summary: SiteSummary, topN = 3): Verdict {
     }
   }
 
-  const rollup = rollupObservedValuations(summary.events)
+  const activeObserverEvents = activeRanked.map((item) => item.observation.event)
+  const rollup = rollupObservedValuations(activeObserverEvents)
   return {
-    companiesWatching: summary.activeCompanies.length,
+    companiesWatching: countWatchingObservers(summary.events),
     tierCounts,
     noTradeCount: rollup.servesCounts.only_their_business,
     noTradeAnnualLowUsd: rollup.onlyTheirBusinessAnnualLowUsd,
     noTradeAnnualHighUsd: rollup.onlyTheirBusinessAnnualHighUsd,
     quickActionCount,
-    topObservers: ranked.slice(0, topN)
+    topObservers: activeRanked.slice(0, topN)
   }
 }

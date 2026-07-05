@@ -3,7 +3,7 @@ title: "Extension Design Primitives"
 description: "Root primitive guide for Pulse Observer popup, report, and value-ledger surfaces."
 owner: Kenshiki
 section: docs
-lastReviewed: 2026-07-03
+lastReviewed: 2026-07-05
 status: active
 ---
 
@@ -26,6 +26,18 @@ Pulse Observer is an instrument panel, not a marketing page. The UI should feel 
 - Use `UI.tableShell`, `UI.tableHeader`, and `UI.tableRow` for report tables.
 - Use `UI.segment`, `UI.segmentActive`, and `UI.segmentIdle` for segmented controls.
 - Do not add inline `style` props. Promote the shape into a primitive.
+
+## Component Primitives
+
+Component-level primitives live in `src/components/system/` (structural, zero domain knowledge) and `src/components/watchers/` (domain-bound; they enforce the docs/surface-contract.md vocabulary structurally). A primitive exists only if it deletes at least two duplications, and primitives are presentation-only — counting and selection happen in `src/core/`.
+
+- `SurfaceSection` — the one section header (optional icon or number marker). Replaces the popup/report private heading variants.
+- `Disclosure` — collapsed-by-default `<details>` with standard summary styling.
+- `Chip` — status/tier/category pill; tones reuse the class combinations the private implementations already used.
+- `CategoryChip` — renders functional-category labels only from `FUNCTIONAL_CATEGORY_LABELS`; surfaces cannot hand-type taxonomy.
+- `WatcherList` / `WatcherRow` — the one renderer of "a watcher" for popup and report; all selection, ranking, naming, and "+N more" arithmetic live in `src/core/report/watchers.ts`.
+- `VerdictBanner` — the identical verdict element on both product surfaces; always renders, including an explicit empty state.
+- `DebugView` — the fail-open surface; the only component allowed to render pipeline vocabulary and the `DEBUG_METRICS` catalog.
 
 ## Elevation
 

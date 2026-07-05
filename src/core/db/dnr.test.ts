@@ -1,6 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
 
-import { buildDynamicBlockRules, getDynamicBlockRuleMetadata, installDynamicBlockRules, uninstallDynamicBlockRules } from "./dnr"
+import {
+  buildDynamicBlockRules,
+  findInstalledBlockRuleMetadataForRequest,
+  getDynamicBlockRuleMetadata,
+  installDynamicBlockRules,
+  uninstallDynamicBlockRules
+} from "./dnr"
 
 describe("buildDynamicBlockRules", () => {
   it("builds blocking rules from the tracker database", () => {
@@ -156,5 +162,60 @@ describe("uninstallDynamicBlockRules", () => {
 
     await uninstallDynamicBlockRules()
     expect(getDynamicBlockRuleMetadata(installedRules[0]!.id)).toBeNull()
+  })
+})
+
+// The production blocked-state path: onErrorOccurred + ERR_BLOCKED_BY_CLIENT
+// is only claimed as OUR block when the URL re-matches an installed rule.
+describe("findInstalledBlockRuleMetadataForRequest", () => {
+  afterEach(async () => {
+    vi.mocked(chrome.declarativeNetRequest.getDynamicRules).mockResolvedValue([])
+    await uninstallDynamicBlockRules()
+    vi.mocked(chrome.declarativeNetRequest.getDynamicRules).mockClear()
+    vi.mocked(chrome.declarativeNetRequest.updateDynamicRules).mockClear()
+  })
+
+  async function installFullstory() {
+    vi.mocked(chrome.declarativeNetRequest.getDynamicRules).mockResolvedValueOnce([])
+    await installDynamicBlockRules(["fullstory"])
+  }
+
+  it("matches a blocked request to the installed tracker rule by domain suffix", async () => {
+    await installFullstory()
+
+    const metadata = findInstalledBlockRuleMetadataForRequest("https://edge.fullstory.com/s/fs.js", "script")
+    expect(metadata?.tracker.id).toBe("fullstory")
+    expect(metadata?.evidence).toContain("fullstory")
+  })
+
+  it("prefers the more specific path rule when the path matches", async () => {
+    await installFullstory()
+
+    const metadata = findInstalledBlockRuleMetadataForRequest("https://fullstory.com/rec/page?x=1", "xmlhttprequest")
+    expect(metadata?.tracker.id).toBe("fullstory")
+    expect(metadata?.path).toBe("/rec/page")
+  })
+
+  it("returns null when no rules are installed — another extension's block is never claimed", async () => {
+    expect(findInstalledBlockRuleMetadataForRequest("https://edge.fullstory.com/s/fs.js", "script")).toBeNull()
+  })
+
+  it("returns null for hosts outside installed rule domains", async () => {
+    await installFullstory()
+
+    expect(findInstalledBlockRuleMetadataForRequest("https://www.google-analytics.com/g/collect", "script")).toBeNull()
+    expect(findInstalledBlockRuleMetadataForRequest("https://not-fullstory.com/s/fs.js", "script")).toBeNull()
+  })
+
+  it("returns null for resource types outside the rule's coverage", async () => {
+    await installFullstory()
+
+    expect(findInstalledBlockRuleMetadataForRequest("https://edge.fullstory.com/s/fs.js", "font")).toBeNull()
+  })
+
+  it("returns null for unparseable URLs", async () => {
+    await installFullstory()
+
+    expect(findInstalledBlockRuleMetadataForRequest("not a url", "script")).toBeNull()
   })
 })

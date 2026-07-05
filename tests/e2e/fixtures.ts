@@ -255,6 +255,31 @@ export const INJECTOR_FIXTURE_HTML = `
   </script>
 `
 
+/**
+ * Host deliberately absent from trackers.json — exercises the Tier 1
+ * unclassified-observation lane (Ghostery-style coverage gaps surfaced as
+ * evidence without invented attribution).
+ */
+export const UNKNOWN_HOST = "telemetry.unknown-vendor.example"
+
+/** Page requesting one known tracker and one unknown third-party host. */
+export const UNKNOWN_HOST_FIXTURE_HTML = `
+  <h1>Unknown host fixture</h1>
+  <script>
+    addEventListener("DOMContentLoaded", () => {
+      fetch("https://${UNKNOWN_HOST}/collect?e=pv", { mode: "no-cors" }).catch(() => undefined)
+      fetch("https://fullstory.com/rec/page", { mode: "no-cors" }).catch(() => undefined)
+    })
+  </script>
+`
+
+/** Fulfills unknown-host requests locally so the fixture runs offline. */
+export async function stubUnknownHostRoute(context: BrowserContext) {
+  await context.route(`https://${UNKNOWN_HOST}/**`, (route) => {
+    route.fulfill({ body: "", contentType: "text/plain", status: 200 }).catch(() => undefined)
+  })
+}
+
 type StoredSummary = {
   origin?: string
   activeCompanies?: string[]

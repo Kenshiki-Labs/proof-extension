@@ -558,5 +558,31 @@
       "advertising"
     ],
     "jurisdiction": "US"
+  },
+  {
+    "id": "sourcepoint",
+    "name": "Sourcepoint",
+    "parentCompany": "Sourcepoint Technologies, Inc.",
+    "aliases": [
+      "Sourcepoint CMP"
+    ],
+    "categoryLabels": [
+      "consent management"
+    ],
+    "jurisdiction": "US"
+  },
+  {
+    "id": "comscore",
+    "name": "comScore / ScorecardResearch",
+    "parentCompany": "Comscore, Inc.",
+    "aliases": [
+      "ScorecardResearch",
+      "comScore"
+    ],
+    "categoryLabels": [
+      "analytics",
+      "audience measurement"
+    ],
+    "jurisdiction": "US"
   }
 ]

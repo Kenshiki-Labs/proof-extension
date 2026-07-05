@@ -58,6 +58,7 @@ export const SDK_GLOBAL_SIGNATURES: SdkGlobalSignature[] = [
   { global: "ID5", trackerId: "id5", sdkName: "ID5 identity API", confidence: "confirmed" },
   { global: "Tynt", trackerId: "33across", sdkName: "33Across/Tynt engagement tag", confidence: "confirmed" },
   { global: "_6si", trackerId: "6sense", sdkName: "6sense tag queue", confidence: "confirmed" },
+  { global: "_comscore", trackerId: "comscore", sdkName: "comScore/ScorecardResearch queue", confidence: "confirmed" },
   // Short names a site could plausibly define itself — presence is a strong
   // hint, not a known-library match, so these never claim "confirmed".
   { global: "OX", trackerId: "openx", sdkName: "OpenX tag object", confidence: "probable" },

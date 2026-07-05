@@ -11,9 +11,12 @@ import {
   PLAIN_FIXTURE_HTML,
   SDK_GLOBAL_FIXTURE_HTML,
   TRACKER_FIXTURE_HTML,
+  UNKNOWN_HOST,
+  UNKNOWN_HOST_FIXTURE_HTML,
   readAllEvents,
   readSummaries,
   stubTrackerRoutes,
+  stubUnknownHostRoute,
   withExtensionContext,
   withFixtureServer
 } from "./fixtures"
@@ -372,6 +375,111 @@ test("dynamically injected tracker script is detected and attributed", async () 
           }
         }, { timeout: 15_000 })
         .toEqual({ trackerId: "fullstory", hasEvidence: true })
+    })
+  })
+})
+
+test("unknown third-party host is observed but never claimed as a named observer", async () => {
+  await withExtensionContext("unknown-host", async (context, worker) => {
+    await stubTrackerRoutes(context)
+    await stubUnknownHostRoute(context)
+
+    await withFixtureServer(UNKNOWN_HOST_FIXTURE_HTML, async (baseUrl) => {
+      const page = await context.newPage()
+      await page.goto(`${baseUrl}/`)
+
+      await expect
+        .poll(async () => {
+          const events = await readAllEvents(worker)
+          const unknown = events.find(
+            (event) => event.eventType === "request_seen" && event.details?.host === UNKNOWN_HOST
+          )
+          if (!unknown) return null
+          return {
+            trackerId: unknown.trackerId ?? null,
+            companyId: unknown.companyId ?? null,
+            evidenceTier: unknown.evidenceTier ?? null,
+            blockability: unknown.blockability,
+            statesUnmatched: unknown.evidence.some((line) => line.includes("no tracker record matched"))
+          }
+        }, { timeout: 15_000 })
+        .toEqual({
+          trackerId: null,
+          companyId: null,
+          evidenceTier: "observed",
+          blockability: "observable_only",
+          statesUnmatched: true
+        })
+
+      // The known tracker on the same page still gets full attribution —
+      // the unclassified lane must not swallow classified matches.
+      await expect
+        .poll(async () => (await readAllEvents(worker)).some((event) => event.trackerId === "fullstory"), { timeout: 15_000 })
+        .toBe(true)
+
+      // The unknown host must never inflate named-company summary buckets.
+      const summaries = await readSummaries(worker)
+      const fixtureSummary = summaries.find((summary) => summary.origin === new URL(baseUrl).origin)
+      expect(fixtureSummary?.activeCompanies).not.toContain(UNKNOWN_HOST)
+      expect(fixtureSummary?.activeCompanies).toContain("fullstory")
+    })
+  })
+})
+
+test("blocked state carries the production err_blocked_by_client signal, not just the dev-only debug event", async () => {
+  await withExtensionContext("blocked-prod-signal", async (context, worker, extensionId) => {
+    const stubs = await stubTrackerRoutes(context)
+
+    await withFixtureServer(FULLSTORY_FIXTURE_HTML, async (baseUrl) => {
+      const settingsPage = await context.newPage()
+      await settingsPage.goto(`chrome-extension://${extensionId}/popup.html`)
+      await settingsPage.evaluate(async () => {
+        await chrome.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { blockedTrackerIds: ["fullstory"] } })
+      })
+      await expect
+        .poll(() =>
+          worker.evaluate(async () => {
+            const rules = await chrome.declarativeNetRequest.getDynamicRules()
+            return rules.filter((rule) => rule.action.type === "block").length
+          })
+        )
+        .toBeGreaterThan(0)
+      await settingsPage.close()
+
+      const page = await context.newPage()
+      await page.goto(`${baseUrl}/`)
+
+      // Network-level proof the DNR rule cancelled the request.
+      expect(stubs.hitCount("fullstory.com")).toBe(0)
+
+      // Product-level proof for packed builds: the blocked event's signal
+      // provenance must include err_blocked_by_client — the only signal
+      // available outside unpacked dev builds, where onRuleMatchedDebug
+      // does not exist. This asserts the production path matched the URL
+      // to OUR installed rule and recorded/confirmed the outcome.
+      await expect
+        .poll(async () => {
+          const events = await readAllEvents(worker)
+          const blocked = events.filter((event) => event.eventType === "request_blocked" && event.trackerId === "fullstory")
+          if (blocked.length === 0) return null
+          return {
+            productionSignalFired: blocked.some((event) => String(event.details?.blockSignals ?? "").includes("err_blocked_by_client")),
+            noDoubleCount: blocked.every((event) => (event.count ?? 1) === 1),
+            allBlocked: blocked.every((event) => event.status === "blocked")
+          }
+        }, { timeout: 15_000 })
+        .toEqual({ productionSignalFired: true, noDoubleCount: true, allBlocked: true })
+
+      // The seen-event for the same request must have been superseded —
+      // fullstory is blocked, not simultaneously watching.
+      const events = await readAllEvents(worker)
+      const blockedRequestIds = new Set(
+        events.filter((event) => event.eventType === "request_blocked" && event.trackerId === "fullstory").map((event) => event.details?.requestId)
+      )
+      const stillSeen = events.filter(
+        (event) => event.eventType === "request_seen" && event.trackerId === "fullstory" && blockedRequestIds.has(event.details?.requestId)
+      )
+      expect(stillSeen).toEqual([])
     })
   })
 })

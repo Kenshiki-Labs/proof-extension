@@ -1,7 +1,9 @@
 import type { PlasmoCSConfig } from "plasmo"
 
+import { installIdentityDigestHook } from "~core/content/identity-digest-hooks"
 import { installPersistenceHooks } from "~core/content/persistence-hooks"
 import { isIgnoredPageError } from "~core/domain/page-errors"
+import { consentSignalGlobalNames } from "~core/signals/consent-signals"
 import { createRateLimitedReporter } from "~core/signals/persistence"
 import { sdkGlobalNames } from "~core/signals/sdk-globals"
 
@@ -80,6 +82,68 @@ function observeSdkGlobals() {
 }
 
 observeSdkGlobals()
+
+function scanConsentSignals(reportedGlobals: Set<string>) {
+  for (const globalName of consentSignalGlobalNames()) {
+    if (reportedGlobals.has(globalName)) continue
+    if ((window as unknown as Record<string, unknown>)[globalName] === undefined) continue
+
+    reportedGlobals.add(globalName)
+    const payload = {
+      id: `consent_signal:${location.origin}:${globalName}`,
+      origin: location.origin,
+      observedAt: Date.now(),
+      source: "api-hook",
+      firstParty: true,
+      policyLabel: "unknown_first_party",
+      eventType: "consent_signal_observed",
+      blockability: "observable_only",
+      status: "active",
+      confidence: "weak",
+      evidence: [`Consent signal global ${globalName} was present in the page.`],
+      details: { global: globalName }
+    }
+    window.postMessage({ type: PAGE_EVENT_TYPE, payload }, location.origin)
+  }
+}
+
+function observeConsentSignals() {
+  const reportedGlobals = new Set<string>()
+  const scan = () => scanConsentSignals(reportedGlobals)
+
+  scan()
+  if (document.readyState === "complete") scan()
+  else window.addEventListener("load", scan, { once: true })
+  setTimeout(scan, 2_500)
+}
+
+observeConsentSignals()
+
+function observeIdentityDigests() {
+  const send = createRateLimitedReporter<{ details: Record<string, string | number> }>((id, { details }) => {
+    const payload = {
+      id,
+      origin: location.origin,
+      observedAt: Date.now(),
+      source: "api-hook",
+      firstParty: true,
+      policyLabel: "behavioral_profiling",
+      eventType: "identity_digest_observed",
+      blockability: "observable_only",
+      status: "active",
+      confidence: "weak",
+      evidence: ["Reported by the identity digest observer; evidence is rebuilt by the extension before recording."],
+      details
+    }
+    window.postMessage({ type: PAGE_EVENT_TYPE, payload }, location.origin)
+  })
+
+  installIdentityDigestHook(({ key, details }) => {
+    send(`identity_digest:${location.origin}:${key}`, { details })
+  })
+}
+
+observeIdentityDigests()
 
 // Persistence-surface observation (cookies, Web Storage, IndexedDB, Cache
 // API, service workers). The MAIN world reports bare metadata only — names,

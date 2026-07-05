@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react"
 
-import { SERVES_LABELS } from "~core/domain/valuation"
+import { formatUsdRange, getTrackerValuation, SERVES_LABELS } from "~core/domain/valuation"
 import { getTrackerSupplyChainRole, SUPPLY_CHAIN_STAGES, SUPPLY_CHAIN_LABELS, type SupplyChainRole } from "~core/domain/supply-chain"
-import type { ValuationEdge } from "~core/domain/types"
+import type { UnclassifiedGraphEdge, ValuationEdge } from "~core/domain/types"
 import { TYPE, UI } from "~components/system/tokens"
 
 // Site ↔ tracker network, rendered as a deterministic bipartite SVG built in
@@ -39,50 +39,124 @@ const STAGE_ORDER: Record<SupplyChainRole, number> = Object.fromEntries(
   SUPPLY_CHAIN_STAGES.map((stage, index) => [stage.role, index])
 ) as Record<SupplyChainRole, number>
 
-type GraphMode = "serves" | "chain"
+// Gray, like "the_site"/"site_tooling" — "we don't know" reads the same as
+// "not obviously predatory" at a glance, and the label (a raw hostname
+// instead of a company name) is what actually tells them apart.
+const UNKNOWN_CLASSES = { stroke: "stroke-muted-foreground", fill: "fill-muted-foreground", dot: "bg-muted-foreground" }
+
+type GraphMode = "serves" | "chain" | "value"
 
 const MAX_SITES = 8
 const MAX_TRACKERS = 14
 const ROW_HEIGHT = 34
 const TOP_PAD = 26
+const MIN_NODE_RADIUS = 4
+const MAX_NODE_RADIUS = 11
+const UNCLASSIFIED_PREFIX = "unclassified:"
 
 function shortSite(origin: string) {
   return origin.replace(/^https?:\/\/(www\.)?/, "")
 }
 
-export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
+// Who makes what, in the picture: annual midpoint value for a tracker, or 0
+// when we have no priced record — an unpriced tracker still gets a node, it
+// just doesn't inflate in "value" mode. Unclassified nodes (never a real
+// tracker id) always resolve to 0 here, same as an unpriced named tracker.
+function trackerAnnualMidpoint(trackerId: string): number {
+  return getTrackerValuation(trackerId)?.annual.midpoint_usd ?? 0
+}
+
+function trackerAnnualRange(trackerId: string): { low: number; high: number } | null {
+  const value = getTrackerValuation(trackerId)
+  return value ? { low: value.annual.low_usd, high: value.annual.high_usd } : null
+}
+
+// Internal shape both ValuationEdge (named, priced) and UnclassifiedGraphEdge
+// (unnamed, unpriced) normalize into, so one rendering path handles both —
+// see docs/observer-spec.md and the report-tab story-arc discussion: the
+// graph must show every observed third party, not only the ones our DB has
+// codified, or it silently contradicts the "Watching" headline count.
+type GraphEdge = {
+  siteOrigin: string
+  nodeId: string
+  nodeLabel: string
+  observations: number
+  servesCategory: ValuationEdge["servesCategory"] | null
+}
+
+function toGraphEdges(edges: ValuationEdge[], unclassifiedEdges: UnclassifiedGraphEdge[]): GraphEdge[] {
+  return [
+    ...edges.map((edge) => ({
+      siteOrigin: edge.siteOrigin,
+      nodeId: edge.trackerId,
+      nodeLabel: edge.trackerId,
+      observations: edge.observations,
+      servesCategory: edge.servesCategory
+    })),
+    ...unclassifiedEdges.map((edge) => ({
+      siteOrigin: edge.siteOrigin,
+      nodeId: `${UNCLASSIFIED_PREFIX}${edge.host}`,
+      nodeLabel: edge.host,
+      observations: edge.observations,
+      servesCategory: null
+    }))
+  ]
+}
+
+function classesFor(mode: GraphMode, servesCategory: ValuationEdge["servesCategory"] | null, nodeId: string) {
+  if (servesCategory === null) return UNKNOWN_CLASSES
+  if (mode === "chain") return STAGE_CLASSES[getTrackerSupplyChainRole(nodeId) ?? "site_tooling"]
+  return SERVES_CLASSES[servesCategory]
+}
+
+export default function TrackerGraph({
+  edges,
+  unclassifiedEdges = []
+}: {
+  edges: ValuationEdge[]
+  unclassifiedEdges?: UnclassifiedGraphEdge[]
+}) {
   const [focused, setFocused] = useState<string | null>(null)
   const [mode, setMode] = useState<GraphMode>("serves")
 
   const { sites, trackers, visibleEdges, height } = useMemo(() => {
+    const graphEdges = toGraphEdges(edges, unclassifiedEdges)
     const siteWeight = new Map<string, number>()
     const trackerWeight = new Map<string, number>()
-    for (const edge of edges) {
+    for (const edge of graphEdges) {
       siteWeight.set(edge.siteOrigin, (siteWeight.get(edge.siteOrigin) ?? 0) + edge.observations)
-      trackerWeight.set(edge.trackerId, (trackerWeight.get(edge.trackerId) ?? 0) + edge.observations)
+      trackerWeight.set(edge.nodeId, (trackerWeight.get(edge.nodeId) ?? 0) + edge.observations)
     }
     const bySeverity = (a: [string, number], b: [string, number]) => b[1] - a[1] || a[0].localeCompare(b[0])
     const sites = [...siteWeight.entries()].sort(bySeverity).slice(0, MAX_SITES).map(([id]) => id)
     const byChain = (a: [string, number], b: [string, number]) =>
       (STAGE_ORDER[getTrackerSupplyChainRole(a[0]) ?? "site_tooling"] - STAGE_ORDER[getTrackerSupplyChainRole(b[0]) ?? "site_tooling"]) || bySeverity(a, b)
+    const byValue = (a: [string, number], b: [string, number]) => trackerAnnualMidpoint(b[0]) - trackerAnnualMidpoint(a[0]) || bySeverity(a, b)
+    const modeSort = mode === "chain" ? byChain : mode === "value" ? byValue : bySeverity
     const trackers = [...trackerWeight.entries()]
       .sort(bySeverity)
       .slice(0, MAX_TRACKERS)
-      .sort(mode === "chain" ? byChain : bySeverity)
+      .sort(modeSort)
       .map(([id]) => id)
     const siteSet = new Set(sites)
     const trackerSet = new Set(trackers)
-    const visibleEdges = edges.filter((edge) => siteSet.has(edge.siteOrigin) && trackerSet.has(edge.trackerId))
+    const visibleEdges = graphEdges.filter((edge) => siteSet.has(edge.siteOrigin) && trackerSet.has(edge.nodeId))
     const height = TOP_PAD + Math.max(sites.length, trackers.length) * ROW_HEIGHT + 10
     return { sites, trackers, visibleEdges, height }
-  }, [edges, mode])
+  }, [edges, unclassifiedEdges, mode])
 
   if (visibleEdges.length === 0) return null
 
   const maxObservations = Math.max(...visibleEdges.map((edge) => edge.observations))
+  const maxAnnualMidpoint = Math.max(1, ...trackers.map(trackerAnnualMidpoint))
+  const hasUnclassifiedNode = trackers.some((id) => id.startsWith(UNCLASSIFIED_PREFIX))
+  // Radius scales by sqrt of value, not value itself — circle AREA should
+  // read as proportional to the dollar amount, or a 10x tracker looks 100x.
+  const nodeRadius = (trackerId: string) =>
+    mode === "value" ? MIN_NODE_RADIUS + Math.sqrt(trackerAnnualMidpoint(trackerId) / maxAnnualMidpoint) * (MAX_NODE_RADIUS - MIN_NODE_RADIUS) : 4
   const siteY = (id: string) => TOP_PAD + sites.indexOf(id) * ROW_HEIGHT + ROW_HEIGHT / 2
   const trackerY = (id: string) => TOP_PAD + trackers.indexOf(id) * ROW_HEIGHT + ROW_HEIGHT / 2
-  const isDimmed = (edge: ValuationEdge) => focused !== null && edge.siteOrigin !== focused && edge.trackerId !== focused
+  const isDimmed = (edge: GraphEdge) => focused !== null && edge.siteOrigin !== focused && edge.nodeId !== focused
 
   return (
     <div>
@@ -90,7 +164,8 @@ export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
         {(
           [
             { label: "Who it serves", value: "serves" },
-            { label: "Supply chain", value: "chain" }
+            { label: "Supply chain", value: "chain" },
+            { label: "Who makes what", value: "value" }
           ] as Array<{ label: string; value: GraphMode }>
         ).map((item) => (
           <button
@@ -109,14 +184,14 @@ export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
         viewBox={`0 0 720 ${height}`}>
         {visibleEdges.map((edge) => {
           const y1 = siteY(edge.siteOrigin)
-          const y2 = trackerY(edge.trackerId)
+          const y2 = trackerY(edge.nodeId)
           const width = 1 + (edge.observations / maxObservations) * 4
           return (
             <path
               d={`M 218 ${y1} C 360 ${y1}, 360 ${y2}, 500 ${y2}`}
               fill="none"
-              key={`${edge.siteOrigin}|${edge.trackerId}`}
-              className={mode === "chain" ? STAGE_CLASSES[getTrackerSupplyChainRole(edge.trackerId) ?? "site_tooling"].stroke : SERVES_CLASSES[edge.servesCategory].stroke}
+              key={`${edge.siteOrigin}|${edge.nodeId}`}
+              className={classesFor(mode, edge.servesCategory, edge.nodeId).stroke}
               opacity={isDimmed(edge) ? 0.12 : 0.55}
               strokeWidth={width}
             />
@@ -129,7 +204,7 @@ export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
             onMouseLeave={() => setFocused(null)}>
             <text
               fontSize="12"
-              opacity={focused !== null && focused !== site && !visibleEdges.some((edge) => edge.trackerId === focused && edge.siteOrigin === site) ? 0.3 : 1}
+              opacity={focused !== null && focused !== site && !visibleEdges.some((edge) => edge.nodeId === focused && edge.siteOrigin === site) ? 0.3 : 1}
               textAnchor="end"
               x="210"
               y={siteY(site) + 4}>
@@ -138,20 +213,22 @@ export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
           </g>
         ))}
         {trackers.map((tracker) => {
-          const servesCategory = visibleEdges.find((edge) => edge.trackerId === tracker)?.servesCategory ?? "the_site"
-          const nodeClasses = mode === "chain" ? STAGE_CLASSES[getTrackerSupplyChainRole(tracker) ?? "site_tooling"] : SERVES_CLASSES[servesCategory]
+          const representativeEdge = visibleEdges.find((edge) => edge.nodeId === tracker)
+          const nodeClasses = classesFor(mode, representativeEdge?.servesCategory ?? null, tracker)
+          const annualRange = mode === "value" ? trackerAnnualRange(tracker) : null
           return (
             <g
               key={tracker}
               onMouseEnter={() => setFocused(tracker)}
               onMouseLeave={() => setFocused(null)}>
-              <circle className={nodeClasses.fill} cx="508" cy={trackerY(tracker)} r="4" />
+              <circle className={nodeClasses.fill} cx="508" cy={trackerY(tracker)} r={nodeRadius(tracker)} />
               <text
                 fontSize="12"
-                opacity={focused !== null && focused !== tracker && !visibleEdges.some((edge) => edge.siteOrigin === focused && edge.trackerId === tracker) ? 0.3 : 1}
+                opacity={focused !== null && focused !== tracker && !visibleEdges.some((edge) => edge.siteOrigin === focused && edge.nodeId === tracker) ? 0.3 : 1}
                 x="520"
                 y={trackerY(tracker) + 4}>
-                {tracker}
+                {representativeEdge?.nodeLabel ?? tracker}
+                {annualRange ? <tspan className="fill-current opacity-60"> · {formatUsdRange(annualRange.low, annualRange.high)}/yr</tspan> : null}
               </text>
             </g>
           )
@@ -164,22 +241,30 @@ export default function TrackerGraph({ edges }: { edges: ValuationEdge[] }) {
         </text>
       </svg>
       <div className={`mt-2 flex flex-wrap gap-x-4 gap-y-1 ${TYPE.small}`}>
-        {mode === "serves"
-          ? (Object.keys(SERVES_CLASSES) as Array<ValuationEdge["servesCategory"]>).map((category) => (
-              <span className="flex items-center gap-1.5" key={category}>
-                <span className={`inline-block h-2 w-2 rounded-full ${SERVES_CLASSES[category].dot}`} />
-                {SERVES_LABELS[category]}
-              </span>
-            ))
-          : SUPPLY_CHAIN_STAGES.map((stage) => (
+        {mode === "chain"
+          ? SUPPLY_CHAIN_STAGES.map((stage) => (
               <span className="flex items-center gap-1.5" key={stage.role}>
                 <span className={`inline-block h-2 w-2 rounded-full ${STAGE_CLASSES[stage.role].dot}`} />
                 {SUPPLY_CHAIN_LABELS[stage.role]}
               </span>
+            ))
+          : (Object.keys(SERVES_CLASSES) as Array<ValuationEdge["servesCategory"]>).map((category) => (
+              <span className="flex items-center gap-1.5" key={category}>
+                <span className={`inline-block h-2 w-2 rounded-full ${SERVES_CLASSES[category].dot}`} />
+                {SERVES_LABELS[category]}
+              </span>
             ))}
+        {hasUnclassifiedNode ? (
+          <span className="flex items-center gap-1.5">
+            <span className={`inline-block h-2 w-2 rounded-full ${UNKNOWN_CLASSES.dot}`} />
+            Not yet classified — observed, not in our tracker database
+          </span>
+        ) : null}
       </div>
       <p className={`${TYPE.small} mt-1.5`}>
-        Thicker lines mean more observations. Hover a site or tracker to isolate its connections.
+        {mode === "value"
+          ? "Circle size is estimated annual value extracted, not requests — the biggest circles are the ones profiting most from you. Unpriced and unclassified nodes still appear, at minimum size."
+          : "Thicker lines mean more observations. Hover a site or tracker to isolate its connections."}
       </p>
     </div>
   )

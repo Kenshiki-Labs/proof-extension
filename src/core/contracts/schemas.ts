@@ -11,6 +11,7 @@ export const BlockabilityClassSchema = z.enum([
 
 export const ObservationStatusSchema = z.enum(["active", "blocked", "mitigated", "cannot_block"])
 export const DetectionConfidenceSchema = z.enum(["confirmed", "probable", "weak"])
+export const EvidenceTierSchema = z.enum(["observed", "classified", "attributed", "explained", "actionable"])
 
 export const FirstPartyPolicyLabelSchema = z.enum([
   "site_functionality",
@@ -37,23 +38,27 @@ export const ObserverEventSchema = z.object({
     "request_blocked",
     "script_injected",
     "sdk_detected",
+    "consent_signal_observed",
     "extension_diagnostic",
     "browser_surface",
     "canvas_read",
     "audio_fingerprint",
     "webgl_query",
     "font_enumeration",
+    "identity_digest_observed",
     "cookie_sync",
     "cookie_observed",
     "storage_write",
     "indexeddb_access",
     "cache_storage_access",
     "service_worker_registered",
+    "cache_validator_seen",
     "webrtc_probe"
   ]),
   blockability: BlockabilityClassSchema,
   status: ObservationStatusSchema,
   confidence: DetectionConfidenceSchema,
+  evidenceTier: EvidenceTierSchema.optional(),
   evidence: z.array(z.string().min(1)).min(1),
   count: z.number().int().positive().optional(),
   details: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional()

@@ -1,5 +1,6 @@
-import { compactEvents } from "~core/report/display"
-import { isDiagnosticEvent, isExposureScanEvent } from "~core/state/summaries"
+import { compactEvents, pageActivityEvents } from "~core/report/display"
+import { countIdentifiedObservers, countPrivacyTradeObservers, countSiteToolObservers, countSourceBackedActiveObservers, countUnclassifiedParties, countWatchingObservers } from "~core/domain/observer-counts"
+import { isDiagnosticEvent, isExposureScanEvent, isLocalPageSignalEvent, isPersistenceSurfaceEvent, isUnclassifiedObservation } from "~core/state/summaries"
 import type { SiteSummary } from "~core/domain/types"
 
 // THE single source of truth for every headline number the popup, the
@@ -19,12 +20,25 @@ export type SummaryMetrics = {
   recordedEvents: number
   // Extension-run exposure scan events (what Pulse could read locally).
   exposureEvents: number
-  // Companies by outcome. A company can appear in watching and blocked in
-  // the same tab only until its seen-event is superseded by the block.
+  // THE headline: every distinct third party observed on the tab, named or
+  // not. A party can appear in watching and blocked in the same tab only
+  // until its seen-event is superseded by the block.
   watchingCompanies: number
+  // Breakdown of watchingCompanies, kept visible for debugging: how many of
+  // the observed third parties our DB has a source-backed name for, and how
+  // many are observed but not yet codified.
+  identifiedObservers: number
+  unclassifiedParties: number
+  // The privacy-trade subset (no-trade + ads-trade) of the source-backed set.
+  privacyTradeObservers: number
+  sourceBackedActiveObservers: number
+  siteToolObservers: number
   blockedCompanies: number
   mitigatedCompanies: number
   cannotBlockSignals: number
+  unclassifiedObservations: number
+  persistenceObservations: number
+  localPageSignals: number
   // The extension's own housekeeping events, reported only in diagnostics.
   diagnostics: number
   // Everything in storage for this tab, including diagnostics — the number
@@ -34,13 +48,21 @@ export type SummaryMetrics = {
 
 export function summaryMetrics(summary: SiteSummary): SummaryMetrics {
   return {
-    observations: compactEvents(summary.events).length,
+    observations: compactEvents(pageActivityEvents(summary.events)).length,
     recordedEvents: summary.events.filter((event) => !isDiagnosticEvent(event) && !isExposureScanEvent(event)).length,
     exposureEvents: summary.events.filter((event) => isExposureScanEvent(event) && !isDiagnosticEvent(event)).length,
-    watchingCompanies: summary.activeCompanies.length,
+    watchingCompanies: countWatchingObservers(summary.events),
+    identifiedObservers: countIdentifiedObservers(summary.events),
+    unclassifiedParties: countUnclassifiedParties(summary.events),
+    privacyTradeObservers: countPrivacyTradeObservers(summary.events),
+    sourceBackedActiveObservers: countSourceBackedActiveObservers(summary.events),
+    siteToolObservers: countSiteToolObservers(summary.events),
     blockedCompanies: summary.blockedCompanies.length,
     mitigatedCompanies: summary.mitigatedCompanies.length,
     cannotBlockSignals: summary.cannotBlockSignals.length,
+    unclassifiedObservations: compactEvents(summary.events).filter(({ event }) => isUnclassifiedObservation(event)).length,
+    persistenceObservations: compactEvents(summary.events).filter(({ event }) => isPersistenceSurfaceEvent(event)).length,
+    localPageSignals: compactEvents(summary.events).filter(({ event }) => isLocalPageSignalEvent(event)).length,
     diagnostics: summary.events.filter(isDiagnosticEvent).length,
     storedEvents: summary.events.length
   }

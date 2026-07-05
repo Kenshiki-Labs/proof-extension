@@ -4,7 +4,7 @@ import { resolve } from "node:path"
 
 import { validateTrackerDatabase } from "~core/db/validate"
 import type { ObserverEvent } from "~core/domain/types"
-import { formatUsd, formatUsdRange, getTrackerValuation, rollupObservedValuations, VALUATION_DISCLAIMER } from "./valuation"
+import { buildTabValuationEdges, buildUnclassifiedGraphEdges, formatUsd, formatUsdRange, getTrackerValuation, rollupObservedValuations, VALUATION_DISCLAIMER } from "./valuation"
 
 const root = resolve(__dirname, "../../..")
 const normalizedValuations = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/valuations.json"), "utf8"))
@@ -109,6 +109,85 @@ describe("usd formatting", () => {
     expect(formatUsdRange(420, 500)).toBe("$420–$500")
     expect(formatUsdRange(0, 0)).toBe("$0")
     expect(formatUsdRange(1234, 5678)).toBe("$1,234–$5,678")
+  })
+})
+
+describe("buildTabValuationEdges — the per-page Network graph, not the cross-site ledger", () => {
+  it("builds one edge per named tracker on this page, priced and colored", () => {
+    const edges = buildTabValuationEdges(
+      [event("google-ads", "e1"), event("google-ads", "e2"), event("fullstory", "e3")],
+      "https://example.test"
+    )
+
+    expect(edges).toHaveLength(2)
+    const googleAds = edges.find((edge) => edge.trackerId === "google-ads")
+    expect(googleAds).toMatchObject({ siteOrigin: "https://example.test", observations: 2, servesCategory: "advertisers_and_maybe_you" })
+    // A tracker's per-visit value is counted once per presence, not once per
+    // raw request — 2 observations still means one $0.000768 presence.
+    expect(googleAds?.thisPeriodVisitUsd).toBeCloseTo(0.000768, 6)
+  })
+
+  it("excludes unclassified hosts, first-party events, and trackers missing a whoItServes category", () => {
+    const edges = buildTabValuationEdges(
+      [
+        event(undefined, "unclassified"),
+        { ...event("google-ads", "first-party"), firstParty: true },
+        event("nonexistent-tracker-id", "unknown-serves")
+      ],
+      "https://example.test"
+    )
+    expect(edges).toEqual([])
+  })
+})
+
+describe("buildUnclassifiedGraphEdges — unnamed third parties, still in the picture", () => {
+  function unclassifiedEvent(overrides: Partial<ObserverEvent>): ObserverEvent {
+    return {
+      id: "unclassified",
+      tabId: 1,
+      origin: "https://example.test",
+      observedAt: 100,
+      source: "network",
+      firstParty: false,
+      eventType: "request_seen",
+      blockability: "observable_only",
+      status: "active",
+      confidence: "confirmed",
+      evidenceTier: "observed",
+      evidence: ["Third-party request observed; no tracker record matched it."],
+      ...overrides
+    }
+  }
+
+  it("folds subdomains of the same unmatched host into one edge", () => {
+    const edges = buildUnclassifiedGraphEdges(
+      [
+        unclassifiedEvent({ id: "e1", details: { host: "sb.scorecardresearch.com" } }),
+        unclassifiedEvent({ id: "e2", details: { host: "b.scorecardresearch.com" } }),
+        unclassifiedEvent({ id: "e3", details: { host: "c.permutive.com" } })
+      ],
+      "https://example.test"
+    )
+
+    expect(edges).toEqual(
+      expect.arrayContaining([
+        { siteOrigin: "https://example.test", host: "scorecardresearch.com", observations: 2 },
+        { siteOrigin: "https://example.test", host: "permutive.com", observations: 1 }
+      ])
+    )
+    expect(edges).toHaveLength(2)
+  })
+
+  it("excludes first-party, named, and inactive events", () => {
+    const edges = buildUnclassifiedGraphEdges(
+      [
+        { ...unclassifiedEvent({ id: "fp", details: { host: "cdn.example" } }), firstParty: true },
+        unclassifiedEvent({ id: "named", trackerId: "google-ads", details: { host: "doubleclick.net" } }),
+        { ...unclassifiedEvent({ id: "blocked", details: { host: "cdn.example" } }), status: "blocked" }
+      ],
+      "https://example.test"
+    )
+    expect(edges).toEqual([])
   })
 })
 
