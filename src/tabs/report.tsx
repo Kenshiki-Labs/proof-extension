@@ -32,11 +32,14 @@ import { functionalCategoryBreakdown } from "~core/domain/functional-category"
 import { rankObservers } from "~core/domain/attention"
 import CleanupFlow from "~components/CleanupFlow"
 import DebugView from "~components/debug/DebugView"
+import LocationReveal from "~components/LocationReveal"
+import { NarrowingReportSection } from "~components/NarrowingPanel"
 import Disclosure from "~components/system/Disclosure"
 import TrackerGraph from "~components/value/TrackerGraph"
 import VerdictBanner from "~components/VerdictBanner"
 import WatcherList from "~components/watchers/WatcherList"
 import { buildTabValuationEdges, buildUnclassifiedGraphEdges, formatUsd, formatUsdRange, getTrackerServes, MONETIZATION_FLOW_LABELS, rollupObservedValuations, SERVES_LABELS } from "~core/domain/valuation"
+import { buildNarrowingModel } from "~core/report/narrowing"
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import type { UserSettings } from "~core/domain/types"
 import Button from "~components/system/Button"
@@ -580,6 +583,7 @@ function ReportTab() {
   // contradicts the "Watching" headline, which counts them already.
   const unclassifiedTabEdges = buildUnclassifiedGraphEdges(summary.events, summary.origin)
   const categoryBreakdown = functionalCategoryBreakdown(summary.events)
+  const narrowingModel = buildNarrowingModel(summary.events)
 
   return (
     <main className="min-h-screen bg-background p-6 font-body text-foreground">
@@ -631,10 +635,16 @@ function ReportTab() {
         ) : reportView === "evidence" ? (
           <>
             <VerdictBanner summary={summary} />
+            {narrowingModel.steps.length > 0 ? (
+              <div className="mt-6">
+                <LocationReveal watching={narrowingModel.watching} />
+              </div>
+            ) : null}
+            <NarrowingReportSection model={narrowingModel} />
 
             <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <SectionTitle number="01" title="Who was here — the picture" />
+                <SectionTitle number="02" title="Who was here — the picture" />
                 <div className="flex flex-wrap gap-1">
                   {(
                     [
@@ -689,7 +699,7 @@ function ReportTab() {
                 action inline — quick cleanup at the top, per-watcher opt-out
                 and deletion detail behind the disclosure. */}
             <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-              <SectionTitle number="02" title="Who is watching — and what you can do" />
+              <SectionTitle number="03" title="Who is watching — and what you can do" />
               <div className="mt-3">
                 <CleanupFlow events={summary.events} />
               </div>
@@ -712,7 +722,7 @@ function ReportTab() {
             </section>
 
             <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-              <SectionTitle number="03" title="The money" />
+              <SectionTitle number="04" title="The money" />
               <ValuationSection embedded events={summary.events} />
               <div className="mt-4">
                 <Button onClick={() => setReportView("value")} variant="secondary">Open the full value ledger</Button>
@@ -721,7 +731,7 @@ function ReportTab() {
 
             <Disclosure className="mt-6" labelStyle="label" summary="Appendix — full evidence for auditors">
               <section className={`mt-4 ${UI.panel} ${UI.reportInset}`}>
-                <SectionTitle number="04" title="All observed activity" />
+                <SectionTitle number="05" title="All observed activity" />
                 <p className={`${TYPE.small} mt-2`}>
                   Grouped rows from the page's full activity stream — named watchers, site tools, not-yet-classified hosts, and storage/cache surfaces.
                 </p>

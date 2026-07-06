@@ -96,20 +96,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "FullStory Browser SDK — Getting Started; iframe capture help article",
         "url": "https://developer.fullstory.com/browser/getting-started/",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the fs.js snippet loads from edge.fullstory.com and that the SDK performs client-side session-replay capture (clicks, scrolls, navigation, form interaction metadata); supports match.domains, category, and collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -212,20 +212,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Google Tag Platform — Content Security Policy guide",
         "url": "https://developers.google.com/tag-platform/security/guides/csp",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Google's own CSP allowlist guide names google-analytics.com as a required host for GA4/gtag measurement traffic, supporting match.domains and the analytics collection claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -357,20 +357,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Google Tag Platform — Content Security Policy guide",
         "url": "https://developers.google.com/tag-platform/security/guides/csp",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Google's own CSP allowlist guide names googletagmanager.com as the GTM container/script host, supporting match.domains and the tag-delivery collection claim."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -506,20 +506,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Google Tag Platform CSP guide; Google Publisher Tag — Get started",
         "url": "https://developers.google.com/tag-platform/security/guides/csp",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Google's own CSP allowlist guide names doubleclick.net, googleadservices.com, and googlesyndication.com (securepubads.g.doubleclick.net) as required ad-serving/conversion hosts, supporting match.domains and the retargeting/conversion collection claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -655,20 +655,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Meta for Developers — Meta Pixel, Get Started",
         "url": "https://developers.facebook.com/docs/meta-pixel/get-started",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms fbevents.js loads from connect.facebook.net, PageView is auto-tracked, and fbq() reports site-defined conversion events; supports match.domains and collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -938,20 +938,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "LinkedIn Help — Insight Tag conversion tracking and first-party cookies",
         "url": "https://www.linkedin.com/help/lms/answer/a418880",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "LinkedIn's own help articles confirm the Insight Tag install flow and first-party-cookie conversion tracking; supports category and collects claims. The two match.domains hosts (snap.licdn.com, px.ads.linkedin.com) come from this project's own network observation, not verbatim from the retrieved text."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1226,20 +1226,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Mixpanel Docs — JavaScript SDK / tracking methods",
         "url": "https://docs.mixpanel.com/docs/tracking-methods/sdks/javascript",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the JS SDK loads from cdn.mxpnl.com and reports events to api.mixpanel.com, with autocapture of page/click events; supports match.domains and collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1376,20 +1376,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Twilio Segment Docs — Analytics.js website source",
         "url": "https://www.twilio.com/docs/segment/connections/sources/catalog/libraries/website/javascript",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms Analytics.js loads from cdn.segment.com and reports events to api.segment.io, and states explicitly that Analytics.js sets only first-party cookies; supports match.domains and collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1521,20 +1521,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Amplitude Docs — Browser SDK 2",
         "url": "https://amplitude.com/docs/sdks/analytics/browser/browser-sdk-2",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the Browser SDK loads from cdn.amplitude.com and its cookie/ingestion behavior; supports match.domains and collects claims. The api2.amplitude.com ingestion host is Amplitude's documented standard endpoint pattern, not verbatim-quoted in the retrieved page text."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1806,20 +1806,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Adobe Experience League — Implement Adobe Analytics",
         "url": "https://experienceleague.adobe.com/en/docs/analytics/implementation/home",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms Adobe's own implementation architecture (Tags/Launch extension loader tag, legacy AppMeasurement.js, Edge Network forwarding to Adobe Analytics), supporting vendor identity and analytics-collection claims. Does not verbatim-confirm assets.adobedtm.com or sc.omtrdc.net in the retrieved text — these are Adobe's well-established Tags-CDN and legacy-collection hostname patterns (formerly DTM/Omniture), not independently re-verified as literal strings this session."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -1954,20 +1954,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Braze Docs — Web SDK integration guide",
         "url": "https://www.braze.com/docs/developer_guide/sdk_integration",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the Braze Web SDK's regional data-collection endpoint pattern (sdk.iad-XX.braze.com / sdk.fra-XX.braze.eu), matching this record's match.domains exactly; supports category and collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -2100,20 +2100,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Intercom Developer Docs — Installing Intercom on the web",
         "url": "https://developers.intercom.com/installing-intercom/web/installation",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the Messenger widget loads from widget.intercom.io and reports events to api-iam.intercom.io; supports match.domains and collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -2246,20 +2246,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Drift Developer Docs — JS API overview",
         "url": "https://devdocs.drift.com/docs/js-api-overview",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms Drift as a widget-based live-chat product loaded via a JS snippet; js.driftt.com is Drift's documented widget-delivery host."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3076,20 +3076,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Snapchat Business Help — Install the Snap Pixel on your website",
         "url": "https://businesshelp.snapchat.com/s/article/pixel-website-install",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the Snap Pixel install flow and its event-tracking script; sc-static.net and tr.snapchat.com are Snap's documented pixel-delivery and event-collection hosts."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3222,20 +3222,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Pinterest Business Help — Install the Pinterest tag",
         "url": "https://help.pinterest.com/en/business/article/install-the-pinterest-tag",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the Pinterest Tag product and its manual base-code/event-code install flow. Does not verbatim-confirm the specific ct.pinterest.com/s.pinimg.com hostnames in the retrieved text — these match Pinterest's known tag-delivery and CDN domains, not independently re-verified as literal strings this session."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3367,20 +3367,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "X Business Help — Conversion tracking for websites",
         "url": "https://business.x.com/en/help/campaign-measurement-and-analytics/conversion-tracking-for-websites.html",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms uwt.js loads from static.ads-twitter.com, and X's documented CSP allowlist names ads-twitter.com, ads-api.twitter.com, and analytics.twitter.com — an exact match to this record's domain family."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3513,20 +3513,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Yandex Metrica Support — Initialize the tag",
         "url": "https://yandex.com/support/metrica/code/counter-initialize.html",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the Metrica tag initialization flow and its mc.yandex.ru counter/watch endpoint, including session-replay-style webvisor capture; supports match.domains and collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3659,20 +3659,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Microsoft Learn — Clarity setup and installation",
         "url": "https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-setup",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the Clarity tag install flow and its www.clarity.ms tag-delivery host, and describes session-replay/heatmap capture behavior; supports match.domains and collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -3804,20 +3804,20 @@
         "transform_notes": "Hand-authored seed record based on common public tracker domains and product behavior; not imported from a third-party list."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Datadog Docs — Browser RUM setup",
         "url": "https://docs.datadoghq.com/real_user_monitoring/browser/setup/",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the Browser RUM SDK's intake endpoint pattern (browser-intake-datadoghq.com) and its /api/v2/rum ingestion path; supports match.domains and collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -5469,20 +5469,20 @@
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "HubSpot Knowledge Base — What cookies does HubSpot set in a visitor's browser?",
         "url": "https://knowledge.hubspot.com/reports/what-cookies-does-hubspot-set-in-a-visitor-s-browser",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms HubSpot's own analytics/tracking domain family (hs-analytics.net, hs-scripts.com, hs-banner.com) matching this record's match.domains; supports collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -5614,20 +5614,20 @@
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Microsoft Advertising Help — UET tag",
         "url": "https://help.ads.microsoft.com/answers/17752/en",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the Universal Event Tracking (UET) tag and its bat.bing.com conversion-tracking host; supports match.domains and collects claims."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -5898,20 +5898,20 @@
         "transform_notes": "Hand-authored domains for well-known vendor endpoints; remediation URLs taken from state data-broker registry filings in intelligence/normalized/ where available."
       },
       {
-        "family": "market_research",
-        "name": "Kenshiki market research valuation corpus",
-        "version": "2026",
-        "retrieved_at": "2026-07-03",
-        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
-      },
-      {
         "family": "vendor_docs",
         "name": "Reddit Business Help — Reddit Pixel",
         "url": "https://business.reddithelp.com/helpcenter/s/article/Install-the-Reddit-Pixel",
         "retrieved_at": "2026-07-05",
         "license": "Vendor documentation; referenced for factual identity/collection/blocking claims, not redistributed verbatim.",
         "transform_notes": "Confirms the Reddit Pixel conversion-tracking install flow; alb.reddit.com is Reddit's documented conversion-event endpoint."
+      },
+      {
+        "family": "market_research",
+        "name": "Kenshiki market research valuation corpus",
+        "version": "2026",
+        "retrieved_at": "2026-07-03",
+        "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -6081,7 +6081,7 @@
         "version": "2026",
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Placeholder zero-dollar operator-SaaS valuation until Sourcepoint-specific economics are promoted."
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {
@@ -6220,7 +6220,7 @@
         "version": "2026",
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
-        "transform_notes": "Placeholder estimated audience-measurement valuation until comScore-specific economics are promoted."
+        "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
       }
     ],
     "review": {

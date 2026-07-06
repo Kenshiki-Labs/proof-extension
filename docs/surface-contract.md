@@ -3,7 +3,7 @@ title: Surface Contract — Popup, Report, Debug
 description: Normative contract for what each user-facing surface is for, what it shows, and what it is forbidden to show.
 owner: stephen
 status: active
-version: 1.5.0
+version: 1.6.0
 lastReviewed: 2026-07-05
 nextReview: 2026-08-05
 ---
@@ -44,10 +44,11 @@ The debug requirement ("we must be able to see everything, or we can't diagnose 
 
 The popup renders exactly this, in this order, and nothing else:
 
-1. **Verdict sentence.** One sentence carrying the headline number with meaning attached: "14 watchers on this page. 3 gave you nothing back — worth $12–48/yr to them." (This is the existing VerdictBanner; it becomes the top, not a mid-page banner.)
-2. **The watchers.** Top 3–5 by severity, worst first: name (or hostname if not yet classified), one category word, **the money** — the priced annual estimate of what that watcher extracts ("$420–$500/yr to them") or what the site pays it ("site pays $x/yr") — and a block toggle where blocking is offered. Then one line: "+9 more in the full report." The money column is not detail; it is the product's differentiator. A watcher list without the invoice is any blocker's list — showing *what you're worth to them* is the reason Pulse exists, so it survives every future decluttering. Unpriced and unclassified watchers show no figure (never an invented one).
-3. **One primary action.** Open the full report.
-4. **Footer.** Site origin · "Debug" link (opens Debug view).
+1. **The mirror.** The actual values this page could read: timezone, screen/pixel ratio, platform/language, and request-contact context. Then one narrowing sentence: "That narrows 330,000,000 people to about N." If no readable surface has arrived yet, this block is absent rather than padded with placeholders.
+2. **Verdict sentence.** One sentence carrying the headline watcher number with meaning attached: "14 watchers on this page. 3 gave you nothing back — worth $12–48/yr to them."
+3. **The watchers.** Top 3–5 by severity, worst first: name (or hostname if not yet classified), one category word, **the money** — the priced annual estimate of what that watcher extracts ("$420–$500/yr to them") or what the site pays it ("site pays $x/yr") — and a block toggle where blocking is offered. Then one line: "+9 more in the full report." The money column is not detail; it is the product's differentiator. A watcher list without the invoice is any blocker's list — showing *what you're worth to them* is the reason Pulse exists, so it survives every future decluttering. Unpriced and unclassified watchers show no figure (never an invented one).
+4. **One primary action.** Open the full report.
+5. **Footer.** Site origin · "Debug" link (opens Debug view).
 
 **Deleted from the popup** (moves to Report or Debug, or dies):
 
@@ -63,9 +64,10 @@ The popup renders exactly this, in this order, and nothing else:
 Four acts, in order. Each act is one section; appendices are collapsed by default.
 
 1. **Verdict** — same sentence as the popup, verbatim.
-2. **The picture** — the Connections graph (Network default; Actors / Money / Timeline lenses). Category breakdown chips live here, as the graph's caption.
-3. **Who, and what you can do** — the full watcher list, grouped by functional category (Advertising, Analytics, Session Replay, Data Brokers, Marketing & Sales Tools, Unidentified), worst-first within groups. Block/opt-out actions inline. This absorbs the popup's old Blocked/Exposed/Cannot-block sections and the "Stop at source" material.
-4. **The money** — value ledger summary with "show the math" disclosure.
+2. **The narrowing** — the mirror expanded into a candidate-pool chain using the same additive model as the proof app. It starts from 330,000,000 and shows only readable values that were actually observed by the exposure scan. It states that the model is estimated and that joint entropy is lower than a naive independent sum.
+3. **The picture** — the Connections graph (Network default; Actors / Money / Timeline lenses). Category breakdown chips live here, as the graph's caption.
+4. **Who, and what you can do** — the full watcher list, grouped by functional category (Advertising, Analytics, Session Replay, Data Brokers, Marketing & Sales Tools, Unidentified), worst-first within groups. Block/opt-out actions inline. This absorbs the popup's old Blocked/Exposed/Cannot-block sections and the "Stop at source" material.
+5. **The money** — value ledger summary with "show the math" disclosure.
 
 Appendix (collapsed): exposure scan, evidence-type matrix, storage/cache observations, per-event tables.
 
@@ -83,7 +85,7 @@ Exemption: report appendix content explicitly addressed to auditors may use pipe
 
 ## Congruence rules
 
-- Every number on any surface derives from `summaryMetrics`, `functionalCategoryBreakdown`, or `rankObservers`. No surface-local counting.
+- Every number on any surface derives from `summaryMetrics`, `functionalCategoryBreakdown`, `rankObservers`, or `buildNarrowingModel`. No surface-local counting.
 - The popup's "+N more" must equal watching minus names shown.
 - The popup verdict and report verdict are the same rendered component with the same inputs.
 - Category grouping totals must sum to the watching count (enforced in tests already).

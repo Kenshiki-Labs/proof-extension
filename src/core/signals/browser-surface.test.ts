@@ -69,4 +69,49 @@ describe("collectBrowserSurfaceExposure", () => {
     expect(details.rtt).toBe("unavailable")
     expect(details.saveData).toBe("unavailable")
   })
+
+  it("reads the GPU renderer when WebGL exposes it, naming the hardware", () => {
+    stubMatchMedia()
+    // Real, unmasked WebGL: getExtension returns the debug info, getParameter
+    // returns the hardware string — the alarming, unconsented, unblockable read.
+    const gl = {
+      getExtension: (name: string) => (name === "WEBGL_debug_renderer_info" ? { UNMASKED_RENDERER_WEBGL: 37446 } : null),
+      getParameter: (param: number) => (param === 37446 ? "ANGLE (Apple, Apple M2 Pro, OpenGL 4.1)" : "")
+    }
+    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(gl as unknown as RenderingContext)
+
+    const [event] = collectBrowserSurfaceExposure("https://example.test")
+    expect(event?.details?.gpuRenderer).toBe("ANGLE (Apple, Apple M2 Pro, OpenGL 4.1)")
+    expect(event?.details?.gpuMasked).toBe("false")
+    expect(event?.evidence.some((line) => line.includes("Apple M2 Pro"))).toBe(true)
+  })
+
+  it("treats a software/blocked renderer as masked — a defense finding, not a value", () => {
+    stubMatchMedia()
+    const gl = {
+      getExtension: (name: string) => (name === "WEBGL_debug_renderer_info" ? { UNMASKED_RENDERER_WEBGL: 37446 } : null),
+      getParameter: () => "Google SwiftShader"
+    }
+    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(gl as unknown as RenderingContext)
+
+    const [event] = collectBrowserSurfaceExposure("https://example.test")
+    // Masked value is withheld from the narrowing (reported unavailable) but
+    // the defense itself is recorded.
+    expect(event?.details?.gpuRenderer).toBe("unavailable")
+    expect(event?.details?.gpuMasked).toBe("true")
+    expect(event?.evidence.some((line) => line.includes("hid your GPU"))).toBe(true)
+  })
+
+  it("never transmits — the read constructs no request", () => {
+    stubMatchMedia()
+    const fetchSpy = vi.fn()
+    const beaconSpy = vi.fn()
+    vi.stubGlobal("fetch", fetchSpy)
+    vi.stubGlobal("navigator", { ...navigator, sendBeacon: beaconSpy })
+
+    collectBrowserSurfaceExposure("https://example.test")
+
+    expect(fetchSpy).not.toHaveBeenCalled()
+    expect(beaconSpy).not.toHaveBeenCalled()
+  })
 })

@@ -29,7 +29,7 @@
     "vocab:analyze": "node scripts/analyze-vocabulary.mjs --write",
     "vocab:check": "node scripts/analyze-vocabulary.mjs --check",
     "typecheck": "tsc --noEmit",
-    "test:surface-congruence": "vitest run src/core/report/surface-metrics.test.ts src/core/report/metrics.test.ts src/core/report/ui-callchain.test.ts src/core/report/display.test.ts src/core/report/badge.test.ts src/core/report/watchers.test.ts src/core/report/vocabulary-guard.test.ts --coverage=false",
+    "test:surface-congruence": "vitest run src/core/report/surface-metrics.test.ts src/core/report/metrics.test.ts src/core/report/ui-callchain.test.ts src/core/report/display.test.ts src/core/report/badge.test.ts src/core/report/watchers.test.ts src/core/report/narrowing.test.ts src/core/report/vocabulary-guard.test.ts --coverage=false",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:browser": "vitest --config vitest.browser.config.ts run",
@@ -93,6 +93,9 @@
     ],
     "host_permissions": [
       "<all_urls>"
-    ]
+    ],
+    "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://gate.kenshikilabs.com https://proof.kenshikilabs.com; img-src 'self' data: https://api.mapbox.com"
+    }
   }
 }

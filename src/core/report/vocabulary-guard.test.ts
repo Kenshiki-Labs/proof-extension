@@ -51,8 +51,12 @@ describe("surface vocabulary guard", () => {
 
   it("keeps the report's act titles in user language and its debug sections gone", () => {
     const report = readFileSync(resolve(root, "src/tabs/report.tsx"), "utf8")
+    const narrowingPanel = readFileSync(resolve(root, "src/components/NarrowingPanel.tsx"), "utf8")
 
-    const actTitles = [...report.matchAll(/SectionTitle number="0[123]" title="([^"]+)"/g)].map((match) => match[1] ?? "")
+    const actTitles = [
+      ...[...report.matchAll(/SectionTitle number="0[234]" title="([^"]+)"/g)].map((match) => match[1] ?? ""),
+      ...[...narrowingPanel.matchAll(/<h2[^>]*>(?:\{[^}]+\})?0?1 · ([^<]+)<\/h2>/g)].map((match) => match[1] ?? "")
+    ]
     expect(actTitles.length).toBeGreaterThanOrEqual(3)
     for (const title of actTitles) {
       for (const pattern of BANNED_ON_PRODUCT_SURFACES) {

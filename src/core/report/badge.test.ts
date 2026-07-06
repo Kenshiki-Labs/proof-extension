@@ -29,9 +29,13 @@ describe("badge text", () => {
     expect(badgeTextForEventCount(100)).toBe("99+")
   })
 
-  it("uses the same raw page-event count as the visible Events metric", () => {
+  it("shows the distinct-watcher headline count, not the raw event count", () => {
+    // The badge must equal the popup verdict's watcher number. Two watchers
+    // (a named tracker + one unclassified third-party host); first-party
+    // storage, the exposure scan, and diagnostics are never watchers.
     let summary = createEmptySiteSummary("https://example.test", 1)
-    summary = upsertEvent(summary, event({ id: "tracker" }))
+    summary = upsertEvent(summary, event({ id: "tracker", trackerId: "meta-pixel", companyId: "meta" }))
+    summary = upsertEvent(summary, event({ id: "unknown", details: { host: "cdn.example" }, evidenceTier: "observed" }))
     summary = upsertEvent(summary, event({ id: "storage", firstParty: true, source: "api-hook", eventType: "storage_write" }))
     summary = upsertEvent(summary, event({ id: "exposure", firstParty: true, source: "extension-scan", eventType: "browser_surface" }))
     summary = upsertEvent(summary, event({ id: "diag", firstParty: true, source: "content", eventType: "extension_diagnostic" }))

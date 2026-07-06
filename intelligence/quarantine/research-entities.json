@@ -7209,65 +7209,6 @@
       ]
     },
     {
-      "id": "comscore-inc",
-      "canonicalName": "Comscore, Inc",
-      "aliases": [
-        "Comscore Inc"
-      ],
-      "domains": [
-        "comscore.com",
-        "thetradedesk.com"
-      ],
-      "facets": {
-        "companyIds": [],
-        "trackerIds": [],
-        "broker2025Ids": [
-          "comscoreinc_c_f1d54b84",
-          "sambatvinc_s_00dc50cb"
-        ],
-        "caRegistry2026Ids": [
-          "comscore-inc"
-        ],
-        "defenseDestinationIds": []
-      },
-      "joins": [
-        {
-          "key": "broker2025:comscoreinc_c_f1d54b84",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record comscoreinc_c_f1d54b84",
-            "name: Comscore, Inc.",
-            "registrable domains: comscore.com"
-          ]
-        },
-        {
-          "key": "broker2025:sambatvinc_s_00dc50cb",
-          "method": "domain",
-          "confidence": 0.95,
-          "confidenceLabel": "high",
-          "reasons": [
-            "2025 registry merge record sambatvinc_s_00dc50cb",
-            "name: Free Stream Media Corp.",
-            "registrable domains: comscore.com, samba.tv, thetradedesk.com"
-          ]
-        },
-        {
-          "key": "ca2026:comscore-inc",
-          "method": "anchor",
-          "confidence": 1,
-          "confidenceLabel": "confirmed",
-          "reasons": [
-            "CA 2026 registry record comscore-inc",
-            "DBA: Comscore Inc",
-            "name: Comscore, Inc",
-            "registrable domains: comscore.com, comscore.com"
-          ]
-        }
-      ]
-    },
-    {
       "id": "connatix-native-exchange-inc",
       "canonicalName": "Connatix Native Exchange Inc.",
       "aliases": [],

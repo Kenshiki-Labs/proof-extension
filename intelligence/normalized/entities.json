@@ -25,7 +25,7 @@
   "scope": {
     "purpose": "extension_runtime",
     "rule": "Keep entities with runtime companyIds or trackerIds; quarantine broker-only and defense-only entities.",
-    "quarantinedEntityCount": 937,
+    "quarantinedEntityCount": 936,
     "quarantinePath": "intelligence/quarantine/research-entities.json"
   },
   "records": [
@@ -279,6 +279,81 @@
           "reasons": [
             "registrable domains: braze.com, braze.eu",
             "runtime company braze"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "comscore-inc",
+      "canonicalName": "comScore / ScorecardResearch",
+      "aliases": [
+        "Comscore Inc",
+        "Comscore, Inc."
+      ],
+      "domains": [
+        "comscore.com",
+        "scorecardresearch.com",
+        "thetradedesk.com"
+      ],
+      "facets": {
+        "companyIds": [
+          "comscore"
+        ],
+        "trackerIds": [
+          "comscore"
+        ],
+        "broker2025Ids": [
+          "comscoreinc_c_f1d54b84",
+          "sambatvinc_s_00dc50cb"
+        ],
+        "caRegistry2026Ids": [
+          "comscore-inc"
+        ],
+        "defenseDestinationIds": []
+      },
+      "joins": [
+        {
+          "key": "broker2025:comscoreinc_c_f1d54b84",
+          "method": "domain",
+          "confidence": 0.95,
+          "confidenceLabel": "high",
+          "reasons": [
+            "2025 registry merge record comscoreinc_c_f1d54b84",
+            "name: Comscore, Inc.",
+            "registrable domains: comscore.com"
+          ]
+        },
+        {
+          "key": "broker2025:sambatvinc_s_00dc50cb",
+          "method": "domain",
+          "confidence": 0.95,
+          "confidenceLabel": "high",
+          "reasons": [
+            "2025 registry merge record sambatvinc_s_00dc50cb",
+            "name: Free Stream Media Corp.",
+            "registrable domains: comscore.com, samba.tv, thetradedesk.com"
+          ]
+        },
+        {
+          "key": "ca2026:comscore-inc",
+          "method": "name",
+          "confidence": 0.8,
+          "confidenceLabel": "medium",
+          "reasons": [
+            "CA 2026 registry record comscore-inc",
+            "DBA: Comscore Inc",
+            "name: Comscore, Inc",
+            "registrable domains: comscore.com, comscore.com"
+          ]
+        },
+        {
+          "key": "company:comscore",
+          "method": "anchor",
+          "confidence": 1,
+          "confidenceLabel": "confirmed",
+          "reasons": [
+            "registrable domains: scorecardresearch.com",
+            "runtime company comscore"
           ]
         }
       ]
@@ -1566,6 +1641,39 @@
             "defense destination snapchat_lockdown",
             "display name: Snapchat privacy lockdown",
             "registrable domains: snapchat.com"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sourcepoint",
+      "canonicalName": "Sourcepoint",
+      "aliases": [
+        "Sourcepoint Technologies, Inc."
+      ],
+      "domains": [
+        "privacy-mgmt.com"
+      ],
+      "facets": {
+        "companyIds": [
+          "sourcepoint"
+        ],
+        "trackerIds": [
+          "sourcepoint"
+        ],
+        "broker2025Ids": [],
+        "caRegistry2026Ids": [],
+        "defenseDestinationIds": []
+      },
+      "joins": [
+        {
+          "key": "company:sourcepoint",
+          "method": "anchor",
+          "confidence": 1,
+          "confidenceLabel": "confirmed",
+          "reasons": [
+            "registrable domains: privacy-mgmt.com",
+            "runtime company sourcepoint"
           ]
         }
       ]

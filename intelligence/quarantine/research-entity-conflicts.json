@@ -883,7 +883,7 @@
       "severity": "high",
       "status": "needs_review",
       "entityIds": [
-        "comscore-inc",
+        "comscore-scorecardresearch",
         "samba-tv-inc"
       ],
       "facetKeys": [],
@@ -895,7 +895,7 @@
           "thetradedesk.com"
         ],
         "entityIds": [
-          "comscore-inc",
+          "comscore-scorecardresearch",
           "samba-tv-inc"
         ]
       }
@@ -906,14 +906,14 @@
       "severity": "high",
       "status": "needs_review",
       "entityIds": [
-        "comscore-inc",
+        "comscore-scorecardresearch",
         "samba-tv-inc"
       ],
       "facetKeys": [],
       "details": {
         "domain": "samba.tv",
         "existingEntityId": "samba-tv-inc",
-        "attemptedEntityId": "comscore-inc",
+        "attemptedEntityId": "comscore-scorecardresearch",
         "attemptedName": "Free Stream Media Corp."
       }
     },

@@ -3,6 +3,13 @@ import { extname, join } from "node:path"
 
 const CODE_EXTENSIONS = new Set([".css", ".js", ".jsx", ".ts", ".tsx"])
 const TOKEN_FILES = new Set(["src/style.css", "src/components/system/tokens.ts"])
+// Colors passed to browser/canvas APIs that REQUIRE a literal value, not UI
+// styling: the canvas-fingerprint probe draws specific colors to a <canvas>
+// to produce a stable device hash, and the Chrome action badge API
+// (setBadgeBackgroundColor) takes a literal color string. The raw-color ban
+// is a UI-styling guardrail and does not apply to these. Only the raw-color
+// check is skipped for these files; inline-style and font-size checks still run.
+const CANVAS_COLOR_FILES = new Set(["src/core/signals/browser-surface.ts", "src/background.ts"])
 const IGNORED_DIRS = new Set([".git", ".plasmo", "build", "coverage", "node_modules"])
 const RAW_COLOR_PATTERN = /#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla)\(/g
 const FONT_SIZE_PATTERN = /font-size:\s*([^;]+)/g
@@ -26,8 +33,10 @@ function checkFile(filePath) {
 
   if (/\bstyle\s*=/.test(text)) errors.push("Inline style attributes/props are banned. Add a tokenized primitive instead.")
 
-  for (const match of text.matchAll(RAW_COLOR_PATTERN)) {
-    errors.push(`Raw color '${match[0]}' is banned outside src/style.css.`)
+  if (!CANVAS_COLOR_FILES.has(filePath)) {
+    for (const match of text.matchAll(RAW_COLOR_PATTERN)) {
+      errors.push(`Raw color '${match[0]}' is banned outside src/style.css.`)
+    }
   }
 
   if (filePath.endsWith(".css")) {

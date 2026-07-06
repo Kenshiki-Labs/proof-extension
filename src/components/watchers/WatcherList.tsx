@@ -73,8 +73,12 @@ export default function WatcherList({
   if (model.rows.length === 0) return null
 
   return (
-    <div>
-      <ul className="mt-2 grid gap-1.5">
+    <div className="min-w-0">
+      {/* flex-col, not grid: a single implicit grid column is content-sized
+          (auto), so it grows to the widest untruncated row and the row's
+          flex-1/truncate never gets a width bound — the source of the popup's
+          horizontal overflow. Flex-col stretches each row to the container. */}
+      <ul className="mt-2 flex flex-col gap-1.5">
         {model.rows.map((row) => (
           <WatcherRowView blockedTrackerIds={blockedTrackerIds} key={row.key} onToggleBlocking={onToggleBlocking} row={row} />
         ))}

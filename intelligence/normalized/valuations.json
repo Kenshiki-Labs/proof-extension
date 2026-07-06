@@ -16,7 +16,7 @@
     "reviewer": "Kenshiki",
     "notes": "Valuation estimates only. This artifact does not support tracker identity, collection behavior, blocking policy, or remediation claims."
   },
-  "sourceFindingCount": 42,
+  "sourceFindingCount": 44,
   "records": [
     {
       "trackerId": "33across",
@@ -207,6 +207,38 @@
           "braze-valuation-2026"
         ],
         "lastUpdated": "2026-07-03",
+        "confidence": "estimated"
+      }
+    },
+    {
+      "trackerId": "comscore",
+      "subjectEntityId": "comscore-inc",
+      "sourceFindingIds": [
+        "comscore-valuation-placeholder-2026"
+      ],
+      "perPersonValue": {
+        "schemaVersion": 1,
+        "currency": "USD",
+        "geography": "US",
+        "userProfile": "average_adult_internet_user",
+        "valueType": "revenue",
+        "monetizationFlow": "programmatic",
+        "perVisit": {
+          "microdollars": 0,
+          "dollars": 0,
+          "basis": "zero placeholder pending promoted valuation source"
+        },
+        "annual": {
+          "low_usd": 0,
+          "high_usd": 0,
+          "midpoint_usd": 0
+        },
+        "valueNote": "Audience-measurement beacons support publisher analytics and advertising-market reporting; no comScore-specific per-person valuation is promoted yet.",
+        "sourceNote": "Zero placeholder pending comScore-specific valuation source promotion.",
+        "sourceFindingIds": [
+          "comscore-valuation-placeholder-2026"
+        ],
+        "lastUpdated": "2026-07-05",
         "confidence": "estimated"
       }
     },
@@ -1168,6 +1200,38 @@
         ],
         "lastUpdated": "2026-07-03",
         "confidence": "sourced"
+      }
+    },
+    {
+      "trackerId": "sourcepoint",
+      "subjectEntityId": "sourcepoint",
+      "sourceFindingIds": [
+        "sourcepoint-valuation-placeholder-2026"
+      ],
+      "perPersonValue": {
+        "schemaVersion": 1,
+        "currency": "USD",
+        "geography": "US",
+        "userProfile": "average_adult_internet_user",
+        "valueType": "cost",
+        "monetizationFlow": "operator_saas",
+        "perVisit": {
+          "microdollars": 0,
+          "dollars": 0,
+          "basis": "operator SaaS cost not yet priced per visit"
+        },
+        "annual": {
+          "low_usd": 0,
+          "high_usd": 0,
+          "midpoint_usd": 0
+        },
+        "valueNote": "Consent-management infrastructure is treated as site operator tooling until a sourced per-person valuation exists.",
+        "sourceNote": "No Sourcepoint-specific per-person economics promoted yet.",
+        "sourceFindingIds": [
+          "sourcepoint-valuation-placeholder-2026"
+        ],
+        "lastUpdated": "2026-07-05",
+        "confidence": "estimated"
       }
     },
     {

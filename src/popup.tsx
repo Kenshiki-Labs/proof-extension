@@ -9,11 +9,13 @@ import { RuntimeMessageSchema } from "~core/contracts/schemas"
 import { EMPTY_SUMMARY, parseSiteSummaryResponse } from "~core/report/display"
 import { buildWatcherListModel } from "~core/report/watchers"
 import Button from "~components/system/Button"
+import { NarrowingMirror } from "~components/NarrowingPanel"
 import SiteLogo from "~components/system/SiteLogo"
 import SurfaceSection from "~components/system/SurfaceSection"
 import VerdictBanner from "~components/VerdictBanner"
 import WatcherList from "~components/watchers/WatcherList"
 import { TYPE, UI } from "~components/system/tokens"
+import { buildNarrowingModel } from "~core/report/narrowing"
 import type { SiteSummary, UserSettings } from "~core/domain/types"
 
 // The glance surface (docs/surface-contract.md): under ten seconds, four
@@ -53,7 +55,6 @@ function IndexPopup() {
   const [summary, setSummary] = useState<SiteSummary>(EMPTY_SUMMARY)
   const [settings, setSettings] = useState<UserSettings>(EMPTY_SETTINGS)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [showReportConfirm, setShowReportConfirm] = useState(false)
 
   useEffect(() => {
     let liveTabId: number | undefined
@@ -136,22 +137,9 @@ function IndexPopup() {
     await browser.tabs.create({ url: browser.runtime.getURL(`tabs/report.html${query}`) })
   }
 
-  async function requestFullReport() {
-    if (settings.skipReportOpenConfirm) {
-      await openFullReport()
-      return
-    }
-
-    setShowReportConfirm(true)
-  }
-
-  async function openFullReportAndRemember() {
-    setSettings((current) => ({ ...current, skipReportOpenConfirm: true }))
-    await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { skipReportOpenConfirm: true } }).catch(() => undefined)
-    await openFullReport()
-  }
 
   const watcherModel = buildWatcherListModel(summary.events, summary.origin, POPUP_WATCHER_LIMIT)
+  const narrowingModel = buildNarrowingModel(summary.events)
 
   return (
     <main className="max-h-[640px] min-w-[480px] overflow-y-auto bg-background p-4 font-body text-foreground">
@@ -162,20 +150,6 @@ function IndexPopup() {
         </HeaderIconButton>
       </header>
 
-      {showReportConfirm ? (
-        <section className={`mt-3.5 ${UI.panel} ${UI.inset}`}>
-          <h2 className={TYPE.label}>Open full report in a new tab?</h2>
-          <p className={`${TYPE.small} mt-2`}>
-            The report opens an extension tab with the full watcher list, the connection graph, money estimates, and actions for this page.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button onClick={() => openFullReport().catch(() => undefined)}>Open report</Button>
-            <Button onClick={() => openFullReportAndRemember().catch(() => undefined)} variant="secondary">Open and don't ask again</Button>
-            <Button onClick={() => setShowReportConfirm(false)} variant="secondary">Not now</Button>
-          </div>
-        </section>
-      ) : null}
-
       {loadError ? (
         <section className="mt-3.5 border border-danger bg-card p-3 shadow-sm" role="alert">
           <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-danger">Observer connection failed</h2>
@@ -183,6 +157,7 @@ function IndexPopup() {
         </section>
       ) : null}
 
+      <NarrowingMirror model={narrowingModel} />
       <VerdictBanner compact summary={summary} />
 
       {watcherModel.rows.length > 0 ? (
@@ -196,7 +171,7 @@ function IndexPopup() {
       ) : null}
 
       <div className="mt-3.5">
-        <Button disabled={summary.tabId < 0} onClick={() => requestFullReport().catch(() => undefined)}>
+        <Button disabled={summary.tabId < 0} onClick={() => openFullReport().catch(() => undefined)}>
           Open full report
         </Button>
       </div>

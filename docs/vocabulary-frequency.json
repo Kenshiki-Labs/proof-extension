@@ -3,11 +3,11 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "0e8390ff720056b713a375836eae958516e8c67bdd6c25d92f2fd36d86386c11"
+      "sha256": "a8d83c7dc3f0d0286d8e8beae666739b63eafc7aa11f533e4eb28328a0fe2a3d"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "720de634b3bda7eb054af2904d07dc59f9f710f76e29c5bf5d2e7c0836201230"
+      "sha256": "d14101937f299e6904d2059700a74c961e5e3160c3691501b654633f785b6cc2"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
@@ -15,7 +15,7 @@
     },
     {
       "file": "src/core/report/display.ts",
-      "sha256": "43393075c94cdb7734abfa54b4794791260bfbf84b919a475259e38e75dd89cc"
+      "sha256": "434d4a5ae98a165a3bbe24b4ddcf1b8756ab75e500eee8d7c691c2ac44156438"
     },
     {
       "file": "src/core/domain/valuation.ts",
@@ -82,10 +82,10 @@
     },
     {
       "term": "Evidence",
-      "total": 25,
+      "total": 29,
       "files": {
         "src/popup.tsx": 1,
-        "src/tabs/report.tsx": 20,
+        "src/tabs/report.tsx": 24,
         "src/core/report/display.ts": 4
       }
     },
@@ -105,9 +105,9 @@
     },
     {
       "term": "Full report",
-      "total": 2,
+      "total": 1,
       "files": {
-        "src/popup.tsx": 2
+        "src/popup.tsx": 1
       }
     },
     {
@@ -125,11 +125,11 @@
     },
     {
       "term": "Observations",
-      "total": 41,
+      "total": 47,
       "files": {
-        "src/tabs/report.tsx": 18,
+        "src/tabs/report.tsx": 23,
         "src/components/value/ValueLedgerView.tsx": 7,
-        "src/core/report/display.ts": 12,
+        "src/core/report/display.ts": 13,
         "src/core/domain/valuation.ts": 4
       }
     },
@@ -194,10 +194,10 @@
     },
     {
       "term": "Watching",
-      "total": 5,
+      "total": 7,
       "files": {
         "src/popup.tsx": 1,
-        "src/tabs/report.tsx": 2,
+        "src/tabs/report.tsx": 4,
         "src/core/domain/valuation.ts": 2
       }
     },
@@ -292,11 +292,11 @@
   "topWords": [
     {
       "word": "mt-",
-      "count": 45
+      "count": 47
     },
     {
       "word": "core",
-      "count": 29
+      "count": 31
     },
     {
       "word": "gap-",
@@ -304,6 +304,10 @@
     },
     {
       "word": "components",
+      "count": 22
+    },
+    {
+      "word": "page",
       "count": 19
     },
     {
@@ -315,8 +319,8 @@
       "count": 17
     },
     {
-      "word": "page",
-      "count": 16
+      "word": "not",
+      "count": 15
     },
     {
       "word": "browser",
@@ -327,7 +331,7 @@
       "count": 14
     },
     {
-      "word": "not",
+      "word": "grid",
       "count": 14
     },
     {
@@ -335,23 +339,19 @@
       "count": 13
     },
     {
-      "word": "grid",
+      "word": "font-display",
+      "count": 13
+    },
+    {
+      "word": "font-semibold",
+      "count": 13
+    },
+    {
+      "word": "grid-cols-",
       "count": 13
     },
     {
       "word": "flex-wrap",
-      "count": 12
-    },
-    {
-      "word": "font-display",
-      "count": 12
-    },
-    {
-      "word": "font-semibold",
-      "count": 12
-    },
-    {
-      "word": "grid-cols-",
       "count": 12
     },
     {
@@ -379,6 +379,14 @@
       "count": 9
     },
     {
+      "word": "observed",
+      "count": 9
+    },
+    {
+      "word": "report",
+      "count": 9
+    },
+    {
       "word": "revenue",
       "count": 9
     },
@@ -400,22 +408,14 @@
     },
     {
       "word": "identity",
-      "count": 7
+      "count": 8
     },
     {
       "word": "justify-between",
-      "count": 7
+      "count": 8
     },
     {
       "word": "network",
-      "count": 7
-    },
-    {
-      "word": "observed",
-      "count": 7
-    },
-    {
-      "word": "report",
       "count": 7
     },
     {
@@ -459,6 +459,10 @@
       "count": 6
     },
     {
+      "word": "text-base",
+      "count": 6
+    },
+    {
       "word": "what",
       "count": 6
     },
@@ -479,19 +483,15 @@
       "count": 5
     },
     {
+      "word": "local",
+      "count": 5
+    },
+    {
       "word": "min-w-",
       "count": 5
     },
     {
-      "word": "settings",
-      "count": 5
-    },
-    {
       "word": "storage",
-      "count": 5
-    },
-    {
-      "word": "text-base",
       "count": 5
     },
     {
@@ -500,6 +500,10 @@
     },
     {
       "word": "text-muted-foreground",
+      "count": 5
+    },
+    {
+      "word": "tracking-tight",
       "count": 5
     },
     {
@@ -543,11 +547,15 @@
       "count": 4
     },
     {
-      "word": "items-baseline",
+      "word": "gap-x-",
       "count": 4
     },
     {
-      "word": "local",
+      "word": "gap-y-",
+      "count": 4
+    },
+    {
+      "word": "items-baseline",
       "count": 4
     },
     {
@@ -571,7 +579,7 @@
       "count": 4
     },
     {
-      "word": "secondary",
+      "word": "settings",
       "count": 4
     },
     {
@@ -600,14 +608,6 @@
     },
     {
       "word": "their",
-      "count": 4
-    },
-    {
-      "word": "timeline",
-      "count": 4
-    },
-    {
-      "word": "tools",
       "count": 4
     }
   ]

@@ -172,6 +172,34 @@
       }
     },
     {
+      "id": "comscore-valuation-placeholder-2026",
+      "subjectEntityId": "comscore-inc",
+      "metric": "annual_revenue_value_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "revenue",
+      "monetizationFlow": "programmatic",
+      "perVisitMicrodollars": 0,
+      "perVisitBasis": "zero placeholder pending promoted valuation source",
+      "annualLowUsd": 0,
+      "annualHighUsd": 0,
+      "valueNote": "Audience-measurement beacons support publisher analytics and advertising-market reporting; no comScore-specific per-person valuation is promoted yet.",
+      "sourceNote": "Zero placeholder pending comScore-specific valuation source promotion.",
+      "publisher": "Kenshiki placeholder (no external per-person source)",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-05",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "comscore"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Placeholder $0 audience-measurement valuation; comScore-specific per-person economics not yet promoted."
+      }
+    },
+    {
       "id": "crazyegg-valuation-2026",
       "subjectEntityId": "crazy-egg",
       "metric": "annual_operator_cost_us",
@@ -1009,6 +1037,34 @@
         ],
         "excludedTrackerIds": [],
         "notes": "Baseline projection for Snapchat Pixel; generated from runtime perPersonValue before market-research promotion."
+      }
+    },
+    {
+      "id": "sourcepoint-valuation-placeholder-2026",
+      "subjectEntityId": "sourcepoint",
+      "metric": "annual_operator_cost_us",
+      "currency": "USD",
+      "geography": "US",
+      "userProfile": "average_adult_internet_user",
+      "valueType": "cost",
+      "monetizationFlow": "operator_saas",
+      "perVisitMicrodollars": 0,
+      "perVisitBasis": "operator SaaS cost not yet priced per visit",
+      "annualLowUsd": 0,
+      "annualHighUsd": 0,
+      "valueNote": "Consent-management infrastructure is treated as site operator tooling until a sourced per-person valuation exists.",
+      "sourceNote": "No Sourcepoint-specific per-person economics promoted yet.",
+      "publisher": "Kenshiki placeholder (no external per-person source)",
+      "url": null,
+      "publishedAt": null,
+      "lastUpdated": "2026-07-05",
+      "confidence": "estimated",
+      "projection": {
+        "appliesToTrackerIds": [
+          "sourcepoint"
+        ],
+        "excludedTrackerIds": [],
+        "notes": "Placeholder $0 operator-SaaS cost; consent-management infrastructure not yet priced per person."
       }
     },
     {

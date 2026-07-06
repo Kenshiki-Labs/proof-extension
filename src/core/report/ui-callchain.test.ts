@@ -5,6 +5,7 @@ import type { ObserverEvent } from "~core/domain/types"
 import { createEmptySiteSummary, supersedeEvent, upsertEvent } from "~core/state/summaries"
 import { buildAtomicSignalRows, buildCopyPayload, compactEvents, exposureScanEvents, pageActivityEvents, persistenceSurfaceObservations, unclassifiedObservations } from "./display"
 import { summaryMetrics } from "./metrics"
+import { buildNarrowingModel } from "./narrowing"
 
 function event(overrides: Partial<ObserverEvent>): ObserverEvent {
   return {
@@ -171,6 +172,7 @@ describe("UI callchain integration", () => {
         firstParty: true,
         eventType: "browser_surface",
         policyLabel: "unknown_first_party",
+        details: { timezone: "America/Denver", screen: "1512x982", pixelRatio: 2, platform: "MacIntel", language: "en-US" },
         evidence: ["Browser APIs exposed passive surface fields to the extension scan."]
       }),
       event({
@@ -188,6 +190,7 @@ describe("UI callchain integration", () => {
     const verdict = buildVerdict(summary)
     const ranked = rankObservers(summary.events)
     const visibleAllObservedRows = compactEvents(pageActivityEvents(summary.events))
+    const narrowing = buildNarrowingModel(summary.events)
 
     expect(metrics).toMatchObject({
       observations: 6,
@@ -229,6 +232,9 @@ describe("UI callchain integration", () => {
     expect(unclassifiedObservations(summary.events).map((item) => item.event.details?.host)).toEqual(["cdn.example"])
     expect(persistenceSurfaceObservations(summary.events).map((item) => item.event.eventType).sort()).toEqual(["cache_validator_seen", "storage_write"])
     expect(exposureScanEvents(summary.events)).toHaveLength(1)
+    expect(narrowing.values).toEqual(["America/Denver", "1512x982 @2x", "MacIntel · en-US"])
+    expect(narrowing.steps.map((step) => step.key)).toEqual(["timezone", "screen", "platformLanguage"])
+    expect(narrowing.watching).toBe(metrics.watchingCompanies)
     expect(buildAtomicSignalRows(summary.events).map((row) => row.signal).sort()).toEqual([
       "cache_validator_seen",
       "request_seen",
