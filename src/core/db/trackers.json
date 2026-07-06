@@ -5458,13 +5458,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "6sense privacy policy",
+        "url": "https://6sense.com/privacy-policy/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Rendered in headless Chromium and confirmed as the vendor's own privacy policy on 2026-07-06 (7 policy signals, vendor identity present). Excerpt: \"INFORMATION WE COLLECT 3. HOW WE COLLECT PERSONAL INFORMATION 4. HOW WE USE PERSONAL INFORMATION 5. HOW WE SHARE PERSONAL INFORMATION 6. YOUR DATA RIGHTS – OPT-OUT AND CHOICE 7. EE\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (headless-browser fetch + verify)",
+      "notes": "Source-backed by headless-browser fetch+verify against 6sense.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "6sense",
     "observes": {
@@ -5895,13 +5903,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Amazon Ads privacy policy",
+        "url": "https://www.amazon.com/gp/help/customer/display.html/?nodeId=GX7NJQ4ZB8MHFRNJ&ref_=a20m_us_fnav_l_prvcy_us&ie=UTF8",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Rendered in headless Chromium and confirmed as the vendor's own privacy policy on 2026-07-06 (6 policy signals, vendor identity present). Excerpt: \"information we collect: Information You Give Us: We receive and store any information you provide in relation to Amazon Services. You can choose not to provide certain information,\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (headless-browser fetch + verify)",
+      "notes": "Source-backed by headless-browser fetch+verify against www.amazon.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Amazon Ads",
     "observes": {

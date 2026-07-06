@@ -7,14 +7,14 @@ lastReviewed: 2026-07-06
 status: generated
 ---
 
-> Generated from commit `6c337f7` by `pnpm db:baseline`. Do not hand-edit.
+> Generated from commit `6269080` by `pnpm db:baseline`. Do not hand-edit.
 
 ## Summary
 
 - Trackers: **44** (Phase 1 minimum: 25)
 - Companies: **44**, remediation records: **42**
 - SDK-global signatures: **38/44** trackers covered
-- Provenance: **4** seed / **40** source-backed
+- Provenance: **2** seed / **42** source-backed
 - Remediation: deletion link **44/44**, opt-out link **44/44**
 - Explanation coverage: **44/44**
 - Blocking-limit coverage: **44/44**
@@ -81,17 +81,17 @@ status: generated
 | id5 | identity-resolution | ID5 Technology Ltd | 1 | 0 | no | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | 33across | advertising | 33Across, Inc. | 2 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | tapad | cross-device-tracking | Experian plc | 1 | 0 | no | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
-| 6sense | behavioral-profiling | 6sense Insights, Inc. | 1 | 0 | no | seed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
+| 6sense | behavioral-profiling | 6sense Insights, Inc. | 1 | 0 | no | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
 | hubspot | marketing-automation | HubSpot, Inc. | 4 | 0 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
 | microsoft-ads | advertising | Microsoft Corporation | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| amazon-ads | advertising | Amazon.com, Inc. | 1 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | no |
+| amazon-ads | advertising | Amazon.com, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | no |
 | reddit-pixel | advertising | Reddit, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | no |
 | sourcepoint | consent-management | Sourcepoint Technologies, Inc. | 1 | 1 | no | source_backed | first_party_evidence | yes | yes | medium | 2026-07-05 | no |
 | comscore | analytics | Comscore, Inc. | 1 | 3 | yes | source_backed | first_party_evidence | yes | yes | medium | 2026-07-05 | no |
 
 ## Gap register
 
-- **Provenance**: 4 of 44 records are hand-authored seeds pending Tracker Radar / EasyPrivacy source backing (Phase 3).
+- **Provenance**: 2 of 44 records are hand-authored seeds pending Tracker Radar / EasyPrivacy source backing (Phase 3).
 - **All trackers are network_blockable** — no `content_mitigatable` or `observable_only` records exist yet, so only one of six blockability classes is exercised by the DB.
 - **No SDK-global signature** (6): segment, id5, 33across, tapad, 6sense, sourcepoint.
 - **Unknown remediation friction** (6): tiktok-pixel, braze, drift, optimizely, crazyegg, datadog-rum.
