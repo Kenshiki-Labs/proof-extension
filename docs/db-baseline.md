@@ -7,14 +7,14 @@ lastReviewed: 2026-07-06
 status: generated
 ---
 
-> Generated from commit `c3b9cc3` by `pnpm db:baseline`. Do not hand-edit.
+> Generated from commit `6c337f7` by `pnpm db:baseline`. Do not hand-edit.
 
 ## Summary
 
 - Trackers: **44** (Phase 1 minimum: 25)
 - Companies: **44**, remediation records: **42**
 - SDK-global signatures: **38/44** trackers covered
-- Provenance: **5** seed / **39** source-backed
+- Provenance: **4** seed / **40** source-backed
 - Remediation: deletion link **44/44**, opt-out link **44/44**
 - Explanation coverage: **44/44**
 - Blocking-limit coverage: **44/44**
@@ -49,7 +49,7 @@ status: generated
 | google-tag-manager | tag-manager | Alphabet Inc. | 1 | 2 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-01 | yes |
 | google-ads | advertising | Alphabet Inc. | 3 | 2 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-01 | yes |
 | meta-pixel | advertising | Meta Platforms, Inc. | 2 | 2 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-01 | yes |
-| tiktok-pixel | advertising | ByteDance Ltd. | 1 | 1 | yes | seed | manual_seed | yes | yes | unknown | 2026-07-01 | no |
+| tiktok-pixel | advertising | ByteDance Ltd. | 1 | 1 | yes | source_backed | manual_seed | yes | yes | unknown | 2026-07-01 | no |
 | linkedin-insight | advertising | Microsoft Corporation | 2 | 1 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-01 | no |
 | hotjar | session-replay | Contentsquare | 2 | 2 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-01 | yes |
 | mixpanel | product-analytics | Mixpanel, Inc. | 3 | 2 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-01 | yes |
@@ -91,7 +91,7 @@ status: generated
 
 ## Gap register
 
-- **Provenance**: 5 of 44 records are hand-authored seeds pending Tracker Radar / EasyPrivacy source backing (Phase 3).
+- **Provenance**: 4 of 44 records are hand-authored seeds pending Tracker Radar / EasyPrivacy source backing (Phase 3).
 - **All trackers are network_blockable** — no `content_mitigatable` or `observable_only` records exist yet, so only one of six blockability classes is exercised by the DB.
 - **No SDK-global signature** (6): segment, id5, 33across, tapad, 6sense, sourcepoint.
 - **Unknown remediation friction** (6): tiktok-pixel, braze, drift, optimizely, crazyegg, datadog-rum.

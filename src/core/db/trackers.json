@@ -805,13 +805,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "TikTok Pixel privacy policy",
+        "url": "https://www.tiktok.com/legal/page/us/privacy-policy/en",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (5 policy signals, vendor identity present). Excerpt: \"Information We Collect We collect your information in three ways: information that you provide, automatically collected information, and information from other sources. More detail\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
-      "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.tiktok.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "TikTok Pixel",
     "observes": {

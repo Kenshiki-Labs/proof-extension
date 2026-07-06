@@ -27,7 +27,9 @@ const FETCH_TIMEOUT_MS = 20_000
 
 // trackerId -> ordered candidate official policy URLs. First that verifies wins.
 const CANDIDATES = {
-  "tiktok-pixel": ["https://ads.tiktok.com/i18n/official/policy/privacy", "https://www.tiktok.com/legal/page/global/privacy-policy/en"],
+  // US variant found by the Haiku policy-finder loop — a readable static page,
+  // unlike the JS-rendered /global/ URL that returned thin text.
+  "tiktok-pixel": ["https://www.tiktok.com/legal/page/us/privacy-policy/en"],
   hotjar: ["https://www.hotjar.com/legal/policies/privacy/"],
   criteo: ["https://www.criteo.com/privacy/"],
   optimizely: ["https://www.optimizely.com/legal/privacy-policy/", "https://www.optimizely.com/privacy/"],
