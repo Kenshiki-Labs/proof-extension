@@ -1,7 +1,7 @@
 {
   "name": "proof-extension",
   "displayName": "Proof Extension",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "A browser-local observer panel for tracker detection, mitigation status, and source-level remediation routing.",
   "private": false,
   "license": "MIT",
@@ -95,7 +95,7 @@
       "<all_urls>"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://gate.kenshikilabs.com https://proof.kenshikilabs.com; img-src 'self' data: https://api.mapbox.com"
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https:; img-src 'self' data: https://api.mapbox.com"
     }
   }
 }

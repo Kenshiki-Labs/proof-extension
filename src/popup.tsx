@@ -13,9 +13,13 @@ import { NarrowingMirror } from "~components/NarrowingPanel"
 import SiteLogo from "~components/system/SiteLogo"
 import SurfaceSection from "~components/system/SurfaceSection"
 import VerdictBanner from "~components/VerdictBanner"
+import VisitFrequencyAsk from "~components/VisitFrequencyAsk"
 import WatcherList from "~components/watchers/WatcherList"
 import { TYPE, UI } from "~components/system/tokens"
 import { buildNarrowingModel } from "~core/report/narrowing"
+import { registrableDomain } from "~core/domain/party"
+import { rollupObservedValuations } from "~core/domain/valuation"
+import type { VisitFrequency } from "~core/domain/visit-frequency"
 import type { SiteSummary, UserSettings } from "~core/domain/types"
 
 // The glance surface (docs/surface-contract.md): under ten seconds, four
@@ -32,10 +36,19 @@ const EMPTY_SETTINGS: UserSettings = {
   mitigateCanvas: false,
   mitigateAudio: false,
   mitigateWebgl: false,
-  skipReportOpenConfirm: false
+  skipReportOpenConfirm: false,
+  siteVisitFrequency: {}
 }
 
 const POPUP_WATCHER_LIMIT = 5
+
+function domainForOrigin(origin: string): string | null {
+  try {
+    return registrableDomain(new URL(origin).hostname) || null
+  } catch {
+    return null
+  }
+}
 
 function HeaderIconButton({ label, onClick, disabled = false, children }: { label: string; onClick: () => void; disabled?: boolean; children: React.ReactNode }) {
   return (
@@ -137,9 +150,23 @@ function IndexPopup() {
     await browser.tabs.create({ url: browser.runtime.getURL(`tabs/report.html${query}`) })
   }
 
+  async function openContractAudit() {
+    if (summary.tabId < 0) return
+    await browser.tabs.create({ url: browser.runtime.getURL(`tabs/contract.html?tabId=${summary.tabId}`) })
+  }
+
 
   const watcherModel = buildWatcherListModel(summary.events, summary.origin, POPUP_WATCHER_LIMIT)
   const narrowingModel = buildNarrowingModel(summary.events)
+  const siteDomain = domainForOrigin(summary.origin)
+  const valuationRollup = rollupObservedValuations(summary.events)
+
+  async function answerVisitFrequency(frequency: VisitFrequency) {
+    if (!siteDomain) return
+    const siteVisitFrequency = { ...settings.siteVisitFrequency, [siteDomain]: frequency }
+    setSettings((current) => ({ ...current, siteVisitFrequency }))
+    await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { siteVisitFrequency } }).catch(() => undefined)
+  }
 
   return (
     <main className="max-h-[640px] min-w-[480px] overflow-y-auto bg-background p-4 font-body text-foreground">
@@ -159,6 +186,13 @@ function IndexPopup() {
 
       <NarrowingMirror model={narrowingModel} />
       <VerdictBanner compact summary={summary} />
+      <VisitFrequencyAsk
+        compact
+        domain={siteDomain}
+        frequency={siteDomain ? (settings.siteVisitFrequency[siteDomain] ?? null) : null}
+        onAnswer={(frequency) => answerVisitFrequency(frequency).catch(() => undefined)}
+        thisVisitUsd={valuationRollup.thisVisitUsd}
+      />
 
       {watcherModel.rows.length > 0 ? (
         <SurfaceSection className={`mt-3.5 ${UI.panel} ${UI.inset}`} icon={Eye} title="Who is watching — worst first">
@@ -178,9 +212,18 @@ function IndexPopup() {
 
       <footer className={`${TYPE.small} mt-3.5 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-2.5`}>
         <span className="break-all">{summary.origin}</span>
-        <button className="underline hover:text-foreground" onClick={() => openDebugView().catch(() => undefined)} type="button">
-          Debug data
-        </button>
+        <span className="flex items-center gap-3">
+          <button
+            className="underline hover:text-foreground disabled:no-underline disabled:opacity-40"
+            disabled={summary.tabId < 0}
+            onClick={() => openContractAudit().catch(() => undefined)}
+            type="button">
+            What you agreed to
+          </button>
+          <button className="underline hover:text-foreground" onClick={() => openDebugView().catch(() => undefined)} type="button">
+            Debug data
+          </button>
+        </span>
       </footer>
     </main>
   )

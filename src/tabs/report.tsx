@@ -37,14 +37,25 @@ import { NarrowingReportSection } from "~components/NarrowingPanel"
 import Disclosure from "~components/system/Disclosure"
 import TrackerGraph from "~components/value/TrackerGraph"
 import VerdictBanner from "~components/VerdictBanner"
+import VisitFrequencyAsk from "~components/VisitFrequencyAsk"
 import WatcherList from "~components/watchers/WatcherList"
 import { buildTabValuationEdges, buildUnclassifiedGraphEdges, formatUsd, formatUsdRange, getTrackerServes, MONETIZATION_FLOW_LABELS, rollupObservedValuations, SERVES_LABELS } from "~core/domain/valuation"
 import { buildNarrowingModel } from "~core/report/narrowing"
+import { registrableDomain } from "~core/domain/party"
+import type { VisitFrequency } from "~core/domain/visit-frequency"
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import type { UserSettings } from "~core/domain/types"
 import Button from "~components/system/Button"
 import SiteLogo from "~components/system/SiteLogo"
 import { TYPE, UI } from "~components/system/tokens"
+
+function domainForOrigin(origin: string): string | null {
+  try {
+    return registrableDomain(new URL(origin).hostname) || null
+  } catch {
+    return null
+  }
+}
 
 const EMPTY_SETTINGS: UserSettings = {
   retentionDays: 14,
@@ -53,7 +64,8 @@ const EMPTY_SETTINGS: UserSettings = {
   mitigateCanvas: false,
   mitigateAudio: false,
   mitigateWebgl: false,
-  skipReportOpenConfirm: false
+  skipReportOpenConfirm: false,
+  siteVisitFrequency: {}
 }
 
 function Metric({ label, value }: { label: string; value: number | string }) {
@@ -584,6 +596,15 @@ function ReportTab() {
   const unclassifiedTabEdges = buildUnclassifiedGraphEdges(summary.events, summary.origin)
   const categoryBreakdown = functionalCategoryBreakdown(summary.events)
   const narrowingModel = buildNarrowingModel(summary.events)
+  const siteDomain = domainForOrigin(summary.origin)
+  const observedRollup = rollupObservedValuations(summary.events)
+
+  async function answerVisitFrequency(frequency: VisitFrequency) {
+    if (!siteDomain) return
+    const siteVisitFrequency = { ...settings.siteVisitFrequency, [siteDomain]: frequency }
+    setSettings((current) => ({ ...current, siteVisitFrequency }))
+    await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { siteVisitFrequency } }).catch(() => undefined)
+  }
 
   return (
     <main className="min-h-screen bg-background p-6 font-body text-foreground">
@@ -635,6 +656,12 @@ function ReportTab() {
         ) : reportView === "evidence" ? (
           <>
             <VerdictBanner summary={summary} />
+            <VisitFrequencyAsk
+              domain={siteDomain}
+              frequency={siteDomain ? (settings.siteVisitFrequency[siteDomain] ?? null) : null}
+              onAnswer={(frequency) => answerVisitFrequency(frequency).catch(() => undefined)}
+              thisVisitUsd={observedRollup.thisVisitUsd}
+            />
             {narrowingModel.steps.length > 0 ? (
               <div className="mt-6">
                 <LocationReveal watching={narrowingModel.watching} />

@@ -1,3 +1,6 @@
+import type { ConsentAuditRecord } from "~core/atlas/audit"
+import type { VisitFrequency } from "~core/domain/visit-frequency"
+
 export type BlockabilityClass =
   | "network_blockable"
   | "content_mitigatable"
@@ -112,6 +115,9 @@ export type UserSettings = {
   mitigateAudio: boolean
   mitigateWebgl: boolean
   skipReportOpenConfirm: boolean
+  // The user's stated visit rate per registrable domain ("How often are you
+  // here?") — calibrates the annual value line. Absent domain = not asked yet.
+  siteVisitFrequency: Record<string, VisitFrequency>
 }
 
 export type ValuationPeriod = "day" | "week" | "month" | "all"
@@ -229,6 +235,9 @@ export type RuntimeMessage =
   | { type: "GET_VALUATION_ROLLUP"; period: ValuationPeriod }
   | { type: "VALUATION_ROLLUP"; payload: RollingValuationSummary }
   | { type: "REFRESH_TAB_SCAN"; tabId: number }
+  | { type: "RUN_CONSENT_AUDIT"; tabId: number }
+  | { type: "CONSENT_AUDIT"; payload: ConsentAuditRecord }
+  | { type: "CONSENT_AUDIT_FAILED"; reason: "no_tab" | "restricted_page" | "anchor_harvest_failed" }
   | { type: "GET_SETTINGS" }
   | { type: "SETTINGS"; payload: UserSettings }
   | { type: "UPDATE_SETTINGS"; payload: Partial<UserSettings> }

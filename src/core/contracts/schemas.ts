@@ -1,5 +1,8 @@
 import * as z from "zod"
 
+import { DocTypeSchema, GiveupSchema } from "~core/atlas/types"
+import { VISIT_FREQUENCIES, type VisitFrequency } from "~core/domain/visit-frequency"
+
 export const BlockabilityClassSchema = z.enum([
   "network_blockable",
   "content_mitigatable",
@@ -85,6 +88,8 @@ export const SiteSummarySchema = z.object({
   updatedAt: z.number().int().nonnegative()
 })
 
+export const VisitFrequencySchema = z.enum(VISIT_FREQUENCIES as [VisitFrequency, ...VisitFrequency[]])
+
 export const UserSettingsSchema = z.object({
   retentionDays: z.number().int().min(1).max(365),
   maxEventsPerTab: z.number().int().min(1).max(500),
@@ -96,7 +101,10 @@ export const UserSettingsSchema = z.object({
   mitigateCanvas: z.boolean(),
   mitigateAudio: z.boolean(),
   mitigateWebgl: z.boolean(),
-  skipReportOpenConfirm: z.boolean()
+  skipReportOpenConfirm: z.boolean(),
+  // Per-domain stated visit rate; .default({}) keeps settings persisted
+  // before this field existed parseable.
+  siteVisitFrequency: z.record(z.string(), VisitFrequencySchema).default({})
 })
 
 export const ValuationPeriodSchema = z.enum(["day", "week", "month", "all"])
@@ -207,6 +215,28 @@ export const RollingValuationSummarySchema = z.object({
   disclaimer: z.string().min(1)
 })
 
+// Live consent audit of the site currently seen (docs/consent-atlas-tab-spec.md).
+// The record is produced in the background from the page's own legal-document
+// links; giveups are validated against the atlas GiveupSchema at this boundary.
+export const AuditedDocumentSchema = z.object({
+  docType: DocTypeSchema,
+  url: z.string().min(1),
+  finalUrl: z.string().min(1),
+  lastUpdated: z.string().nullable(),
+  textHash: z.string(),
+  textLength: z.number().int().nonnegative(),
+  thinContent: z.boolean(),
+  fetchError: z.string().nullable()
+})
+
+export const ConsentAuditRecordSchema = z.object({
+  domain: z.string().min(1),
+  auditedAt: z.number().int().nonnegative(),
+  documents: z.array(AuditedDocumentSchema),
+  giveups: z.array(GiveupSchema),
+  nothingDiscovered: z.boolean()
+})
+
 export const RuntimeMessageSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("OBSERVED_EVENT"), payload: ObserverEventSchema }),
   z.object({ type: z.literal("PAGE_ERROR_OBSERVED"), payload: PageErrorSchema.omit({ id: true }) }),
@@ -215,6 +245,9 @@ export const RuntimeMessageSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("GET_VALUATION_ROLLUP"), period: ValuationPeriodSchema }),
   z.object({ type: z.literal("VALUATION_ROLLUP"), payload: RollingValuationSummarySchema }),
   z.object({ type: z.literal("REFRESH_TAB_SCAN"), tabId: z.number().int() }),
+  z.object({ type: z.literal("RUN_CONSENT_AUDIT"), tabId: z.number().int() }),
+  z.object({ type: z.literal("CONSENT_AUDIT"), payload: ConsentAuditRecordSchema }),
+  z.object({ type: z.literal("CONSENT_AUDIT_FAILED"), reason: z.enum(["no_tab", "restricted_page", "anchor_harvest_failed"]) }),
   z.object({ type: z.literal("GET_SETTINGS") }),
   z.object({ type: z.literal("SETTINGS"), payload: UserSettingsSchema }),
   z.object({ type: z.literal("UPDATE_SETTINGS"), payload: UserSettingsSchema.partial() }),

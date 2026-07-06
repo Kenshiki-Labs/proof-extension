@@ -3,11 +3,11 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "a8d83c7dc3f0d0286d8e8beae666739b63eafc7aa11f533e4eb28328a0fe2a3d"
+      "sha256": "20612c583cf8edaca8f60eaa0f328e62a9b2fc29d7bd1acbe743b4fbe1176fe6"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "d14101937f299e6904d2059700a74c961e5e3160c3691501b654633f785b6cc2"
+      "sha256": "b2f309b1193322e254c9d68d1ee7f95401ab94524e96ef7ddb3cc7016ba6126e"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
@@ -296,14 +296,18 @@
     },
     {
       "word": "core",
-      "count": 31
-    },
-    {
-      "word": "gap-",
-      "count": 23
+      "count": 36
     },
     {
       "word": "components",
+      "count": 24
+    },
+    {
+      "word": "gap-",
+      "count": 24
+    },
+    {
+      "word": "domain",
       "count": 22
     },
     {
@@ -313,10 +317,6 @@
     {
       "word": "can",
       "count": 18
-    },
-    {
-      "word": "domain",
-      "count": 17
     },
     {
       "word": "not",
@@ -331,12 +331,12 @@
       "count": 14
     },
     {
-      "word": "grid",
+      "word": "flex",
       "count": 14
     },
     {
-      "word": "flex",
-      "count": 13
+      "word": "grid",
+      "count": 14
     },
     {
       "word": "font-display",
@@ -455,6 +455,10 @@
       "count": 6
     },
     {
+      "word": "settings",
+      "count": 6
+    },
+    {
       "word": "surface",
       "count": 6
     },
@@ -495,6 +499,10 @@
       "count": 5
     },
     {
+      "word": "text-foreground",
+      "count": 5
+    },
+    {
       "word": "text-left",
       "count": 5
     },
@@ -504,6 +512,10 @@
     },
     {
       "word": "tracking-tight",
+      "count": 5
+    },
+    {
+      "word": "valuation",
       "count": 5
     },
     {
@@ -555,7 +567,15 @@
       "count": 4
     },
     {
+      "word": "hover",
+      "count": 4
+    },
+    {
       "word": "items-baseline",
+      "count": 4
+    },
+    {
+      "word": "items-center",
       "count": 4
     },
     {
@@ -579,10 +599,6 @@
       "count": 4
     },
     {
-      "word": "settings",
-      "count": 4
-    },
-    {
       "word": "source",
       "count": 4
     },
@@ -592,22 +608,6 @@
     },
     {
       "word": "tab",
-      "count": 4
-    },
-    {
-      "word": "text-danger",
-      "count": 4
-    },
-    {
-      "word": "text-foreground",
-      "count": 4
-    },
-    {
-      "word": "text-lg",
-      "count": 4
-    },
-    {
-      "word": "their",
       "count": 4
     }
   ]

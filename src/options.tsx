@@ -18,7 +18,8 @@ const DEFAULT_SETTINGS: UserSettings = {
   mitigateCanvas: false,
   mitigateAudio: false,
   mitigateWebgl: false,
-  skipReportOpenConfirm: false
+  skipReportOpenConfirm: false,
+  siteVisitFrequency: {}
 }
 
 const dbCounts = (() => {
