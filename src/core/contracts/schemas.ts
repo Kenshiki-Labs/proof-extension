@@ -93,6 +93,21 @@ export const CookieMetadataScanResultSchema = z.object({
   events: z.array(ObserverEventSchema)
 })
 
+export const CookieValueInspectResultSchema = z.object({
+  status: z.enum(["available", "permission_required", "unsupported", "no_tab", "restricted_page"]),
+  cookies: z.array(z.object({
+    domain: z.string().min(1),
+    expirationDate: z.number().optional(),
+    httpOnly: z.boolean(),
+    name: z.string(),
+    path: z.string(),
+    sameSite: z.string(),
+    secure: z.boolean(),
+    session: z.boolean(),
+    value: z.string()
+  }))
+})
+
 export const VisitFrequencySchema = z.enum(VISIT_FREQUENCIES as [VisitFrequency, ...VisitFrequency[]])
 
 export const UserSettingsSchema = z.object({
@@ -107,6 +122,7 @@ export const UserSettingsSchema = z.object({
   mitigateAudio: z.boolean(),
   mitigateWebgl: z.boolean(),
   skipReportOpenConfirm: z.boolean(),
+  cookieMetadataEnabled: z.boolean().default(false),
   // Per-domain stated visit rate; .default({}) keeps settings persisted
   // before this field existed parseable.
   siteVisitFrequency: z.record(z.string(), VisitFrequencySchema).default({})
@@ -252,6 +268,8 @@ export const RuntimeMessageSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("COOKIE_METADATA_PERMISSION"), granted: z.boolean() }),
   z.object({ type: z.literal("SCAN_SITE_COOKIES"), tabId: z.number().int() }),
   z.object({ type: z.literal("COOKIE_METADATA_SCAN"), payload: CookieMetadataScanResultSchema }),
+  z.object({ type: z.literal("INSPECT_SITE_COOKIE_VALUES"), tabId: z.number().int() }),
+  z.object({ type: z.literal("COOKIE_VALUE_INSPECT"), payload: CookieValueInspectResultSchema }),
   z.object({ type: z.literal("GET_VALUATION_ROLLUP"), period: ValuationPeriodSchema }),
   z.object({ type: z.literal("VALUATION_ROLLUP"), payload: RollingValuationSummarySchema }),
   z.object({ type: z.literal("REFRESH_TAB_SCAN"), tabId: z.number().int() }),

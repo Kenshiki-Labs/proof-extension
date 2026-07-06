@@ -187,3 +187,36 @@ describe("normalizePersistenceEvent", () => {
     expect(huge.details?.valueBytes).toBe(1_000_000_000)
   })
 })
+
+describe("normalizePersistenceEvent — durable storage families", () => {
+  it("describes each cache-storage operation verb and never reads contents", () => {
+    const verbs: Array<[string, string]> = [
+      ["open", "opened"],
+      ["delete", "deleted"],
+      ["match", "searched"],
+      ["has", "checked for"]
+    ]
+    for (const [op, verb] of verbs) {
+      const event = normalizePersistenceEvent(persistenceEvent({ eventType: "cache_storage_access", details: { op, cache: "site-cache" } }))
+      expect(event.confidence).toBe("confirmed")
+      expect(event.evidence[0]).toContain(verb)
+      expect(event.evidence.join(" ")).toContain("never read")
+    }
+  })
+
+  it("records a cache-storage report with an unknown operation as malformed", () => {
+    const event = normalizePersistenceEvent(persistenceEvent({ eventType: "cache_storage_access", details: { op: "explode", cache: "site-cache" } }))
+    expect(event.confidence).toBe("weak")
+    expect(event.details).toBeUndefined()
+  })
+
+  it("describes a registered service worker and drops one missing its scope", () => {
+    const registered = normalizePersistenceEvent(persistenceEvent({ eventType: "service_worker_registered", details: { scriptOrigin: "https://example.test", scopePath: "/app" } }))
+    expect(registered.confidence).toBe("confirmed")
+    expect(registered.evidence.join(" ")).toContain("background worker")
+
+    const malformed = normalizePersistenceEvent(persistenceEvent({ eventType: "service_worker_registered", details: { scriptOrigin: "https://example.test" } }))
+    expect(malformed.confidence).toBe("weak")
+    expect(malformed.details).toBeUndefined()
+  })
+})

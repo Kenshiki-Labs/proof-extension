@@ -1,5 +1,5 @@
-import { buildCookieObservedEvent, type ObservedCookieMetadata } from "~core/signals/cookie-observer"
-import type { CookieMetadataScanResult } from "~core/domain/types"
+import { buildCookieObservedEvent, cookieMatchesOrigin, type ObservedCookieMetadata } from "~core/signals/cookie-observer"
+import type { CookieMetadataScanResult, CookieValueInspectEntry, CookieValueInspectResult, ObserverEvent } from "~core/domain/types"
 
 type CookiePermissionApi = {
   contains: (permissions: chrome.permissions.Permissions, callback: (granted: boolean) => void) => void
@@ -13,10 +13,14 @@ type CookieApi = {
 export type CookieStoreChromeApi = {
   cookies?: CookieApi | undefined
   permissions?: CookiePermissionApi | undefined
-  runtime?: { lastError?: { message?: string } | undefined } | undefined
+  runtime?: { lastError?: { message?: string | undefined } | undefined } | undefined
 }
 
 const COOKIE_PERMISSION: chrome.permissions.Permissions = { permissions: ["cookies"] }
+
+function defaultChromeApi(): CookieStoreChromeApi | undefined {
+  return typeof chrome === "undefined" ? undefined : chrome
+}
 
 function cookieStoreApi(api: CookieStoreChromeApi | undefined): { cookies: CookieApi; permissions: CookiePermissionApi } | null {
   if (!api?.cookies?.getAll || !api.permissions?.contains || !api.permissions.request) return null
@@ -38,15 +42,15 @@ function permissionCall(
   })
 }
 
-export async function hasCookieMetadataPermission(api: CookieStoreChromeApi | undefined = globalThis.chrome): Promise<boolean> {
+export async function hasCookieMetadataPermission(api: CookieStoreChromeApi | undefined = defaultChromeApi()): Promise<boolean> {
   const storeApi = cookieStoreApi(api)
-  if (!storeApi) return false
+  if (!api || !storeApi) return false
   return permissionCall(api, (callback) => storeApi.permissions.contains(COOKIE_PERMISSION, callback))
 }
 
-export async function requestCookieMetadataPermission(api: CookieStoreChromeApi | undefined = globalThis.chrome): Promise<boolean> {
+export async function requestCookieMetadataPermission(api: CookieStoreChromeApi | undefined = defaultChromeApi()): Promise<boolean> {
   const storeApi = cookieStoreApi(api)
-  if (!storeApi) return false
+  if (!api || !storeApi) return false
   return permissionCall(api, (callback) => storeApi.permissions.request(COOKIE_PERMISSION, callback))
 }
 
@@ -76,8 +80,32 @@ function toObservedCookieMetadata(cookie: Pick<chrome.cookies.Cookie, "name" | "
   }
 }
 
+function parseInspectableOrigin(origin: string): { hostname: string } | null {
+  try {
+    const url = new URL(origin)
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null
+    return { hostname: url.hostname }
+  } catch {
+    return null
+  }
+}
+
+function toCookieValueInspectEntry(cookie: chrome.cookies.Cookie): CookieValueInspectEntry {
+  return {
+    domain: cookie.domain,
+    expirationDate: cookie.expirationDate,
+    httpOnly: cookie.httpOnly,
+    name: cookie.name,
+    path: cookie.path,
+    sameSite: cookie.sameSite,
+    secure: cookie.secure,
+    session: cookie.session,
+    value: cookie.value
+  }
+}
+
 export async function scanSiteCookieMetadata({
-  api = globalThis.chrome,
+  api = defaultChromeApi(),
   observedAt = Date.now(),
   origin,
   tabId
@@ -88,24 +116,40 @@ export async function scanSiteCookieMetadata({
   tabId: number
 }): Promise<CookieMetadataScanResult> {
   const storeApi = cookieStoreApi(api)
-  if (!storeApi) return { status: "unsupported", events: [] }
+  if (!api || !storeApi) return { status: "unsupported", events: [] }
 
   if (!(await hasCookieMetadataPermission(api))) return { status: "permission_required", events: [] }
 
-  let hostname: string
-  try {
-    const url = new URL(origin)
-    if (url.protocol !== "http:" && url.protocol !== "https:") return { status: "restricted_page", events: [] }
-    hostname = url.hostname
-  } catch {
-    return { status: "restricted_page", events: [] }
-  }
+  const inspectableOrigin = parseInspectableOrigin(origin)
+  if (!inspectableOrigin) return { status: "restricted_page", events: [] }
 
-  const cookies = await readCookiesForDomain(api, hostname)
+  const cookies = await readCookiesForDomain(api, inspectableOrigin.hostname)
   const events = cookies
     .map((cookie) => buildCookieObservedEvent({ cookie: toObservedCookieMetadata(cookie), tabId, origin, observedAt }))
-    .filter((event) => event !== null)
+    .filter((event): event is ObserverEvent => event !== null)
     .map((event) => ({ ...event, source: "extension-scan" as const }))
 
   return { status: "available", events }
+}
+
+export async function inspectSiteCookieValues({
+  api = defaultChromeApi(),
+  origin
+}: {
+  api?: CookieStoreChromeApi | undefined
+  origin: string
+}): Promise<CookieValueInspectResult> {
+  const storeApi = cookieStoreApi(api)
+  if (!api || !storeApi) return { status: "unsupported", cookies: [] }
+
+  if (!(await hasCookieMetadataPermission(api))) return { status: "permission_required", cookies: [] }
+
+  const inspectableOrigin = parseInspectableOrigin(origin)
+  if (!inspectableOrigin) return { status: "restricted_page", cookies: [] }
+
+  const cookies = await readCookiesForDomain(api, inspectableOrigin.hostname)
+  return {
+    status: "available",
+    cookies: cookies.filter((cookie) => cookieMatchesOrigin(cookie.domain, origin)).map(toCookieValueInspectEntry)
+  }
 }

@@ -4430,6 +4430,7 @@
     "schemaVersion": 2,
     "match": {
       "domains": [
+        "openx.com",
         "openx.net"
       ],
       "paths": [],
@@ -4471,7 +4472,7 @@
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
-      "Request matched OpenX domain openx.net."
+      "Request matched OpenX domain (openx.com / openx.net)."
     ],
     "remediationId": "openx-default",
     "sources": [
@@ -4576,6 +4577,7 @@
     "match": {
       "domains": [
         "casalemedia.com",
+        "indexexchange.com",
         "indexww.com"
       ],
       "paths": [],
@@ -4616,7 +4618,7 @@
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
-      "Request matched Index Exchange domain (casalemedia.com / indexww.com)."
+      "Request matched Index Exchange domain (casalemedia.com / indexexchange.com / indexww.com)."
     ],
     "remediationId": "index-exchange-default",
     "sources": [
@@ -4720,7 +4722,8 @@
     "schemaVersion": 2,
     "match": {
       "domains": [
-        "crwdcntrl.net"
+        "crwdcntrl.net",
+        "lotame.com"
       ],
       "paths": [],
       "requestTypes": [
@@ -4761,7 +4764,7 @@
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
-      "Request matched Lotame domain crwdcntrl.net."
+      "Request matched Lotame domain (crwdcntrl.net / lotame.com)."
     ],
     "remediationId": "lotame-default",
     "sources": [
@@ -4865,6 +4868,7 @@
     "schemaVersion": 2,
     "match": {
       "domains": [
+        "liveramp.com",
         "rlcdn.com"
       ],
       "paths": [],
@@ -4907,7 +4911,7 @@
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
-      "Request matched LiveRamp identity domain rlcdn.com."
+      "Request matched LiveRamp identity domain (liveramp.com / rlcdn.com)."
     ],
     "remediationId": "liveramp-default",
     "sources": [
@@ -5011,7 +5015,8 @@
     "schemaVersion": 2,
     "match": {
       "domains": [
-        "id5-sync.com"
+        "id5-sync.com",
+        "id5.io"
       ],
       "paths": [],
       "requestTypes": [
@@ -5051,7 +5056,7 @@
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
-      "Request matched ID5 shared-ID domain id5-sync.com."
+      "Request matched ID5 shared-ID domain (id5-sync.com / id5.io)."
     ],
     "remediationId": "id5-default",
     "sources": [
@@ -5446,7 +5451,8 @@
     "schemaVersion": 2,
     "match": {
       "domains": [
-        "6sc.co"
+        "6sc.co",
+        "6sense.com"
       ],
       "paths": [],
       "requestTypes": [
@@ -5487,7 +5493,7 @@
     },
     "confidence": "confirmed",
     "evidenceTemplate": [
-      "Request matched 6sense intent-data domain 6sc.co."
+      "Request matched 6sense intent-data domain (6sc.co / 6sense.com)."
     ],
     "remediationId": "6sense-default",
     "sources": [
@@ -5590,6 +5596,7 @@
     "schemaVersion": 2,
     "match": {
       "domains": [
+        "clearbit.com",
         "hs-analytics.net",
         "hs-scripts.com",
         "hs-banner.com",

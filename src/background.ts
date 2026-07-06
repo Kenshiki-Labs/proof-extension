@@ -3,7 +3,7 @@ import type { Runtime } from "webextension-polyfill"
 import * as z from "zod"
 
 import { runConsentAudit, type AnchorInput, type ConsentAuditRecord } from "~core/atlas/audit"
-import { hasCookieMetadataPermission, requestCookieMetadataPermission, scanSiteCookieMetadata } from "~core/browser/cookie-store"
+import { hasCookieMetadataPermission, inspectSiteCookieValues, requestCookieMetadataPermission, scanSiteCookieMetadata } from "~core/browser/cookie-store"
 import { RuntimeMessageSchema } from "~core/contracts/schemas"
 import {
   findInstalledBlockRuleMetadataForRequest,
@@ -63,6 +63,7 @@ const DEFAULT_SETTINGS: UserSettings = {
   mitigateAudio: false,
   mitigateWebgl: false,
   skipReportOpenConfirm: false,
+  cookieMetadataEnabled: false,
   siteVisitFrequency: {}
 }
 
@@ -464,6 +465,17 @@ async function scanCookieMetadataForTab(tabId: number): Promise<RuntimeMessage> 
   return { type: "COOKIE_METADATA_SCAN", payload: result }
 }
 
+async function inspectCookieValuesForTab(tabId: number): Promise<RuntimeMessage> {
+  let tab: browser.Tabs.Tab
+  try {
+    tab = await browser.tabs.get(tabId)
+  } catch {
+    return { type: "COOKIE_VALUE_INSPECT", payload: { status: "no_tab", cookies: [] } }
+  }
+
+  return { type: "COOKIE_VALUE_INSPECT", payload: await inspectSiteCookieValues({ origin: originFromUrl(tab.url) }) }
+}
+
 // Live consent audit of the site currently seen (docs/consent-atlas-tab-spec.md).
 // The page's own anchors replace the atlas crawler: harvest them on demand,
 // classify legal-document links, fetch documents on this site's own domain,
@@ -799,6 +811,10 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
 
     if (message.type === "SCAN_SITE_COOKIES") {
       return scanCookieMetadataForTab(message.tabId)
+    }
+
+    if (message.type === "INSPECT_SITE_COOKIE_VALUES") {
+      return inspectCookieValuesForTab(message.tabId)
     }
 
     if (message.type === "GET_VALUATION_ROLLUP") {

@@ -13,6 +13,7 @@
  *
  * Usage: node scripts/policy-finder-verify.mjs <candidates.json> [--out <file>]
  * candidates.json: [{ key, label, domains:[], privacyUrl, cookieUrl, termsUrl }]
+ * Also accepts plural arrays: privacyUrls, cookieUrls, termsUrls.
  */
 import { readFileSync, writeFileSync } from "node:fs"
 
@@ -100,6 +101,23 @@ async function verifyOne(url, kind, record) {
   return { ok: true, url: fetched.finalUrl, signals: hits.length }
 }
 
+function candidateUrls(record, kind) {
+  return [...new Set([...(record[`${kind}Urls`] ?? []), record[`${kind}Url`]].filter(Boolean))]
+}
+
+async function verifyAny(kind, record) {
+  const urls = candidateUrls(record, kind)
+  if (urls.length === 0) return { ok: false, reason: "none proposed" }
+
+  const misses = []
+  for (const url of urls) {
+    const result = await verifyOne(url, kind, record)
+    if (result.ok) return result
+    misses.push(`${url} → ${result.reason}`)
+  }
+  return { ok: false, reason: misses.join("; ") }
+}
+
 const candidates = JSON.parse(readFileSync(candidatesPath, "utf8"))
 const verified = {}
 const report = []
@@ -107,11 +125,11 @@ const report = []
 for (const record of candidates) {
   const entry = {}
   for (const kind of ["privacy", "cookie", "terms"]) {
-    const result = await verifyOne(record[`${kind}Url`], kind, record)
+    const result = await verifyAny(kind, record)
     if (result.ok) {
       entry[kind] = result.url
       report.push(`  PASS ${record.key} ${kind} @ ${new URL(result.url).hostname} (${result.signals})`)
-    } else if (record[`${kind}Url`]) {
+    } else if (candidateUrls(record, kind).length > 0) {
       report.push(`  drop ${record.key} ${kind}: ${result.reason}`)
     }
   }

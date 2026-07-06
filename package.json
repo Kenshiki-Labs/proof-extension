@@ -41,6 +41,8 @@
     "qa:refresh": "node scripts/refresh-and-qa.mjs",
     "qa:full": "pnpm qa && pnpm test:browser && pnpm test:e2e && pnpm build:firefox && pnpm build:edge",
     "db:baseline": "node scripts/db-baseline.mjs",
+    "intel:breadth": "node scripts/breadth-backlog.mjs",
+    "intel:harvest": "node scripts/harvest-unclassified.mjs",
     "intel:normalize": "node scripts/normalize-intelligence.mjs",
     "intel:eval": "node scripts/eval-entity-resolution.mjs",
     "intel:check": "node scripts/check-intelligence-fresh.mjs",

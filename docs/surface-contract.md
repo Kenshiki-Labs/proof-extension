@@ -3,9 +3,9 @@ title: Surface Contract — Popup, Report, Debug
 description: Normative contract for what each user-facing surface is for, what it shows, and what it is forbidden to show.
 owner: stephen
 status: active
-version: 1.6.0
-lastReviewed: 2026-07-05
-nextReview: 2026-08-05
+version: 1.8.1
+lastReviewed: 2026-07-06
+nextReview: 2026-08-06
 ---
 
 # Surface Contract
@@ -61,13 +61,25 @@ The popup renders exactly this, in this order, and nothing else:
 
 ## Report tab contract
 
-Four acts, in order. Each act is one section; appendices are collapsed by default.
+Five evidence acts, plus one focused local-state surface. Each act is one section; appendices are collapsed by default.
 
 1. **Verdict** — same sentence as the popup, verbatim.
 2. **The narrowing** — the mirror expanded into a candidate-pool chain using the same additive model as the proof app. It starts from 330,000,000 and shows only readable values that were actually observed by the exposure scan. It states that the model is estimated and that joint entropy is lower than a naive independent sum.
 3. **The picture** — the Connections graph (Network default; Actors / Money / Timeline lenses). Category breakdown chips live here, as the graph's caption.
 4. **Who, and what you can do** — the full watcher list, grouped by functional category (Advertising, Analytics, Session Replay, Data Brokers, Marketing & Sales Tools, Unidentified), worst-first within groups. Block/opt-out actions inline. This absorbs the popup's old Blocked/Exposed/Cannot-block sections and the "Stop at source" material.
 5. **The money** — value ledger summary with "show the math" disclosure.
+
+**Local State tab** — a separate report view labeled "Local state", not part of the Evidence story and not an appendix. Its job is to answer: "What did this site leave in my browser that may persist after this page?" It rolls up browser-local state across cookies, Web Storage, IndexedDB, Cache Storage, service workers, and cache validators. The headline is an interpretation, not a dump: total local-state mechanisms, script-readable vs browser-only records, session vs durable records, background-capable workers, and any cross-surface respawn suspicion. Raw rows are collapsed behind an audit disclosure.
+
+Local State rules:
+
+- It scans only the current page/current site the user is viewing or reporting on. A global opt-in may enable the capability, but it never turns into an all-browser cookie or storage inventory.
+- Default reports never read, store, render, or infer values. Allowed default fields are names/keys after redaction, domains/origins, sizes/counts, timestamps, durability, and browser attributes such as HttpOnly, Secure, SameSite, session, storage family, and worker scope.
+- Explicit local inspect mode may reveal current-site cookie or storage values only after a direct user action inside the Local State tab. Revealed values are ephemeral extension-page state: they are never written to `ObserverEvent`, summaries, storage, the value ledger, debug data, report copy/export, or any off-device request. The UI must provide a clear hide/clear action, keep values redacted until the user reveals a row, and state that HttpOnly values are browser-only data the page script itself cannot read.
+- A Local State clipboard affordance may copy the tab's local-state rollup and raw metadata rows for support/debug handoff. It must exclude all explicitly revealed values and must state that copied output is metadata only.
+- The useful sentence must describe consequence: script-readable state, browser-only state still sent by the browser, records that survive the session, background-capable state, and whether deletion/respawn behavior is suspected. "Cookie observed" or "Storage write observed" alone is insufficient product copy.
+- A single cookie card grid is forbidden. Counts appear in dense strips or compact summaries; raw table rows are audit material.
+- The tab label is **Local state**. "Persistence" is allowed in docs and code identifiers, but user-facing product navigation uses "Local state".
 
 Appendix (collapsed): exposure scan, evidence-type matrix, storage/cache observations, per-event tables.
 
@@ -79,13 +91,14 @@ A separate route (`report.html?view=debug`), linked from both product surfaces. 
 
 ## Shared vocabulary
 
-User surfaces (popup, report) may use only: **watcher / watching, blocked, can't be blocked, not yet classified, identified**, the six category names, and dollar estimates. Banned on user surfaces (debug-only): observation, event, signal, source-backed, evidence tier, exposure scan, diagnostic, persistence.
+User surfaces (popup, report) may use only: **watcher / watching, blocked, can't be blocked, not yet classified, identified**, the six category names, dollar estimates, and Local State vocabulary: **local state, cookie, storage, browser-only, readable by page scripts, session, durable, background worker, cache**. Banned on user surfaces (debug-only): observation, event, signal, source-backed, evidence tier, exposure scan, diagnostic, persistence.
 
 Exemption: report appendix content explicitly addressed to auditors may use pipeline vocabulary — an audit trail in euphemism would be less honest, not more. Enforcement: `src/core/report/vocabulary-guard.test.ts` (full-strictness scan of popup strings; act-title scan plus banned-section check on the report), wired into the prebuild gate.
 
 ## Congruence rules
 
 - Every number on any surface derives from `summaryMetrics`, `functionalCategoryBreakdown`, `rankObservers`, or `buildNarrowingModel`. No surface-local counting.
+- Local State numbers derive from named local-state rollup helpers (`buildLocalStateRollup`, `buildLocalStatePurposeRollup`, `buildCookieMetadataRollup`). No surface-local counting.
 - The popup's "+N more" must equal watching minus names shown.
 - The popup verdict and report verdict are the same rendered component with the same inputs.
 - Category grouping totals must sum to the watching count (enforced in tests already).

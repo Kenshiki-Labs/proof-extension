@@ -19,6 +19,7 @@ const DEFAULT_SETTINGS: UserSettings = {
   mitigateAudio: false,
   mitigateWebgl: false,
   skipReportOpenConfirm: false,
+  cookieMetadataEnabled: false,
   siteVisitFrequency: {}
 }
 

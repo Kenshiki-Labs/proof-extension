@@ -7,7 +7,7 @@ lastReviewed: 2026-07-06
 status: generated
 ---
 
-> Generated from commit `74aa7d8` by `pnpm db:baseline`. Do not hand-edit.
+> Generated from commit `bfd1f9c` by `pnpm db:baseline`. Do not hand-edit.
 
 ## Summary
 
@@ -74,15 +74,15 @@ status: generated
 | the-trade-desk | advertising | The Trade Desk, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | pubmatic | advertising | PubMatic, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | magnite | advertising | Magnite, Inc. | 2 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| openx | advertising | OpenX Technologies, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| index-exchange | advertising | Index Exchange Inc. | 2 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| lotame | data-management-platform | Lotame Solutions, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| liveramp | identity-resolution | LiveRamp Holdings, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
-| id5 | identity-resolution | ID5 Technology Ltd | 1 | 0 | no | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| openx | advertising | OpenX Technologies, Inc. | 2 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| index-exchange | advertising | Index Exchange Inc. | 3 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| lotame | data-management-platform | Lotame Solutions, Inc. | 2 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| liveramp | identity-resolution | LiveRamp Holdings, Inc. | 2 | 0 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
+| id5 | identity-resolution | ID5 Technology Ltd | 2 | 0 | no | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | 33across | advertising | 33Across, Inc. | 2 | 0 | no | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | tapad | cross-device-tracking | Experian plc | 1 | 0 | no | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
-| 6sense | behavioral-profiling | 6sense Insights, Inc. | 1 | 0 | no | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
-| hubspot | marketing-automation | HubSpot, Inc. | 4 | 0 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
+| 6sense | behavioral-profiling | 6sense Insights, Inc. | 2 | 0 | no | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
+| hubspot | marketing-automation | HubSpot, Inc. | 5 | 0 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
 | microsoft-ads | advertising | Microsoft Corporation | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | amazon-ads | advertising | Amazon.com, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | no |
 | reddit-pixel | advertising | Reddit, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | no |

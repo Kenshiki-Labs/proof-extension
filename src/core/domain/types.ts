@@ -114,6 +114,23 @@ export type CookieMetadataScanResult = {
   events: ObserverEvent[]
 }
 
+export type CookieValueInspectEntry = {
+  domain: string
+  expirationDate?: number | undefined
+  httpOnly: boolean
+  name: string
+  path: string
+  sameSite: string
+  secure: boolean
+  session: boolean
+  value: string
+}
+
+export type CookieValueInspectResult = {
+  status: CookieMetadataScanStatus
+  cookies: CookieValueInspectEntry[]
+}
+
 export type UserSettings = {
   retentionDays: number
   maxEventsPerTab: number
@@ -122,6 +139,7 @@ export type UserSettings = {
   mitigateAudio: boolean
   mitigateWebgl: boolean
   skipReportOpenConfirm: boolean
+  cookieMetadataEnabled: boolean
   // The user's stated visit rate per registrable domain ("How often are you
   // here?") — calibrates the annual value line. Absent domain = not asked yet.
   siteVisitFrequency: Record<string, VisitFrequency>
@@ -244,6 +262,8 @@ export type RuntimeMessage =
   | { type: "COOKIE_METADATA_PERMISSION"; granted: boolean }
   | { type: "SCAN_SITE_COOKIES"; tabId: number }
   | { type: "COOKIE_METADATA_SCAN"; payload: CookieMetadataScanResult }
+  | { type: "INSPECT_SITE_COOKIE_VALUES"; tabId: number }
+  | { type: "COOKIE_VALUE_INSPECT"; payload: CookieValueInspectResult }
   | { type: "GET_VALUATION_ROLLUP"; period: ValuationPeriod }
   | { type: "VALUATION_ROLLUP"; payload: RollingValuationSummary }
   | { type: "REFRESH_TAB_SCAN"; tabId: number }

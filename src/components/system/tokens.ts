@@ -23,17 +23,21 @@ export const ELEVATION = {
 }
 
 export const INSET = {
-  compact: "p-3",
-  card: "p-4"
+  compact: "p-2.5",
+  card: "p-3"
 }
 
 export const UI = {
   panel: `border border-border bg-card ${ELEVATION.card}`,
-  inset: "p-3.5",
-  reportInset: "p-4 sm:p-5",
+  inset: "p-3",
+  reportInset: "p-3 sm:p-4",
+  denseInset: "p-2.5 sm:p-3",
   subtlePanel: "border border-border bg-background/55 shadow-[var(--panel-shadow-soft)]",
-  metricCard: `border border-border bg-card p-4 ${ELEVATION.card}`,
-  tableShell: "overflow-x-auto border border-border bg-card p-4 shadow-[var(--panel-shadow-soft)]",
+  densePanel: "border border-border bg-background/55 p-2.5 shadow-[var(--panel-shadow-soft)] sm:p-3",
+  metricCard: `border border-border bg-card p-2.5 ${ELEVATION.card} sm:p-3`,
+  metricValue: "mt-1 font-display text-xl font-semibold tracking-tight tabular-nums sm:text-2xl",
+  statStrip: "grid gap-2 sm:grid-cols-2 lg:grid-cols-4",
+  tableShell: "overflow-x-auto border border-border bg-card p-2 shadow-[var(--panel-shadow-soft)] sm:p-3",
   tableHeader: "border-b border-border bg-background/70",
   tableRow: "border-t border-border align-top hover:bg-background/55",
   segment: "border px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.08em] transition-colors",

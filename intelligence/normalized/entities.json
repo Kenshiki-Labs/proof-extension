@@ -128,9 +128,9 @@
         },
         {
           "key": "ca2026:6sense-insights-inc",
-          "method": "name",
-          "confidence": 0.8,
-          "confidenceLabel": "medium",
+          "method": "domain",
+          "confidence": 0.95,
+          "confidenceLabel": "high",
           "reasons": [
             "CA 2026 registry record 6sense-insights-inc",
             "name: 6sense Insights, Inc.",
@@ -143,7 +143,7 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
-            "registrable domains: 6sc.co",
+            "registrable domains: 6sc.co, 6sense.com",
             "runtime company 6sense"
           ]
         }
@@ -742,7 +742,7 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
-            "registrable domains: hs-analytics.net, hs-banner.com, hs-scripts.com, hubspot.com",
+            "registrable domains: clearbit.com, hs-analytics.net, hs-banner.com, hs-scripts.com, hubspot.com",
             "runtime company hubspot"
           ]
         }
@@ -803,9 +803,9 @@
         },
         {
           "key": "ca2026:id5-technology-ltd",
-          "method": "name",
-          "confidence": 0.8,
-          "confidenceLabel": "medium",
+          "method": "domain",
+          "confidence": 0.95,
+          "confidenceLabel": "high",
           "reasons": [
             "CA 2026 registry record id5-technology-ltd",
             "DBA: ID5",
@@ -819,7 +819,7 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
-            "registrable domains: id5-sync.com",
+            "registrable domains: id5-sync.com, id5.io",
             "runtime company id5"
           ]
         }
@@ -852,9 +852,9 @@
       "joins": [
         {
           "key": "ca2026:index-exchange-inc",
-          "method": "name",
-          "confidence": 0.8,
-          "confidenceLabel": "medium",
+          "method": "domain",
+          "confidence": 0.95,
+          "confidenceLabel": "high",
           "reasons": [
             "CA 2026 registry record index-exchange-inc",
             "name: Index Exchange Inc.",
@@ -867,7 +867,7 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
-            "registrable domains: casalemedia.com, indexww.com",
+            "registrable domains: casalemedia.com, indexexchange.com, indexww.com",
             "runtime company index-exchange"
           ]
         }
@@ -981,9 +981,9 @@
         },
         {
           "key": "ca2026:liveramp-holdings-inc",
-          "method": "name",
-          "confidence": 0.8,
-          "confidenceLabel": "medium",
+          "method": "domain",
+          "confidence": 0.95,
+          "confidenceLabel": "high",
           "reasons": [
             "CA 2026 registry record liveramp-holdings-inc",
             "name: LiveRamp Holdings, Inc.",
@@ -996,7 +996,7 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
-            "registrable domains: rlcdn.com",
+            "registrable domains: liveramp.com, rlcdn.com",
             "runtime company liveramp"
           ]
         }
@@ -1028,9 +1028,9 @@
       "joins": [
         {
           "key": "broker2025:lotamesolutions_l_4654bd4a",
-          "method": "name",
-          "confidence": 0.8,
-          "confidenceLabel": "medium",
+          "method": "domain",
+          "confidence": 0.95,
+          "confidenceLabel": "high",
           "reasons": [
             "2025 registry merge record lotamesolutions_l_4654bd4a",
             "name: Lotame Solutions, Inc.",
@@ -1043,7 +1043,7 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
-            "registrable domains: crwdcntrl.net",
+            "registrable domains: crwdcntrl.net, lotame.com",
             "runtime company lotame"
           ]
         }
@@ -1284,9 +1284,9 @@
         },
         {
           "key": "ca2026:openx-technologies-inc",
-          "method": "name",
-          "confidence": 0.8,
-          "confidenceLabel": "medium",
+          "method": "domain",
+          "confidence": 0.95,
+          "confidenceLabel": "high",
           "reasons": [
             "CA 2026 registry record openx-technologies-inc",
             "name: OpenX Technologies, Inc.",
@@ -1299,7 +1299,7 @@
           "confidence": 1,
           "confidenceLabel": "confirmed",
           "reasons": [
-            "registrable domains: openx.net",
+            "registrable domains: openx.com, openx.net",
             "runtime company openx"
           ]
         }

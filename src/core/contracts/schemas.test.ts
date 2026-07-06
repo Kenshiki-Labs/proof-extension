@@ -70,6 +70,44 @@ describe("RuntimeMessageSchema", () => {
     })).toMatchObject({ type: "COOKIE_METADATA_SCAN" })
   })
 
+  it("validates explicit local cookie value inspect responses", () => {
+    expect(RuntimeMessageSchema.parse({
+      type: "COOKIE_VALUE_INSPECT",
+      payload: {
+        status: "available",
+        cookies: [{
+          domain: "example.test",
+          httpOnly: true,
+          name: "session_id",
+          path: "/",
+          sameSite: "lax",
+          secure: true,
+          session: false,
+          value: "local-user-only-value"
+        }]
+      }
+    })).toMatchObject({ type: "COOKIE_VALUE_INSPECT" })
+  })
+
+  it("defaults legacy settings to cookie metadata disabled", () => {
+    const parsed = RuntimeMessageSchema.parse({
+      type: "SETTINGS",
+      payload: {
+        retentionDays: 14,
+        maxEventsPerTab: 100,
+        blockedTrackerIds: [],
+        mitigateCanvas: false,
+        mitigateAudio: false,
+        mitigateWebgl: false,
+        skipReportOpenConfirm: false
+      }
+    })
+
+    expect(parsed).toMatchObject({ type: "SETTINGS" })
+    if (parsed.type !== "SETTINGS") throw new Error("Expected settings")
+    expect(parsed.payload.cookieMetadataEnabled).toBe(false)
+  })
+
   it("accepts legacy valuation rollups and fills supply-chain defaults", () => {
     const parsed = RuntimeMessageSchema.parse({
       type: "VALUATION_ROLLUP",

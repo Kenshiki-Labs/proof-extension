@@ -3,19 +3,19 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "855019c96e6ffc967489c7ceec13d662480d76bd45bf1b877f56f3d9b885a397"
+      "sha256": "ba1992149dd332feddefefdf90aa459f668b622ba706b48262b9e20441c8a9da"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "1a0bc9d1cfc0fc873b493b1166d0ec9e6d1fe27b104ce9c1a856c33d9b9e3629"
+      "sha256": "9358efa849fab463a6893bf04d5978b3a7156f1f24d9a82b326c6b097c7feeeb"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
-      "sha256": "6326c7246b2d73ea41631ca09ca61661706c3e5639851e4c73e1a7211bff61c7"
+      "sha256": "7e63fdd6d0274e66fd8cc128634393c5c69b54313e182cbb85b96ad279838c55"
     },
     {
       "file": "src/core/report/display.ts",
-      "sha256": "434d4a5ae98a165a3bbe24b4ddcf1b8756ab75e500eee8d7c691c2ac44156438"
+      "sha256": "c65fe621fc8e7181e3153dbf4da26d80b69952449bc71fcbff14e1ad8da0bd55"
     },
     {
       "file": "src/core/domain/valuation.ts",
@@ -82,10 +82,10 @@
     },
     {
       "term": "Evidence",
-      "total": 30,
+      "total": 33,
       "files": {
         "src/popup.tsx": 1,
-        "src/tabs/report.tsx": 25,
+        "src/tabs/report.tsx": 28,
         "src/core/report/display.ts": 4
       }
     },
@@ -125,11 +125,11 @@
     },
     {
       "term": "Observations",
-      "total": 47,
+      "total": 72,
       "files": {
-        "src/tabs/report.tsx": 23,
+        "src/tabs/report.tsx": 31,
         "src/components/value/ValueLedgerView.tsx": 7,
-        "src/core/report/display.ts": 13,
+        "src/core/report/display.ts": 30,
         "src/core/domain/valuation.ts": 4
       }
     },
@@ -292,71 +292,123 @@
   "topWords": [
     {
       "word": "mt-",
-      "count": 47
+      "count": 51
     },
     {
       "word": "core",
       "count": 36
     },
     {
-      "word": "components",
-      "count": 25
+      "word": "cookie",
+      "count": 31
+    },
+    {
+      "word": "page",
+      "count": 31
     },
     {
       "word": "gap-",
-      "count": 24
+      "count": 29
+    },
+    {
+      "word": "components",
+      "count": 28
+    },
+    {
+      "word": "browser",
+      "count": 22
     },
     {
       "word": "domain",
       "count": 22
     },
     {
-      "word": "page",
-      "count": 19
+      "word": "not",
+      "count": 22
     },
     {
       "word": "can",
-      "count": 18
+      "count": 20
     },
     {
-      "word": "not",
+      "word": "storage",
+      "count": 19
+    },
+    {
+      "word": "flex",
+      "count": 17
+    },
+    {
+      "word": "observed",
+      "count": 17
+    },
+    {
+      "word": "border-border",
+      "count": 16
+    },
+    {
+      "word": "grid",
+      "count": 16
+    },
+    {
+      "word": "site",
+      "count": 16
+    },
+    {
+      "word": "flex-wrap",
       "count": 15
     },
     {
-      "word": "browser",
-      "count": 14
+      "word": "grid-cols-",
+      "count": 15
+    },
+    {
+      "word": "metadata",
+      "count": 15
     },
     {
       "word": "data",
       "count": 14
     },
     {
-      "word": "flex",
+      "word": "report",
       "count": 14
     },
     {
-      "word": "grid",
-      "count": 14
+      "word": "you",
+      "count": 13
+    },
+    {
+      "word": "evidence",
+      "count": 12
+    },
+    {
+      "word": "seen",
+      "count": 12
+    },
+    {
+      "word": "cache",
+      "count": 11
     },
     {
       "word": "font-display",
-      "count": 13
+      "count": 11
     },
     {
       "word": "font-semibold",
-      "count": 13
+      "count": 11
     },
     {
-      "word": "grid-cols-",
-      "count": 13
+      "word": "only",
+      "count": 11
     },
     {
-      "word": "flex-wrap",
-      "count": 12
+      "word": "scanning",
+      "count": 11
     },
     {
-      "word": "site",
-      "count": 12
+      "word": "system",
+      "count": 11
     },
     {
       "word": "tabular-nums",
@@ -367,27 +419,43 @@
       "count": 11
     },
     {
-      "word": "border-border",
+      "word": "extension",
       "count": 10
     },
     {
-      "word": "system",
+      "word": "failed",
       "count": 10
+    },
+    {
+      "word": "idle",
+      "count": 10
+    },
+    {
+      "word": "justify-between",
+      "count": 10
+    },
+    {
+      "word": "tab",
+      "count": 10
+    },
+    {
+      "word": "values",
+      "count": 10
+    },
+    {
+      "word": "border-b",
+      "count": 9
     },
     {
       "word": "debug",
       "count": 9
     },
     {
-      "word": "evidence",
+      "word": "error",
       "count": 9
     },
     {
-      "word": "observed",
-      "count": 9
-    },
-    {
-      "word": "report",
+      "word": "local",
       "count": 9
     },
     {
@@ -395,19 +463,15 @@
       "count": 9
     },
     {
-      "word": "seen",
-      "count": 9
-    },
-    {
-      "word": "you",
-      "count": 9
-    },
-    {
-      "word": "contract",
+      "word": "access",
       "count": 8
     },
     {
-      "word": "extension",
+      "word": "border",
+      "count": 8
+    },
+    {
+      "word": "contract",
       "count": 8
     },
     {
@@ -415,11 +479,47 @@
       "count": 8
     },
     {
-      "word": "justify-between",
+      "word": "session",
       "count": 8
     },
     {
+      "word": "write",
+      "count": 8
+    },
+    {
+      "word": "bg-background",
+      "count": 7
+    },
+    {
+      "word": "cookies",
+      "count": 7
+    },
+    {
+      "word": "copied",
+      "count": 7
+    },
+    {
+      "word": "httponly",
+      "count": 7
+    },
+    {
+      "word": "inspect",
+      "count": 7
+    },
+    {
+      "word": "local-state",
+      "count": 7
+    },
+    {
+      "word": "min-w-",
+      "count": 7
+    },
+    {
       "word": "network",
+      "count": 7
+    },
+    {
+      "word": "recorded",
       "count": 7
     },
     {
@@ -427,7 +527,19 @@
       "count": 7
     },
     {
-      "word": "text-",
+      "word": "secure",
+      "count": 7
+    },
+    {
+      "word": "settings",
+      "count": 7
+    },
+    {
+      "word": "state",
+      "count": 7
+    },
+    {
+      "word": "text-left",
       "count": 7
     },
     {
@@ -439,7 +551,19 @@
       "count": 7
     },
     {
-      "word": "border",
+      "word": "w-full",
+      "count": 7
+    },
+    {
+      "word": "bg-card",
+      "count": 6
+    },
+    {
+      "word": "but",
+      "count": 6
+    },
+    {
+      "word": "copy",
       "count": 6
     },
     {
@@ -447,11 +571,15 @@
       "count": 6
     },
     {
-      "word": "ledger",
+      "word": "extension-scan",
       "count": 6
     },
     {
-      "word": "only",
+      "word": "hidden",
+      "count": 6
+    },
+    {
+      "word": "ledger",
       "count": 6
     },
     {
@@ -459,7 +587,19 @@
       "count": 6
     },
     {
-      "word": "settings",
+      "word": "secondary",
+      "count": 6
+    },
+    {
+      "word": "service",
+      "count": 6
+    },
+    {
+      "word": "source",
+      "count": 6
+    },
+    {
+      "word": "string",
       "count": 6
     },
     {
@@ -469,146 +609,6 @@
     {
       "word": "text-base",
       "count": 6
-    },
-    {
-      "word": "what",
-      "count": 6
-    },
-    {
-      "word": "who",
-      "count": 6
-    },
-    {
-      "word": "bg-background",
-      "count": 5
-    },
-    {
-      "word": "border-b",
-      "count": 5
-    },
-    {
-      "word": "but",
-      "count": 5
-    },
-    {
-      "word": "local",
-      "count": 5
-    },
-    {
-      "word": "min-w-",
-      "count": 5
-    },
-    {
-      "word": "storage",
-      "count": 5
-    },
-    {
-      "word": "text-foreground",
-      "count": 5
-    },
-    {
-      "word": "text-left",
-      "count": 5
-    },
-    {
-      "word": "text-muted-foreground",
-      "count": 5
-    },
-    {
-      "word": "tracking-tight",
-      "count": 5
-    },
-    {
-      "word": "valuation",
-      "count": 5
-    },
-    {
-      "word": "w-full",
-      "count": 5
-    },
-    {
-      "word": "all",
-      "count": 4
-    },
-    {
-      "word": "bg-card",
-      "count": 4
-    },
-    {
-      "word": "block",
-      "count": 4
-    },
-    {
-      "word": "business",
-      "count": 4
-    },
-    {
-      "word": "contracts",
-      "count": 4
-    },
-    {
-      "word": "cost",
-      "count": 4
-    },
-    {
-      "word": "dsps",
-      "count": 4
-    },
-    {
-      "word": "failed",
-      "count": 4
-    },
-    {
-      "word": "font-mono",
-      "count": 4
-    },
-    {
-      "word": "gap-x-",
-      "count": 4
-    },
-    {
-      "word": "gap-y-",
-      "count": 4
-    },
-    {
-      "word": "hover",
-      "count": 4
-    },
-    {
-      "word": "items-baseline",
-      "count": 4
-    },
-    {
-      "word": "items-center",
-      "count": 4
-    },
-    {
-      "word": "may",
-      "count": 4
-    },
-    {
-      "word": "money",
-      "count": 4
-    },
-    {
-      "word": "publisher",
-      "count": 4
-    },
-    {
-      "word": "rem",
-      "count": 4
-    },
-    {
-      "word": "schemas",
-      "count": 4
-    },
-    {
-      "word": "source",
-      "count": 4
-    },
-    {
-      "word": "ssps",
-      "count": 4
     }
   ]
 }

@@ -4,6 +4,9 @@ import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import {
   blockabilitySummary,
   buildAtomicSignalRows,
+  buildCookieMetadataRollup,
+  buildLocalStatePurposeRollup,
+  buildLocalStateRollup,
   buildCopyPayload,
   compactEvents,
   compactPageErrors,
@@ -140,6 +143,175 @@ describe("compactEvents", () => {
 
     expect(observations.map((item) => observerName(item.event)).sort()).toEqual(["a.example", "b.example"])
     expect(unclassifiedObservations(observations.map((item) => item.event))).toHaveLength(2)
+  })
+
+  it("keeps browser cookie metadata rows separate by cookie name", () => {
+    const observations = compactEvents([
+      event({
+        id: "cookie-a",
+        source: "extension-scan",
+        eventType: "cookie_observed",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        evidence: ["Cookie values are never recorded."],
+        details: { name: "session_id", domain: "example.test", httpOnly: true, secure: true, session: false, sameSite: "lax" }
+      }),
+      event({
+        id: "cookie-b",
+        source: "extension-scan",
+        eventType: "cookie_observed",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        evidence: ["Cookie values are never recorded."],
+        observedAt: 200,
+        details: { name: "FTR_Cache_Status", domain: "example.test", httpOnly: false, secure: false, session: true, sameSite: "unspecified" }
+      })
+    ])
+
+    expect(observations).toHaveLength(2)
+    expect(observations.map(({ event }) => event.details?.name).sort()).toEqual(["FTR_Cache_Status", "session_id"])
+  })
+})
+
+describe("buildCookieMetadataRollup", () => {
+  it("summarizes browser cookie metadata into local-state counts and takeaways", () => {
+    const observations = compactEvents([
+      event({
+        id: "cookie-a",
+        source: "extension-scan",
+        eventType: "cookie_observed",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        evidence: ["Cookie values are never recorded."],
+        details: { name: "session_id", domain: "example.test", httpOnly: true, secure: true, session: false, sameSite: "lax" }
+      }),
+      event({
+        id: "cookie-b",
+        source: "extension-scan",
+        eventType: "cookie_observed",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        evidence: ["Cookie values are never recorded."],
+        details: { name: "cache", domain: "example.test", httpOnly: false, secure: false, session: true, sameSite: "unspecified" }
+      })
+    ])
+
+    expect(buildCookieMetadataRollup(observations)).toMatchObject({
+      httpOnlyCookies: 1,
+      insecureCookies: 1,
+      javascriptReadableCookies: 1,
+      persistentCookies: 1,
+      sameSiteSummary: "1 lax · 1 unspecified",
+      sessionCookies: 1,
+      totalCookies: 2
+    })
+    expect(buildCookieMetadataRollup(observations).takeaways).toEqual(expect.arrayContaining([
+      expect.stringContaining("readable by page scripts"),
+      expect.stringContaining("HttpOnly"),
+      expect.stringContaining("not marked Secure"),
+      expect.stringContaining("beyond the current browser session")
+    ]))
+  })
+})
+
+describe("buildLocalStateRollup", () => {
+  it("summarizes local-state mechanisms across cookies, storage, cache, and workers", () => {
+    const observations = compactEvents([
+      event({
+        id: "cookie-a",
+        source: "extension-scan",
+        eventType: "cookie_observed",
+        blockability: "observable_only",
+        evidence: ["Cookie values are never recorded."],
+        details: { name: "session_id", domain: "example.test", httpOnly: true, secure: true, session: false, sameSite: "lax" }
+      }),
+      event({ id: "storage", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "localStorage", key: "cart", valueBytes: 12 } }),
+      event({ id: "cache", eventType: "cache_storage_access", evidence: ["Cache Storage access observed."], details: { op: "open", cache: "site-cache" } }),
+      event({ id: "worker", eventType: "service_worker_registered", evidence: ["Service worker registered."], details: { scopePath: "/" } })
+    ])
+
+    expect(buildLocalStateRollup(observations)).toMatchObject({
+      backgroundWorkers: 1,
+      browserOnlyRecords: 1,
+      durableRecords: 4,
+      scriptReadableRecords: 3,
+      sessionRecords: 0,
+      totalRecords: 4
+    })
+    expect(buildLocalStateRollup(observations).families.map((family) => family.label)).toEqual(expect.arrayContaining(["Cookies", "Web Storage", "Cache Storage", "Service workers"]))
+  })
+
+  it("classifies browser-only, session, and non-durable records without double-counting", () => {
+    const observations = compactEvents([
+      // Browser-only + non-durable + not script-readable: exercises the
+      // fallbacks in the script-readable and durable classifiers.
+      event({ id: "cache-validator", eventType: "cache_validator_seen", blockability: "observable_only", evidence: ["Cache validator seen."], details: { header: "if-none-match" } }),
+      // Session-scoped storage: durable classifier's storage_write branch takes
+      // its false side; session classifier takes its true side.
+      event({ id: "session-storage", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "sessionStorage", key: "step", valueBytes: 4 } }),
+      // Session cookie, script-readable (httpOnly false), NOT durable: exercises
+      // the durable cookie condition's false side.
+      event({ id: "session-cookie", source: "extension-scan", eventType: "cookie_observed", blockability: "observable_only", evidence: ["Cookie values are never recorded."], details: { name: "csrf", domain: "example.test", httpOnly: false, secure: true, session: true, sameSite: "strict" } })
+    ])
+
+    expect(buildLocalStateRollup(observations)).toMatchObject({
+      backgroundWorkers: 0,
+      browserOnlyRecords: 1,
+      durableRecords: 0,
+      scriptReadableRecords: 2,
+      sessionRecords: 2,
+      totalRecords: 3
+    })
+  })
+})
+
+describe("eventSummary", () => {
+  it("describes persistence and cookie observations in plain language", () => {
+    expect(eventSummary(event({ eventType: "cookie_observed", evidence: ["x"] }))).toContain("its contents were not read")
+    expect(eventSummary(event({ eventType: "cache_validator_seen", evidence: ["x"] }))).toContain("marker value was not recorded")
+    expect(eventSummary(event({ eventType: "service_worker_registered", evidence: ["x"] }))).toContain("background worker")
+  })
+
+  it("falls back to a titled summary for event types without bespoke copy", () => {
+    expect(eventSummary(event({ eventType: "webrtc_probe", evidence: ["x"] }))).toMatch(/observed\.$/)
+  })
+})
+
+describe("buildLocalStatePurposeRollup", () => {
+  it("classifies Web Storage keys without using values", () => {
+    const observations = compactEvents([
+      event({ id: "storage-cart", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "localStorage", op: "set", key: "cart", valueBytes: 12 } }),
+      event({ id: "storage-csm", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "localStorage", op: "set", key: "csm-hit", valueBytes: 69 } }),
+      event({ id: "storage-events", eventType: "storage_write", evidence: ["Storage write observed."], count: 3, details: { area: "sessionStorage", op: "set", key: "amzn:fwcim:events", valueBytes: 1353 } }),
+      event({ id: "storage-remove", eventType: "storage_write", evidence: ["Storage write observed."], count: 2, details: { area: "sessionStorage", op: "remove", key: "amzn:fwcim:events" } }),
+      event({ id: "storage-clear", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "localStorage", op: "clear" } }),
+      event({ id: "storage-hidden", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "sessionStorage", op: "set", key: "[hidden 20]", valueBytes: 1 } }),
+      event({ id: "cookie", eventType: "cookie_observed", evidence: ["Cookie observed."], details: { name: "cart" } })
+    ])
+
+    const rollup = buildLocalStatePurposeRollup(observations)
+
+    expect(rollup).toMatchObject({
+      clearOperations: 1,
+      deleteOperations: 2,
+      localStorageRecords: 3,
+      sessionStorageRecords: 6,
+      setOperations: 6,
+      totalRecords: 9
+    })
+    expect(rollup.purposes).toEqual(expect.arrayContaining([
+      expect.objectContaining({ label: "Analytics and event queues", count: 5, keyExamples: ["amzn:fwcim:events"] }),
+      expect.objectContaining({ label: "Cart and commerce", count: 1, keyExamples: ["cart"] }),
+      expect.objectContaining({ label: "Performance and diagnostics", count: 1, keyExamples: ["csm-hit"] }),
+      expect.objectContaining({ label: "Unclassified storage keys", count: 1, keyExamples: [] })
+    ]))
+    expect(rollup.takeaways).toEqual(expect.arrayContaining([
+      expect.stringContaining("localStorage"),
+      expect.stringContaining("sessionStorage"),
+      expect.stringContaining("rotating or clearing"),
+      expect.stringContaining("clear operation wiped"),
+      expect.stringContaining("analytics and event queues")
+    ]))
   })
 })
 

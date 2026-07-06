@@ -150,7 +150,7 @@ function Metric({
         <div className={TYPE.label}>{label}</div>
         <IconComponent aria-hidden className={`h-4 w-4 shrink-0 ${toneClass}`} />
       </div>
-      <div className="mt-2 font-display text-2xl font-semibold tracking-tight tabular-nums">{value}</div>
+      <div className={UI.metricValue}>{value}</div>
       {description ? <p className={`${TYPE.small} mt-2`}>{description}</p> : null}
     </div>
   )

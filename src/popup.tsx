@@ -8,10 +8,12 @@ import type { Storage } from "webextension-polyfill"
 import { RuntimeMessageSchema } from "~core/contracts/schemas"
 import { EMPTY_SUMMARY, parseSiteSummaryResponse } from "~core/report/display"
 import { buildWatcherListModel } from "~core/report/watchers"
+import BetaBreadthNotice from "~components/BetaBreadthNotice"
 import Button from "~components/system/Button"
 import { NarrowingMirror } from "~components/NarrowingPanel"
 import SiteLogo from "~components/system/SiteLogo"
 import SurfaceSection from "~components/system/SurfaceSection"
+import Toggle from "~components/system/Toggle"
 import VerdictBanner from "~components/VerdictBanner"
 import VisitFrequencyAsk from "~components/VisitFrequencyAsk"
 import WatcherList from "~components/watchers/WatcherList"
@@ -37,10 +39,33 @@ const EMPTY_SETTINGS: UserSettings = {
   mitigateAudio: false,
   mitigateWebgl: false,
   skipReportOpenConfirm: false,
+  cookieMetadataEnabled: false,
   siteVisitFrequency: {}
 }
 
 const POPUP_WATCHER_LIMIT = 5
+const COOKIE_METADATA_PERMISSION: chrome.permissions.Permissions = { permissions: ["cookies"] }
+
+function updateCookiePermission(enabled: boolean): Promise<boolean> {
+  if (typeof chrome === "undefined" || !chrome.permissions) return Promise.resolve(false)
+
+  return new Promise((resolve) => {
+    const callback = (granted: boolean) => {
+      if (chrome.runtime?.lastError) {
+        resolve(false)
+        return
+      }
+      resolve(granted)
+    }
+
+    if (enabled) {
+      chrome.permissions.request(COOKIE_METADATA_PERMISSION, callback)
+      return
+    }
+
+    chrome.permissions.remove(COOKIE_METADATA_PERMISSION, callback)
+  })
+}
 
 function domainForOrigin(origin: string): string | null {
   try {
@@ -135,6 +160,14 @@ function IndexPopup() {
     await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { blockedTrackerIds } }).catch(() => undefined)
   }
 
+  async function toggleCookieMetadata(enabled: boolean) {
+    const permissionUpdated = await updateCookiePermission(enabled)
+    if (enabled && !permissionUpdated) return
+
+    setSettings((current) => ({ ...current, cookieMetadataEnabled: enabled }))
+    await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { cookieMetadataEnabled: enabled } }).catch(() => undefined)
+  }
+
   async function openFullReport() {
     if (summary.tabId < 0) return
     await browser.tabs.create({ url: browser.runtime.getURL(`tabs/report.html?tabId=${summary.tabId}&view=evidence`) })
@@ -186,6 +219,15 @@ function IndexPopup() {
 
       <NarrowingMirror model={narrowingModel} />
       <VerdictBanner compact summary={summary} />
+      <BetaBreadthNotice compact />
+      <section className={`mt-3.5 ${UI.panel} ${UI.inset}`}>
+        <Toggle
+          checked={settings.cookieMetadataEnabled}
+          label="Observe browser cookie metadata"
+          note="Adds HttpOnly/SameSite/Secure metadata to reports for pages you visit. Values are hidden unless you inspect them locally in the report."
+          onChange={(checked) => toggleCookieMetadata(checked).catch(() => undefined)}
+        />
+      </section>
       <VisitFrequencyAsk
         annualHighUsd={valuationRollup.annualRevenueHighUsd}
         annualLowUsd={valuationRollup.annualRevenueLowUsd}
