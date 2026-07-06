@@ -57,39 +57,60 @@ if (files.length === 0) {
   process.exit(0)
 }
 
-let flipped = 0
 const report = []
+const norm = (value) => value.toLowerCase().replace(/[^a-z0-9]/g, "")
 
+// Match each drop file to a seed tracker by normalized-prefix, so descriptive
+// names (magnite-cookie.txt, 33-across-privacy.txt) map to their tracker id.
+// Longest matching id wins to avoid a short id swallowing another's files.
+const seedIds = list.filter((r) => r.review?.status === "seed").map((r) => r.id).sort((a, b) => norm(b).length - norm(a).length)
+const filesByTracker = new Map()
+const unmatched = []
 for (const file of files) {
-  const trackerId = file.replace(/\.txt$/, "")
+  const base = norm(file.replace(/\.txt$/, ""))
+  const trackerId = seedIds.find((id) => base.startsWith(norm(id)))
+  if (!trackerId) { unmatched.push(file); continue }
+  if (!filesByTracker.has(trackerId)) filesByTracker.set(trackerId, [])
+  filesByTracker.get(trackerId).push(file)
+}
+for (const file of unmatched) report.push(`SKIP  ${file} — no seed tracker matches this name`)
+
+let flipped = 0
+
+for (const [trackerId, trackerFiles] of filesByTracker) {
   const record = byId.get(trackerId)
-  if (!record) { report.push(`SKIP  ${file} — no tracker "${trackerId}"`); continue }
-  if (record.review?.status !== "seed") { report.push(`SKIP  ${trackerId} — already ${record.review?.status}`); continue }
+  const verifiedSources = []
 
-  const raw = readFileSync(new URL(file, DROP_DIR), "utf8")
-  const newlineAt = raw.indexOf("\n")
-  const url = (newlineAt === -1 ? raw : raw.slice(0, newlineAt)).trim()
-  const text = (newlineAt === -1 ? "" : raw.slice(newlineAt + 1)).replace(/\s+/g, " ").trim()
+  for (const file of trackerFiles) {
+    const raw = readFileSync(new URL(file, DROP_DIR), "utf8")
+    const newlineAt = raw.indexOf("\n")
+    const url = (newlineAt === -1 ? raw : raw.slice(0, newlineAt)).trim()
+    const text = (newlineAt === -1 ? "" : raw.slice(newlineAt + 1)).replace(/\s+/g, " ").trim()
+    const lower = text.toLowerCase()
+    const hits = POLICY_SIGNALS.filter((s) => lower.includes(s))
+    const hasIdentity = identityTokens(record).some((t) => lower.includes(t))
 
-  if (!/^https?:\/\//i.test(url)) { report.push(`FAIL  ${trackerId} — line 1 is not a URL`); continue }
-  if (!hostIsPlausible(url, record)) { report.push(`FAIL  ${trackerId} — URL host not plausibly ${record.displayName}`); continue }
-  if (text.length < 400) { report.push(`FAIL  ${trackerId} — pasted text too short (${text.length})`); continue }
-  const lower = text.toLowerCase()
-  const hits = POLICY_SIGNALS.filter((s) => lower.includes(s))
-  const hasIdentity = identityTokens(record).some((t) => lower.includes(t))
-  if (hits.length < 2 || !hasIdentity) { report.push(`FAIL  ${trackerId} — not policy-like (signals=${hits.length}, identity=${hasIdentity})`); continue }
+    if (!/^https?:\/\//i.test(url)) { report.push(`  drop ${file} — line 1 is not a URL`); continue }
+    if (!hostIsPlausible(url, record)) { report.push(`  drop ${file} — host not plausibly ${record.displayName}`); continue }
+    if (text.length < 400) { report.push(`  drop ${file} — text too short (${text.length})`); continue }
+    if (hits.length < 2 || !hasIdentity) { report.push(`  drop ${file} — not policy-like (signals=${hits.length}, id=${hasIdentity})`); continue }
 
-  report.push(`PASS  ${trackerId} — ${hits.length} signals, ${text.length} chars, ${new URL(url).hostname}`)
-  if (doWrite) {
-    record.sources = [...(record.sources ?? []), {
+    report.push(`  ok   ${file} — ${hits.length} signals, ${text.length} chars, ${new URL(url).hostname}`)
+    verifiedSources.push({
       family: "vendor_docs",
-      name: `${record.displayName} privacy policy`,
+      name: `${record.displayName} — ${file.replace(/\.txt$/, "")}`,
       url,
       retrieved_at: TODAY,
       license: "Vendor public documentation; referenced, not reproduced",
-      transform_notes: `Owner-provided policy text from ${url}, verified on ${TODAY} to carry ${hits.length} policy signals and vendor identity. Excerpt: "${excerptAround(text)}"`,
-    }]
-    record.review = { status: "source_backed", last_reviewed_at: TODAY, reviewer: REVIEWER, notes: `Source-backed from owner-provided policy text (${new URL(url).hostname}) on ${TODAY}. Pending human spot-check.` }
+      transform_notes: `Owner-provided policy text from ${url}, verified on ${TODAY} (${hits.length} policy signals, vendor identity present). Excerpt: "${excerptAround(text)}"`,
+    })
+  }
+
+  if (verifiedSources.length === 0) { report.push(`FAIL  ${trackerId} — no drop file verified`); continue }
+  report.push(`PASS  ${trackerId} — ${verifiedSources.length} verified source doc(s)`)
+  if (doWrite) {
+    record.sources = [...(record.sources ?? []), ...verifiedSources]
+    record.review = { status: "source_backed", last_reviewed_at: TODAY, reviewer: REVIEWER, notes: `Source-backed from ${verifiedSources.length} owner-provided policy doc(s) on ${TODAY}. Pending human spot-check.` }
     flipped += 1
   }
 }

@@ -7,14 +7,14 @@ lastReviewed: 2026-07-06
 status: generated
 ---
 
-> Generated from commit `6269080` by `pnpm db:baseline`. Do not hand-edit.
+> Generated from commit `74aa7d8` by `pnpm db:baseline`. Do not hand-edit.
 
 ## Summary
 
 - Trackers: **44** (Phase 1 minimum: 25)
 - Companies: **44**, remediation records: **42**
 - SDK-global signatures: **38/44** trackers covered
-- Provenance: **2** seed / **42** source-backed
+- Provenance: **0** seed / **44** source-backed
 - Remediation: deletion link **44/44**, opt-out link **44/44**
 - Explanation coverage: **44/44**
 - Blocking-limit coverage: **44/44**
@@ -73,13 +73,13 @@ status: generated
 | datadog-rum | performance-monitoring | Datadog, Inc. | 1 | 1 | yes | source_backed | manual_seed | yes | yes | unknown | 2026-07-01 | no |
 | the-trade-desk | advertising | The Trade Desk, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | pubmatic | advertising | PubMatic, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| magnite | advertising | Magnite, Inc. | 2 | 0 | yes | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| magnite | advertising | Magnite, Inc. | 2 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | openx | advertising | OpenX Technologies, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | index-exchange | advertising | Index Exchange Inc. | 2 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | lotame | data-management-platform | Lotame Solutions, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | liveramp | identity-resolution | LiveRamp Holdings, Inc. | 1 | 0 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
 | id5 | identity-resolution | ID5 Technology Ltd | 1 | 0 | no | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
-| 33across | advertising | 33Across, Inc. | 2 | 0 | no | seed | manual_seed | yes | yes | low | 2026-07-03 | yes |
+| 33across | advertising | 33Across, Inc. | 2 | 0 | no | source_backed | manual_seed | yes | yes | low | 2026-07-03 | yes |
 | tapad | cross-device-tracking | Experian plc | 1 | 0 | no | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
 | 6sense | behavioral-profiling | 6sense Insights, Inc. | 1 | 0 | no | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
 | hubspot | marketing-automation | HubSpot, Inc. | 4 | 0 | yes | source_backed | manual_seed | yes | yes | medium | 2026-07-03 | yes |
@@ -91,7 +91,7 @@ status: generated
 
 ## Gap register
 
-- **Provenance**: 2 of 44 records are hand-authored seeds pending Tracker Radar / EasyPrivacy source backing (Phase 3).
+- **Provenance**: 0 of 44 records are hand-authored seeds pending Tracker Radar / EasyPrivacy source backing (Phase 3).
 - **All trackers are network_blockable** — no `content_mitigatable` or `observable_only` records exist yet, so only one of six blockability classes is exercised by the DB.
 - **No SDK-global signature** (6): segment, id5, 33across, tapad, 6sense, sourcepoint.
 - **Unknown remediation friction** (6): tiktok-pixel, braze, drift, optimizely, crazyegg, datadog-rum.

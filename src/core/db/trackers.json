@@ -4313,13 +4313,53 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Magnite — magnite-ad-policy",
+        "url": "https://www.magnite.com/legal/advertising-platform-privacy-policy/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Owner-provided policy text from https://www.magnite.com/legal/advertising-platform-privacy-policy/, verified on 2026-07-06 (7 policy signals, vendor identity present). Excerpt: \"Information We Collect, Use, Disclose, and the Purposes for such Disclosure Your Privacy Rights and Choices Additional Information for Residents of Certain States Information Reten\""
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Magnite — magnite-cookie",
+        "url": "https://www.magnite.com/legal/platform-partner-statement/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Owner-provided policy text from https://www.magnite.com/legal/platform-partner-statement/, verified on 2026-07-06 (4 policy signals, vendor identity present). Excerpt: \"we collect with information independently collected by our customers and other third party advertising platforms and advertisers that are interested in providing you with ads. Soft\""
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Magnite — magnite-privacy",
+        "url": "https://www.magnite.com/legal/data-protection-framework/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Owner-provided policy text from https://www.magnite.com/legal/data-protection-framework/, verified on 2026-07-06 (5 policy signals, vendor identity present). Excerpt: \"information we collect and use The types of personal information we may receive in the US, as well as the purposes for which we collect and use it, are set out in our Website Priva\""
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Magnite — magnite-user",
+        "url": "https://www.magnite.com/legal/user-choice-portal/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Owner-provided policy text from https://www.magnite.com/legal/user-choice-portal/, verified on 2026-07-06 (6 policy signals, vendor identity present). Excerpt: \"personal data to the person about whom such data relates. We use the information you provide when making the request only for the purpose of processing your data protection and pri\""
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Magnite — magnite-website-policy",
+        "url": "https://www.magnite.com/legal/magnite-website-privacy-policy/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Owner-provided policy text from https://www.magnite.com/legal/magnite-website-privacy-policy/, verified on 2026-07-06 (7 policy signals, vendor identity present). Excerpt: \"information we collect when you use or interact with those services) here. How We Collect, Use, Disclose Information and the Purposes for such Disclosure: The information listed be\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (owner-provided policy text, verified)",
+      "notes": "Source-backed from 5 owner-provided policy doc(s) on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Magnite",
     "observes": {
@@ -5176,13 +5216,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "33Across — 33across-privacy",
+        "url": "https://www.33across.com/privacy-policy",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Owner-provided policy text from https://www.33across.com/privacy-policy, verified on 2026-07-06 (9 policy signals, vendor identity present). Excerpt: \"Information We collect PII exclusively on the 33Across Websites: our main company site (33across.com) and our publisher portal (platform.33across.com), when you choose to provide i\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (owner-provided policy text, verified)",
+      "notes": "Source-backed from 1 owner-provided policy doc(s) on 2026-07-06. Pending human spot-check."
     },
     "displayName": "33Across",
     "observes": {
