@@ -55,7 +55,21 @@ For each record in `src/core/db/trackers.json` (all 42 are
 Done when: every record either carries retrieved provenance or its
 `review.notes` says exactly what could not be verified; `pnpm qa` green.
 
-## 2. Production blocked-state reporting
+## 2. Production blocked-state reporting — DONE (2026-07-06)
+
+Shipped in commit 70976c9. `recordBlockedOutcome` (src/background.ts) is the
+single recorder shared by both deterministic signals; the production path
+(`webRequest.onErrorOccurred` + `net::ERR_BLOCKED_BY_CLIENT` matched to an
+installed rule via `findInstalledBlockRuleMetadataForRequest` in
+`src/core/db/dnr.ts`) records `request_blocked`, supersedes the matching
+`request_seen`, and annotates `blockSignals` so a request is never
+double-counted. Both paths are Firefox-guarded (`chrome.webRequest?.`).
+E2E proof: `tests/e2e/tracker-fixture.spec.ts:429` ("blocked state carries
+the production err_blocked_by_client signal") asserts network cancellation +
+`err_blocked_by_client` provenance + supersede + no double-count; verified
+passing 2026-07-06. Unit coverage in `src/core/db/dnr.test.ts`.
+
+### (original task, for reference)
 
 `chrome.declarativeNetRequest.onRuleMatchedDebug` (src/background.ts) only
 fires in unpacked dev builds. In a packed/store build, DNR still blocks but

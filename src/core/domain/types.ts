@@ -107,6 +107,13 @@ export type SiteSummary = {
   updatedAt: number
 }
 
+export type CookieMetadataScanStatus = "available" | "permission_required" | "unsupported" | "no_tab" | "restricted_page"
+
+export type CookieMetadataScanResult = {
+  status: CookieMetadataScanStatus
+  events: ObserverEvent[]
+}
+
 export type UserSettings = {
   retentionDays: number
   maxEventsPerTab: number
@@ -232,6 +239,11 @@ export type RuntimeMessage =
   | { type: "PAGE_ERROR_OBSERVED"; payload: Omit<PageError, "id"> }
   | { type: "GET_SITE_SUMMARY"; tabId: number }
   | { type: "SITE_SUMMARY"; payload: SiteSummary }
+  | { type: "GET_COOKIE_METADATA_PERMISSION" }
+  | { type: "REQUEST_COOKIE_METADATA_PERMISSION" }
+  | { type: "COOKIE_METADATA_PERMISSION"; granted: boolean }
+  | { type: "SCAN_SITE_COOKIES"; tabId: number }
+  | { type: "COOKIE_METADATA_SCAN"; payload: CookieMetadataScanResult }
   | { type: "GET_VALUATION_ROLLUP"; period: ValuationPeriod }
   | { type: "VALUATION_ROLLUP"; payload: RollingValuationSummary }
   | { type: "REFRESH_TAB_SCAN"; tabId: number }

@@ -7,7 +7,11 @@ test("loads the built Chromium extension popup", async () => {
     const page = await context.newPage()
     await page.goto(`chrome-extension://${extensionId}/popup.html`)
     await expect(page.getByText("Pulse Observer")).toBeVisible()
-    await expect(page.getByRole("heading", { name: "Watching now" })).toBeVisible()
+    // Opened with no active tab: the verdict always speaks, even when empty
+    // (surface contract — a missing verdict is indistinguishable from a
+    // broken pipeline). The old "Watching now" heading was removed in the
+    // popup rebuild.
+    await expect(page.getByText("No watchers observed on this page yet.")).toBeVisible()
   })
 })
 

@@ -3,6 +3,7 @@ import type { Runtime } from "webextension-polyfill"
 import * as z from "zod"
 
 import { runConsentAudit, type AnchorInput, type ConsentAuditRecord } from "~core/atlas/audit"
+import { hasCookieMetadataPermission, requestCookieMetadataPermission, scanSiteCookieMetadata } from "~core/browser/cookie-store"
 import { RuntimeMessageSchema } from "~core/contracts/schemas"
 import {
   findInstalledBlockRuleMetadataForRequest,
@@ -450,6 +451,19 @@ async function recordActiveTabScan(tabId: number) {
   return readSummary(tabId, origin)
 }
 
+async function scanCookieMetadataForTab(tabId: number): Promise<RuntimeMessage> {
+  let tab: browser.Tabs.Tab
+  try {
+    tab = await browser.tabs.get(tabId)
+  } catch {
+    return { type: "COOKIE_METADATA_SCAN", payload: { status: "no_tab", events: [] } }
+  }
+
+  const result = await scanSiteCookieMetadata({ origin: originFromUrl(tab.url), tabId })
+  for (const event of result.events) await recordEvent(event)
+  return { type: "COOKIE_METADATA_SCAN", payload: result }
+}
+
 // Live consent audit of the site currently seen (docs/consent-atlas-tab-spec.md).
 // The page's own anchors replace the atlas crawler: harvest them on demand,
 // classify legal-document links, fetch documents on this site's own domain,
@@ -773,6 +787,18 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
 
     if (message.type === "GET_SITE_SUMMARY") {
       return { type: "SITE_SUMMARY", payload: readSummary(message.tabId) }
+    }
+
+    if (message.type === "GET_COOKIE_METADATA_PERMISSION") {
+      return { type: "COOKIE_METADATA_PERMISSION", granted: await hasCookieMetadataPermission() }
+    }
+
+    if (message.type === "REQUEST_COOKIE_METADATA_PERMISSION") {
+      return { type: "COOKIE_METADATA_PERMISSION", granted: await requestCookieMetadataPermission() }
+    }
+
+    if (message.type === "SCAN_SITE_COOKIES") {
+      return scanCookieMetadataForTab(message.tabId)
     }
 
     if (message.type === "GET_VALUATION_ROLLUP") {

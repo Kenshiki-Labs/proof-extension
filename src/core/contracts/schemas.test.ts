@@ -49,6 +49,27 @@ describe("RuntimeMessageSchema", () => {
     })
   })
 
+  it("validates cookie metadata scan responses", () => {
+    expect(RuntimeMessageSchema.parse({
+      type: "COOKIE_METADATA_SCAN",
+      payload: {
+        status: "available",
+        events: [{
+          ...observerEvent,
+          id: "cookie_observed:12:example.test:session_id",
+          source: "extension-scan",
+          eventType: "cookie_observed",
+          blockability: "observable_only",
+          confidence: "confirmed",
+          firstParty: true,
+          policyLabel: "unknown_first_party",
+          evidence: ["Cookie values are never recorded — only the name and attributes."],
+          details: { name: "session_id", httpOnly: true }
+        }]
+      }
+    })).toMatchObject({ type: "COOKIE_METADATA_SCAN" })
+  })
+
   it("accepts legacy valuation rollups and fills supply-chain defaults", () => {
     const parsed = RuntimeMessageSchema.parse({
       type: "VALUATION_ROLLUP",

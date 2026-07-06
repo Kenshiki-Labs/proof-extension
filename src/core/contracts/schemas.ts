@@ -88,6 +88,11 @@ export const SiteSummarySchema = z.object({
   updatedAt: z.number().int().nonnegative()
 })
 
+export const CookieMetadataScanResultSchema = z.object({
+  status: z.enum(["available", "permission_required", "unsupported", "no_tab", "restricted_page"]),
+  events: z.array(ObserverEventSchema)
+})
+
 export const VisitFrequencySchema = z.enum(VISIT_FREQUENCIES as [VisitFrequency, ...VisitFrequency[]])
 
 export const UserSettingsSchema = z.object({
@@ -242,6 +247,11 @@ export const RuntimeMessageSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("PAGE_ERROR_OBSERVED"), payload: PageErrorSchema.omit({ id: true }) }),
   z.object({ type: z.literal("GET_SITE_SUMMARY"), tabId: z.number().int() }),
   z.object({ type: z.literal("SITE_SUMMARY"), payload: SiteSummarySchema }),
+  z.object({ type: z.literal("GET_COOKIE_METADATA_PERMISSION") }),
+  z.object({ type: z.literal("REQUEST_COOKIE_METADATA_PERMISSION") }),
+  z.object({ type: z.literal("COOKIE_METADATA_PERMISSION"), granted: z.boolean() }),
+  z.object({ type: z.literal("SCAN_SITE_COOKIES"), tabId: z.number().int() }),
+  z.object({ type: z.literal("COOKIE_METADATA_SCAN"), payload: CookieMetadataScanResultSchema }),
   z.object({ type: z.literal("GET_VALUATION_ROLLUP"), period: ValuationPeriodSchema }),
   z.object({ type: z.literal("VALUATION_ROLLUP"), payload: RollingValuationSummarySchema }),
   z.object({ type: z.literal("REFRESH_TAB_SCAN"), tabId: z.number().int() }),
