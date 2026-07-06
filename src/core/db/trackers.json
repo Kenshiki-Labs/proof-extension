@@ -1092,13 +1092,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Hotjar privacy policy",
+        "url": "https://www.hotjar.com/legal/policies/privacy/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (8 policy signals, vendor identity present). Excerpt: \"information We collect from Our Customers, Users and/or Testers is disclosed only in accordance with the Agreement and the Applicable Law. Personal Data collected from Engage Produ\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
-      "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.hotjar.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Hotjar",
     "observes": {
@@ -1674,13 +1682,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Criteo privacy policy",
+        "url": "https://www.criteo.com/privacy/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (7 policy signals, vendor identity present). Excerpt: \"information we collect, how we use it, and under what circumstances, if any we disclose it. If we make any material changes we will notify you by means of a notice on this site pri\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
-      "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.criteo.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Criteo",
     "observes": {
@@ -2398,13 +2414,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Optimizely privacy policy",
+        "url": "https://www.optimizely.com/legal/privacy-notice",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (7 policy signals, vendor identity present). Excerpt: \"information we collect either directly or indirectly about specific users to ensure the completeness and correctness of the data and to help us better tailor our interactions with\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
-      "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.optimizely.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Optimizely",
     "observes": {
@@ -2533,13 +2557,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Crazy Egg privacy policy",
+        "url": "https://www.crazyegg.com/privacy",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (5 policy signals, vendor identity present). Excerpt: \"personal data under applicable data protection law, it is referred to in this Privacy Policy as “Personal Data”. Use of Cookies by the Service As described in our Cookie Policy, th\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
-      "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.crazyegg.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Crazy Egg",
     "observes": {
@@ -2671,13 +2703,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Quantcast privacy policy",
+        "url": "https://legal.quantcast.com/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (8 policy signals, vendor identity present). Excerpt: \"information we collect then enables the Client to learn about their audience, and it enables us to build models for better targeting ads. Tags or Pixels used by advertiser Clients:\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
-      "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against legal.quantcast.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Quantcast",
     "observes": {
@@ -2808,13 +2848,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Taboola privacy policy",
+        "url": "https://policies.taboola.com/privacy-policy/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (7 policy signals, vendor identity present). Excerpt: \"Information We Collect from Customers (“Customer Information”) 1.2 Why We Use Customer Information 1.3 To Whom We Disclose Customer Information 1.4 Customer Choices 2. Users 2.1 In\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-02",
-      "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against policies.taboola.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Taboola",
     "observes": {
@@ -2945,13 +2993,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Outbrain privacy policy",
+        "url": "https://www.outbrain.com/privacy/?who=publisher&lang=pl-PL",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (6 policy signals, vendor identity present). Excerpt: \"information we collect, how and why a) Why we collect your Personal Data We mainly process your Personal Data so that we can serve interesting ads or content to you. We also proces\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-05",
-      "reviewer": "Kenshiki",
-      "notes": "Seed record pending source-backed Tracker Radar/EasyPrivacy import review. Not verified 2026-07-05: attempted to retrieve Outbrain's publisher/pixel documentation directly (widgets.outbrain.com identity and outbrain.js behavior); the specific pixel-install page returned 404 and no vendor page confirming widgets.outbrain.com verbatim was successfully retrieved this session. Domains remain hand-authored, unconfirmed by vendor docs."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.outbrain.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Outbrain",
     "observes": {
@@ -3956,13 +4012,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "The Trade Desk privacy policy",
+        "url": "https://www.thetradedesk.com/legal/privacy",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (7 policy signals, vendor identity present). Excerpt: \"personal data or personal information (“personal data”) it uses for delivering advertising. If you are interested in our corporate and website privacy policy, click here . If you a\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.thetradedesk.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "The Trade Desk",
     "observes": {
@@ -4094,13 +4158,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "PubMatic privacy policy",
+        "url": "https://pubmatic.com/legal/privacy-policy/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (8 policy signals, vendor identity present). Excerpt: \"INFORMATION WE COLLECT HOW WE USE THE USER INFORMATION HOW WE DISCLOSE USER INFORMATION YOUR CHOICES AND DATA PROTECTION RIGHTS YOUR PRIVACY CHOICES YOUR DATA RIGHTS ADDITIONAL INF\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against pubmatic.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "PubMatic",
     "observes": {
@@ -4370,13 +4442,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "OpenX privacy policy",
+        "url": "https://www.openx.com/privacy-center/privacy-policy/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (7 policy signals, vendor identity present). Excerpt: \"information we collect, the categories of personal data we collect, the categories of sources from which we collected personal data, our purposes for collecting personal data, and\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.openx.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "OpenX",
     "observes": {
@@ -4507,13 +4587,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Index Exchange privacy policy",
+        "url": "https://www.indexexchange.com/privacy/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (7 policy signals, vendor identity present). Excerpt: \"personal data, or the equivalent term in your region (collectively, Personal Data ) with transparency, care, and respect. Unless otherwise specified, any reference to Index Exchang\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.indexexchange.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Index Exchange",
     "observes": {
@@ -4644,13 +4732,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Lotame privacy policy",
+        "url": "https://www.lotame.com/privacy/",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (5 policy signals, vendor identity present). Excerpt: \"personal data we collect and our use of that personal data varies based on how you use our Sites (like corporate websites and our platform site) or how you interact with the sites\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.lotame.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Lotame",
     "observes": {
@@ -4782,13 +4878,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "LiveRamp privacy policy",
+        "url": "https://liveramp.com/privacy",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (4 policy signals, vendor identity present). Excerpt: \"information we collect, how the information is used and what choices you have to protect your information. General Privacy Notices Product and Service Privacy Notice (How we handle\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against liveramp.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "LiveRamp",
     "observes": {
@@ -4918,13 +5022,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "ID5 privacy policy",
+        "url": "https://id5.io/trust/platform-privacy-policy",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (3 policy signals, vendor identity present). Excerpt: \"personal information\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against id5.io on 2026-07-06. Pending human spot-check."
     },
     "displayName": "ID5",
     "observes": {
@@ -5193,13 +5305,21 @@
         "retrieved_at": "2026-07-03",
         "license": "Kenshiki Labs curated research notes; external source attribution preserved per finding.",
         "transform_notes": "Projected source findings through extension-scoped entities into one per-tracker perPersonValue block. Derived fields perVisit.dollars and annual.midpoint_usd are computed by the normalizer, never authored in the source corpus."
+      },
+      {
+        "family": "vendor_docs",
+        "name": "Tapad privacy policy",
+        "url": "https://www.tapad.com/privacy",
+        "retrieved_at": "2026-07-06",
+        "license": "Vendor public documentation; referenced, not reproduced",
+        "transform_notes": "Retrieved and confirmed as the vendor's own privacy policy on 2026-07-06 (4 policy signals, vendor identity present). Excerpt: \"Personal Information Identity The Tapad Graph Switchboard Hashed Email Onboarding CTV IP Onboarding Mobile Connections Solutions Brands Agencies Platforms Resources Engineering Blo\""
       }
     ],
     "review": {
-      "status": "seed",
-      "last_reviewed_at": "2026-07-03",
-      "reviewer": "Kenshiki",
-      "notes": "Expansion batch record. Domains hand-authored from vendor-documented endpoints; pending Tracker Radar/EasyPrivacy cross-check."
+      "status": "source_backed",
+      "last_reviewed_at": "2026-07-06",
+      "reviewer": "pulse-source-loop-v1 (deterministic fetch + verify)",
+      "notes": "Source-backed by deterministic fetch+verify against www.tapad.com on 2026-07-06. Pending human spot-check."
     },
     "displayName": "Tapad",
     "observes": {
