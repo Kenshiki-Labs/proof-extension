@@ -152,7 +152,7 @@ function IndexPopup() {
 
   async function openContractAudit() {
     if (summary.tabId < 0) return
-    await browser.tabs.create({ url: browser.runtime.getURL(`tabs/contract.html?tabId=${summary.tabId}`) })
+    await browser.tabs.create({ url: browser.runtime.getURL(`tabs/report.html?tabId=${summary.tabId}&view=contract`) })
   }
 
 
@@ -187,11 +187,13 @@ function IndexPopup() {
       <NarrowingMirror model={narrowingModel} />
       <VerdictBanner compact summary={summary} />
       <VisitFrequencyAsk
+        annualHighUsd={valuationRollup.annualRevenueHighUsd}
+        annualLowUsd={valuationRollup.annualRevenueLowUsd}
         compact
         domain={siteDomain}
         frequency={siteDomain ? (settings.siteVisitFrequency[siteDomain] ?? null) : null}
         onAnswer={(frequency) => answerVisitFrequency(frequency).catch(() => undefined)}
-        thisVisitUsd={valuationRollup.thisVisitUsd}
+        revenueTrackerCount={valuationRollup.revenueTrackerCount}
       />
 
       {watcherModel.rows.length > 0 ? (

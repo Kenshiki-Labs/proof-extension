@@ -22,14 +22,32 @@ describe("visit frequency", () => {
     expect(rates.at(-1)).toBe(1)
   })
 
-  it("calibrates annual value as per-visit × stated rate", () => {
-    expect(calibratedAnnualUsd(0.02, "daily")).toBeCloseTo(7.3)
-    expect(calibratedAnnualUsd(0.02, "once")).toBeCloseTo(0.02)
+  it("positions the user inside the sourced annual range by frequency", () => {
+    // range $10–$50: daily = heavy end, weekly = light-middle, never outside.
+    expect(calibratedAnnualUsd(10, 50, "several_daily")).toBe(50)
+    expect(calibratedAnnualUsd(10, 50, "daily")).toBeCloseTo(44)
+    expect(calibratedAnnualUsd(10, 50, "weekly")).toBeCloseTo(24)
+    expect(calibratedAnnualUsd(10, 50, "rarely")).toBeCloseTo(14)
   })
 
-  it("refuses to fabricate an annual value from no per-visit value", () => {
-    expect(calibratedAnnualUsd(0, "daily")).toBeNull()
-    expect(calibratedAnnualUsd(Number.NaN, "daily")).toBeNull()
+  it("never leaves the sourced range", () => {
+    for (const frequency of VISIT_FREQUENCIES) {
+      const value = calibratedAnnualUsd(10, 50, frequency)
+      if (value !== null) {
+        expect(value).toBeGreaterThanOrEqual(10)
+        expect(value).toBeLessThanOrEqual(50)
+      }
+    }
+  })
+
+  it("claims no yearly figure for a one-time visit — annual estimates assume a repeat audience", () => {
+    expect(calibratedAnnualUsd(10, 50, "once")).toBeNull()
+  })
+
+  it("refuses to fabricate a figure from no sourced range", () => {
+    expect(calibratedAnnualUsd(0, 0, "daily")).toBeNull()
+    expect(calibratedAnnualUsd(0, Number.NaN, "daily")).toBeNull()
+    expect(calibratedAnnualUsd(50, 10, "daily")).toBeNull()
   })
 
   it("guards unknown values", () => {

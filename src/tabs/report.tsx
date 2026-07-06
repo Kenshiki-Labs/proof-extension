@@ -31,6 +31,7 @@ import { buildWatcherGroups } from "~core/report/watchers"
 import { functionalCategoryBreakdown } from "~core/domain/functional-category"
 import { rankObservers } from "~core/domain/attention"
 import CleanupFlow from "~components/CleanupFlow"
+import ContractAuditView from "~components/contract/ContractAuditView"
 import DebugView from "~components/debug/DebugView"
 import LocationReveal from "~components/LocationReveal"
 import { NarrowingReportSection } from "~components/NarrowingPanel"
@@ -55,6 +56,11 @@ function domainForOrigin(origin: string): string | null {
   } catch {
     return null
   }
+}
+
+function reportTabId(): number | null {
+  const tabId = Number(new URLSearchParams(location.search).get("tabId"))
+  return Number.isFinite(tabId) && tabId > 0 ? tabId : null
 }
 
 const EMPTY_SETTINGS: UserSettings = {
@@ -96,16 +102,17 @@ function SectionTitle({ number, title }: { number: string; title: string }) {
   )
 }
 
-type ReportView = "evidence" | "value" | "debug"
+type ReportView = "evidence" | "contract" | "value" | "debug"
 
 function initialReportView(): ReportView {
   const view = new URLSearchParams(location.search).get("view")
-  return view === "value" || view === "debug" ? view : "evidence"
+  return view === "value" || view === "debug" || view === "contract" ? view : "evidence"
 }
 
 function ReportViewSwitch({ onViewChange, view }: { onViewChange: (view: ReportView) => void; view: ReportView }) {
   const options: Array<{ label: string; value: ReportView }> = [
     { label: "Evidence", value: "evidence" },
+    { label: "Contract", value: "contract" },
     { label: "Value ledger", value: "value" },
     { label: "Debug data", value: "debug" }
   ]
@@ -491,6 +498,7 @@ function ReportTab() {
   const [summary, setSummary] = useState<SiteSummary>(EMPTY_SUMMARY)
   const [settings, setSettings] = useState<UserSettings>(EMPTY_SETTINGS)
   const [loadError, setLoadError] = useState<string | null>(null)
+  const [summaryLoaded, setSummaryLoaded] = useState(false)
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle")
   const [reportView, setReportView] = useState<ReportView>(initialReportView)
   const { error: valuationError, period: valuationPeriod, refresh: refreshValuationRollup, rollup: valuationRollup, setPeriod: setValuationPeriod } = useValuationRollup("week")
@@ -522,6 +530,7 @@ function ReportTab() {
       }
 
       setSummary(parsed.data)
+      setSummaryLoaded(true)
       setLoadError(null)
     }
 
@@ -613,14 +622,22 @@ function ReportTab() {
           <div>
             <SiteLogo textClass="text-xl" sublabel="Pulse Observer report" />
             <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight">
-              {reportView === "value" ? "Local value ledger" : reportView === "debug" ? "Debug data" : "Current tab evidence"}
+              {reportView === "value"
+                ? "Local value ledger"
+                : reportView === "debug"
+                  ? "Debug data"
+                  : reportView === "contract"
+                    ? "Done vs. declared"
+                    : "Current tab evidence"}
             </h1>
             <p className={`${TYPE.body} mt-2 break-all`}>
               {reportView === "value"
                 ? "Local estimates from tracker presence observed by this extension. Not revenue measurements."
                 : reportView === "debug"
                   ? `Raw pipeline data for ${summary.origin} — fail-open, uncurated, for diagnosing what the product surfaces show.`
-                  : summary.origin}
+                  : reportView === "contract"
+                    ? `What this page did, reconciled against the legal documents it links to — ${summary.origin}`
+                    : summary.origin}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -653,14 +670,24 @@ function ReportTab() {
           <div className="mt-6">
             <ValueLedgerView onPeriodChange={setValuationPeriod} period={valuationPeriod} rollup={valuationRollup} showMethodology />
           </div>
+        ) : reportView === "contract" ? (
+          <ContractAuditView
+            onShowEvidence={() => setReportView("evidence")}
+            summary={summary}
+            summaryFailed={loadError !== null}
+            summaryReady={summaryLoaded}
+            tabId={reportTabId()}
+          />
         ) : reportView === "evidence" ? (
           <>
             <VerdictBanner summary={summary} />
             <VisitFrequencyAsk
+              annualHighUsd={observedRollup.annualRevenueHighUsd}
+              annualLowUsd={observedRollup.annualRevenueLowUsd}
               domain={siteDomain}
               frequency={siteDomain ? (settings.siteVisitFrequency[siteDomain] ?? null) : null}
               onAnswer={(frequency) => answerVisitFrequency(frequency).catch(() => undefined)}
-              thisVisitUsd={observedRollup.thisVisitUsd}
+              revenueTrackerCount={observedRollup.revenueTrackerCount}
             />
             {narrowingModel.steps.length > 0 ? (
               <div className="mt-6">

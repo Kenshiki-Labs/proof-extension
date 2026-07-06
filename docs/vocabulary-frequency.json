@@ -3,11 +3,11 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "20612c583cf8edaca8f60eaa0f328e62a9b2fc29d7bd1acbe743b4fbe1176fe6"
+      "sha256": "855019c96e6ffc967489c7ceec13d662480d76bd45bf1b877f56f3d9b885a397"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "b2f309b1193322e254c9d68d1ee7f95401ab94524e96ef7ddb3cc7016ba6126e"
+      "sha256": "1a0bc9d1cfc0fc873b493b1166d0ec9e6d1fe27b104ce9c1a856c33d9b9e3629"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
@@ -82,10 +82,10 @@
     },
     {
       "term": "Evidence",
-      "total": 29,
+      "total": 30,
       "files": {
         "src/popup.tsx": 1,
-        "src/tabs/report.tsx": 24,
+        "src/tabs/report.tsx": 25,
         "src/core/report/display.ts": 4
       }
     },
@@ -300,7 +300,7 @@
     },
     {
       "word": "components",
-      "count": 24
+      "count": 25
     },
     {
       "word": "gap-",
@@ -379,6 +379,10 @@
       "count": 9
     },
     {
+      "word": "evidence",
+      "count": 9
+    },
+    {
       "word": "observed",
       "count": 9
     },
@@ -399,7 +403,7 @@
       "count": 9
     },
     {
-      "word": "evidence",
+      "word": "contract",
       "count": 8
     },
     {
@@ -604,10 +608,6 @@
     },
     {
       "word": "ssps",
-      "count": 4
-    },
-    {
-      "word": "tab",
       "count": 4
     }
   ]

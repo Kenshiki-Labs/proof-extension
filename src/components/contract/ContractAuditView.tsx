@@ -1,9 +1,6 @@
-import "~style.css"
-
 import { useEffect, useState } from "react"
 import browser from "webextension-polyfill"
 
-import SiteLogo from "~components/system/SiteLogo"
 import { TYPE, UI } from "~components/system/tokens"
 import type { ConsentAuditRecord } from "~core/atlas/audit"
 import { reconcile, type ConsentAudit, type ReconciledClass } from "~core/atlas/reconcile"
@@ -11,13 +8,17 @@ import { CATEGORY_BOOSTS, RUBRIC_VERSION, WEIGHTS } from "~core/atlas/scoring"
 import type { Giveup } from "~core/atlas/types"
 import { RuntimeMessageSchema } from "~core/contracts/schemas"
 import type { SiteSummary } from "~core/domain/types"
-import { EMPTY_SUMMARY, parseSiteSummaryResponse } from "~core/report/display"
 
 // Done vs. Declared (docs/consent-atlas-tab-spec.md): reconciles what this
 // page DID (the observed event stream) with what its own legal documents SAY
-// it may do (clauses detected live from the site's own privacy/terms/cookie
-// pages). Three outputs: done-and-declared, done-with-no-clause-found (the
-// disclosure gap), and declared-but-not-seen (dormant powers).
+// it may do (clauses detected live from documents the page links to on its
+// own domain). Three outputs: done-and-declared, done-with-no-clause-found
+// (the disclosure gap), and declared-but-not-seen (dormant powers).
+//
+// A first-class report view — it shares the report's already-loaded summary
+// (one source of observed truth, no second fetch) and triggers the audit on
+// mount, i.e. when the user selects the Contract view. Still user-initiated:
+// selecting the view IS the request to read the documents.
 
 const DOC_LABELS: Record<string, string> = {
   privacy_policy: "Privacy policy",
@@ -67,7 +68,7 @@ function ClauseCard({ giveup }: { giveup: Giveup }) {
   )
 }
 
-function ObservedClassCard({ entry, reportHref }: { entry: ReconciledClass; reportHref: string | null }) {
+function ObservedClassCard({ entry, onShowEvidence }: { entry: ReconciledClass; onShowEvidence: () => void }) {
   return (
     <div className={`${UI.subtlePanel} ${entry.status === "undeclared" ? "border-amber-700/60" : ""} p-3`}>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -90,18 +91,16 @@ function ObservedClassCard({ entry, reportHref }: { entry: ReconciledClass; repo
           contract is silent — but they did it, and we could not find where they told you.
         </p>
       )}
-      {reportHref ? (
-        <p className={`${TYPE.small} mt-2`}>
-          <a className="underline hover:text-foreground" href={reportHref}>
-            See the observed evidence in the full report →
-          </a>
-        </p>
-      ) : null}
+      <p className={`${TYPE.small} mt-2`}>
+        <button className="underline hover:text-foreground" onClick={onShowEvidence} type="button">
+          See the observed evidence →
+        </button>
+      </p>
     </div>
   )
 }
 
-function SectionTitle({ index, title }: { index: string; title: string }) {
+function ContractSectionTitle({ index, title }: { index: string; title: string }) {
   return (
     <h2 className={TYPE.label}>
       <span className="text-signal">{index}</span> · {title}
@@ -219,30 +218,21 @@ function ProvenanceFooter({ record }: { record: ConsentAuditRecord }) {
   )
 }
 
-function ContractTab() {
-  const [summary, setSummary] = useState<SiteSummary>(EMPTY_SUMMARY)
-  const [summaryState, setSummaryState] = useState<"loading" | "loaded" | "failed">("loading")
+type Props = {
+  tabId: number | null
+  summary: SiteSummary
+  summaryReady: boolean
+  summaryFailed: boolean
+  onShowEvidence: () => void
+}
+
+export default function ContractAuditView({ tabId, summary, summaryReady, summaryFailed, onShowEvidence }: Props) {
   const [auditState, setAuditState] = useState<AuditState>({ status: "loading" })
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search)
-    const tabIdParam = Number(params.get("tabId"))
-    const tabId = Number.isFinite(tabIdParam) && tabIdParam > 0 ? tabIdParam : undefined
-
-    if (!tabId) {
+    if (!tabId || tabId < 0) {
       setAuditState({ status: "failed", reason: "no_tab" })
       return
-    }
-
-    async function loadSummary() {
-      const response = await browser.runtime.sendMessage({ type: "GET_SITE_SUMMARY", tabId })
-      const parsed = parseSiteSummaryResponse(response)
-      if (parsed.success) {
-        setSummary(parsed.data)
-        setSummaryState("loaded")
-        return
-      }
-      setSummaryState("failed")
     }
 
     async function runAudit() {
@@ -263,9 +253,8 @@ function ContractTab() {
       setAuditState({ status: "failed", reason: "malformed" })
     }
 
-    loadSummary().catch(() => setSummaryState("failed"))
     runAudit().catch(() => setAuditState({ status: "failed", reason: "malformed" }))
-  }, [])
+  }, [tabId])
 
   const record = auditState.status === "ready" ? auditState.record : null
   // The verdict may only speak when BOTH sides of the reconciliation are
@@ -273,26 +262,17 @@ function ContractTab() {
   // an unloaded summary would claim "0 extraction behaviors observed" while
   // the popup shows watchers on the same tab — the exact overclaim this
   // surface exists to condemn.
-  const summaryReady = summaryState === "loaded"
   // Documents discovered but none READABLE (fetch failed or a JS-rendered
   // shell with no extractable text): the reconciliation must NOT run —
   // "silent on N" may only rest on documents actually read as text.
   const noneReadable = record ? record.documents.length > 0 && record.documents.every((doc) => doc.fetchError !== null || doc.thinContent) : false
   const audit = record && summaryReady && !noneReadable ? reconcile(summary.events, record.giveups) : null
-  const params = new URLSearchParams(location.search)
-  const tabIdParam = params.get("tabId")
-  const reportHref = tabIdParam ? `report.html?tabId=${tabIdParam}&view=evidence` : null
 
   const declared = audit?.observed.filter((entry) => entry.status === "declared") ?? []
   const undeclared = audit?.observed.filter((entry) => entry.status === "undeclared") ?? []
 
   return (
-    <main className="mx-auto max-w-4xl bg-background p-6 font-body text-foreground">
-      <header className="flex items-start justify-between gap-3">
-        <SiteLogo sublabel="Done vs. Declared" textClass="text-base" />
-        {record ? <span className={`${TYPE.mono} text-muted-foreground`}>{record.domain}</span> : null}
-      </header>
-
+    <>
       {auditState.status === "loading" ? (
         <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
           <p className={TYPE.body}>
@@ -317,12 +297,12 @@ function ContractTab() {
         </section>
       ) : null}
 
-      {record && summaryState === "failed" ? (
+      {record && summaryFailed ? (
         <section className={`mt-6 ${UI.panel} ${UI.reportInset}`} role="alert">
           <h2 className={TYPE.label}>Could not read the observed evidence for this tab</h2>
           <p className={`${TYPE.body} mt-2`}>
             The documents below were read, but the observed side of the reconciliation is unavailable — so no claim is
-            made about what happened on this page. Reopen this audit from the popup.
+            made about what happened on this page.
           </p>
         </section>
       ) : null}
@@ -344,13 +324,13 @@ function ContractTab() {
           <h2 className={TYPE.label}>No public legal documents were discoverable from this page</h2>
           <p className={`${TYPE.body} mt-2`}>
             This page's links did not lead to a privacy policy, terms of use, or cookie policy we could classify. That
-            is itself worth knowing: the extraction observed in the report is running without a discoverable written
-            basis on this page.
+            is itself worth knowing: the extraction observed in the evidence view is running without a discoverable
+            written basis on this page.
           </p>
         </section>
       ) : null}
 
-      {record && (noneReadable || summaryState === "failed") ? <ProvenanceFooter record={record} /> : null}
+      {record && (noneReadable || summaryFailed) ? <ProvenanceFooter record={record} /> : null}
 
       {record && audit && !record.nothingDiscovered ? (
         <>
@@ -358,11 +338,11 @@ function ContractTab() {
 
           {undeclared.length > 0 ? (
             <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-              <SectionTitle index="01" title="Done here — and no clause found" />
+              <ContractSectionTitle index="01" title="Done here — and no clause found" />
               <p className={`${TYPE.small} mt-2`}>The disclosure gap: observed on this page, unmatched in its own documents.</p>
               <div className="mt-3 flex flex-col gap-3">
                 {undeclared.map((entry) => (
-                  <ObservedClassCard entry={entry} key={entry.key} reportHref={reportHref} />
+                  <ObservedClassCard entry={entry} key={entry.key} onShowEvidence={onShowEvidence} />
                 ))}
               </div>
             </section>
@@ -370,11 +350,11 @@ function ContractTab() {
 
           {declared.length > 0 ? (
             <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-              <SectionTitle index="02" title="Done here — with the receipt" />
+              <ContractSectionTitle index="02" title="Done here — with the receipt" />
               <p className={`${TYPE.small} mt-2`}>Observed on this page, and authorized by the site's own contract. The clauses:</p>
               <div className="mt-3 flex flex-col gap-3">
                 {declared.map((entry) => (
-                  <ObservedClassCard entry={entry} key={entry.key} reportHref={reportHref} />
+                  <ObservedClassCard entry={entry} key={entry.key} onShowEvidence={onShowEvidence} />
                 ))}
               </div>
             </section>
@@ -382,7 +362,7 @@ function ContractTab() {
 
           {audit.dormant.length > 0 ? (
             <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-              <SectionTitle index="03" title="Declared — powers you never saw exercised" />
+              <ContractSectionTitle index="03" title="Declared — powers you never saw exercised" />
               <p className={`${TYPE.small} mt-2`}>
                 Also in the contract, with no observed counterpart this session. Worst first.
               </p>
@@ -396,7 +376,7 @@ function ContractTab() {
 
           {audit.consentTheater.bannerObserved ? (
             <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-              <SectionTitle index="04" title="The banner vs. the contract" />
+              <ContractSectionTitle index="04" title="The banner vs. the contract" />
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <div className={`${UI.subtlePanel} p-3`}>
                   <p className={TYPE.label}>What the banner governed</p>
@@ -423,8 +403,6 @@ function ContractTab() {
           <ProvenanceFooter record={record} />
         </>
       ) : null}
-    </main>
+    </>
   )
 }
-
-export default ContractTab
