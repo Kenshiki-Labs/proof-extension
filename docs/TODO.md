@@ -25,7 +25,30 @@ Standing rules for every task:
 
 ---
 
-## 1. Source-back the 42 tracker records — REQUIRES WEB ACCESS
+## 1. Source-back the tracker records — DONE (2026-07-06)
+
+All 44 records are `source_backed`; 0 seed. Each carries retrieved vendor_docs
+provenance with real URLs + `retrieved_at`. Method, cheapest first: 15 plain
+Node fetch, 1 via the Haiku policy-finder loop (tiktok), 2 headed-browser
+render (6sense, amazon-ads), 2 from owner-pasted policy text for the hard
+Cloudflare vendors (magnite, 33across). Tooling: `scripts/source-back-verify.mjs`
+(fetch), `scripts/source-back-browser.mjs` (render), `scripts/source-back-from-text.mjs`
+(paste), `scripts/policy-finder-verify.mjs` + the Haiku finder loop. The trust
+boundary was always the deterministic verifier, never the model.
+
+Per-record depth is sufficient (owner call, 2026-07-06): records already carry
+multiple sources, valuations, and verified opt-out/deletion routes. Per-claim
+quote-grounding (131 collects claims → verbatim quotes) was judged gold-plating
+— not pursued. The next axis is BREADTH, not more depth on these 44:
+
+- Name the unclassified parties. On real pages the graph shows "unclassified"
+  gray nodes — third parties observed but with no DB record, so the "watching N"
+  headline includes parties we cannot name. Point the same loop outward: harvest
+  observed-but-unclassified hosts across real browsing, and source-back new
+  records for them (identity → collection → blocking → valuation → remediation).
+  Reuses the finder + deterministic verify machinery wholesale.
+
+### (original task, for reference)
 
 Blocked in restricted environments: verify web access first (fetch any
 vendor docs page). If blocked, skip to task 2 and tell the owner why.
