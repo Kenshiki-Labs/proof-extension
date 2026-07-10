@@ -5,6 +5,7 @@ import browser from "webextension-polyfill"
 import type { Storage } from "webextension-polyfill"
 
 import { RuntimeMessageSchema } from "~core/contracts/messages"
+import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
 import { validateTrackerDatabase } from "~core/db/validate"
 import type { UserSettings } from "~core/domain/types"
 import Button from "~components/system/Button"
@@ -12,17 +13,6 @@ import Section from "~components/system/Section"
 import { TYPE } from "~components/system/tokens"
 import Toggle from "~components/system/Toggle"
 
-const DEFAULT_SETTINGS: UserSettings = {
-  retentionDays: 14,
-  maxEventsPerTab: 100,
-  blockedTrackerIds: [],
-  mitigateCanvas: false,
-  mitigateAudio: false,
-  mitigateWebgl: false,
-  skipReportOpenConfirm: false,
-  cookieMetadataEnabled: false,
-  siteVisitFrequency: {}
-}
 
 const dbCounts = (() => {
   try {
@@ -203,7 +193,7 @@ function OptionsPage() {
       <Section
         title="Local data"
         description={
-          'Clears per-tab summaries stored in this browser. This does not affect data already collected by observed third parties — see "Stop at source" in the popup for that.'
+          'Clears per-tab summaries stored in this browser. This does not affect data already collected by observed third parties — see "Stop at source" in the audit report for that.'
         }>
         <Button variant="danger" onClick={() => clearLocalData().catch(() => setStatus("Clear failed."))}>
           Clear local data

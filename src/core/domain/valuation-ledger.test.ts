@@ -126,3 +126,37 @@ describe("rollupValuationLedger", () => {
     expect(pruned.trackerPresence.map((entry) => entry.siteOrigin)).toEqual(["https://today.test"])
   })
 })
+// Audit regression: the period rollup filters siteVisits on lastVisitedAt,
+// so a visit minted days ago must advance as its events keep arriving — a
+// pinned tab's activity today counts as a visit today, not zero visits
+// alongside nonzero money.
+describe("ledger visit recency", () => {
+  it("advances lastVisitedAt with tracker events so period rollups include long-lived tabs", () => {
+    const threeDaysAgo = Date.UTC(2026, 6, 7, 12)
+    const today = Date.UTC(2026, 6, 10, 12)
+    let ledger = recordSiteVisit(createEmptyValuationLedger(), "visit-1", "https://news.example", threeDaysAgo)
+    ledger = upsertValuationLedgerEvent(
+      ledger,
+      {
+        id: "request_seen:1:meta",
+        tabId: 1,
+        origin: "https://news.example",
+        observedAt: today,
+        source: "network",
+        trackerId: "meta-pixel",
+        firstParty: false,
+        eventType: "request_seen",
+        blockability: "network_blockable",
+        status: "active",
+        confidence: "confirmed",
+        evidence: ["Request matched tracker domain."]
+      },
+      "visit-1"
+    )
+
+    expect(ledger.siteVisits[0]?.lastVisitedAt).toBe(today)
+    const rollup = rollupValuationLedger(ledger, "day", today)
+    expect(rollup.visitCount).toBeGreaterThan(0)
+    expect(rollup.siteCount).toBeGreaterThan(0)
+  })
+})

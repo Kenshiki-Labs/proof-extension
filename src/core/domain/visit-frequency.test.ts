@@ -6,6 +6,7 @@ import {
   isVisitFrequency,
   VISIT_FREQUENCIES,
   VISITS_PER_YEAR,
+  type VisitFrequency,
 } from "~core/domain/visit-frequency"
 
 describe("visit frequency", () => {
@@ -54,5 +55,55 @@ describe("visit frequency", () => {
     expect(isVisitFrequency("daily")).toBe(true)
     expect(isVisitFrequency("sometimes")).toBe(false)
     expect(isVisitFrequency(3)).toBe(false)
+  })
+})
+
+// Calibration invariants: frequency positions the user INSIDE the sourced
+// range — never below low, never above high, monotonically increasing with
+// stated frequency, and refusing to claim a yearly figure for a single visit.
+describe("calibratedAnnualUsd invariants", () => {
+  const ranges: Array<[number, number]> = [
+    [0, 1],
+    [12, 48],
+    [0.05, 0.31],
+    [100, 100],
+    [3.17, 890.2]
+  ]
+
+  it("stays within [low, high] for every frequency and range", () => {
+    for (const [low, high] of ranges) {
+      for (const frequency of VISIT_FREQUENCIES) {
+        const result = calibratedAnnualUsd(low, high, frequency)
+        if (frequency === "once") {
+          expect(result).toBeNull()
+          continue
+        }
+        expect(result, `${frequency} ${low}-${high}`).not.toBeNull()
+        expect(result!).toBeGreaterThanOrEqual(low)
+        expect(result!).toBeLessThanOrEqual(high)
+      }
+    }
+  })
+
+  it("is monotonically non-decreasing from rarely to several_daily", () => {
+    const ordered: VisitFrequency[] = ["rarely", "weekly", "few_weekly", "daily", "several_daily"]
+    for (const [low, high] of ranges) {
+      const values = ordered.map((frequency) => calibratedAnnualUsd(low, high, frequency)!)
+      for (let index = 1; index < values.length; index += 1) {
+        expect(values[index]!, `${ordered[index]} vs ${ordered[index - 1]} on ${low}-${high}`).toBeGreaterThanOrEqual(values[index - 1]!)
+      }
+    }
+  })
+
+  it("hits the exact endpoints: several_daily = high, and the interpolation formula", () => {
+    expect(calibratedAnnualUsd(12, 48, "several_daily")).toBe(48)
+    expect(calibratedAnnualUsd(12, 48, "daily")).toBeCloseTo(12 + 36 * 0.85, 10)
+    expect(calibratedAnnualUsd(12, 48, "rarely")).toBeCloseTo(12 + 36 * 0.1, 10)
+  })
+
+  it("returns null when there is no positive sourced range or the range is inverted", () => {
+    expect(calibratedAnnualUsd(0, 0, "daily")).toBeNull()
+    expect(calibratedAnnualUsd(50, 20, "daily")).toBeNull()
+    expect(calibratedAnnualUsd(-1, 10, "daily")).toBeNull()
   })
 })

@@ -42,13 +42,17 @@ The debug requirement ("we must be able to see everything, or we can't diagnose 
 
 ## Popup contract
 
-The popup renders exactly this, in this order, and nothing else:
+The popup renders exactly this, in this order, and nothing else. The order is deliberate: the exit action is fixed chrome at the top (always in the same place, never below a variable-height list), and the evidence follows.
 
-1. **The mirror.** The actual values this page could read: timezone, screen/pixel ratio, platform/language, and request-contact context. Then one narrowing sentence: "That narrows 330,000,000 people to about N." If no readable surface has arrived yet, this block is absent rather than padded with placeholders.
-2. **Verdict sentence.** One sentence carrying the headline watcher number with meaning attached: "14 watchers on this page. 3 gave you nothing back — worth $12–48/yr to them."
-3. **The watchers.** Top 3–5 by severity, worst first: name (or hostname if not yet classified), one category word, **the money** — the priced annual estimate of what that watcher extracts ("$420–$500/yr to them") or what the site pays it ("site pays $x/yr") — and a block toggle where blocking is offered. Then one line: "+9 more in the full report." The money column is not detail; it is the product's differentiator. A watcher list without the invoice is any blocker's list — showing *what you're worth to them* is the reason Pulse exists, so it survives every future decluttering. Unpriced and unclassified watchers show no figure (never an invented one).
-4. **One primary action.** Open the full report.
-5. **Footer.** Site origin · "Debug" link (opens Debug view).
+1. **Header.** Product mark · value-ledger shortcut.
+2. **Primary action.** Open the full report — fixed position, before the evidence, so the exit never moves.
+3. **The mirror.** The actual values this page could read: timezone, screen/pixel ratio, platform/language, and request-contact context. Then one narrowing sentence: "That narrows 330,000,000 people to about N." If no readable surface has arrived yet, this block is absent rather than padded with placeholders.
+4. **Verdict sentence.** One sentence carrying the headline watcher number with meaning attached: "14 watchers on this page. 3 gave you nothing back — worth $12–48/yr to them."
+5. **Stopped-value line.** Present only when the user's own choices fired: "N watchers blocked, M mitigated here — about $X of this visit's estimated value stayed with you." Blocked and mitigated counts stay separate (they are different user choices), the scope is named per-visit so it reads as related to — not contradicting — the verdict's annual range, and the line appears directly under the verdict because it is a verdict-tier fact.
+6. **The watchers.** Top 3–5 by severity, worst first: name (or hostname if not yet classified), one category word, **the money** — the priced annual estimate of what that watcher extracts ("$420–$500/yr to them") or what the site pays it ("site pays $x/yr") — and block/mitigate toggles where offered. Then one line: "+9 more in the full report." The money column is not detail; it is the product's differentiator. A watcher list without the invoice is any blocker's list — showing *what you're worth to them* is the reason Pulse exists, so it survives every future decluttering. Unpriced and unclassified watchers show no figure (never an invented one).
+7. **Visit-frequency ask.** One question, once per domain, because the annual figures are honest only when calibrated to how often the user is actually here.
+8. **Cookie-metadata toggle.** The opt-in capability grant lives at the moment of use.
+9. **Footer.** Site origin · "What you agreed to" (Done vs. declared view) · "Debug" link.
 
 **Deleted from the popup** (moves to Report or Debug, or dies):
 
@@ -67,7 +71,9 @@ Five evidence acts, plus one focused local-state surface. Each act is one sectio
 2. **The narrowing** — the mirror expanded into a candidate-pool chain using the same additive model as the proof app. It starts from 330,000,000 and shows only readable values that were actually observed by the exposure scan. It states that the model is estimated and that joint entropy is lower than a naive independent sum.
 3. **The picture** — the Connections graph (Network default; Actors / Money / Timeline lenses). Category breakdown chips live here, as the graph's caption.
 4. **Who, and what you can do** — the full watcher list, grouped by functional category (Advertising, Analytics, Session Replay, Data Brokers, Marketing & Sales Tools, Unidentified), worst-first within groups. Block/opt-out actions inline. This absorbs the popup's old Blocked/Exposed/Cannot-block sections and the "Stop at source" material.
-5. **The money** — value ledger summary with "show the math" disclosure.
+5. **The money** — value ledger summary with "show the math" disclosure, split by outcome when the user's choices fired: value that reached watchers, value denied by blocks, value mitigated locally. One word per intervention everywhere: the watcher list's toggle, the money table's outcome column, and the popup line all say "mitigated" — never "shim" (engineering vocabulary) on a product surface.
+
+The AI audit narrative is not a report view: it renders as an eligibility-gated section at the end of the evidence acts, only on .gov pages, because a permanent tab that is a dead end on every other page fails the taxonomy.
 
 **Local State tab** — a separate report view labeled "Local state", not part of the Evidence story and not an appendix. Its job is to answer: "What did this site leave in my browser that may persist after this page?" It rolls up browser-local state across cookies, Web Storage, IndexedDB, Cache Storage, service workers, and cache validators. The headline is an interpretation, not a dump: total local-state mechanisms, script-readable vs browser-only records, session vs durable records, background-capable workers, and any cross-surface respawn suspicion. Raw rows are collapsed behind an audit disclosure.
 
@@ -91,7 +97,7 @@ A separate route (`report.html?view=debug`), linked from both product surfaces. 
 
 ## Shared vocabulary
 
-User surfaces (popup, report) may use only: **watcher / watching, blocked, can't be blocked, not yet classified, identified**, the six category names, dollar estimates, and Local State vocabulary: **local state, cookie, storage, browser-only, readable by page scripts, session, durable, background worker, cache**. Banned on user surfaces (debug-only): observation, event, signal, source-backed, evidence tier, exposure scan, diagnostic, persistence.
+User surfaces (popup, report) may use only: **watcher / watching, blocked, mitigated, can't be blocked, not yet classified, identified**, the six category names, dollar estimates, and Local State vocabulary: **local state, cookie, storage, browser-only, readable by page scripts, session, durable, background worker, cache**. Banned on user surfaces (debug-only): observation, event, signal, source-backed, evidence tier, exposure scan, diagnostic, persistence.
 
 Exemption: report appendix content explicitly addressed to auditors may use pipeline vocabulary — an audit trail in euphemism would be less honest, not more. Enforcement: `src/core/report/vocabulary-guard.test.ts` (full-strictness scan of popup strings; act-title scan plus banned-section check on the report), wired into the prebuild gate.
 

@@ -96,6 +96,17 @@
     "host_permissions": [
       "<all_urls>"
     ],
+    "web_accessible_resources": [
+      {
+        "resources": [
+          "shims/gtag.js",
+          "shims/pixel.gif"
+        ],
+        "matches": [
+          "<all_urls>"
+        ]
+      }
+    ],
     "content_security_policy": {
       "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https:; img-src 'self' data: https://api.mapbox.com"
     }

@@ -3,7 +3,7 @@ import { useMemo } from "react"
 import { rankObservers } from "~core/domain/attention"
 import { functionalCategoryBreakdown } from "~core/domain/functional-category"
 import type { SiteSummary } from "~core/domain/types"
-import { buildTabValuationEdges, buildUnclassifiedGraphEdges, rollupObservedValuations } from "~core/domain/valuation"
+import { buildTabValuationEdges, buildUnclassifiedGraphEdges, rollupObservedValuations, rollupValuationOutcomes } from "~core/domain/valuation"
 import { buildAtomicSignalRows, compactEvents, exposureScanEvents, localPageSignalObservations, persistenceSurfaceObservations } from "~core/report/display"
 import { buildNarrowingModel } from "~core/report/narrowing"
 import { buildWatcherGroups } from "~core/report/watchers"
@@ -35,6 +35,7 @@ export function useReportModel(summary: SiteSummary) {
     const narrowingModel = buildNarrowingModel(summary.events)
     const siteDomain = domainForOrigin(summary.origin)
     const observedRollup = rollupObservedValuations(summary.events)
+    const valuationOutcomes = rollupValuationOutcomes(summary.events)
 
     return {
       allObservations,
@@ -50,6 +51,7 @@ export function useReportModel(summary: SiteSummary) {
       siteDomain,
       tabEdges,
       unclassifiedTabEdges,
+      valuationOutcomes,
       watcherGroups
     }
   }, [summary])

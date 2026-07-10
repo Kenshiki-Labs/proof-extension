@@ -10,6 +10,11 @@ const TOKEN_FILES = new Set(["src/style.css", "src/components/system/tokens.ts"]
 // is a UI-styling guardrail and does not apply to these. Only the raw-color
 // check is skipped for these files; inline-style and font-size checks still run.
 const CANVAS_COLOR_FILES = new Set(["src/core/signals/browser-surface.ts", "src/background.ts"])
+// Content scripts that inject styled DOM into arbitrary third-party pages
+// cannot reach the extension's tokens (Tailwind/style.css live in the
+// extension's own surfaces, not the host page) — literal colors and inline
+// styles are the only option. Same carve-out as the canvas/badge files.
+const PAGE_INJECTED_FILES = new Set(["src/contents/blocked-space-marker.ts"])
 const IGNORED_DIRS = new Set([".git", ".plasmo", "build", "coverage", "node_modules"])
 const RAW_COLOR_PATTERN = /#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla)\(/g
 const FONT_SIZE_PATTERN = /font-size:\s*([^;]+)/g
@@ -31,9 +36,11 @@ function checkFile(filePath) {
   const text = readFileSync(filePath, "utf8")
   const errors = []
 
-  if (/\bstyle\s*=/.test(text)) errors.push("Inline style attributes/props are banned. Add a tokenized primitive instead.")
+  const pageInjected = PAGE_INJECTED_FILES.has(filePath)
 
-  if (!CANVAS_COLOR_FILES.has(filePath)) {
+  if (!pageInjected && /\bstyle\s*=/.test(text)) errors.push("Inline style attributes/props are banned. Add a tokenized primitive instead.")
+
+  if (!CANVAS_COLOR_FILES.has(filePath) && !pageInjected) {
     for (const match of text.matchAll(RAW_COLOR_PATTERN)) {
       errors.push(`Raw color '${match[0]}' is banned outside src/style.css.`)
     }

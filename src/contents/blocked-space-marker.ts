@@ -1,0 +1,119 @@
+import browser from "webextension-polyfill"
+import type { PlasmoCSConfig } from "plasmo"
+
+import { RuntimeMessageSchema } from "~core/contracts/messages"
+
+// Blocked-space marker: when the user's own blocking left an ad container
+// empty, fill the reserved space with a quiet receipt instead of an
+// unexplained gray box. Strictly gated: it runs only when this tab has at
+// least one blocked company (blocking is opt-in per tracker, so this can
+// never appear for a user who blocked nothing), and it only touches
+// elements that provably match well-known ad-slot markers, are visibly
+// reserving space, and contain nothing. The site's layout is preserved —
+// the box keeps its exact size; only its emptiness gets an explanation.
+
+export const config: PlasmoCSConfig = {
+  matches: ["<all_urls>"],
+  run_at: "document_idle"
+}
+
+// Known ad-container conventions only — no fuzzy class matching, which is how
+// cosmetic filters eat real content. Each selector is a real publisher ad-tech
+// marker: GPT/AdSense ids and attributes, plus `.ad-slot` (CNN and other
+// WarnerMedia/Vox-family sites reserve boxes with exactly this class —
+// confirmed by inspecting a blocked live page).
+const AD_SLOT_SELECTORS = [
+  "ins.adsbygoogle",
+  '[id^="div-gpt-ad"]',
+  '[id^="google_ads_iframe"]',
+  "[data-ad-slot]",
+  "[data-ad-unit-path]",
+  '[data-testid="ad-slot"]',
+  "div.ad-slot"
+].join(", ")
+
+const MIN_WIDTH = 120
+const MIN_HEIGHT = 90
+const MAX_MARKS_PER_PAGE = 8
+const MARKED_ATTR = "data-pulse-observer-marker"
+// Ad scripts fill slots asynchronously; two passes give real ads time to
+// land so an about-to-fill slot is never falsely claimed as blocked.
+const PASS_DELAYS_MS = [2_500, 7_000]
+// Rendered ad content — an iframe/img/video/canvas of real size means the
+// slot filled and must be left alone. Publishers also inject non-ad chrome
+// (labels, "Ad Feedback" widgets), so emptiness is judged by absence of
+// rendered MEDIA, never by text content.
+const AD_MEDIA_SELECTOR = "iframe, img, video, canvas"
+
+// The Pulse Observer fingerprint logomark (assets/icon.svg), SVGO-optimized to
+// four fill paths and inlined so the injected marker needs no external asset.
+const FINGERPRINT_SVG = `<svg width="24" height="24" viewBox="0 0 128 128" fill="#3D8A84" aria-hidden="true"><path d="M95.969 41.336c11.264 8.858 18.44 23.305 20.586 37.277.688 7.95.93 14.53-3.555 21.387-3.585 4.148-7.53 7.035-13 8-6.383.073-11.033-.726-16-5-4.882-4.95-7.113-9.501-7.437-16.437C76.2 82.067 75.713 78.742 73 75c-4.016-2.677-7.203-3.7-12-3-4.85 2.472-7.245 4.833-9 10-1.368 7.643 1.242 14.407 5 21 5.621 7.463 11.148 12.66 19.813 16.125C79 120 79 120 81 122c-.375 3.125-.375 3.125-1 6-8.166.742-12.898-1.89-19.324-6.762-9.578-8.016-17.326-18.965-19.156-31.539-.368-8.456 1.418-15.248 7.195-21.578 5.497-4.992 10.319-6.624 17.73-6.426 7.222.862 11.523 4.841 16.11 10.207 3.091 4.488 3.832 8.873 4.507 14.223C87.7 91.138 87.7 91.138 89 96c2.677.892 4.594 1.252 7.375 1.375l2.273.148c3.664-.815 5.096-2.592 7.352-5.523 2.418-12.873-1.988-25.023-9.156-35.594C90.632 48.3 81.032 42.84 71 41c-14.178-.972-24.7 1.818-35.973 10.523C27.243 58.538 22.23 69.786 21.664 80.2 21.384 94.092 24.242 104.311 32 116l-3 5c-2.77 0-4.474-.497-6.492-2.426C14.358 108.376 9.603 94.088 11 81c2.223-16.105 8.855-29.589 21.445-40.027 19.66-14.576 43.79-13.028 63.524.363"/><path d="M83.367 51.32c2.03 1.446 3.826 2.965 5.633 4.68l1.863 1.742c6.74 6.957 10.408 15.238 10.512 24.946-.172 5.11-.172 5.11-1.375 6.312-2.937.25-2.937.25-6 0-2.07-3.104-2.377-4.586-2.875-8.187C89.468 71.285 85.882 65.675 78 60c-6.484-4.02-13.542-3.864-21-3-8.182 2.395-13.785 7.603-18.094 14.836-3.14 6.89-3.052 15.1-1.027 22.281 3.862 9.816 9.39 18.65 16.934 26.031C56 122 56 122 55.75 124.664 55 127 55 127 54 128c-2.723.453-2.723.453-6 0-2.151-2.069-3.72-3.863-5.437-6.25l-1.436-1.919C36.951 114.152 33.184 108.296 30 102l-1.09-2.148c-3.76-9.046-3.367-21.197.027-30.29 4.745-9.756 12.452-17.817 22.727-21.523 11.237-3.374 21.293-2.525 31.703 3.281"/><path d="M103.781 27.95c6.434 4.93 14.1 11.354 17.219 19.05-.812 2.813-.812 2.813-2 5-2.758.285-2.758.285-6 0-2.055-1.941-2.055-1.941-3.875-4.562-9.336-12.46-21.622-19.273-36.89-22.004C57.47 23.454 43.604 27.104 31 35c-5.335 4.123-10.163 8.42-13.812 14.125L15 52c-3.312.438-3.312.438-6 0-1.207-2.168-1.207-2.168-2-5 6.45-13.61 20.81-22.884 34.355-28.355 21.914-7.541 43.598-3.891 62.426 9.304"/><path d="m63.688-.5 3.451.017c17.794.375 31.84 7.074 45.412 18.49C114 20 114 20 113.793 22.68 113 25 113 25 112 26c-3.214.413-4.669.21-7.437-1.54L102 22.376C86.376 10.499 69.61 8.208 50.563 10.395c-9.497 2-19.468 6.98-26.836 13.332C21 26 21 26 18.25 26.5 16 26 16 26 14 23c.283-3.631 1.945-5.346 4.563-7.75 4.141-3.534 8.483-6.114 13.312-8.562l1.924-.986C43.498 1.008 52.967-.563 63.688-.5M63.5 77.75C66 78 66 78 68 80a202 202 0 0 1 1.75 7.625C71.277 94.229 73.082 99.132 78 104l2.75 2.813c3.632 2.444 6.862 3.47 11.078 4.511C94 112 94 112 96 114c-.375 3.125-.375 3.125-1 6-6.56 1.711-11.148.314-17-3-10.051-7.283-16.627-16.755-19-29-.297-2.816-.254-5.152 0-8 2-2 2-2 4.5-2.25"/></svg>`
+
+function slotIsEmpty(element: Element): boolean {
+  // Blocked slots render no ad media. A slot with a real-sized iframe/image
+  // filled normally — leave it. Zero-size media (collapsed blocked iframe)
+  // still counts as empty.
+  for (const media of element.querySelectorAll(AD_MEDIA_SELECTOR)) {
+    const rect = media.getBoundingClientRect()
+    if (rect.width > 1 && rect.height > 1) return false
+  }
+  return true
+}
+
+function markSlot(element: HTMLElement) {
+  element.setAttribute(MARKED_ATTR, "true")
+  // Fill the reserved box exactly, over any publisher label, without
+  // resizing it — the slot keeps its dimensions so layout never shifts.
+  if (getComputedStyle(element).position === "static") element.style.position = "relative"
+
+  const note = document.createElement("div")
+  note.setAttribute("role", "note")
+  note.style.cssText =
+    "position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;" +
+    "gap:6px;box-sizing:border-box;padding:12px;z-index:1;pointer-events:none;" +
+    "border:1px dashed rgba(61,138,132,0.5);background:rgba(61,138,132,0.04);" +
+    "font:11px/1.4 ui-sans-serif,system-ui,sans-serif;color:#6f6b64;text-align:center;"
+  note.innerHTML = FINGERPRINT_SVG
+  const label = document.createElement("span")
+  label.textContent = "Ad request blocked at your choice — Pulse Observer"
+  note.appendChild(label)
+  element.appendChild(note)
+}
+
+function runMarkerPass() {
+  const candidates = document.querySelectorAll(AD_SLOT_SELECTORS)
+  let marked = document.querySelectorAll(`[${MARKED_ATTR}]`).length
+
+  for (const element of candidates) {
+    if (marked >= MAX_MARKS_PER_PAGE) return
+    if (!(element instanceof HTMLElement) || element.hasAttribute(MARKED_ATTR)) continue
+    if (element.closest(`[${MARKED_ATTR}]`)) continue
+
+    const rect = element.getBoundingClientRect()
+    if (rect.width < MIN_WIDTH || rect.height < MIN_HEIGHT) continue
+    if (!slotIsEmpty(element)) continue
+
+    markSlot(element)
+    marked += 1
+  }
+}
+
+async function tabHasBlocks(): Promise<boolean> {
+  try {
+    const response = await browser.runtime.sendMessage({ type: "GET_BLOCK_MARKER_STATE" })
+    const parsed = RuntimeMessageSchema.safeParse(response)
+    return parsed.success && parsed.data.type === "BLOCK_MARKER_STATE" && parsed.data.payload.active
+  } catch {
+    return false
+  }
+}
+
+for (const delay of PASS_DELAYS_MS) {
+  setTimeout(() => {
+    tabHasBlocks()
+      .then((active) => {
+        if (active) runMarkerPass()
+      })
+      .catch(() => undefined)
+  }, delay)
+}

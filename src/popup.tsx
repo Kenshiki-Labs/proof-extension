@@ -6,6 +6,7 @@ import browser from "webextension-polyfill"
 import type { Storage } from "webextension-polyfill"
 
 import { RuntimeMessageSchema } from "~core/contracts/messages"
+import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
 import { EMPTY_SUMMARY, parseSiteSummaryResponse } from "~core/report/display"
 import { buildWatcherListModel } from "~core/report/watchers"
 import Button from "~components/system/Button"
@@ -19,28 +20,17 @@ import WatcherList from "~components/watchers/WatcherList"
 import { TYPE, UI } from "~components/system/tokens"
 import { buildNarrowingModel } from "~core/report/narrowing"
 import { registrableDomain } from "~core/domain/party"
-import { rollupObservedValuations } from "~core/domain/valuation"
+import { formatUsd, rollupObservedValuations, rollupValuationOutcomes } from "~core/domain/valuation"
 import type { VisitFrequency } from "~core/domain/visit-frequency"
 import type { SiteSummary, UserSettings } from "~core/domain/types"
 
-// The glance surface (docs/surface-contract.md): under ten seconds, four
-// elements — verdict, the watchers, one action, footer. Everything that
-// used to stack here (metric tiles, money sections, event lists, runtime
-// details) lives in the report tab or the debug view now. This file renders
-// the contract's popup section and nothing else; if a block is not in the
-// contract's popup list, it does not belong in this file.
+// The glance surface (docs/surface-contract.md): report action first (the
+// exit is deliberate chrome, always in the same place), then mirror →
+// verdict → stopped-value line → watchers → visit-frequency ask → cookie
+// toggle → footer. This file renders the contract's popup section and
+// nothing else; if a block is not in the contract's popup list, it does not
+// belong in this file — amend the contract first, then this file.
 
-const EMPTY_SETTINGS: UserSettings = {
-  retentionDays: 14,
-  maxEventsPerTab: 100,
-  blockedTrackerIds: [],
-  mitigateCanvas: false,
-  mitigateAudio: false,
-  mitigateWebgl: false,
-  skipReportOpenConfirm: false,
-  cookieMetadataEnabled: false,
-  siteVisitFrequency: {}
-}
 
 const POPUP_WATCHER_LIMIT = 5
 const COOKIE_METADATA_PERMISSION: chrome.permissions.Permissions = { permissions: ["cookies"] }
@@ -90,7 +80,7 @@ function HeaderIconButton({ label, onClick, disabled = false, children }: { labe
 
 function IndexPopup() {
   const [summary, setSummary] = useState<SiteSummary>(EMPTY_SUMMARY)
-  const [settings, setSettings] = useState<UserSettings>(EMPTY_SETTINGS)
+  const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS)
   const [loadError, setLoadError] = useState<string | null>(null)
   const settingsRef = useRef(settings)
   settingsRef.current = settings
@@ -169,6 +159,22 @@ function IndexPopup() {
     }
   }
 
+  async function toggleTrackerShim(trackerId: string, shimmed: boolean) {
+    // Same confirm-first discipline as blocking: "Mitigated" is a claim that
+    // redirect rules are installed, so state flips only after the background
+    // acknowledges the settings write.
+    const shimmedTrackerIds = shimmed
+      ? [...new Set([...settingsRef.current.shimmedTrackerIds, trackerId])]
+      : settingsRef.current.shimmedTrackerIds.filter((id) => id !== trackerId)
+
+    try {
+      await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { shimmedTrackerIds } })
+      setSettings((current) => ({ ...current, shimmedTrackerIds }))
+    } catch (error) {
+      console.warn("Failed to update mitigation", error)
+    }
+  }
+
   async function toggleCookieMetadata(enabled: boolean) {
     // Both directions require the permission change to have actually landed:
     // a failed removal must not show the toggle off while the browser still
@@ -209,12 +215,26 @@ function IndexPopup() {
   const narrowingModel = buildNarrowingModel(summary.events)
   const siteDomain = domainForOrigin(summary.origin)
   const valuationRollup = rollupObservedValuations(summary.events)
+  const valuationOutcomes = rollupValuationOutcomes(summary.events)
+  const deniedCount = valuationOutcomes.denied.trackerIds.length
+  const mitigatedCount = valuationOutcomes.shimmed.trackerIds.length
+  // Revenue-type value only: "stayed with you" must not count fees the site
+  // pays its own tools.
+  const stoppedVisitUsd = valuationOutcomes.denied.thisVisitRevenueUsd + valuationOutcomes.shimmed.thisVisitRevenueUsd
 
   async function answerVisitFrequency(frequency: VisitFrequency) {
+    // Confirm-first, like the block/mitigate toggles: the calibrated money
+    // line recalcs from this answer, so it must not display an answer the
+    // background never stored (a swallowed failure would silently revert on
+    // the next open). settingsRef keeps rapid re-answers from clobbering.
     if (!siteDomain) return
-    const siteVisitFrequency = { ...settings.siteVisitFrequency, [siteDomain]: frequency }
-    setSettings((current) => ({ ...current, siteVisitFrequency }))
-    await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { siteVisitFrequency } }).catch(() => undefined)
+    const siteVisitFrequency = { ...settingsRef.current.siteVisitFrequency, [siteDomain]: frequency }
+    try {
+      await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { siteVisitFrequency } })
+      setSettings((current) => ({ ...current, siteVisitFrequency }))
+    } catch (error) {
+      console.warn("Failed to store visit frequency", error)
+    }
   }
 
   return (
@@ -228,7 +248,7 @@ function IndexPopup() {
 
       <div className="mt-3.5">
         <Button disabled={summary.tabId < 0} onClick={() => openFullReport().catch(() => undefined)}>
-          Open audit report
+          Open full report
         </Button>
       </div>
 
@@ -241,12 +261,29 @@ function IndexPopup() {
 
       <NarrowingMirror model={narrowingModel} />
       <VerdictBanner compact summary={summary} />
+      {deniedCount + mitigatedCount > 0 ? (
+        <p className={`${TYPE.small} mt-2 text-foreground`}>
+          {/* Blocked and mitigated are the user's two distinct choices — never
+              fold one into the other's count. Per-visit, unlike the verdict's
+              annual range: both scopes are named so they read as related, not
+              contradictory. */}
+          {[
+            deniedCount > 0 ? `${deniedCount} ${deniedCount === 1 ? "watcher" : "watchers"} blocked` : null,
+            mitigatedCount > 0 ? `${mitigatedCount} mitigated` : null
+          ]
+            .filter(Boolean)
+            .join(", ")}{" "}
+          here{stoppedVisitUsd > 0 ? <> — about {formatUsd(stoppedVisitUsd)} of this visit's estimated value stayed with you</> : null}.
+        </p>
+      ) : null}
       {watcherModel.rows.length > 0 ? (
         <SurfaceSection className={`mt-3.5 ${UI.panel} ${UI.inset}`} icon={Eye} title="Who is watching — worst first">
           <WatcherList
             blockedTrackerIds={settings.blockedTrackerIds}
             model={watcherModel}
             onToggleBlocking={(trackerId, blocked) => toggleTrackerBlocking(trackerId, blocked).catch(() => undefined)}
+            onToggleShim={(trackerId, shimmed) => toggleTrackerShim(trackerId, shimmed).catch(() => undefined)}
+            shimmedTrackerIds={settings.shimmedTrackerIds}
           />
         </SurfaceSection>
       ) : null}

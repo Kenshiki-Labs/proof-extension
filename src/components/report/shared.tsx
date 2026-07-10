@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react"
+import { Activity, Bug, Database, FileCheck2, LineChart, type LucideIcon } from "lucide-react"
 
 import { registrableDomain } from "~core/domain/party"
 import type { ObserverEvent } from "~core/domain/types"
@@ -81,37 +81,51 @@ export function SectionTitle({ number, title }: { number: string; title: string 
   )
 }
 
-export type ReportView = "evidence" | "local-state" | "contract" | "value" | "debug" | "ai-audit"
+export type ReportView = "evidence" | "local-state" | "contract" | "value" | "debug"
+
+// The raw diagnostic dump is a developer surface, not something a store
+// reviewer or end user should meet. Present in dev builds (pnpm dev), gone
+// from packaged/production builds.
+const SHOW_DEBUG = process.env.NODE_ENV !== "production"
 
 export function initialReportView(): ReportView {
   const view = new URLSearchParams(location.search).get("view")
   if (view === "persistence") return "local-state"
-  return view === "value" || view === "debug" || view === "contract" || view === "local-state" || view === "ai-audit" ? view : "evidence"
+  // "ai-audit" deep links land on the evidence view: the AI narrative is an
+  // eligibility-gated section there (.gov only), not permanent chrome. Debug
+  // stays reachable by deep link (the popup's Debug data link) even in
+  // production — only the tab-strip button is hidden there.
+  return view === "value" || view === "debug" || view === "contract" || view === "local-state" ? view : "evidence"
 }
 
 export function ReportViewSwitch({ onViewChange, view }: { onViewChange: (view: ReportView) => void; view: ReportView }) {
-  const options: Array<{ label: string; value: ReportView }> = [
-    { label: "Runtime audit", value: "evidence" },
-    { label: "Local state", value: "local-state" },
-    { label: "Contract", value: "contract" },
-    { label: "Value ledger", value: "value" },
-    { label: "Debug data", value: "debug" },
-    { label: "AI audit", value: "ai-audit" }
+  const options: Array<{ label: string; value: ReportView; icon: LucideIcon }> = [
+    { label: "Runtime audit", value: "evidence", icon: Activity },
+    { label: "Local state", value: "local-state", icon: Database },
+    // The view's own header says "Done vs. declared" — the tab should
+    // promise the same thing ("Contract" read as legal-document viewer).
+    { label: "Done vs. declared", value: "contract", icon: FileCheck2 },
+    { label: "Value ledger", value: "value", icon: LineChart },
+    ...(SHOW_DEBUG ? [{ label: "Debug data", value: "debug", icon: Bug } as const] : [])
   ]
 
   return (
     <div className="flex flex-wrap gap-1" role="tablist">
-      {options.map((option) => (
-        <button
-          aria-selected={view === option.value}
-          className={`border px-3 py-1.5 font-mono text-xs uppercase tracking-[0.1em] ${view === option.value ? "border-foreground text-foreground" : "border-border text-muted-foreground"}`}
-          key={option.value}
-          onClick={() => onViewChange(option.value)}
-          role="tab"
-          type="button">
-          {option.label}
-        </button>
-      ))}
+      {options.map((option) => {
+        const Icon = option.icon
+        return (
+          <button
+            aria-selected={view === option.value}
+            className={`flex items-center gap-1.5 border px-3 py-1.5 font-mono text-xs uppercase tracking-[0.1em] ${view === option.value ? "border-foreground text-foreground" : "border-border text-muted-foreground"}`}
+            key={option.value}
+            onClick={() => onViewChange(option.value)}
+            role="tab"
+            type="button">
+            <Icon aria-hidden className="h-3.5 w-3.5" strokeWidth={1.8} />
+            {option.label}
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -121,6 +135,12 @@ export function ReportFooter() {
     <footer className={`${TYPE.small} mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-border py-5`}>
       <span>Pulse Observer</span>
       <nav aria-label="Product links" className="flex flex-wrap items-center gap-4">
+        {/* Settings had no path from either product surface — retention and
+            the blocked-watcher roster were reachable only via the browser's
+            extension manager. */}
+        <a className="underline hover:text-foreground" href="/options.html" rel="noreferrer" target="_blank">
+          Settings
+        </a>
         {FOOTER_LINKS.map((link) => (
           <a className="underline hover:text-foreground" href={link.href} key={link.href} rel="noreferrer" target="_blank">
             {link.label}

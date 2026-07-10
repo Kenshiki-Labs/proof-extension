@@ -5,6 +5,7 @@ import browser from "webextension-polyfill"
 import type { Storage } from "webextension-polyfill"
 
 import { RuntimeMessageSchema } from "~core/contracts/messages"
+import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
 import type { SiteSummary, UserSettings } from "~core/domain/types"
 import type { VisitFrequency } from "~core/domain/visit-frequency"
 import { EMPTY_SUMMARY, buildCopyPayload, parseSiteSummaryResponse } from "~core/report/display"
@@ -14,7 +15,6 @@ import { useValuationRollup } from "~hooks/useValuationRollup"
 import BetaBreadthNotice from "~components/BetaBreadthNotice"
 import ContractAuditView from "~components/contract/ContractAuditView"
 import DebugView from "~components/debug/DebugView"
-import AiAuditReportPanel from "~components/report/AiAuditPanel"
 import EvidenceView from "~components/report/EvidenceView"
 import LocalStateSection from "~components/report/LocalStateView"
 import { ReportFooter, ReportViewSwitch, initialReportView, reportTabId, type ReportView } from "~components/report/shared"
@@ -23,21 +23,10 @@ import SiteLogo from "~components/system/SiteLogo"
 import { TYPE, UI } from "~components/system/tokens"
 import ValueLedgerView from "~components/value/ValueLedgerView"
 
-const EMPTY_SETTINGS: UserSettings = {
-  retentionDays: 14,
-  maxEventsPerTab: 100,
-  blockedTrackerIds: [],
-  mitigateCanvas: false,
-  mitigateAudio: false,
-  mitigateWebgl: false,
-  skipReportOpenConfirm: false,
-  cookieMetadataEnabled: false,
-  siteVisitFrequency: {}
-}
 
 function ReportTab() {
   const [summary, setSummary] = useState<SiteSummary>(EMPTY_SUMMARY)
-  const [settings, setSettings] = useState<UserSettings>(EMPTY_SETTINGS)
+  const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS)
   const settingsRef = useRef(settings)
   settingsRef.current = settings
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -127,6 +116,22 @@ function ReportTab() {
     }
   }
 
+  async function toggleTrackerShim(trackerId: string, shimmed: boolean) {
+    // Same confirm-first discipline as blocking: "Mitigated" is a claim that
+    // redirect rules are installed, so state flips only after the background
+    // acknowledges the settings write.
+    const shimmedTrackerIds = shimmed
+      ? [...new Set([...settingsRef.current.shimmedTrackerIds, trackerId])]
+      : settingsRef.current.shimmedTrackerIds.filter((id) => id !== trackerId)
+
+    try {
+      await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { shimmedTrackerIds } })
+      setSettings((current) => ({ ...current, shimmedTrackerIds }))
+    } catch (error) {
+      console.warn("Failed to update mitigation", error)
+    }
+  }
+
   async function copyReport() {
     try {
       await navigator.clipboard.writeText(buildCopyPayload(summary))
@@ -137,10 +142,17 @@ function ReportTab() {
   }
 
   async function answerVisitFrequency(frequency: VisitFrequency) {
+    // Confirm-first, like the block/mitigate toggles: the calibrated money
+    // line recalcs from this answer, so it must not display an answer the
+    // background never stored.
     if (!model.siteDomain) return
-    const siteVisitFrequency = { ...settings.siteVisitFrequency, [model.siteDomain]: frequency }
-    setSettings((current) => ({ ...current, siteVisitFrequency }))
-    await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { siteVisitFrequency } }).catch(() => undefined)
+    const siteVisitFrequency = { ...settingsRef.current.siteVisitFrequency, [model.siteDomain]: frequency }
+    try {
+      await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { siteVisitFrequency } })
+      setSettings((current) => ({ ...current, siteVisitFrequency }))
+    } catch (error) {
+      console.warn("Failed to store visit frequency", error)
+    }
   }
 
   // EMPTY_SUMMARY's origin is the literal string "unknown" — never show it
@@ -156,8 +168,6 @@ function ReportTab() {
             <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight">
               {reportView === "value"
                 ? "Local value ledger"
-                : reportView === "ai-audit"
-                  ? "AI audit narrative"
                 : reportView === "debug"
                   ? "Debug data"
                   : reportView === "contract"
@@ -167,8 +177,6 @@ function ReportTab() {
             <p className={`${TYPE.body} mt-2 break-all`}>
               {reportView === "value"
                 ? "Local estimates from tracker presence observed by this extension. Not revenue measurements."
-                : reportView === "ai-audit"
-                  ? `Generated buyer-ready audit narrative for ${originLabel}`
                 : reportView === "debug"
                   ? `Raw pipeline data for ${originLabel} — fail-open, uncurated, for diagnosing what the product surfaces show.`
                   : reportView === "contract"
@@ -229,14 +237,14 @@ function ReportTab() {
             origin={summary.origin}
             tabId={reportTabId()}
           />
-        ) : reportView === "ai-audit" ? (
-          <AiAuditReportPanel summary={summary} tabId={reportTabId()} />
         ) : reportView === "evidence" ? (
           <EvidenceView
             model={model}
+            tabId={reportTabId()}
             onAnswerVisitFrequency={(frequency) => answerVisitFrequency(frequency).catch(() => undefined)}
             onOpenValueLedger={() => setReportView("value")}
             onToggleBlocking={toggleTrackerBlocking}
+            onToggleShim={toggleTrackerShim}
             settings={settings}
             summary={summary}
           />

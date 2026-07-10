@@ -22,6 +22,7 @@ const settings: UserSettings = {
   retentionDays: 30,
   maxEventsPerTab: 200,
   blockedTrackerIds: [],
+  shimmedTrackerIds: [],
   mitigateCanvas: false,
   mitigateAudio: false,
   mitigateWebgl: false,
@@ -177,6 +178,28 @@ describe("createRuntimeMessageRouter", () => {
     // The narrow view must not leak blockedTrackerIds or visit frequencies.
     expect(JSON.stringify(response)).not.toContain("blockedTrackerIds")
     expect(JSON.stringify(response)).not.toContain("siteVisitFrequency")
+  })
+
+  it("serves GET_BLOCK_MARKER_STATE to content-script senders as a bare boolean from their own tab", async () => {
+    const deps = makeDeps()
+    const route = createRuntimeMessageRouter(deps)
+
+    const response = await route({ type: "GET_BLOCK_MARKER_STATE" }, WEB_PAGE_SENDER)
+    expect(deps.readSummary).toHaveBeenCalledWith(7)
+    expect(response).toEqual({
+      type: "BLOCK_MARKER_STATE",
+      payload: { active: summary.blockedCompanies.length > 0 }
+    })
+    // A page context must never learn which companies were blocked.
+    expect(JSON.stringify(response)).not.toContain("blockedCompanies")
+  })
+
+  it("answers GET_BLOCK_MARKER_STATE inactive when the sender has no tab", async () => {
+    const deps = makeDeps()
+    const route = createRuntimeMessageRouter(deps)
+
+    const response = await route({ type: "GET_BLOCK_MARKER_STATE" }, { url: "https://news.example/story" })
+    expect(response).toEqual({ type: "BLOCK_MARKER_STATE", payload: { active: false } })
   })
 
   it("also refuses privileged messages when the sender has no URL at all", async () => {

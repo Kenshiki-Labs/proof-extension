@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Banknote, Clock, Share2, Users } from "lucide-react"
 
 import type { SiteSummary, UserSettings } from "~core/domain/types"
 import type { VisitFrequency } from "~core/domain/visit-frequency"
@@ -14,6 +15,7 @@ import { TYPE, UI } from "~components/system/tokens"
 import TrackerGraph from "~components/value/TrackerGraph"
 import WatcherList from "~components/watchers/WatcherList"
 
+import AiAuditReportPanel, { govHostname } from "~components/report/AiAuditPanel"
 import AuditBrief from "~components/report/AuditBrief"
 import { AtomicSignalMatrix, ExposureScanSection, LocalPageSignalsSection } from "~components/report/EvidenceAppendix"
 import EvidenceTimeline from "~components/report/EvidenceTimeline"
@@ -27,20 +29,25 @@ export default function EvidenceView({
   onAnswerVisitFrequency,
   onOpenValueLedger,
   onToggleBlocking,
+  onToggleShim,
   settings,
-  summary
+  summary,
+  tabId
 }: {
   model: ReportModel
   onAnswerVisitFrequency: (frequency: VisitFrequency) => void
   onOpenValueLedger: () => void
   onToggleBlocking: (trackerId: string, blocked: boolean) => void
+  onToggleShim: (trackerId: string, shimmed: boolean) => void
   settings: UserSettings
   summary: SiteSummary
+  tabId: number | null
 }) {
   // "network" first: the graph is the picture users should see before the
   // supporting tables — see the report-tab story-arc discussion (verdict ->
   // picture -> receipts -> action).
   const [lens, setLens] = useState<"actors" | "money" | "network" | "timeline">("network")
+  const statedFrequency = model.siteDomain ? (settings.siteVisitFrequency[model.siteDomain] ?? null) : null
   const {
     allObservations,
     atomicSignalRows,
@@ -54,6 +61,7 @@ export default function EvidenceView({
     siteDomain,
     tabEdges,
     unclassifiedTabEdges,
+    valuationOutcomes,
     watcherGroups
   } = model
 
@@ -87,20 +95,24 @@ export default function EvidenceView({
           <div className="flex flex-wrap gap-1">
             {(
               [
-                { label: "Network", value: "network" },
-                { label: "Actors", value: "actors" },
-                { label: "Money", value: "money" },
-                { label: "Timeline", value: "timeline" }
+                { label: "Network", value: "network", icon: Share2 },
+                { label: "Actors", value: "actors", icon: Users },
+                { label: "Money", value: "money", icon: Banknote },
+                { label: "Timeline", value: "timeline", icon: Clock }
               ] as const
-            ).map((item) => (
-              <button
-                className={`${UI.segment} ${lens === item.value ? UI.segmentActive : UI.segmentIdle}`}
-                key={item.value}
-                onClick={() => setLens(item.value)}
-                type="button">
-                {item.label}
-              </button>
-            ))}
+            ).map((item) => {
+              const Icon = item.icon
+              return (
+                <button
+                  className={`${UI.segment} inline-flex items-center gap-1.5 ${lens === item.value ? UI.segmentActive : UI.segmentIdle}`}
+                  key={item.value}
+                  onClick={() => setLens(item.value)}
+                  type="button">
+                  <Icon aria-hidden className="h-3.5 w-3.5" strokeWidth={1.8} />
+                  {item.label}
+                </button>
+              )
+            })}
           </div>
         </div>
         {categoryBreakdown.length > 0 ? (
@@ -129,7 +141,7 @@ export default function EvidenceView({
         {lens === "actors" ? (
           <ObservationTable blockedTrackerIds={settings.blockedTrackerIds} observations={observations} onToggleBlocking={onToggleBlocking} />
         ) : null}
-        {lens === "money" ? <ValuationSection embedded events={summary.events} /> : null}
+        {lens === "money" ? <ValuationSection embedded events={summary.events} frequency={statedFrequency} outcomes={valuationOutcomes} rollup={observedRollup} /> : null}
         {lens === "timeline" ? <EvidenceTimeline embedded events={summary.events} /> : null}
       </section>
 
@@ -151,6 +163,8 @@ export default function EvidenceView({
               blockedTrackerIds={settings.blockedTrackerIds}
               model={{ rows: group.rows, moreCount: 0, totalWatching: group.rows.length }}
               onToggleBlocking={onToggleBlocking}
+              onToggleShim={onToggleShim}
+              shimmedTrackerIds={settings.shimmedTrackerIds}
             />
           </div>
         ))}
@@ -162,11 +176,16 @@ export default function EvidenceView({
 
       <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
         <SectionTitle number="04" title="The money" />
-        <ValuationSection embedded events={summary.events} />
+        <ValuationSection embedded events={summary.events} frequency={statedFrequency} outcomes={valuationOutcomes} rollup={observedRollup} />
         <div className="mt-4">
           <Button onClick={onOpenValueLedger} variant="secondary">Open the full value ledger</Button>
         </div>
       </section>
+
+      {/* Eligibility-gated, not permanent chrome: the AI narrative only
+          exists for .gov pages, so it only appears on them — a top-level
+          tab that is a dead end everywhere else fails the taxonomy. */}
+      {govHostname(summary.origin) ? <AiAuditReportPanel summary={summary} tabId={tabId} /> : null}
 
       <Disclosure className="mt-6" labelStyle="label" summary="Appendix — full evidence for auditors">
         <section className={`mt-4 ${UI.panel} ${UI.reportInset}`}>

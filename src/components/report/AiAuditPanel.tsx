@@ -19,7 +19,7 @@ function safeReportSlug(origin: string) {
   }
 }
 
-function govHostname(origin: string) {
+export function govHostname(origin: string) {
   try {
     const hostname = new URL(origin).hostname.toLowerCase()
     return hostname.endsWith(".gov") ? hostname : null

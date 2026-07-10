@@ -78,7 +78,7 @@ describe("generateAiAuditReport", () => {
       payload: { report: "The report body." }
     })
     expect(vi.mocked(fetch)).toHaveBeenCalledWith(
-      "https://pulse-ai-audit.kenshiki.workers.dev/",
+      "https://pulse-ai-audit.pulsekenshikilabscom.workers.dev/",
       expect.objectContaining({ method: "POST", body: JSON.stringify({ auditPayload: "payload" }) })
     )
   })

@@ -98,6 +98,16 @@ export function createRuntimeMessageRouter(deps: RuntimeMessageRouterDeps) {
         return { type: "CONTENT_SCRIPT_SETTINGS", payload: { mitigateCanvas } }
       }
 
+      // The blocked-space marker asks one question: "did this extension block
+      // anything on my tab?" A bare boolean, derived from the sender's own
+      // tab — never which trackers, never another tab's state — so an
+      // arbitrary page context learns nothing it couldn't infer itself.
+      if (message.type === "GET_BLOCK_MARKER_STATE") {
+        const tabId = sender.tab?.id
+        const active = tabId !== undefined && deps.readSummary(tabId).blockedCompanies.length > 0
+        return { type: "BLOCK_MARKER_STATE", payload: { active } }
+      }
+
       // Everything below is a privileged operation reachable only from the
       // extension's own pages (popup, options, report tab). Content scripts run
       // inside every <all_urls> page context, so a compromised page context

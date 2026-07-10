@@ -1,4 +1,5 @@
 import { blockingGuidance } from "~core/domain/blocking-policy"
+import { shimForTrackerId } from "~core/db/shims"
 import { buildUnclassifiedGraphEdges, formatUsdRange, getTrackerValuation } from "~core/domain/valuation"
 import { countWatchingObservers } from "~core/domain/observer-counts"
 import { FUNCTIONAL_CATEGORY_LABELS, getFunctionalCategory, type FunctionalCategory } from "~core/domain/functional-category"
@@ -28,6 +29,9 @@ export type WatcherRow = {
   observations: number
   trackerId?: string | undefined
   canBlock: boolean
+  // A page-safe shim resource ships for this tracker (core/db/shims.ts):
+  // the UI may offer mitigation even where blocking is too breakage-prone.
+  canShim: boolean
   // The invoice (contract §Popup #2): what this watcher extracts per year
   // ("$420–$500/yr to them") or what the site pays it ("site pays $x/yr").
   // Null for unpriced/unclassified watchers — an absent figure is honest,
@@ -75,6 +79,7 @@ export function buildWatcherRows(events: ObserverEvent[], origin: string): Watch
       observations: ranked.observation.count,
       trackerId: event.trackerId,
       canBlock: event.blockability === "network_blockable" && Boolean(event.trackerId) && guidance.offerBlocking,
+      canShim: Boolean(shimForTrackerId(event.trackerId)),
       valueLabel: watcherValueLabel(event.trackerId)
     })
   }
@@ -91,6 +96,7 @@ export function buildWatcherRows(events: ObserverEvent[], origin: string): Watch
       tier: "gray",
       observations: edge.observations,
       canBlock: false,
+      canShim: false,
       valueLabel: null
     })
   }

@@ -4,7 +4,7 @@ import { resolve } from "node:path"
 
 import { validateTrackerDatabase } from "~core/db/validate"
 import type { ObserverEvent } from "~core/domain/types"
-import { buildTabValuationEdges, buildUnclassifiedGraphEdges, formatUsd, formatUsdRange, getTrackerValuation, rollupObservedValuations, VALUATION_DISCLAIMER } from "./valuation"
+import { buildTabValuationEdges, buildUnclassifiedGraphEdges, formatUsd, formatUsdRange, getTrackerValuation, rollupObservedValuations, rollupValuationOutcomes, VALUATION_DISCLAIMER } from "./valuation"
 
 const root = resolve(__dirname, "../../..")
 const normalizedValuations = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/valuations.json"), "utf8"))
@@ -217,5 +217,179 @@ describe("who-it-serves slice", () => {
     })
     expect(rollup.onlyTheirBusinessAnnualLowUsd).toBe(1)
     expect(rollup.onlyTheirBusinessAnnualHighUsd).toBe(8)
+  })
+})
+
+describe("rollupValuationOutcomes", () => {
+  function statusEvent(trackerId: string, id: string, status: ObserverEvent["status"], count?: number): ObserverEvent {
+    return { ...event(trackerId, id), status, ...(count ? { count } : {}) }
+  }
+
+  it("puts fully blocked trackers in denied and untouched trackers in reached", () => {
+    const rollup = rollupValuationOutcomes([
+      statusEvent("fullstory", "b1", "blocked", 3),
+      statusEvent("google-analytics", "a1", "active", 2)
+    ])
+
+    expect(rollup.denied.trackerIds).toEqual(["fullstory"])
+    expect(rollup.denied.requestCount).toBe(3)
+    expect(rollup.denied.thisVisitUsd).toBeGreaterThan(0)
+    expect(rollup.reached.trackerIds).toEqual(["google-analytics"])
+    expect(rollup.shimmed.trackerIds).toEqual([])
+  })
+
+  it("counts a tracker as reached if even one of its requests got through — worst case is the honest case", () => {
+    const rollup = rollupValuationOutcomes([
+      statusEvent("fullstory", "b1", "blocked"),
+      statusEvent("fullstory", "a1", "active")
+    ])
+
+    expect(rollup.reached.trackerIds).toEqual(["fullstory"])
+    expect(rollup.denied.trackerIds).toEqual([])
+  })
+
+  it("cannot_block counts as reached, never denied", () => {
+    const rollup = rollupValuationOutcomes([statusEvent("fullstory", "c1", "cannot_block")])
+    expect(rollup.reached.trackerIds).toEqual(["fullstory"])
+  })
+
+  it("mitigated-only trackers land in shimmed, even alongside blocks", () => {
+    const rollup = rollupValuationOutcomes([
+      statusEvent("google-analytics", "m1", "mitigated"),
+      statusEvent("google-analytics", "b1", "blocked")
+    ])
+
+    expect(rollup.shimmed.trackerIds).toEqual(["google-analytics"])
+    expect(rollup.denied.trackerIds).toEqual([])
+  })
+
+  it("denied bucket value equals the sum of its trackers' per-visit value", () => {
+    const value = getTrackerValuation("fullstory")
+    const rollup = rollupValuationOutcomes([statusEvent("fullstory", "b1", "blocked")])
+    expect(rollup.denied.thisVisitUsd).toBeCloseTo((value?.perVisit.microdollars ?? 0) / 1_000_000, 10)
+    expect(rollup.denied.annualLowUsd).toBe(value?.annual.low_usd)
+    expect(rollup.denied.annualHighUsd).toBe(value?.annual.high_usd)
+  })
+
+  it("ignores events without a tracker id or without a valuation", () => {
+    const rollup = rollupValuationOutcomes([statusEvent("not-a-tracker", "x1", "blocked"), event(undefined, "u1")])
+    expect(rollup.denied.trackerIds).toEqual([])
+    expect(rollup.reached.trackerIds).toEqual([])
+  })
+})
+
+// Money-math invariants: the outcome split is a PARTITION of the same
+// valued trackers the headline rollup prices — the three buckets must sum
+// exactly to the whole, or two surfaces will show irreconcilable dollars.
+describe("valuation math invariants", () => {
+  const { trackers } = validateTrackerDatabase()
+  const valuedIds = trackers.map((tracker) => tracker.id)
+
+  function eventsWithSpreadStatuses(): ObserverEvent[] {
+    const statuses: ObserverEvent["status"][] = ["active", "blocked", "mitigated", "cannot_block"]
+    return valuedIds.flatMap((trackerId, index) => [
+      {
+        id: `spread:${trackerId}`,
+        tabId: 1,
+        origin: "https://example.test",
+        observedAt: 100,
+        source: "network" as const,
+        trackerId,
+        firstParty: false,
+        eventType: "request_seen" as const,
+        blockability: "network_blockable" as const,
+        status: statuses[index % statuses.length]!,
+        confidence: "confirmed" as const,
+        evidence: ["Request matched tracker domain."]
+      }
+    ])
+  }
+
+  it("reached + denied + shimmed partition the full rollup exactly (per-visit and annual)", () => {
+    const events = eventsWithSpreadStatuses()
+    const whole = rollupObservedValuations(events)
+    const parts = rollupValuationOutcomes(events)
+
+    const bucketIds = [...parts.reached.trackerIds, ...parts.denied.trackerIds, ...parts.shimmed.trackerIds]
+    expect(bucketIds.sort()).toEqual(whole.perTracker.map(({ trackerId }) => trackerId).sort())
+    expect(new Set(bucketIds).size).toBe(bucketIds.length)
+
+    const partsVisitUsd = parts.reached.thisVisitUsd + parts.denied.thisVisitUsd + parts.shimmed.thisVisitUsd
+    expect(partsVisitUsd).toBeCloseTo(whole.thisVisitUsd, 9)
+
+    const partsAnnualLow = parts.reached.annualLowUsd + parts.denied.annualLowUsd + parts.shimmed.annualLowUsd
+    const partsAnnualHigh = parts.reached.annualHighUsd + parts.denied.annualHighUsd + parts.shimmed.annualHighUsd
+    const wholeAnnualLow = whole.perTracker.reduce((sum, { value }) => sum + value.annual.low_usd, 0)
+    const wholeAnnualHigh = whole.perTracker.reduce((sum, { value }) => sum + value.annual.high_usd, 0)
+    expect(partsAnnualLow).toBeCloseTo(wholeAnnualLow, 9)
+    expect(partsAnnualHigh).toBeCloseTo(wholeAnnualHigh, 9)
+  })
+
+  it("headline 'This visit' (reached) can never exceed the all-trackers total", () => {
+    const events = eventsWithSpreadStatuses()
+    const whole = rollupObservedValuations(events)
+    const parts = rollupValuationOutcomes(events)
+    expect(parts.reached.thisVisitUsd).toBeLessThanOrEqual(whole.thisVisitUsd + 1e-12)
+  })
+})
+
+// Regressions from the adversarial money-math audit.
+describe("outcome rollup audit regressions", () => {
+  function statusEvent(trackerId: string, id: string, status: ObserverEvent["status"], count?: number): ObserverEvent {
+    return { ...event(trackerId, id), status, ...(count ? { count } : {}) }
+  }
+
+  it("a mixed-status tracker's blocked requests never count as 'answered locally'", () => {
+    // criteo: 2 mitigated requests + 3 blocked requests -> shimmed bucket,
+    // but only the 2 mitigated ones were answered by the shim.
+    const rollup = rollupValuationOutcomes([
+      statusEvent("criteo", "m1", "mitigated", 2),
+      statusEvent("criteo", "b1", "blocked", 3)
+    ])
+    expect(rollup.shimmed.trackerIds).toEqual(["criteo"])
+    expect(rollup.shimmed.requestCount).toBe(2)
+  })
+
+  it("splits revenue from site-paid cost inside every bucket", () => {
+    const { trackers } = validateTrackerDatabase()
+    const revenueTracker = trackers.find((tracker) => tracker.perPersonValue.valueType === "revenue")!
+    const costTracker = trackers.find((tracker) => tracker.perPersonValue.valueType === "cost")!
+
+    const rollup = rollupValuationOutcomes([
+      statusEvent(revenueTracker.id, "b1", "blocked"),
+      statusEvent(costTracker.id, "b2", "blocked")
+    ])
+
+    expect(rollup.denied.costTrackerCount).toBe(1)
+    expect(rollup.denied.annualRevenueLowUsd).toBe(revenueTracker.perPersonValue.annual.low_usd)
+    expect(rollup.denied.annualRevenueHighUsd).toBe(revenueTracker.perPersonValue.annual.high_usd)
+    expect(rollup.denied.thisVisitRevenueUsd).toBeCloseTo(revenueTracker.perPersonValue.perVisit.microdollars / 1_000_000, 10)
+    // The total still includes both — the partition invariant is over totals.
+    expect(rollup.denied.thisVisitUsd).toBeCloseTo(
+      (revenueTracker.perPersonValue.perVisit.microdollars + costTracker.perPersonValue.perVisit.microdollars) / 1_000_000,
+      10
+    )
+  })
+})
+
+describe("formatUsd audit regressions", () => {
+  it("never renders a range whose low prints larger-looking than its high", () => {
+    expect(formatUsd(0.996)).toBe("$1")
+    expect(formatUsdRange(0.996, 1.2)).toBe("$1")
+  })
+
+  it("collapses ranges that round to the same string", () => {
+    expect(formatUsdRange(4.6, 5.4)).toBe("$5")
+    expect(formatUsdRange(4.6, 6.4)).toBe("$5–$6")
+  })
+
+  it("routes sub-cent values that round up to a cent into the cents format", () => {
+    expect(formatUsd(0.00995)).toBe("$0.01")
+    expect(formatUsd(0.0099)).toBe("$0.0099")
+  })
+
+  it("never prints a positive value as a string of zeros", () => {
+    expect(formatUsd(1e-9)).toBe("<$0.00000001")
+    expect(formatUsd(0)).toBe("$0")
   })
 })

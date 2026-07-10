@@ -129,6 +129,109 @@ export function rollupObservedValuations(events: ObserverEvent[]): ValuationRoll
   }
 }
 
+// Where a tracker's value actually went this visit, judged per tracker from
+// the statuses of its own events:
+// - "reached":  at least one request got through unimpeded (active or
+//               cannot_block) — its value counts as extracted, even if other
+//               requests from it were blocked. Worst case is the honest case.
+// - "shimmed":  nothing reached it for real, but a page-safe shim answered
+//               (status mitigated) — it got a request, not data.
+// - "denied":   every one of its requests was deterministically blocked.
+// A tracker only lands in a bucket via statuses the background can prove;
+// "blocked" is only ever set from deterministic block signals.
+export type TrackerOutcome = "reached" | "shimmed" | "denied"
+
+export type OutcomeBucket = {
+  trackerIds: string[]
+  // This visit, in dollars (sum of per-visit microdollars for the bucket).
+  thisVisitUsd: number
+  annualLowUsd: number
+  annualHighUsd: number
+  // Revenue-type value only (companies monetizing the user). Personal claims
+  // ("stayed with you", "denied by your blocks") must use these: cost-type
+  // trackers are fees the SITE pays — blocking one saves the site money, not
+  // the user, and folding it into a "your value" figure overclaims.
+  thisVisitRevenueUsd: number
+  annualRevenueLowUsd: number
+  annualRevenueHighUsd: number
+  costTrackerCount: number
+  // Requests whose own status matches this bucket's outcome — a mixed-status
+  // tracker's blocked requests never count as "answered locally" just
+  // because the tracker landed in the shimmed bucket.
+  requestCount: number
+}
+
+export type ValuationOutcomeRollup = {
+  reached: OutcomeBucket
+  shimmed: OutcomeBucket
+  denied: OutcomeBucket
+  disclaimer: string
+}
+
+function emptyOutcomeBucket(): OutcomeBucket {
+  return {
+    trackerIds: [],
+    thisVisitUsd: 0,
+    annualLowUsd: 0,
+    annualHighUsd: 0,
+    thisVisitRevenueUsd: 0,
+    annualRevenueLowUsd: 0,
+    annualRevenueHighUsd: 0,
+    costTrackerCount: 0,
+    requestCount: 0
+  }
+}
+
+function statusOutcomeClass(status: ObserverEvent["status"]): TrackerOutcome {
+  if (status === "blocked") return "denied"
+  if (status === "mitigated") return "shimmed"
+  return "reached"
+}
+
+export function rollupValuationOutcomes(events: ObserverEvent[]): ValuationOutcomeRollup {
+  const statusesByTracker = new Map<string, Set<ObserverEvent["status"]>>()
+  const requestsByTrackerByClass = new Map<string, Record<TrackerOutcome, number>>()
+  for (const event of events) {
+    if (!event.trackerId) continue
+    const statuses = statusesByTracker.get(event.trackerId) ?? new Set()
+    statuses.add(event.status)
+    statusesByTracker.set(event.trackerId, statuses)
+    const counts = requestsByTrackerByClass.get(event.trackerId) ?? { reached: 0, shimmed: 0, denied: 0 }
+    counts[statusOutcomeClass(event.status)] += event.count ?? 1
+    requestsByTrackerByClass.set(event.trackerId, counts)
+  }
+
+  const rollup: ValuationOutcomeRollup = {
+    reached: emptyOutcomeBucket(),
+    shimmed: emptyOutcomeBucket(),
+    denied: emptyOutcomeBucket(),
+    disclaimer: VALUATION_DISCLAIMER
+  }
+
+  for (const [trackerId, statuses] of statusesByTracker) {
+    const value = getTrackerValuation(trackerId)
+    if (!value) continue
+    const outcome: TrackerOutcome =
+      statuses.has("active") || statuses.has("cannot_block") ? "reached" : statuses.has("mitigated") ? "shimmed" : "denied"
+    const bucket = rollup[outcome]
+    bucket.trackerIds.push(trackerId)
+    bucket.thisVisitUsd += value.perVisit.microdollars / 1_000_000
+    bucket.annualLowUsd += value.annual.low_usd
+    bucket.annualHighUsd += value.annual.high_usd
+    if (value.valueType === "revenue") {
+      bucket.thisVisitRevenueUsd += value.perVisit.microdollars / 1_000_000
+      bucket.annualRevenueLowUsd += value.annual.low_usd
+      bucket.annualRevenueHighUsd += value.annual.high_usd
+    } else {
+      bucket.costTrackerCount += 1
+    }
+    bucket.requestCount += requestsByTrackerByClass.get(trackerId)?.[outcome] ?? 0
+  }
+
+  for (const bucket of [rollup.reached, rollup.shimmed, rollup.denied]) bucket.trackerIds.sort()
+  return rollup
+}
+
 // Site↔tracker edges scoped to ONE tab, for the per-page Network graph. The
 // cross-site rolling ledger (rollupValuationLedger) already produces edges
 // for the all-time Value view; this is the honestly-scoped counterpart so
@@ -185,14 +288,27 @@ export function formatUsd(value: number): string {
   // Valuation data is validated nonnegative, but a display formatter must
   // not render "$NaN"/"$Infinity"/"$-3" if garbage arrives anyway.
   if (!Number.isFinite(value) || value <= 0) return "$0"
-  if (value >= 1) return `$${Math.round(value).toLocaleString("en-US")}`
+  // Positive-but-immeasurable must not print as a string of zeros — "$0.00000000"
+  // claims exact zero for a value that isn't.
+  if (value < 1e-8) return "<$0.00000001"
+  // 0.995 rounds into whole-dollar territory either way; branching on >= 1
+  // produced "$1.00–$1" ranges (low printing larger-looking than its high).
+  if (value >= 0.995) return `$${Math.round(value).toLocaleString("en-US")}`
   if (value >= 0.01) return `$${value.toFixed(2)}`
   // Sub-cent amounts: two significant digits, never exponential notation.
   // "$0.0013" reads as a number; "$0.001305" reads as noise.
   const digits = Math.min(8, Math.ceil(-Math.log10(value)) + 1)
-  return `$${value.toFixed(digits)}`
+  const formatted = value.toFixed(digits)
+  // toFixed can round across its own branch boundary (0.00995 -> "0.0100");
+  // re-route those to the cents format instead of printing four decimals.
+  if (Number.parseFloat(formatted) >= 0.01) return `$${Number.parseFloat(formatted).toFixed(2)}`
+  return `$${formatted}`
 }
 
 export function formatUsdRange(low: number, high: number): string {
-  return low === high ? formatUsd(low) : `${formatUsd(low)}–${formatUsd(high)}`
+  // Collapse on the RENDERED strings, not the raw numbers: 4.6 and 5.4 both
+  // print "$5", and "$5–$5" is a nonsense range.
+  const lowFormatted = formatUsd(low)
+  const highFormatted = formatUsd(high)
+  return lowFormatted === highFormatted ? lowFormatted : `${lowFormatted}–${highFormatted}`
 }

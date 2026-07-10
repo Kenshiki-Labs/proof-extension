@@ -3,19 +3,19 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "0cb3da41ba8fd961fe763ac4d2e1fb31427bd24029c97f5fbebf8e952e48c062"
+      "sha256": "07719e81a50402486e38eeb0bcc1b9b13d982c2618ad676b5e91330128c88ec7"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "791d7a9da5262bf4398f58ab0d019771bb57089b1112bcd1ddb760fa9951a281"
+      "sha256": "106f66cf86e22fb6634bd8b0f4efa027f1eef703209faf8a2ce3dca2f01560ea"
     },
     {
       "file": "src/components/report/AiAuditPanel.tsx",
-      "sha256": "5960b3177a3150355212873820a7667da87ea5a3ab2d9b5d0642706f482443cf"
+      "sha256": "41a12ba1ca90157fb0bd97ce384227be06367cf87121d12803448b921dbd8212"
     },
     {
       "file": "src/components/report/AuditBrief.tsx",
-      "sha256": "99d3b7b47bb0ce8d915f85710b0b5721dfb61093c6763d421afe082b99c88a15"
+      "sha256": "1afbd2c2e2117c4672483587b81f22c05987520f39ed9334d8e66fd84e5b4448"
     },
     {
       "file": "src/components/report/EvidenceAppendix.tsx",
@@ -27,7 +27,7 @@
     },
     {
       "file": "src/components/report/EvidenceView.tsx",
-      "sha256": "547afa145e8976105cf25158e62dddd140e75cf64f6c0a13d0aa1692b66035b3"
+      "sha256": "2fbb48283e9c3256bb731978492b92309a33bed581e6338991e8b5825cb8a3e8"
     },
     {
       "file": "src/components/report/LocalStateView.tsx",
@@ -43,11 +43,11 @@
     },
     {
       "file": "src/components/report/ValuationSection.tsx",
-      "sha256": "cd619eef7df4c12790a81f0c99a7895b557d6852390e8b31fcac78f768df7020"
+      "sha256": "a30213f4f830e31f749d84cdd56f52be099d14086eddc267404d76f33792d26c"
     },
     {
       "file": "src/components/report/shared.tsx",
-      "sha256": "fb61876c223a1d6a2d77c7f2e4b31c4bdef4ba111d7fac43f58e598264568448"
+      "sha256": "02b70ed2196a948097d34cf2a906c8eea6eb7c7720780d86b5b95338609cc8a1"
     },
     {
       "file": "src/components/value/LedgerTables.tsx",
@@ -71,7 +71,7 @@
     },
     {
       "file": "src/core/domain/valuation.ts",
-      "sha256": "ddb1c41ffda06077bcfc91615b5451d1394ca619ca31e6b80836207acd18daa6"
+      "sha256": "034dd01d84b883aad4c74dc9ddce816a624bb8cab505322057d4c15d3d81dbcd"
     }
   ],
   "canonicalTerms": [
@@ -82,13 +82,16 @@
     },
     {
       "term": "Blocked",
-      "total": 11,
+      "total": 21,
       "files": {
-        "src/popup.tsx": 4,
+        "src/popup.tsx": 6,
         "src/tabs/report.tsx": 2,
         "src/components/report/EvidenceView.tsx": 1,
         "src/components/report/ObservationTable.tsx": 1,
-        "src/core/report/display.ts": 3
+        "src/components/report/ValuationSection.tsx": 2,
+        "src/components/report/shared.tsx": 1,
+        "src/core/report/display.ts": 3,
+        "src/core/domain/valuation.ts": 5
       }
     },
     {
@@ -139,13 +142,13 @@
         "src/popup.tsx": 1,
         "src/tabs/report.tsx": 3,
         "src/components/report/AiAuditPanel.tsx": 1,
-        "src/components/report/AuditBrief.tsx": 3,
+        "src/components/report/AuditBrief.tsx": 2,
         "src/components/report/EvidenceAppendix.tsx": 12,
         "src/components/report/EvidenceTimeline.tsx": 3,
         "src/components/report/EvidenceView.tsx": 1,
         "src/components/report/LocalStateView.tsx": 3,
         "src/components/report/ObservationTable.tsx": 2,
-        "src/components/report/shared.tsx": 3,
+        "src/components/report/shared.tsx": 4,
         "src/core/report/display.ts": 2
       }
     },
@@ -166,8 +169,10 @@
     },
     {
       "term": "Full report",
-      "total": 0,
-      "files": {}
+      "total": 1,
+      "files": {
+        "src/popup.tsx": 1
+      }
     },
     {
       "term": "Local value ledger",
@@ -239,14 +244,14 @@
     },
     {
       "term": "Trackers",
-      "total": 20,
+      "total": 22,
       "files": {
         "src/components/report/ObservationTable.tsx": 1,
-        "src/components/report/ValuationSection.tsx": 2,
+        "src/components/report/ValuationSection.tsx": 3,
         "src/components/value/LedgerTables.tsx": 2,
         "src/components/value/SupplyChainMap.tsx": 4,
         "src/components/value/ValueLedgerView.tsx": 5,
-        "src/core/domain/valuation.ts": 6
+        "src/core/domain/valuation.ts": 7
       }
     },
     {
@@ -373,12 +378,12 @@
       "count": 69
     },
     {
-      "word": "mt-",
-      "count": 61
+      "word": "core",
+      "count": 59
     },
     {
-      "word": "core",
-      "count": 56
+      "word": "mt-",
+      "count": 59
     },
     {
       "word": "report",
@@ -386,18 +391,18 @@
     },
     {
       "word": "gap-",
-      "count": 39
+      "count": 36
     },
     {
       "word": "domain",
+      "count": 34
+    },
+    {
+      "word": "failed",
       "count": 31
     },
     {
       "word": "page",
-      "count": 30
-    },
-    {
-      "word": "failed",
       "count": 29
     },
     {
@@ -409,32 +414,32 @@
       "count": 25
     },
     {
-      "word": "flex",
-      "count": 23
-    },
-    {
       "word": "not",
-      "count": 23
+      "count": 24
     },
     {
       "word": "browser",
-      "count": 22
+      "count": 23
     },
     {
-      "word": "flex-wrap",
-      "count": 21
-    },
-    {
-      "word": "grid",
-      "count": 21
-    },
-    {
-      "word": "grid-cols-",
+      "word": "flex",
       "count": 21
     },
     {
       "word": "can",
       "count": 20
+    },
+    {
+      "word": "grid",
+      "count": 20
+    },
+    {
+      "word": "grid-cols-",
+      "count": 20
+    },
+    {
+      "word": "flex-wrap",
+      "count": 19
     },
     {
       "word": "site",
@@ -449,10 +454,6 @@
       "count": 17
     },
     {
-      "word": "types",
-      "count": 17
-    },
-    {
       "word": "metadata",
       "count": 16
     },
@@ -461,11 +462,15 @@
       "count": 16
     },
     {
-      "word": "data",
-      "count": 14
+      "word": "types",
+      "count": 16
     },
     {
       "word": "display",
+      "count": 14
+    },
+    {
+      "word": "you",
       "count": 14
     },
     {
@@ -473,8 +478,8 @@
       "count": 13
     },
     {
-      "word": "you",
-      "count": 13
+      "word": "data",
+      "count": 12
     },
     {
       "word": "font-display",
@@ -489,15 +494,7 @@
       "count": 12
     },
     {
-      "word": "audit",
-      "count": 11
-    },
-    {
       "word": "copied",
-      "count": 11
-    },
-    {
-      "word": "evidence",
       "count": 11
     },
     {
@@ -509,16 +506,16 @@
       "count": 11
     },
     {
-      "word": "tab",
-      "count": 11
-    },
-    {
       "word": "tabular-nums",
       "count": 11
     },
     {
       "word": "your",
       "count": 11
+    },
+    {
+      "word": "evidence",
+      "count": 10
     },
     {
       "word": "extension",
@@ -533,15 +530,19 @@
       "count": 10
     },
     {
+      "word": "tab",
+      "count": 10
+    },
+    {
       "word": "values",
       "count": 10
     },
     {
-      "word": "border-b",
+      "word": "audit",
       "count": 9
     },
     {
-      "word": "debug",
+      "word": "border-b",
       "count": 9
     },
     {
@@ -565,10 +566,6 @@
       "count": 8
     },
     {
-      "word": "contract",
-      "count": 8
-    },
-    {
       "word": "copy",
       "count": 8
     },
@@ -581,7 +578,15 @@
       "count": 8
     },
     {
+      "word": "settings",
+      "count": 8
+    },
+    {
       "word": "bg-background",
+      "count": 7
+    },
+    {
+      "word": "debug",
       "count": 7
     },
     {
@@ -601,7 +606,7 @@
       "count": 7
     },
     {
-      "word": "settings",
+      "word": "signal",
       "count": 7
     },
     {
@@ -613,11 +618,19 @@
       "count": 7
     },
     {
+      "word": "text-foreground",
+      "count": 7
+    },
+    {
       "word": "text-left",
       "count": 7
     },
     {
       "word": "that",
+      "count": 7
+    },
+    {
+      "word": "update",
       "count": 7
     },
     {
@@ -629,10 +642,6 @@
       "count": 7
     },
     {
-      "word": "ai-audit",
-      "count": 6
-    },
-    {
       "word": "available",
       "count": 6
     },
@@ -642,6 +651,10 @@
     },
     {
       "word": "but",
+      "count": 6
+    },
+    {
+      "word": "contract",
       "count": 6
     },
     {
@@ -665,15 +678,11 @@
       "count": 6
     },
     {
-      "word": "items-center",
+      "word": "hover",
       "count": 6
     },
     {
       "word": "items-start",
-      "count": 6
-    },
-    {
-      "word": "ledger",
       "count": 6
     },
     {
@@ -682,10 +691,6 @@
     },
     {
       "word": "rail",
-      "count": 6
-    },
-    {
-      "word": "running",
       "count": 6
     }
   ]

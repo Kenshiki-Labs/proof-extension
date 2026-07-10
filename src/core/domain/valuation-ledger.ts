@@ -72,6 +72,17 @@ export function upsertValuationLedgerEvent(ledger: ValuationLedger, event: Obser
   const valuation = valuationSnapshot(event)
   if (!valuation) return ledger
 
+  // Keep the visit's lastVisitedAt moving with its events: the period rollup
+  // filters siteVisits on lastVisitedAt, so a long-lived tab whose visit was
+  // minted days ago must still count as visited "today" when today's events
+  // arrive — otherwise the Value tab shows money next to "Visits 0".
+  const siteVisits = ledger.siteVisits.some((entry) => entry.visitId === visitId && entry.lastVisitedAt < event.observedAt)
+    ? ledger.siteVisits.map((entry) =>
+        entry.visitId === visitId ? { ...entry, lastVisitedAt: Math.max(entry.lastVisitedAt, event.observedAt) } : entry
+      )
+    : ledger.siteVisits
+  ledger = siteVisits === ledger.siteVisits ? ledger : { ...ledger, siteVisits }
+
   const day = dayKey(event.observedAt)
   const key = trackerPresenceKey(visitId, event.trackerId)
   const occurrences = event.count ?? 1

@@ -1,4 +1,5 @@
 import type { TrackerRecord } from "~core/contracts/schemas"
+import { shimForTrackerId } from "~core/db/shims"
 import { validateTrackerDatabase } from "~core/db/validate"
 
 const DYNAMIC_RULE_ID_BASE = 10_000
@@ -24,11 +25,15 @@ const RESOURCE_TYPE = {
 } as const
 
 const RULE_ACTION_BLOCK = "block"
+const RULE_ACTION_REDIRECT = "redirect"
 
 type ResourceType = (typeof RESOURCE_TYPE)[keyof typeof RESOURCE_TYPE]
 
+export type DynamicRuleAction = "block" | "shim"
+
 export type DynamicBlockRuleMetadata = {
   ruleId: number
+  action: DynamicRuleAction
   tracker: TrackerRecord
   evidence: string
   domain: string
@@ -63,13 +68,69 @@ export function buildDynamicBlockRules(blockedTrackerIds: readonly string[] = []
 // explicitly turned on. A tracker being network_blockable in the DB just
 // means blocking is *possible* for it; whether it's actually blocked right
 // now depends on the user having opted that specific one in.
-export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = []) {
+//
+// shimmedTrackerIds is the page-safe sibling: instead of blocking, the
+// tracker's script is redirected to a local impostor (core/db/shims.ts) so
+// the page keeps working while nothing reaches the tracker. Shim wins over
+// block for the same tracker — a shim is a block plus page safety.
+export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = [], shimmedTrackerIds: readonly string[] = []) {
   const { trackers } = validateTrackerDatabase()
-  const enabledIds = new Set(blockedTrackerIds)
+  const shimmedIds = new Set(shimmedTrackerIds.filter((trackerId) => shimForTrackerId(trackerId)))
+  const enabledIds = new Set(blockedTrackerIds.filter((trackerId) => !shimmedIds.has(trackerId)))
   const rules: chrome.declarativeNetRequest.Rule[] = []
   const metadata = new Map<number, DynamicBlockRuleMetadata>()
 
+  const addRule = (
+    tracker: TrackerRecord,
+    domain: string,
+    action: chrome.declarativeNetRequest.RuleAction,
+    resourceTypes: chrome.declarativeNetRequest.ResourceType[],
+    ruleMeta: Pick<DynamicBlockRuleMetadata, "action" | "evidence">
+  ) => {
+    const ruleId = DYNAMIC_RULE_ID_BASE + rules.length
+    rules.push({
+      id: ruleId,
+      priority: 1,
+      action,
+      condition: { resourceTypes, urlFilter: domainFilter(domain) }
+    })
+    metadata.set(ruleId, { ruleId, tracker, domain, resourceTypes, ...ruleMeta })
+  }
+
   for (const tracker of trackers) {
+    const shim = shimmedIds.has(tracker.id) ? shimForTrackerId(tracker.id) : null
+
+    if (shim) {
+      // Shims bypass the network_blockable gate on purpose: high-breakage
+      // trackers are exactly the ones that need the page-safe path. Scripts
+      // get the impostor, image beacons get the local pixel, and the
+      // fire-and-forget return path (XHR/ping) is blocked outright.
+      for (const domain of tracker.match.domains) {
+        addRule(
+          tracker,
+          domain,
+          { type: RULE_ACTION_REDIRECT as chrome.declarativeNetRequest.RuleActionType, redirect: { extensionPath: shim.scriptPath } },
+          [RESOURCE_TYPE.SCRIPT] as chrome.declarativeNetRequest.ResourceType[],
+          { action: "shim", evidence: `Script from ${tracker.id} domain ${domain} replaced with the local page-safe shim.` }
+        )
+        addRule(
+          tracker,
+          domain,
+          { type: RULE_ACTION_REDIRECT as chrome.declarativeNetRequest.RuleActionType, redirect: { extensionPath: shim.imagePath } },
+          [RESOURCE_TYPE.IMAGE] as chrome.declarativeNetRequest.ResourceType[],
+          { action: "shim", evidence: `Beacon to ${tracker.id} domain ${domain} answered by the local pixel.` }
+        )
+        addRule(
+          tracker,
+          domain,
+          { type: RULE_ACTION_BLOCK as chrome.declarativeNetRequest.RuleActionType },
+          [RESOURCE_TYPE.XMLHTTPREQUEST, RESOURCE_TYPE.PING] as chrome.declarativeNetRequest.ResourceType[],
+          { action: "shim", evidence: `Return path to ${tracker.id} domain ${domain} closed.` }
+        )
+      }
+      continue
+    }
+
     if (tracker.browserAction.blockability !== "network_blockable") continue
     if (!enabledIds.has(tracker.id)) continue
 
@@ -82,19 +143,9 @@ export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = 
     // could never match — and even fixed they would be strictly subsumed by
     // these same-priority domain rules while burning dynamic-rule quota.
     for (const domain of tracker.match.domains) {
-      const ruleId = DYNAMIC_RULE_ID_BASE + rules.length
-      rules.push({
-        id: ruleId,
-        priority: 1,
-        action: { type: RULE_ACTION_BLOCK as chrome.declarativeNetRequest.RuleActionType },
-        condition: { resourceTypes, urlFilter: domainFilter(domain) }
-      })
-      metadata.set(ruleId, {
-        ruleId,
-        tracker,
-        evidence: `Request matched ${tracker.id} domain ${domain}.`,
-        domain,
-        resourceTypes
+      addRule(tracker, domain, { type: RULE_ACTION_BLOCK as chrome.declarativeNetRequest.RuleActionType }, resourceTypes, {
+        action: "block",
+        evidence: `Request matched ${tracker.id} domain ${domain}.`
       })
     }
   }
@@ -139,14 +190,14 @@ function hasDeclarativeNetRequest(): boolean {
 
 const FALLBACK_DYNAMIC_RULE_LIMIT = 30_000
 
-export async function installDynamicBlockRules(blockedTrackerIds: readonly string[] = []) {
+export async function installDynamicBlockRules(blockedTrackerIds: readonly string[] = [], shimmedTrackerIds: readonly string[] = []) {
   if (!hasDeclarativeNetRequest()) return { installed: 0, requested: 0 }
 
   const existingRules = await chrome.declarativeNetRequest.getDynamicRules()
   const removeRuleIds = existingRules
     .map((rule) => rule.id)
     .filter((ruleId) => ruleId >= DYNAMIC_RULE_ID_BASE)
-  const { metadata, rules } = buildDynamicBlockRuleSet(blockedTrackerIds)
+  const { metadata, rules } = buildDynamicBlockRuleSet(blockedTrackerIds, shimmedTrackerIds)
 
   // Never let one over-quota update reject wholesale: that would leave the
   // previous rules installed while the caller believes the new set is live.

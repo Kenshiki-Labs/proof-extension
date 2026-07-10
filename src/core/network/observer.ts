@@ -291,7 +291,9 @@ export function registerNetworkObserver({
       firstParty: false,
       eventType: "request_blocked",
       blockability: metadata.tracker.browserAction.blockability,
-      status: "blocked",
+      // A shim's closed return path still cancels the request, but the
+      // honest claim is "mitigated" (page kept working), not "blocked".
+      status: metadata.action === "shim" ? "mitigated" : "blocked",
       confidence: metadata.tracker.confidence,
       evidence: [metadata.evidence],
       details: { ...requestDetails(request.url, request.type, request.requestId), blockSignals: signal }

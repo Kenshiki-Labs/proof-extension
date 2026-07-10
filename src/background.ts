@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill"
 
 import { generateAiAuditReport } from "~core/ai/audit-client"
+import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
 import { runConsentAuditForTab } from "~core/atlas/tab-audit"
 import { hasCookieMetadataPermission, inspectSiteCookieValues, requestCookieMetadataPermission, scanSiteCookieMetadata } from "~core/browser/cookie-store"
 import { installDynamicBlockRules, uninstallDynamicBlockRules } from "~core/db/dnr"
@@ -8,6 +9,7 @@ import { validateTrackerDatabase } from "~core/db/validate"
 import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
 import { matchTrackerRequest } from "~core/domain/network-match"
 import { filterBlockableTrackerIds } from "~core/domain/blocking-policy"
+import { filterShimmableTrackerIds } from "~core/db/shims"
 import {
   createEmptyValuationLedger,
   normalizeValuationLedger,
@@ -34,21 +36,6 @@ const SETTINGS_STORAGE_KEY = "userSettings"
 const VALUATION_LEDGER_STORAGE_KEY = "valuationLedger"
 const CONTENT_EVENT_DEDUPE_TTL_MS = 750
 
-// This is primarily an observer, not a blocker: blockedTrackerIds starts
-// empty so installing/enabling the extension never changes site behavior by
-// itself. Blocking is a per-tracker choice made from the popup, right where
-// that tracker is observed — not a single global switch.
-const DEFAULT_SETTINGS: UserSettings = {
-  retentionDays: 14,
-  maxEventsPerTab: 100,
-  blockedTrackerIds: [],
-  mitigateCanvas: false,
-  mitigateAudio: false,
-  mitigateWebgl: false,
-  skipReportOpenConfirm: false,
-  cookieMetadataEnabled: false,
-  siteVisitFrequency: {}
-}
 
 let settings = DEFAULT_SETTINGS
 let valuationLedger = createEmptyValuationLedger()
@@ -210,15 +197,15 @@ function isDuplicateContentEvent(event: ObserverEvent) {
   return false
 }
 
-// The only place DNR rules get installed or removed — keeps the live rule
-// set in sync with settings.blockedTrackerIds, so unblocking a tracker from
-// the popup actually stops it immediately, not just future installs.
+// The only place DNR rules get installed or removed — keeps the live rule set
+// in sync with settings so a toggle from the popup takes effect immediately.
 async function syncBlockingRules() {
-  // Defense in depth: high-breakage trackers never get DNR rules, even if
-  // an old stored settings blob or forged message lists them.
+  // Defense in depth: both filters drop ids that must never produce rules
+  // (high-breakage blocks, or shims without a shipped resource).
   const blockable = filterBlockableTrackerIds(settings.blockedTrackerIds)
-  if (blockable.length > 0) {
-    await installDynamicBlockRules(blockable)
+  const shimmable = filterShimmableTrackerIds(settings.shimmedTrackerIds)
+  if (blockable.length > 0 || shimmable.length > 0) {
+    await installDynamicBlockRules(blockable, shimmable)
   } else {
     await uninstallDynamicBlockRules()
   }

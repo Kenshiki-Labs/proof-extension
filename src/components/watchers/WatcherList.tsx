@@ -19,13 +19,18 @@ const TIER_DOT: Record<AttentionTier, string> = {
 function WatcherRowView({
   row,
   blockedTrackerIds,
-  onToggleBlocking
+  shimmedTrackerIds,
+  onToggleBlocking,
+  onToggleShim
 }: {
   row: WatcherRow
   blockedTrackerIds: string[]
+  shimmedTrackerIds: string[]
   onToggleBlocking: (trackerId: string, blocked: boolean) => void
+  onToggleShim: (trackerId: string, shimmed: boolean) => void
 }) {
   const isBlocked = Boolean(row.trackerId) && blockedTrackerIds.includes(row.trackerId as string)
+  const isShimmed = Boolean(row.trackerId) && shimmedTrackerIds.includes(row.trackerId as string)
 
   return (
     // Deterministic single-line row: the name is the only shrinkable part.
@@ -42,7 +47,24 @@ function WatcherRowView({
         {row.observations > 1 ? <span className={`${TYPE.small} shrink-0 tabular-nums`}>× {row.observations}</span> : null}
       </div>
       {row.valueLabel ? <span className={`${TYPE.small} shrink-0 whitespace-nowrap tabular-nums`}>{row.valueLabel}</span> : null}
-      {row.canBlock && row.trackerId ? (
+      {row.canShim && row.trackerId ? (
+        <button
+          type="button"
+          onClick={() => onToggleShim(row.trackerId as string, !isShimmed)}
+          title={
+            isShimmed
+              ? "Restore this watcher's real script"
+              : "Serve a page-safe stand-in: the page keeps working, nothing reaches this watcher"
+          }
+          className={`rounded-full border px-2 py-0.5 text-[0.625rem] uppercase transition-colors ${
+            isShimmed
+              ? "border-signal text-signal hover:bg-signal hover:text-background"
+              : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+          }`}>
+          {isShimmed ? "Mitigated" : "Mitigate"}
+        </button>
+      ) : null}
+      {row.canBlock && row.trackerId && !isShimmed ? (
         <button
           type="button"
           onClick={() => onToggleBlocking(row.trackerId as string, !isBlocked)}
@@ -62,12 +84,16 @@ function WatcherRowView({
 export default function WatcherList({
   model,
   blockedTrackerIds,
+  shimmedTrackerIds,
   onToggleBlocking,
+  onToggleShim,
   moreSuffix = "in the full report"
 }: {
   model: WatcherListModel
   blockedTrackerIds: string[]
+  shimmedTrackerIds: string[]
   onToggleBlocking: (trackerId: string, blocked: boolean) => void
+  onToggleShim: (trackerId: string, shimmed: boolean) => void
   moreSuffix?: string
 }) {
   if (model.rows.length === 0) return null
@@ -80,7 +106,14 @@ export default function WatcherList({
           horizontal overflow. Flex-col stretches each row to the container. */}
       <ul className="mt-2 flex flex-col gap-1.5">
         {model.rows.map((row) => (
-          <WatcherRowView blockedTrackerIds={blockedTrackerIds} key={row.key} onToggleBlocking={onToggleBlocking} row={row} />
+          <WatcherRowView
+            blockedTrackerIds={blockedTrackerIds}
+            key={row.key}
+            onToggleBlocking={onToggleBlocking}
+            onToggleShim={onToggleShim}
+            row={row}
+            shimmedTrackerIds={shimmedTrackerIds}
+          />
         ))}
       </ul>
       {model.moreCount > 0 ? (

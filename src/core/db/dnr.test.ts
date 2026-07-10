@@ -2,11 +2,15 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 
 import {
   buildDynamicBlockRules,
+  buildDynamicBlockRuleSet,
   findInstalledBlockRuleMetadataForRequest,
   getDynamicBlockRuleMetadata,
   installDynamicBlockRules,
   uninstallDynamicBlockRules
 } from "./dnr"
+
+const REDIRECT = "redirect" as chrome.declarativeNetRequest.RuleActionType
+const BLOCK = "block" as chrome.declarativeNetRequest.RuleActionType
 
 describe("buildDynamicBlockRules", () => {
   it("builds blocking rules from the tracker database", () => {
@@ -41,6 +45,48 @@ describe("buildDynamicBlockRules", () => {
     // does not exist there, and reading it at module scope previously threw
     // before installDynamicBlockRules's own guard ever ran.
     expect(() => buildDynamicBlockRules()).not.toThrow()
+  })
+})
+
+// Page-safe shims: redirect the tracker's script to a local impostor and
+// close the return path, instead of blocking (which breaks pages).
+describe("buildDynamicBlockRuleSet with shimmed trackers", () => {
+  it("redirects scripts to the shim, beacons to the pixel, and blocks the XHR/ping return path", () => {
+    const { rules, metadata } = buildDynamicBlockRuleSet([], ["google-analytics"])
+
+    const script = rules.find((rule) => rule.action.type === REDIRECT && rule.condition.resourceTypes?.includes("script" as chrome.declarativeNetRequest.ResourceType))
+    expect(script?.action.redirect?.extensionPath).toBe("/shims/gtag.js")
+    expect(script?.condition.urlFilter).toBe("||google-analytics.com^")
+
+    const image = rules.find((rule) => rule.action.type === REDIRECT && rule.condition.resourceTypes?.includes("image" as chrome.declarativeNetRequest.ResourceType))
+    expect(image?.action.redirect?.extensionPath).toBe("/shims/pixel.gif")
+
+    const returnPath = rules.find((rule) => rule.action.type === BLOCK)
+    expect(returnPath?.condition.resourceTypes).toEqual(["xmlhttprequest", "ping"])
+
+    // Every shim rule's metadata carries the honest action label.
+    expect([...metadata.values()].every((entry) => entry.action === "shim")).toBe(true)
+  })
+
+  it("shims the high-breakage tracker that blocking can never touch (google-tag-manager is user_action_required)", () => {
+    expect(buildDynamicBlockRules(["google-tag-manager"])).toEqual([])
+
+    const { rules } = buildDynamicBlockRuleSet([], ["google-tag-manager"])
+    expect(rules.some((rule) => rule.action.redirect?.extensionPath === "/shims/gtag.js")).toBe(true)
+  })
+
+  it("shim wins over block for the same tracker — no duplicate block rules", () => {
+    const { rules } = buildDynamicBlockRuleSet(["google-analytics"], ["google-analytics"])
+
+    const blockRules = rules.filter((rule) => rule.action.type === BLOCK)
+    // Only the shim's own return-path block remains, scoped to xhr/ping.
+    expect(blockRules).toHaveLength(1)
+    expect(blockRules[0]?.condition.resourceTypes).toEqual(["xmlhttprequest", "ping"])
+  })
+
+  it("ignores shimmed ids without a shipped shim resource", () => {
+    const { rules } = buildDynamicBlockRuleSet([], ["fullstory"])
+    expect(rules).toEqual([])
   })
 })
 
