@@ -36,6 +36,7 @@ import {
 import { blockingGuidance } from "~core/domain/blocking-policy"
 import { buildWatcherGroups } from "~core/report/watchers"
 import { functionalCategoryBreakdown } from "~core/domain/functional-category"
+import { countIdentifiedObservers, countSiteToolObservers, countUnclassifiedParties, countWatchingObservers } from "~core/domain/observer-counts"
 import { rankObservers } from "~core/domain/attention"
 import CleanupFlow from "~components/CleanupFlow"
 import ContractAuditView from "~components/contract/ContractAuditView"
@@ -82,6 +83,12 @@ const EMPTY_SETTINGS: UserSettings = {
   siteVisitFrequency: {}
 }
 
+const FOOTER_LINKS = [
+  { label: "About", href: "https://kenshiki.ai/about" },
+  { label: "Privacy", href: "https://kenshiki.ai/privacy" },
+  { label: "TOS", href: "https://kenshiki.ai/terms" }
+] as const
+
 function Metric({ label, value }: { label: string; value: number | string }) {
   return (
     <div className={`${UI.metricCard} min-w-0`}>
@@ -110,21 +117,22 @@ function SectionTitle({ number, title }: { number: string; title: string }) {
   )
 }
 
-type ReportView = "evidence" | "local-state" | "contract" | "value" | "debug"
+type ReportView = "evidence" | "local-state" | "contract" | "value" | "debug" | "ai-audit"
 
 function initialReportView(): ReportView {
   const view = new URLSearchParams(location.search).get("view")
   if (view === "persistence") return "local-state"
-  return view === "value" || view === "debug" || view === "contract" || view === "local-state" ? view : "evidence"
+  return view === "value" || view === "debug" || view === "contract" || view === "local-state" || view === "ai-audit" ? view : "evidence"
 }
 
 function ReportViewSwitch({ onViewChange, view }: { onViewChange: (view: ReportView) => void; view: ReportView }) {
   const options: Array<{ label: string; value: ReportView }> = [
-    { label: "Evidence", value: "evidence" },
+    { label: "Runtime audit", value: "evidence" },
     { label: "Local state", value: "local-state" },
     { label: "Contract", value: "contract" },
     { label: "Value ledger", value: "value" },
-    { label: "Debug data", value: "debug" }
+    { label: "Debug data", value: "debug" },
+    { label: "AI audit", value: "ai-audit" }
   ]
 
   return (
@@ -831,9 +839,339 @@ function RemediationPanel({ observations }: { observations: DisplayObservation[]
   )
 }
 
+function AuditBrief({
+  allObservations,
+  exposureEvents,
+  localStateObservations,
+  summary
+}: {
+  allObservations: DisplayObservation[]
+  exposureEvents: ObserverEvent[]
+  localStateObservations: DisplayObservation[]
+  summary: SiteSummary
+}) {
+  const watchingObservers = countWatchingObservers(summary.events)
+  const identifiedObservers = countIdentifiedObservers(summary.events)
+  const unclassifiedParties = countUnclassifiedParties(summary.events)
+  const siteToolObservers = countSiteToolObservers(summary.events)
+  const exposedSignals = [...new Set(summary.exposedSignals.filter((signal) => signal !== "extension_diagnostic"))]
+  const takeaways: string[] = []
+
+  if (watchingObservers > 0) {
+    takeaways.push(`${watchingObservers} distinct third-party ${watchingObservers === 1 ? "party was" : "parties were"} observed while this tab ran.`)
+  } else {
+    takeaways.push("No third-party observer was recorded for this tab yet; drive the critical journey and reload if the tab was open before Pulse attached.")
+  }
+
+  if (unclassifiedParties > 0) takeaways.push(`${unclassifiedParties} ${unclassifiedParties === 1 ? "party is" : "parties are"} not yet matched to the tracker database; classify before treating the journey as governed.`)
+  if (siteToolObservers > 0) takeaways.push(`${siteToolObservers} site-tool ${siteToolObservers === 1 ? "observer is" : "observers are"} present; confirm it remains bounded on authenticated or sensitive pages.`)
+  if (localStateObservations.length > 0) takeaways.push("Local state was recorded; open Local state to inspect cookie and storage metadata without copying values.")
+  if (exposureEvents.length > 0) takeaways.push("A browser-surface scan is available; it shows what scripts could read, not proof this page read every field.")
+  if (summary.pageErrors.length > 0) takeaways.push(`${summary.pageErrors.length} page ${summary.pageErrors.length === 1 ? "error was" : "errors were"} observed while Pulse was active; review Debug data before using this as clean evidence.`)
+
+  return (
+    <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
+      <SectionTitle number="00" title="Runtime audit brief" />
+      <p className={`${TYPE.body} mt-2 max-w-4xl`}>
+        Browser-local evidence for what this site exposed during the current journey. Use it before and after consent,
+        login, document upload, payment, account, or benefits flows to catch vendor drift and sensitive-context leakage.
+      </p>
+      <div className={`mt-4 ${UI.statStrip}`}>
+        <Metric label="Third parties seen" value={watchingObservers} />
+        <Metric label="Known vendors" value={identifiedObservers} />
+        <Metric label="Unknown parties" value={unclassifiedParties} />
+        <Metric label="Site-tool observers" value={siteToolObservers} />
+      </div>
+      <div className="mt-2 grid gap-2 sm:grid-cols-3">
+        <Metric label="Evidence rows" value={allObservations.length} />
+        <Metric label="Local state rows" value={localStateObservations.length} />
+        <Metric label="Browser-surface scans" value={exposureEvents.length} />
+      </div>
+      <div className="mt-2 grid gap-2 sm:grid-cols-2">
+        <Metric label="Exposed signal types" value={exposedSignals.length} />
+        <Metric label="Page errors" value={summary.pageErrors.length} />
+      </div>
+      <ul className={`${TYPE.body} mt-4 list-disc pl-5`}>
+        {takeaways.map((takeaway) => <li key={takeaway}>{takeaway}</li>)}
+      </ul>
+    </section>
+  )
+}
+
+function markdownInline(text: string) {
+  return text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).filter(Boolean).map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={`${part}-${index}`}>{part.slice(2, -2)}</strong>
+    if (part.startsWith("`") && part.endsWith("`")) return <code className="border border-border bg-background px-1 py-0.5 font-mono text-[0.8125em]" key={`${part}-${index}`}>{part.slice(1, -1)}</code>
+    return <Fragment key={`${part}-${index}`}>{part}</Fragment>
+  })
+}
+
+function markdownCells(row: string) {
+  return row.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((cell) => cell.trim())
+}
+
+function isMarkdownTableSeparator(line: string) {
+  return /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(line)
+}
+
+function MarkdownTable({ lines, tableKey }: { lines: string[]; tableKey: string }) {
+  const [header = [], , ...bodyRows] = lines.map(markdownCells)
+
+  return (
+    <div className="my-4 overflow-x-auto border border-border bg-card">
+      <table className="w-full min-w-[640px] border-collapse text-left">
+        <thead>
+          <tr className="border-b border-border bg-background/60">
+            {header.map((cell, index) => <th className={`${TYPE.label} p-2`} key={`${tableKey}-head-${index}`}>{markdownInline(cell)}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {bodyRows.map((row, rowIndex) => (
+            <tr className="border-b border-border align-top last:border-b-0" key={`${tableKey}-row-${rowIndex}`}>
+              {row.map((cell, cellIndex) => <td className={`${TYPE.body} p-2`} key={`${tableKey}-cell-${rowIndex}-${cellIndex}`}>{markdownInline(cell)}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function MarkdownReport({ content }: { content: string }) {
+  const blocks = []
+  const lines = content.split(/\r?\n/)
+  let index = 0
+
+  while (index < lines.length) {
+    const line = lines[index] ?? ""
+    const trimmed = line.trim()
+
+    if (!trimmed) {
+      index += 1
+      continue
+    }
+
+    if (trimmed === "---") {
+      blocks.push(<hr className="my-5 border-border" key={`hr-${index}`} />)
+      index += 1
+      continue
+    }
+
+    const heading = /^(#{1,4})\s+(.+)$/.exec(trimmed)
+    if (heading) {
+      const level = (heading[1] ?? "").length
+      const text = markdownInline(heading[2] ?? "")
+      if (level === 1) blocks.push(<h1 className="mt-5 font-display text-2xl font-semibold tracking-tight first:mt-0" key={`h-${index}`}>{text}</h1>)
+      else if (level === 2) blocks.push(<h2 className="mt-6 font-display text-xl font-semibold tracking-tight" key={`h-${index}`}>{text}</h2>)
+      else if (level === 3) blocks.push(<h3 className="mt-5 font-display text-base font-semibold tracking-tight" key={`h-${index}`}>{text}</h3>)
+      else blocks.push(<h4 className={`${TYPE.label} mt-4`} key={`h-${index}`}>{text}</h4>)
+      index += 1
+      continue
+    }
+
+    if (trimmed.startsWith("|") && index + 1 < lines.length && isMarkdownTableSeparator(lines[index + 1] ?? "")) {
+      const tableLines = [line, lines[index + 1] ?? ""]
+      index += 2
+      while (index < lines.length && (lines[index] ?? "").trim().startsWith("|")) {
+        tableLines.push(lines[index] ?? "")
+        index += 1
+      }
+      blocks.push(<MarkdownTable key={`table-${index}`} lines={tableLines} tableKey={`table-${index}`} />)
+      continue
+    }
+
+    if (/^[-*]\s+/.test(trimmed)) {
+      const items: string[] = []
+      while (index < lines.length && /^[-*]\s+/.test((lines[index] ?? "").trim())) {
+        items.push((lines[index] ?? "").trim().replace(/^[-*]\s+/, ""))
+        index += 1
+      }
+      blocks.push(<ul className={`${TYPE.body} mt-3 list-disc pl-5`} key={`ul-${index}`}>{items.map((item, itemIndex) => <li key={`${item}-${itemIndex}`}>{markdownInline(item)}</li>)}</ul>)
+      continue
+    }
+
+    if (/^\d+\.\s+/.test(trimmed)) {
+      const items: string[] = []
+      while (index < lines.length && /^\d+\.\s+/.test((lines[index] ?? "").trim())) {
+        items.push((lines[index] ?? "").trim().replace(/^\d+\.\s+/, ""))
+        index += 1
+      }
+      blocks.push(<ol className={`${TYPE.body} mt-3 list-decimal pl-5`} key={`ol-${index}`}>{items.map((item, itemIndex) => <li key={`${item}-${itemIndex}`}>{markdownInline(item)}</li>)}</ol>)
+      continue
+    }
+
+    const paragraph: string[] = []
+    while (
+      index < lines.length &&
+      (lines[index] ?? "").trim() &&
+      !/^(#{1,4})\s+/.test((lines[index] ?? "").trim()) &&
+      !/^[-*]\s+/.test((lines[index] ?? "").trim()) &&
+      !/^\d+\.\s+/.test((lines[index] ?? "").trim()) &&
+      !((lines[index] ?? "").trim().startsWith("|") && index + 1 < lines.length && isMarkdownTableSeparator(lines[index + 1] ?? "")) &&
+      (lines[index] ?? "").trim() !== "---"
+    ) {
+      paragraph.push((lines[index] ?? "").trim())
+      index += 1
+    }
+    blocks.push(<p className={`${TYPE.body} mt-3`} key={`p-${index}`}>{markdownInline(paragraph.join(" "))}</p>)
+  }
+
+  return <div className="mt-3 max-w-none">{blocks}</div>
+}
+
+function safeReportSlug(origin: string) {
+  try {
+    return new URL(origin).hostname.replace(/[^a-z0-9.-]+/gi, "-").replace(/^-+|-+$/g, "") || "site"
+  } catch {
+    return "site"
+  }
+}
+
+function govHostname(origin: string) {
+  try {
+    const hostname = new URL(origin).hostname.toLowerCase()
+    return hostname.endsWith(".gov") ? hostname : null
+  } catch {
+    return null
+  }
+}
+
+function AiAuditReportPanel({ summary, tabId }: { summary: SiteSummary; tabId: number | null }) {
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle")
+  const [error, setError] = useState<string | null>(null)
+  const [report, setReport] = useState("")
+  const [saveState, setSaveState] = useState<"idle" | "saved" | "failed">("idle")
+  const [status, setStatus] = useState<"idle" | "running" | "ready" | "failed">("idle")
+  const eligibleHostname = govHostname(summary.origin)
+  const generationDisabled = status === "running" || !eligibleHostname || !tabId
+
+  async function generateReport() {
+    if (!eligibleHostname || !tabId) {
+      setError(eligibleHostname ? "This report page is missing its tab context; reopen it from the popup." : "AI audit generation is enabled only for .gov domains.")
+      setStatus("failed")
+      return
+    }
+
+    setError(null)
+    setStatus("running")
+    try {
+      const response = await browser.runtime.sendMessage({
+        type: "GENERATE_AI_AUDIT_REPORT",
+        payload: { tabId, auditPayload: buildCopyPayload(summary) }
+      })
+      const parsed = RuntimeMessageSchema.safeParse(response)
+      if (!parsed.success) throw new Error("Background returned a malformed AI audit response.")
+      if (parsed.data.type === "AI_AUDIT_REPORT_FAILED") throw new Error(parsed.data.error)
+      if (parsed.data.type !== "AI_AUDIT_REPORT") throw new Error("Background did not return an AI audit report.")
+      setReport(parsed.data.payload.report)
+      setStatus("ready")
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : String(caught))
+      setStatus("failed")
+    }
+  }
+
+  async function copyAiReport() {
+    try {
+      await navigator.clipboard.writeText(report)
+      setCopyState("copied")
+      setTimeout(() => setCopyState("idle"), 1600)
+    } catch {
+      setCopyState("failed")
+      setTimeout(() => setCopyState("idle"), 2200)
+    }
+  }
+
+  function saveAiReport() {
+    try {
+      const blob = new Blob([report], { type: "text/markdown;charset=utf-8" })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = `pulse-ai-audit-${safeReportSlug(summary.origin)}-${new Date().toISOString().slice(0, 10)}.md`
+      link.click()
+      URL.revokeObjectURL(url)
+      setSaveState("saved")
+      setTimeout(() => setSaveState("idle"), 1600)
+    } catch {
+      setSaveState("failed")
+      setTimeout(() => setSaveState("idle"), 2200)
+    }
+  }
+
+  return (
+    <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <SectionTitle number="AI" title="Government trust opportunity" />
+          <p className={`${TYPE.body} mt-2 max-w-4xl`}>
+            Generate a concise report on whether this .gov service is missing opportunities to bind legitimate users to
+            high-stakes actions without increasing surveillance.
+          </p>
+          <p className={`${TYPE.small} mt-2`}>
+            {eligibleHostname ? `Ready for ${eligibleHostname}.` : `AI reports are available only for .gov domains.`}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button disabled={generationDisabled} onClick={() => generateReport().catch(() => undefined)}>
+            {status === "running" ? "Generating" : report ? "Regenerate" : "Generate report"}
+          </Button>
+          {report ? (
+            <>
+              <Button onClick={() => copyAiReport().catch(() => setCopyState("failed"))} variant="secondary">
+                {copyState === "copied" ? "Copied" : copyState === "failed" ? "Copy failed" : "Copy report"}
+              </Button>
+              <Button onClick={saveAiReport} variant="secondary">
+                {saveState === "saved" ? "Saved" : saveState === "failed" ? "Save failed" : "Save report"}
+              </Button>
+            </>
+          ) : null}
+        </div>
+      </div>
+      {!report ? (
+        <div className={`${UI.subtlePanel} mt-4 p-4`}>
+          <h3 className={TYPE.label}>Report focus</h3>
+          <ul className={`${TYPE.body} mt-3 list-disc pl-5`}>
+            <li>Lead with the missed trust opportunity, not a tracker inventory.</li>
+            <li>Use observed browser evidence to separate operational telemetry from citizen-benefiting assurance.</li>
+            <li>Recommend first-party, consented, purpose-bound proof for sensitive actions.</li>
+            <li>Reject adtech-style tracking, opaque profiling, and broader passive observation.</li>
+          </ul>
+        </div>
+      ) : null}
+      {error ? <p className={`${TYPE.small} mt-3 text-danger`}>{error}</p> : null}
+      {report ? (
+        <article className={`${UI.subtlePanel} mt-4 p-4`}>
+          <div className="flex flex-wrap gap-2">
+            <h3 className={TYPE.label}>Generated report</h3>
+          </div>
+          <MarkdownReport content={report} />
+        </article>
+      ) : null}
+    </section>
+  )
+}
+
+function ReportFooter() {
+  return (
+    <footer className={`${TYPE.small} mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-border py-5`}>
+      <span>Pulse Observer</span>
+      <nav aria-label="Product links" className="flex flex-wrap items-center gap-4">
+        {FOOTER_LINKS.map((link) => (
+          <a className="underline hover:text-foreground" href={link.href} key={link.href} rel="noreferrer" target="_blank">
+            {link.label}
+          </a>
+        ))}
+      </nav>
+    </footer>
+  )
+}
+
 function ReportTab() {
   const [summary, setSummary] = useState<SiteSummary>(EMPTY_SUMMARY)
   const [settings, setSettings] = useState<UserSettings>(EMPTY_SETTINGS)
+  const settingsRef = useRef(settings)
+  settingsRef.current = settings
   const [loadError, setLoadError] = useState<string | null>(null)
   const [summaryLoaded, setSummaryLoaded] = useState(false)
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle")
@@ -907,12 +1245,20 @@ function ReportTab() {
   }
 
   async function toggleTrackerBlocking(trackerId: string, blocked: boolean) {
+    // Confirm-first, never optimistic: "Unblock" in the UI is a claim that a
+    // DNR rule is installed, so the local state only flips after the
+    // background acknowledges the write. Computed from the freshest settings
+    // (settingsRef) so two quick toggles cannot erase each other.
     const blockedTrackerIds = blocked
-      ? [...new Set([...settings.blockedTrackerIds, trackerId])]
-      : settings.blockedTrackerIds.filter((id) => id !== trackerId)
+      ? [...new Set([...settingsRef.current.blockedTrackerIds, trackerId])]
+      : settingsRef.current.blockedTrackerIds.filter((id) => id !== trackerId)
 
-    setSettings((current) => ({ ...current, blockedTrackerIds }))
-    await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { blockedTrackerIds } }).catch(() => undefined)
+    try {
+      await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { blockedTrackerIds } })
+      setSettings((current) => ({ ...current, blockedTrackerIds }))
+    } catch (error) {
+      console.warn("Failed to update blocking", error)
+    }
   }
 
   async function copyReport() {
@@ -963,20 +1309,24 @@ function ReportTab() {
             <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight">
               {reportView === "value"
                 ? "Local value ledger"
+                : reportView === "ai-audit"
+                  ? "AI audit narrative"
                 : reportView === "debug"
                   ? "Debug data"
                   : reportView === "contract"
                     ? "Done vs. declared"
-                    : "Current tab evidence"}
+                    : "Runtime audit report"}
             </h1>
             <p className={`${TYPE.body} mt-2 break-all`}>
               {reportView === "value"
                 ? "Local estimates from tracker presence observed by this extension. Not revenue measurements."
+                : reportView === "ai-audit"
+                  ? `Generated buyer-ready audit narrative for ${summary.origin}`
                 : reportView === "debug"
                   ? `Raw pipeline data for ${summary.origin} — fail-open, uncurated, for diagnosing what the product surfaces show.`
                   : reportView === "contract"
                     ? `What this page did, reconciled against the legal documents it links to — ${summary.origin}`
-                    : summary.origin}
+                    : `Browser-local evidence for ${summary.origin}`}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -1028,8 +1378,16 @@ function ReportTab() {
             origin={summary.origin}
             tabId={reportTabId()}
           />
+        ) : reportView === "ai-audit" ? (
+          <AiAuditReportPanel summary={summary} tabId={reportTabId()} />
         ) : reportView === "evidence" ? (
           <>
+            <AuditBrief
+              allObservations={allObservations}
+              exposureEvents={exposureEvents}
+              localStateObservations={localStateObservations}
+              summary={summary}
+            />
             <VerdictBanner summary={summary} />
             <VisitFrequencyAsk
               annualHighUsd={observedRollup.annualRevenueHighUsd}
@@ -1149,6 +1507,8 @@ function ReportTab() {
         ) : reportView === "debug" ? (
           <DebugView settings={settings} summary={summary} />
         ) : null}
+
+        <ReportFooter />
       </div>
     </main>
   )

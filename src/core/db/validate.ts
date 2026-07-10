@@ -212,6 +212,13 @@ export function validateTrackerDatabaseRecords(rawTrackers: unknown, rawCompanie
   }
 }
 
+// The bundled database is immutable for the lifetime of the process, but this
+// is called from nine sites including every settings sync — memoize so the
+// full zod parse and the O(n²) domain-disjointness sweep run once, not per
+// call, as the tracker DB grows toward EasyPrivacy scale.
+let validatedBundledDatabase: ReturnType<typeof validateTrackerDatabaseRecords> | null = null
+
 export function validateTrackerDatabase() {
-  return validateTrackerDatabaseRecords(trackers, companies, remediation)
+  validatedBundledDatabase ??= validateTrackerDatabaseRecords(trackers, companies, remediation)
+  return validatedBundledDatabase
 }

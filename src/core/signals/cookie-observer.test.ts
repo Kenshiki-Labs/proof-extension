@@ -61,7 +61,9 @@ describe("buildCookieObservedEvent", () => {
       tabId: 1,
       origin: "https://example.test",
       observedAt: 100,
-      source: "api-hook",
+      // extension-scan, not api-hook: this event describes a chrome.cookies
+      // read, and display classifiers key HttpOnly/session handling on it.
+      source: "extension-scan",
       firstParty: true,
       policyLabel: "unknown_first_party",
       eventType: "cookie_observed",

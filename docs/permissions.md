@@ -3,9 +3,9 @@ title: "Permissions"
 description: "Store-review justification for every permission Pulse Observer requests: why it is needed, what it is not used for, what is stored locally, and what never leaves the browser."
 owner: Kenshiki
 section: docs
-lastReviewed: 2026-07-03
+lastReviewed: 2026-07-10
 nextReview: 2026-09-29
-version: "0.0.2"
+version: "0.0.3"
 status: draft
 ---
 
@@ -17,6 +17,7 @@ This document is the store-review permission justification required by the spec 
 - `scripting`
 - `storage`
 - `webRequest`
+- Optional (runtime-requested): `cookies`
 - Host permissions: `<all_urls>`
 
 ## Product context for reviewers
@@ -51,11 +52,9 @@ A static content script (declared in the manifest, `document_start`) observes DO
 
 Lets the popup resolve the active tab so it can request that tab's summary from the background worker. Used for scoping the UI, not for extra content access.
 
-## Future persistence-observer permissions
+### `cookies` (optional) — persistence-surface metadata, requested at time of use
 
-Persistence-surface observers are specified in `docs/observer-spec.md`, but the current manifest does not request `cookies`.
-
-If browser-level cookie observation ships later, the `cookies` permission must be reviewed and documented before release. It may be used only for cookie metadata and change events, including `HttpOnly` metadata where the browser exposes it. Raw cookie values must not be stored, exported, or uploaded. Any local keyed digest for respawn diagnostics must be retention-bound, cleared by `CLEAR_LOCAL_DATA`, and labeled as diagnostic evidence rather than a raw identifier.
+Declared under `optional_permissions` and requested at runtime (`chrome.permissions.request`) only when the user invokes the persistence-observer feature; the extension functions without it. It is used to read cookie metadata (`cookies.getAll` scoped to the inspected origin) — name, domain, flags, expiry, including `HttpOnly` metadata where the browser exposes it — so persistence and respawn behavior can be reported as evidence. Raw cookie values are not stored, exported, or uploaded. Any local keyed digest for respawn diagnostics is retention-bound, cleared by `CLEAR_LOCAL_DATA`, and labeled as diagnostic evidence rather than a raw identifier. Runtime consumer: `src/core/browser/cookie-store.ts`.
 
 ## Why `activeTab` alone is insufficient
 
@@ -85,7 +84,7 @@ Raw per-tab event state is memory-only in the background worker and subject to t
 - No browsing telemetry leaves the browser. There is no vendor backend, no analytics SDK, and no remote code loading.
 - Page content, form values, cookies, localStorage/sessionStorage values, credentials, and tokens are never read by content hooks and never stored.
 - Copy/export actions are user-initiated and produce a local artifact the user controls.
-- Any future AI explanation feature is opt-in, off by default, and requires a user-reviewed payload preview before any network request (see `docs/observer-spec.md`, "Opt-In AI Assistance"). It is not present in the v1 runtime path.
+- The AI audit-report feature is opt-in and user-initiated: it runs only when the user explicitly clicks Generate, only for `.gov` origins (verified against the tab's real URL in the background worker), and sends only the report's evidence summary — the same payload shown by the copy action — to Kenshiki's audit endpoint (`worker/ai-audit-proxy`), which forwards it to the AI model. The API credential lives in that service, never in the extension. No browsing data is sent anywhere automatically (see `docs/observer-spec.md`, "Opt-In AI Assistance").
 
 ## User controls: pause, clear, limit
 

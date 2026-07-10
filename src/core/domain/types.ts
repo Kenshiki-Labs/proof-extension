@@ -270,6 +270,9 @@ export type RuntimeMessage =
   | { type: "RUN_CONSENT_AUDIT"; tabId: number }
   | { type: "CONSENT_AUDIT"; payload: ConsentAuditRecord }
   | { type: "CONSENT_AUDIT_FAILED"; reason: "no_tab" | "restricted_page" | "anchor_harvest_failed" }
+  | { type: "GENERATE_AI_AUDIT_REPORT"; payload: { tabId: number; auditPayload: string } }
+  | { type: "AI_AUDIT_REPORT"; payload: { report: string } }
+  | { type: "AI_AUDIT_REPORT_FAILED"; error: string }
   | { type: "GET_SETTINGS" }
   | { type: "SETTINGS"; payload: UserSettings }
   | { type: "UPDATE_SETTINGS"; payload: Partial<UserSettings> }

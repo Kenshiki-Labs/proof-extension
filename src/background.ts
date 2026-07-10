@@ -50,6 +50,10 @@ const SUMMARY_STORAGE_KEY = "siteSummaries"
 const SETTINGS_STORAGE_KEY = "userSettings"
 const VALUATION_LEDGER_STORAGE_KEY = "valuationLedger"
 const CONTENT_EVENT_DEDUPE_TTL_MS = 750
+// The audit prompt, the model choice, and the product OpenRouter key all live
+// in the proxy (worker/ai-audit-proxy) — nothing credential-shaped ships in
+// this bundle. Update this URL if the worker is deployed under another route.
+const AI_AUDIT_PROXY_URL = "https://pulse-ai-audit.kenshiki.workers.dev/"
 
 // This is primarily an observer, not a blocker: blockedTrackerIds starts
 // empty so installing/enabling the extension never changes site behavior by
@@ -162,6 +166,16 @@ function originMatchesSender(event: ObserverEvent, sender: Runtime.MessageSender
   return !origin || origin === event.origin
 }
 
+// Extension pages (popup, options, the report tab) load from the extension's
+// own origin; content scripts report the web page's URL. The report page opens
+// in a normal tab, so sender.tab presence cannot be the discriminator — the
+// sender URL's origin is.
+const EXTENSION_ORIGIN = browser.runtime.getURL("")
+
+function isExtensionPageSender(sender: Runtime.MessageSender) {
+  return typeof sender.url === "string" && sender.url.startsWith(EXTENSION_ORIGIN)
+}
+
 function sameTrackerIdSet(a: readonly string[], b: readonly string[]) {
   if (a.length !== b.length) return false
   const bSet = new Set(b)
@@ -182,6 +196,11 @@ function readSummary(tabId: number, origin = "unknown") {
 // events) and the webRequest network observer below — one place that reads,
 // merges, and persists a summary update.
 async function recordEvent(event: ObserverEvent) {
+  // The webRequest listeners register synchronously at worker startup and can
+  // fire before stored state finishes rehydrating; an event recorded onto the
+  // pre-hydration map would be wiped by hydrateState's summaries.clear().
+  // Waiting here means a worker respawn never loses the tab's stored history.
+  await ensureHydrated()
   if (isDuplicateContentEvent(event)) return
 
   const current = readSummary(event.tabId, event.origin)
@@ -251,7 +270,11 @@ async function syncBlockingRules() {
   }
 }
 
-ensureHydrated()
+// Kept as a named promise: dynamic DNR rules survive a service-worker restart
+// but the attribution metadata map does not, so the blocked-signal listeners
+// below await this before matching — otherwise blocks by our own persisted
+// rules would go unattributed between worker wake and this sync finishing.
+const initialRuleSync = ensureHydrated()
   .then(syncBlockingRules)
   .catch((error: unknown) => console.warn("Failed to sync DNR rules", error))
 
@@ -476,6 +499,50 @@ async function inspectCookieValuesForTab(tabId: number): Promise<RuntimeMessage>
   return { type: "COOKIE_VALUE_INSPECT", payload: await inspectSiteCookieValues({ origin: originFromUrl(tab.url) }) }
 }
 
+function urlIsGov(url: string | undefined) {
+  if (!url) return false
+  try {
+    return new URL(url).hostname.toLowerCase().endsWith(".gov")
+  } catch {
+    return false
+  }
+}
+
+async function generateAiAuditReport({ auditPayload, tabId }: { auditPayload: string; tabId: number }): Promise<RuntimeMessage> {
+  try {
+    // Gate on the tab's real URL, not anything asserted inside the payload —
+    // the payload is caller-supplied text and proves nothing about the site.
+    let tab: browser.Tabs.Tab
+    try {
+      tab = await browser.tabs.get(tabId)
+    } catch {
+      return { type: "AI_AUDIT_REPORT_FAILED", error: "The audited tab is no longer open." }
+    }
+    if (!urlIsGov(tab.url)) {
+      return { type: "AI_AUDIT_REPORT_FAILED", error: "AI audit reports are enabled only for .gov origins." }
+    }
+
+    const response = await fetch(AI_AUDIT_PROXY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ auditPayload })
+    })
+
+    const data = (await response.json().catch(() => null)) as { error?: unknown; report?: unknown } | null
+    if (!response.ok) {
+      const error = typeof data?.error === "string" ? data.error : `The audit service is unavailable right now (${response.status}).`
+      return { type: "AI_AUDIT_REPORT_FAILED", error }
+    }
+    if (typeof data?.report !== "string" || data.report.trim().length === 0) {
+      return { type: "AI_AUDIT_REPORT_FAILED", error: "The audit service returned an empty report." }
+    }
+
+    return { type: "AI_AUDIT_REPORT", payload: { report: data.report.trim() } }
+  } catch (error) {
+    return { type: "AI_AUDIT_REPORT_FAILED", error: error instanceof Error ? error.message : String(error) }
+  }
+}
+
 // Live consent audit of the site currently seen (docs/consent-atlas-tab-spec.md).
 // The page's own anchors replace the atlas crawler: harvest them on demand,
 // classify legal-document links, fetch documents on this site's own domain,
@@ -629,11 +696,14 @@ function registerNetworkObserver() {
   // the first records, the second only annotates blockSignals — one blocked
   // request never counts twice, and the stored event shows every
   // deterministic signal that confirmed it.
-  function recordBlockedOutcome(
+  async function recordBlockedOutcome(
     metadata: DynamicBlockRuleMetadata,
     request: { frameId: number; requestId: string; tabId: number; type: string; url: string; initiator?: string | undefined },
     signal: "rule_matched_debug" | "err_blocked_by_client"
   ) {
+    // Same cold-start rule as recordEvent: never read or write summaries
+    // before hydration has finished restoring them.
+    await ensureHydrated()
     const blockedEventId = requestEventId("request_blocked", request.tabId, request.requestId, metadata.tracker.id)
     const current = summaries.get(request.tabId)
     const existingBlocked = current?.events.find((event) => event.id === blockedEventId)
@@ -674,10 +744,15 @@ function registerNetworkObserver() {
   }
 
   chrome.declarativeNetRequest?.onRuleMatchedDebug?.addListener((info) => {
-    const metadata = getDynamicBlockRuleMetadata(info.rule.ruleId)
-    if (!metadata || info.request.tabId < 0) return
+    if (info.request.tabId < 0) return
 
-    recordBlockedOutcome(metadata, info.request, "rule_matched_debug")
+    initialRuleSync
+      .then(() => {
+        const metadata = getDynamicBlockRuleMetadata(info.rule.ruleId)
+        if (!metadata) return
+        return recordBlockedOutcome(metadata, info.request, "rule_matched_debug")
+      })
+      .catch((error: unknown) => console.warn("Failed to record blocked outcome", error))
   })
 
   // Production blocked-state signal: onRuleMatchedDebug never fires in a
@@ -690,10 +765,13 @@ function registerNetworkObserver() {
     (details) => {
       if (details.tabId < 0 || details.error !== "net::ERR_BLOCKED_BY_CLIENT") return
 
-      const metadata = findInstalledBlockRuleMetadataForRequest(details.url, details.type)
-      if (!metadata) return
-
-      recordBlockedOutcome(metadata, details, "err_blocked_by_client")
+      initialRuleSync
+        .then(() => {
+          const metadata = findInstalledBlockRuleMetadataForRequest(details.url, details.type)
+          if (!metadata) return
+          return recordBlockedOutcome(metadata, details, "err_blocked_by_client")
+        })
+        .catch((error: unknown) => console.warn("Failed to record blocked outcome", error))
     },
     { urls: ["<all_urls>"] }
   )
@@ -797,6 +875,13 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
       return { ok: true }
     }
 
+    // Everything below is a privileged operation reachable only from the
+    // extension's own pages (popup, options, report tab). Content scripts run
+    // inside every <all_urls> page context, so a compromised page context
+    // must never be able to wipe local data, rewrite settings, or trigger
+    // scans — the two message types above are the whole content-script API.
+    if (!isExtensionPageSender(sender)) return { ok: false, error: "unauthorized_sender" }
+
     if (message.type === "GET_SITE_SUMMARY") {
       return { type: "SITE_SUMMARY", payload: readSummary(message.tabId) }
     }
@@ -831,6 +916,10 @@ browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.Mess
 
     if (message.type === "RUN_CONSENT_AUDIT") {
       return runConsentAuditForTab(message.tabId)
+    }
+
+    if (message.type === "GENERATE_AI_AUDIT_REPORT") {
+      return generateAiAuditReport(message.payload)
     }
 
     if (message.type === "GET_SETTINGS") {

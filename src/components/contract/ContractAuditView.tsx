@@ -297,6 +297,15 @@ export default function ContractAuditView({ tabId, summary, summaryReady, summar
         </section>
       ) : null}
 
+      {record && !summaryReady && !summaryFailed ? (
+        <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
+          <p className={TYPE.body}>
+            Documents read. Waiting for this tab's observed evidence before reconciling — no claim is made until both
+            sides are confirmed.
+          </p>
+        </section>
+      ) : null}
+
       {record && summaryFailed ? (
         <section className={`mt-6 ${UI.panel} ${UI.reportInset}`} role="alert">
           <h2 className={TYPE.label}>Could not read the observed evidence for this tab</h2>

@@ -80,7 +80,13 @@ export const CONSENT_DARK_PATTERNS = [
     why_it_matters: "A single consent click can become recurring billing with limited refund leverage.",
     applies_to: [DOC_TYPES.TERMS, DOC_TYPES.SUBSCRIPTION],
     evidence_phrases: ["automatically renew", "auto-renew", "non-refundable", "no refunds"],
-    pattern: /(auto[-\s]?renew|automatically\s+renew)[^.]{0,120}|(non[-\s]?refundable|no\s+refunds?)/i,
+    // Both halves of the claim, proximity-bound in either order. A bare
+    // "no refunds" on a one-off purchase page is not an auto-renewal clause.
+    // The window crosses sentence boundaries because real terms split the two
+    // halves across adjacent sentences ("…automatically renew until you
+    // cancel. Charges are non-refundable…").
+    pattern:
+      /(auto[-\s]?renew|automatically\s+renew)[\s\S]{0,160}(non[-\s]?refundable|no\s+refunds?)|(non[-\s]?refundable|no\s+refunds?)[\s\S]{0,160}(auto[-\s]?renew|automatically\s+renew)/i,
     suggested_mitigation: "Set a cancellation reminder before each renewal date and cancel through the documented channel.",
     factors: { surprise: 0.4, data_sensitivity: 0.1, scope_or_sharing: 0.2, irreversibility: 0.5, remedy_or_economic: 0.7, actionability: 0.6 }
   },
@@ -123,7 +129,9 @@ export const CONSENT_DARK_PATTERNS = [
     why_it_matters: "Location data can expose routines, home/work locations, visits, and sensitive inferences.",
     applies_to: [DOC_TYPES.PRIVACY],
     evidence_phrases: ["geolocation", "precise location", "location data", "GPS"],
-    pattern: /(precise\s+)?(geo[-\s]?location|location\s+(data|information)|GPS)/i,
+    // Word-bounded: "allocation data" and "colocation information" must not
+    // read as location collection.
+    pattern: /\b(precise\s+)?(geo[-\s]?location|location\s+(data|information)|GPS)\b/i,
     suggested_mitigation: "Deny or coarsen location permissions at the OS level; grant only while-in-use if needed.",
     factors: { surprise: 0.5, data_sensitivity: 0.75, scope_or_sharing: 0.6, irreversibility: 0.5, remedy_or_economic: 0.2, actionability: 0.55 }
   },
@@ -177,7 +185,9 @@ export const CONSENT_DARK_PATTERNS = [
     why_it_matters: "Children's data carries higher sensitivity and usually requires more careful consent boundaries.",
     applies_to: [DOC_TYPES.PRIVACY],
     evidence_phrases: ["children", "minors", "under 13", "under 18", "parental consent"],
-    pattern: /(children|minors?|under\s+(the\s+age\s+of\s+)?1[38]|COPPA|parental\s+consent)/i,
+    // Word-bounded: "minority" and "underrepresented" must not read as
+    // minors'-data handling.
+    pattern: /\b(children|minors?|under\s+(the\s+age\s+of\s+)?1[38]|COPPA|parental\s+consent)\b/i,
     suggested_mitigation: "For family use, review age gates and parental-consent controls before allowing minors to sign up.",
     factors: { surprise: 0.4, data_sensitivity: 0.8, scope_or_sharing: 0.5, irreversibility: 0.6, remedy_or_economic: 0.2, actionability: 0.4 }
   },
@@ -255,7 +265,11 @@ export const CONSENT_DARK_PATTERNS = [
     why_it_matters: "Consent to one service can import outside information you never gave that service directly.",
     applies_to: [DOC_TYPES.PRIVACY],
     evidence_phrases: ["data brokers", "outside sources", "third-party sources", "combine information"],
-    pattern: /(data\s+brokers?|third[-\s]?party\s+sources?|outside\s+sources?|publicly\s+available\s+sources?)[^.]{0,140}|combine[^.]{0,80}(information|data)[^.]{0,80}(sources|partners)/i,
+    // "data brokers" is a strong signal on its own; the softer source terms
+    // must sit near an enrichment verb, in either order, or the near-universal
+    // "third-party sources" boilerplate flags every policy as broker enrichment.
+    pattern:
+      /data\s+brokers?|(third[-\s]?party\s+sources?|outside\s+sources?|publicly\s+available\s+sources?)[^.]{0,140}(enrich|supplement|combine|append|augment|obtain|receive|collect)|(enrich|supplement|combine|append|augment|obtain|receive|collect)[^.]{0,140}(third[-\s]?party\s+sources?|outside\s+sources?|publicly\s+available\s+sources?)|combine[^.]{0,80}(information|data)[^.]{0,80}(sources|partners)/i,
     suggested_mitigation: "Review off-service data controls and opt out of sale/share or broker enrichment where available.",
     factors: { surprise: 0.75, data_sensitivity: 0.7, scope_or_sharing: 0.85, irreversibility: 0.6, remedy_or_economic: 0.25, actionability: 0.35 }
   },

@@ -171,6 +171,36 @@ describe("compactEvents", () => {
     expect(observations).toHaveLength(2)
     expect(observations.map(({ event }) => event.details?.name).sort()).toEqual(["FTR_Cache_Status", "session_id"])
   })
+
+  it("keeps page-hook cookie writes separate by cookie name too — not only extension scans", () => {
+    // Regression: the cookie metadata key was only built for extension-scan
+    // events, so distinctly named cookies written by page scripts collapsed
+    // into a single merged row.
+    const observations = compactEvents([
+      event({
+        id: "hook-cookie-a",
+        source: "api-hook",
+        eventType: "cookie_observed",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        evidence: ["Cookie values are never recorded."],
+        details: { name: "consent_state", domain: "example.test" }
+      }),
+      event({
+        id: "hook-cookie-b",
+        source: "api-hook",
+        eventType: "cookie_observed",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        evidence: ["Cookie values are never recorded."],
+        observedAt: 200,
+        details: { name: "ab_bucket", domain: "example.test" }
+      })
+    ])
+
+    expect(observations).toHaveLength(2)
+    expect(observations.map(({ event }) => event.details?.name).sort()).toEqual(["ab_bucket", "consent_state"])
+  })
 })
 
 describe("buildCookieMetadataRollup", () => {

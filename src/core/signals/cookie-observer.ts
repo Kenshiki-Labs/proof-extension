@@ -83,7 +83,12 @@ export function buildCookieObservedEvent({
     tabId,
     origin,
     observedAt,
-    source: "api-hook",
+    // "extension-scan" is trust-sensitive: display classifiers key on it to
+    // separate browser-read cookie metadata (can include HttpOnly) from
+    // page-script observations. This builder only ever describes a
+    // chrome.cookies read, so it must claim the right source itself rather
+    // than relying on the caller to rewrite it.
+    source: "extension-scan",
     firstParty: true,
     policyLabel: "unknown_first_party",
     eventType: "cookie_observed",

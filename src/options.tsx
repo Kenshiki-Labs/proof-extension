@@ -52,6 +52,24 @@ function NumberField({
   suffix: string
   onChange: (value: number) => void
 }) {
+  // Edit a local draft and commit on blur/Enter: writing on every keystroke
+  // persisted transient states (clearing the field became 0, which for
+  // maxEventsPerTab prunes every stored event mid-edit). HTML min/max do not
+  // stop typing or clearing, so the commit clamps.
+  const [draft, setDraft] = useState(String(value))
+  useEffect(() => setDraft(String(value)), [value])
+
+  function commit() {
+    const parsed = Number(draft)
+    if (!Number.isFinite(parsed)) {
+      setDraft(String(value))
+      return
+    }
+    const clamped = Math.min(max, Math.max(min, Math.round(parsed)))
+    setDraft(String(clamped))
+    if (clamped !== value) onChange(clamped)
+  }
+
   return (
     <label className="mt-2 flex items-center gap-2">
       <span className={TYPE.body}>{label}</span>
@@ -59,8 +77,12 @@ function NumberField({
         type="number"
         min={min}
         max={max}
-        value={value}
-        onChange={(event) => onChange(Number(event.target.value))}
+        value={draft}
+        onChange={(event) => setDraft(event.target.value)}
+        onBlur={commit}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") commit()
+        }}
         className="w-16 border border-border bg-card px-2 py-1 font-mono text-xs"
       />
       <span className={TYPE.body}>{suffix}</span>

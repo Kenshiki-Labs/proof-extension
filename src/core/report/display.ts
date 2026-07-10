@@ -149,7 +149,10 @@ export function unclassifiedObservations(events: ObserverEvent[]) {
 }
 
 export function displayEventKey(event: ObserverEvent) {
-  const cookieMetadataKey = event.eventType === "cookie_observed" && event.source === "extension-scan"
+  // Keyed for every source, not just extension scans: page-hook cookie
+  // writes carry details.name too, and without it every distinctly named
+  // cookie a page sets collapsed into one merged observation row.
+  const cookieMetadataKey = event.eventType === "cookie_observed"
     ? [event.details?.name ?? "", event.details?.domain ?? "", event.details?.httpOnly ?? "", event.details?.secure ?? "", event.details?.sameSite ?? ""].join(":")
     : ""
   const storageMetadataKey = event.eventType === "storage_write"

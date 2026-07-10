@@ -276,6 +276,15 @@ export const RuntimeMessageSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("RUN_CONSENT_AUDIT"), tabId: z.number().int() }),
   z.object({ type: z.literal("CONSENT_AUDIT"), payload: ConsentAuditRecordSchema }),
   z.object({ type: z.literal("CONSENT_AUDIT_FAILED"), reason: z.enum(["no_tab", "restricted_page", "anchor_harvest_failed"]) }),
+  z.object({
+    type: z.literal("GENERATE_AI_AUDIT_REPORT"),
+    payload: z.object({
+      tabId: z.number().int(),
+      auditPayload: z.string().min(1)
+    })
+  }),
+  z.object({ type: z.literal("AI_AUDIT_REPORT"), payload: z.object({ report: z.string().min(1) }) }),
+  z.object({ type: z.literal("AI_AUDIT_REPORT_FAILED"), error: z.string().min(1) }),
   z.object({ type: z.literal("GET_SETTINGS") }),
   z.object({ type: z.literal("SETTINGS"), payload: UserSettingsSchema }),
   z.object({ type: z.literal("UPDATE_SETTINGS"), payload: UserSettingsSchema.partial() }),

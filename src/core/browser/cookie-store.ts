@@ -127,7 +127,6 @@ export async function scanSiteCookieMetadata({
   const events = cookies
     .map((cookie) => buildCookieObservedEvent({ cookie: toObservedCookieMetadata(cookie), tabId, origin, observedAt }))
     .filter((event): event is ObserverEvent => event !== null)
-    .map((event) => ({ ...event, source: "extension-scan" as const }))
 
   return { status: "available", events }
 }

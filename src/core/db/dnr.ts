@@ -32,7 +32,6 @@ export type DynamicBlockRuleMetadata = {
   tracker: TrackerRecord
   evidence: string
   domain: string
-  path?: string | undefined
   resourceTypes: readonly string[]
 }
 
@@ -53,11 +52,6 @@ function normalizeRequestTypes(types: string[]): ResourceType[] {
 
 function domainFilter(domain: string) {
   return `||${domain}^`
-}
-
-function domainPathFilter(domain: string, path: string) {
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`
-  return `||${domain}^${normalizedPath}`
 }
 
 export function buildDynamicBlockRules(blockedTrackerIds: readonly string[] = []) {
@@ -83,6 +77,10 @@ export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = 
       tracker.match.requestTypes
     ) as chrome.declarativeNetRequest.ResourceType[]
 
+    // Domain-wide rules only. Path-scoped rules (`||domain^/path`) were dead
+    // syntax — in DNR urlFilter, `^` consumes the `/`, so the literal path
+    // could never match — and even fixed they would be strictly subsumed by
+    // these same-priority domain rules while burning dynamic-rule quota.
     for (const domain of tracker.match.domains) {
       const ruleId = DYNAMIC_RULE_ID_BASE + rules.length
       rules.push({
@@ -98,26 +96,6 @@ export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = 
         domain,
         resourceTypes
       })
-    }
-
-    for (const domain of tracker.match.domains) {
-      for (const path of tracker.match.paths) {
-        const ruleId = DYNAMIC_RULE_ID_BASE + rules.length
-        rules.push({
-          id: ruleId,
-          priority: 1,
-          action: { type: RULE_ACTION_BLOCK as chrome.declarativeNetRequest.RuleActionType },
-          condition: { resourceTypes, urlFilter: domainPathFilter(domain, path) }
-        })
-        metadata.set(ruleId, {
-          ruleId,
-          tracker,
-          evidence: `Request matched ${tracker.id} path ${path} on ${domain}.`,
-          domain,
-          path: path.startsWith("/") ? path : `/${path}`,
-          resourceTypes
-        })
-      }
     }
   }
 
@@ -140,49 +118,61 @@ export function findInstalledBlockRuleMetadataForRequest(url: string, resourceTy
   if (installedDynamicBlockRuleMetadata.size === 0) return null
 
   let hostname: string
-  let pathname: string
   try {
-    const parsed = new URL(url)
-    hostname = parsed.hostname.toLowerCase()
-    pathname = parsed.pathname
+    hostname = new URL(url).hostname.toLowerCase()
   } catch {
     return null
   }
 
-  let domainOnlyMatch: DynamicBlockRuleMetadata | null = null
   for (const metadata of installedDynamicBlockRuleMetadata.values()) {
     if (!metadata.resourceTypes.includes(resourceType)) continue
     const hostMatches = hostname === metadata.domain || hostname.endsWith(`.${metadata.domain}`)
-    if (!hostMatches) continue
-
-    if (metadata.path) {
-      if (pathname.startsWith(metadata.path)) return metadata
-      continue
-    }
-
-    domainOnlyMatch ??= metadata
+    if (hostMatches) return metadata
   }
 
-  return domainOnlyMatch
+  return null
 }
 
 function hasDeclarativeNetRequest(): boolean {
   return typeof chrome !== "undefined" && Boolean(chrome.declarativeNetRequest?.updateDynamicRules)
 }
 
+const FALLBACK_DYNAMIC_RULE_LIMIT = 30_000
+
 export async function installDynamicBlockRules(blockedTrackerIds: readonly string[] = []) {
-  if (!hasDeclarativeNetRequest()) return { installed: 0 }
+  if (!hasDeclarativeNetRequest()) return { installed: 0, requested: 0 }
 
   const existingRules = await chrome.declarativeNetRequest.getDynamicRules()
   const removeRuleIds = existingRules
     .map((rule) => rule.id)
     .filter((ruleId) => ruleId >= DYNAMIC_RULE_ID_BASE)
-  const { metadata, rules: addRules } = buildDynamicBlockRuleSet(blockedTrackerIds)
+  const { metadata, rules } = buildDynamicBlockRuleSet(blockedTrackerIds)
 
-  await chrome.declarativeNetRequest.updateDynamicRules({ addRules, removeRuleIds })
-  installedDynamicBlockRuleMetadata = metadata
+  // Never let one over-quota update reject wholesale: that would leave the
+  // previous rules installed while the caller believes the new set is live.
+  // Trim to the browser's dynamic-rule budget (minus rules that aren't ours)
+  // and report requested vs installed so callers can surface the shortfall.
+  const foreignRuleCount = existingRules.length - removeRuleIds.length
+  // MAX_NUMBER_OF_DYNAMIC_RULES shipped in Chrome 121; @types/chrome doesn't declare it yet.
+  const ruleLimit =
+    (chrome.declarativeNetRequest as { MAX_NUMBER_OF_DYNAMIC_RULES?: number }).MAX_NUMBER_OF_DYNAMIC_RULES ??
+    FALLBACK_DYNAMIC_RULE_LIMIT
+  const available = Math.max(0, ruleLimit - foreignRuleCount)
+  const addRules = rules.slice(0, available)
 
-  return { installed: addRules.length }
+  try {
+    await chrome.declarativeNetRequest.updateDynamicRules({ addRules, removeRuleIds })
+  } catch (error) {
+    // The update failed atomically: the browser kept the previous rules, so
+    // keep the previous metadata rather than claiming the new set installed.
+    console.warn("Failed to install dynamic block rules", error)
+    return { installed: 0, requested: rules.length, error: error instanceof Error ? error.message : String(error) }
+  }
+
+  const installedIds = new Set(addRules.map((rule) => rule.id))
+  installedDynamicBlockRuleMetadata = new Map([...metadata].filter(([ruleId]) => installedIds.has(ruleId)))
+
+  return { installed: addRules.length, requested: rules.length }
 }
 
 // Blocking is opt-in and per-tracker (see UserSettings.blockedTrackerIds) —

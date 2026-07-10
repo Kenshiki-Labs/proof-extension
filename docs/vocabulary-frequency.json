@@ -3,11 +3,11 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "ba1992149dd332feddefefdf90aa459f668b622ba706b48262b9e20441c8a9da"
+      "sha256": "2e6a2a564449d9dd721bd4224faf14dbdaf8db7a773f1cfb912903ca3ce12a90"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "9358efa849fab463a6893bf04d5978b3a7156f1f24d9a82b326c6b097c7feeeb"
+      "sha256": "002fbd9f7b83796b5fcd7f1f66f684191d59315e506dc9bbb64ac99bd27d0278"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
@@ -15,7 +15,7 @@
     },
     {
       "file": "src/core/report/display.ts",
-      "sha256": "c65fe621fc8e7181e3153dbf4da26d80b69952449bc71fcbff14e1ad8da0bd55"
+      "sha256": "2eb4f705cfc13914589988c41b34dada9d5e9672f00a8706ee176d63ac0dee9d"
     },
     {
       "file": "src/core/domain/valuation.ts",
@@ -63,10 +63,8 @@
     },
     {
       "term": "Current tab evidence",
-      "total": 1,
-      "files": {
-        "src/tabs/report.tsx": 1
-      }
+      "total": 0,
+      "files": {}
     },
     {
       "term": "Details and evidence",
@@ -82,10 +80,10 @@
     },
     {
       "term": "Evidence",
-      "total": 33,
+      "total": 36,
       "files": {
         "src/popup.tsx": 1,
-        "src/tabs/report.tsx": 28,
+        "src/tabs/report.tsx": 31,
         "src/core/report/display.ts": 4
       }
     },
@@ -105,10 +103,8 @@
     },
     {
       "term": "Full report",
-      "total": 1,
-      "files": {
-        "src/popup.tsx": 1
-      }
+      "total": 0,
+      "files": {}
     },
     {
       "term": "Local value ledger",
@@ -296,11 +292,11 @@
     },
     {
       "word": "core",
-      "count": 36
+      "count": 37
     },
     {
       "word": "cookie",
-      "count": 31
+      "count": 32
     },
     {
       "word": "page",
@@ -315,11 +311,11 @@
       "count": 28
     },
     {
-      "word": "browser",
-      "count": 22
+      "word": "domain",
+      "count": 23
     },
     {
-      "word": "domain",
+      "word": "browser",
       "count": 22
     },
     {
@@ -351,6 +347,10 @@
       "count": 16
     },
     {
+      "word": "metadata",
+      "count": 16
+    },
+    {
       "word": "site",
       "count": 16
     },
@@ -363,7 +363,7 @@
       "count": 15
     },
     {
-      "word": "metadata",
+      "word": "report",
       "count": 15
     },
     {
@@ -371,16 +371,12 @@
       "count": 14
     },
     {
-      "word": "report",
-      "count": 14
+      "word": "failed",
+      "count": 13
     },
     {
       "word": "you",
       "count": 13
-    },
-    {
-      "word": "evidence",
-      "count": 12
     },
     {
       "word": "seen",
@@ -419,11 +415,11 @@
       "count": 11
     },
     {
-      "word": "extension",
+      "word": "evidence",
       "count": 10
     },
     {
-      "word": "failed",
+      "word": "extension",
       "count": 10
     },
     {
@@ -432,10 +428,6 @@
     },
     {
       "word": "justify-between",
-      "count": 10
-    },
-    {
-      "word": "tab",
       "count": 10
     },
     {
@@ -463,6 +455,10 @@
       "count": 9
     },
     {
+      "word": "tab",
+      "count": 9
+    },
+    {
       "word": "access",
       "count": 8
     },
@@ -480,6 +476,10 @@
     },
     {
       "word": "session",
+      "count": 8
+    },
+    {
+      "word": "update",
       "count": 8
     },
     {
@@ -555,6 +555,10 @@
       "count": 7
     },
     {
+      "word": "ai-audit",
+      "count": 6
+    },
+    {
       "word": "bg-card",
       "count": 6
     },
@@ -568,10 +572,6 @@
     },
     {
       "word": "device",
-      "count": 6
-    },
-    {
-      "word": "extension-scan",
       "count": 6
     },
     {
@@ -604,10 +604,6 @@
     },
     {
       "word": "surface",
-      "count": 6
-    },
-    {
-      "word": "text-base",
       "count": 6
     }
   ]

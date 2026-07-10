@@ -1,6 +1,6 @@
 import "~style.css"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Eye, LineChart } from "lucide-react"
 import browser from "webextension-polyfill"
 import type { Storage } from "webextension-polyfill"
@@ -93,6 +93,8 @@ function IndexPopup() {
   const [summary, setSummary] = useState<SiteSummary>(EMPTY_SUMMARY)
   const [settings, setSettings] = useState<UserSettings>(EMPTY_SETTINGS)
   const [loadError, setLoadError] = useState<string | null>(null)
+  const settingsRef = useRef(settings)
+  settingsRef.current = settings
 
   useEffect(() => {
     let liveTabId: number | undefined
@@ -152,20 +154,35 @@ function IndexPopup() {
   }, [])
 
   async function toggleTrackerBlocking(trackerId: string, blocked: boolean) {
+    // Confirm-first, never optimistic: "Unblock" in the UI is a claim that a
+    // DNR rule is installed, so the local state only flips after the
+    // background acknowledges the write. Computed from the freshest settings
+    // (settingsRef) so two quick toggles cannot erase each other.
     const blockedTrackerIds = blocked
-      ? [...new Set([...settings.blockedTrackerIds, trackerId])]
-      : settings.blockedTrackerIds.filter((id) => id !== trackerId)
+      ? [...new Set([...settingsRef.current.blockedTrackerIds, trackerId])]
+      : settingsRef.current.blockedTrackerIds.filter((id) => id !== trackerId)
 
-    setSettings((current) => ({ ...current, blockedTrackerIds }))
-    await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { blockedTrackerIds } }).catch(() => undefined)
+    try {
+      await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { blockedTrackerIds } })
+      setSettings((current) => ({ ...current, blockedTrackerIds }))
+    } catch (error) {
+      console.warn("Failed to update blocking", error)
+    }
   }
 
   async function toggleCookieMetadata(enabled: boolean) {
+    // Both directions require the permission change to have actually landed:
+    // a failed removal must not show the toggle off while the browser still
+    // grants cookie access.
     const permissionUpdated = await updateCookiePermission(enabled)
-    if (enabled && !permissionUpdated) return
+    if (!permissionUpdated) return
 
-    setSettings((current) => ({ ...current, cookieMetadataEnabled: enabled }))
-    await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { cookieMetadataEnabled: enabled } }).catch(() => undefined)
+    try {
+      await browser.runtime.sendMessage({ type: "UPDATE_SETTINGS", payload: { cookieMetadataEnabled: enabled } })
+      setSettings((current) => ({ ...current, cookieMetadataEnabled: enabled }))
+    } catch (error) {
+      console.warn("Failed to update cookie metadata setting", error)
+    }
   }
 
   async function openFullReport() {
@@ -250,7 +267,7 @@ function IndexPopup() {
 
       <div className="mt-3.5">
         <Button disabled={summary.tabId < 0} onClick={() => openFullReport().catch(() => undefined)}>
-          Open full report
+          Open audit report
         </Button>
       </div>
 

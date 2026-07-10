@@ -28,14 +28,12 @@ describe("buildDynamicBlockRules", () => {
     expect(rules.some((rule) => rule.priority === 1 && rule.action.type === chrome.declarativeNetRequest.RuleActionType.BLOCK)).toBe(true)
   })
 
-  it("scopes path rules to tracker domains so broad paths cannot block unrelated vendors", () => {
+  it("emits domain-wide rules only — no path-scoped filters (dead `||domain^/path` syntax, subsumed by domain rules)", () => {
     const rules = buildDynamicBlockRules(["segment"])
     const filters = rules.map((rule) => rule.condition.urlFilter)
 
-    expect(filters).not.toContain("/v1/track")
-    expect(filters).not.toContain("/v1/page")
-    expect(filters).toContain("||api.segment.io^/v1/track")
-    expect(filters).toContain("||api.segment.io^/v1/page")
+    expect(filters).toContain("||api.segment.io^")
+    expect(filters.every((filter) => filter !== undefined && /\^$/.test(filter))).toBe(true)
   })
 
   it("does not read chrome.declarativeNetRequest at all — safe when chrome is undefined", () => {
@@ -58,7 +56,7 @@ describe("installDynamicBlockRules", () => {
   it("no-ops instead of throwing when chrome is entirely undefined (Firefox MV2)", async () => {
     vi.stubGlobal("chrome", undefined)
 
-    await expect(installDynamicBlockRules()).resolves.toEqual({ installed: 0 })
+    await expect(installDynamicBlockRules()).resolves.toEqual({ installed: 0, requested: 0 })
   })
 
   it("replaces managed dynamic rules in Chromium", async () => {
@@ -78,7 +76,8 @@ describe("installDynamicBlockRules", () => {
     ])
 
     await expect(installDynamicBlockRules(["fullstory"])).resolves.toEqual({
-      installed: buildDynamicBlockRules(["fullstory"]).length
+      installed: buildDynamicBlockRules(["fullstory"]).length,
+      requested: buildDynamicBlockRules(["fullstory"]).length
     })
 
     expect(chrome.declarativeNetRequest.updateDynamicRules).toHaveBeenCalledWith(
@@ -89,6 +88,35 @@ describe("installDynamicBlockRules", () => {
         ])
       })
     )
+  })
+
+  it("trims to the dynamic-rule quota instead of letting the whole update reject, and reports the shortfall", async () => {
+    const requested = buildDynamicBlockRules(["fullstory"]).length
+    expect(requested).toBeGreaterThan(1)
+    vi.mocked(chrome.declarativeNetRequest.getDynamicRules).mockResolvedValueOnce([])
+    const dnrApi = chrome.declarativeNetRequest as { MAX_NUMBER_OF_DYNAMIC_RULES?: number }
+    dnrApi.MAX_NUMBER_OF_DYNAMIC_RULES = 1
+
+    try {
+      await expect(installDynamicBlockRules(["fullstory"])).resolves.toEqual({ installed: 1, requested })
+      const addRules = vi.mocked(chrome.declarativeNetRequest.updateDynamicRules).mock.calls.at(-1)?.[0].addRules ?? []
+      expect(addRules).toHaveLength(1)
+      // Metadata only covers what actually installed — no attribution for trimmed rules.
+      expect(getDynamicBlockRuleMetadata(addRules[0]!.id)).toBeTruthy()
+      expect(getDynamicBlockRuleMetadata(addRules[0]!.id + 1)).toBeNull()
+    } finally {
+      delete dnrApi.MAX_NUMBER_OF_DYNAMIC_RULES
+    }
+  })
+
+  it("keeps the previous metadata when the browser rejects the update — never claims rules that did not install", async () => {
+    vi.mocked(chrome.declarativeNetRequest.getDynamicRules).mockResolvedValueOnce([])
+    vi.mocked(chrome.declarativeNetRequest.updateDynamicRules).mockRejectedValueOnce(new Error("quota exceeded"))
+
+    const result = await installDynamicBlockRules(["fullstory"])
+    expect(result.installed).toBe(0)
+    expect(result.requested).toBeGreaterThan(0)
+    expect(result.error).toContain("quota exceeded")
   })
 
   it("keeps metadata for installed dynamic block rules", async () => {
@@ -188,12 +216,12 @@ describe("findInstalledBlockRuleMetadataForRequest", () => {
     expect(metadata?.evidence).toContain("fullstory")
   })
 
-  it("prefers the more specific path rule when the path matches", async () => {
+  it("attributes a blocked request on any path to the domain rule", async () => {
     await installFullstory()
 
     const metadata = findInstalledBlockRuleMetadataForRequest("https://fullstory.com/rec/page?x=1", "xmlhttprequest")
     expect(metadata?.tracker.id).toBe("fullstory")
-    expect(metadata?.path).toBe("/rec/page")
+    expect(metadata?.evidence).toContain("domain fullstory.com")
   })
 
   it("returns null when no rules are installed — another extension's block is never claimed", async () => {
