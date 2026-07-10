@@ -27,7 +27,7 @@
     },
     {
       "file": "src/components/report/EvidenceView.tsx",
-      "sha256": "2fbb48283e9c3256bb731978492b92309a33bed581e6338991e8b5825cb8a3e8"
+      "sha256": "8370348e648284aa84067fc78d083001e59aaaad4068d7b19366486bd86e06e5"
     },
     {
       "file": "src/components/report/LocalStateView.tsx",
@@ -47,7 +47,7 @@
     },
     {
       "file": "src/components/report/shared.tsx",
-      "sha256": "02b70ed2196a948097d34cf2a906c8eea6eb7c7720780d86b5b95338609cc8a1"
+      "sha256": "5ee324e5159b4528324d352c63a3cbf56bea23616eeb098781507fad8c22aac8"
     },
     {
       "file": "src/components/value/LedgerTables.tsx",
@@ -391,7 +391,7 @@
     },
     {
       "word": "gap-",
-      "count": 36
+      "count": 38
     },
     {
       "word": "domain",
@@ -423,6 +423,10 @@
     },
     {
       "word": "flex",
+      "count": 23
+    },
+    {
+      "word": "flex-wrap",
       "count": 21
     },
     {
@@ -436,10 +440,6 @@
     {
       "word": "grid-cols-",
       "count": 20
-    },
-    {
-      "word": "flex-wrap",
-      "count": 19
     },
     {
       "word": "site",
@@ -474,12 +474,12 @@
       "count": 14
     },
     {
-      "word": "only",
+      "word": "data",
       "count": 13
     },
     {
-      "word": "data",
-      "count": 12
+      "word": "only",
+      "count": 13
     },
     {
       "word": "font-display",
@@ -506,16 +506,16 @@
       "count": 11
     },
     {
+      "word": "tab",
+      "count": 11
+    },
+    {
       "word": "tabular-nums",
       "count": 11
     },
     {
       "word": "your",
       "count": 11
-    },
-    {
-      "word": "evidence",
-      "count": 10
     },
     {
       "word": "extension",
@@ -530,16 +530,8 @@
       "count": 10
     },
     {
-      "word": "tab",
-      "count": 10
-    },
-    {
       "word": "values",
       "count": 10
-    },
-    {
-      "word": "audit",
-      "count": 9
     },
     {
       "word": "border-b",
@@ -547,10 +539,6 @@
     },
     {
       "word": "error",
-      "count": 9
-    },
-    {
-      "word": "local",
       "count": 9
     },
     {
@@ -562,6 +550,10 @@
       "count": 9
     },
     {
+      "word": "audit",
+      "count": 8
+    },
+    {
       "word": "border",
       "count": 8
     },
@@ -570,7 +562,19 @@
       "count": 8
     },
     {
+      "word": "debug",
+      "count": 8
+    },
+    {
+      "word": "evidence",
+      "count": 8
+    },
+    {
       "word": "identity",
+      "count": 8
+    },
+    {
+      "word": "local",
       "count": 8
     },
     {
@@ -586,15 +590,11 @@
       "count": 7
     },
     {
-      "word": "debug",
+      "word": "contract",
       "count": 7
     },
     {
       "word": "inspect",
-      "count": 7
-    },
-    {
-      "word": "local-state",
       "count": 7
     },
     {
@@ -654,10 +654,6 @@
       "count": 6
     },
     {
-      "word": "contract",
-      "count": 6
-    },
-    {
       "word": "contracts",
       "count": 6
     },
@@ -682,15 +678,19 @@
       "count": 6
     },
     {
+      "word": "items-center",
+      "count": 6
+    },
+    {
       "word": "items-start",
       "count": 6
     },
     {
-      "word": "min-w-",
+      "word": "ledger",
       "count": 6
     },
     {
-      "word": "rail",
+      "word": "min-w-",
       "count": 6
     }
   ]
