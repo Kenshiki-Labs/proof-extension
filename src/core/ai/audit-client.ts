@@ -5,7 +5,7 @@ import type { RuntimeMessage } from "~core/domain/types"
 // The audit prompt, the model choice, and the product OpenRouter key all live
 // in the proxy (worker/ai-audit-proxy) — nothing credential-shaped ships in
 // this bundle. Update this URL if the worker is deployed under another route.
-const AI_AUDIT_PROXY_URL = "https://pulse-ai-audit.kenshiki.workers.dev/"
+const AI_AUDIT_PROXY_URL = "https://pulse-ai-audit.pulsekenshikilabscom.workers.dev/"
 
 export function urlIsGov(url: string | undefined) {
   if (!url) return false
