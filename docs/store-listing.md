@@ -46,7 +46,24 @@ Pulse Observer is in beta: it names source-backed trackers it recognizes today, 
 - Single purpose: paste from above.
 - Permission justifications: paste per-permission text from `docs/permissions.md` (webRequest, declarativeNetRequest, declarativeNetRequestFeedback, storage, scripting, activeTab, cookies (optional), host permissions).
 - Remote code: **No, I am not using remote code.** All code is bundled at build time; `executeScript` only runs inline functions, never remote files.
-- Data usage certification: detection is local-only; the sole network egress is the opt-in, user-initiated AI audit request, which sends the evidence summary to Kenshiki's audit proxy (the API credential stays server-side). Certify after confirming this still holds for the release being published.
+- Data usage certification: detection is local-only; every network egress is user-initiated — (1) the opt-in AI audit request sending the evidence summary to Kenshiki's audit proxy (API credential stays server-side), (2) the click-to-reveal location lookup against Kenshiki's session-profile endpoint (server reads caller IP; approximate geo returned), and (3) the Contract view fetching the visited site's own linked policy documents. See `docs/permissions.md`, "The complete egress inventory". Certify after confirming this still holds for the release being published.
+- Privacy policy URL: `https://proofyouarehuman.com/privacy` (the footer's Privacy link). REQUIRED before submitting: that page must disclose the extension's practices — paste-ready section below.
+
+## Privacy policy section for proofyouarehuman.com/privacy
+
+> ### Pulse Observer browser extension
+>
+> The Pulse Observer extension observes tracker activity locally in your browser. All detection, matching, and reporting run on your device. The extension has no analytics, does not phone home, and never transmits your browsing history, page content, form values, or cookie values anywhere.
+>
+> Data stored locally on your device: your settings, and compact per-site summaries of observed tracker activity (retention is configurable, 14 days by default, with a one-click clear).
+>
+> Three features make network requests, each only when you explicitly trigger them:
+>
+> - **AI audit report** (available on .gov sites): when you click Generate, the report's evidence summary — the same text shown by the Copy action — is sent to our audit service, which forwards it to an AI model to produce the report. We do not store these payloads. The response is shown to you and kept only on your device.
+> - **Location reveal**: when you click reveal, our session-profile service reads your IP address from the request (as any website you visit can) and returns an approximate, city-level location so the extension can show you what trackers already learn silently. We do not use this to build profiles.
+> - **Contract audit**: when you open the Contract view, the extension fetches the visited site's own linked legal documents (privacy policy, terms) from that site, on your behalf, to compare them with observed behavior. Nothing is sent to us.
+>
+> The extension requests broad host permissions solely to observe tracker requests on the pages you visit; this access is never used to collect, transmit, or sell browsing data.
 
 ## Assets
 

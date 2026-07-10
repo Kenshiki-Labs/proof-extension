@@ -108,7 +108,7 @@ export default {
       headers: {
         Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://kenshiki.ai/proof-extension",
+        "HTTP-Referer": "https://proofyouarehuman.com",
         "X-Title": "Pulse Observer Runtime Audit"
       },
       body: JSON.stringify({
