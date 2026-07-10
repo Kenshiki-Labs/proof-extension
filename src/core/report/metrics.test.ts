@@ -83,7 +83,7 @@ describe("summaryMetrics — the single source of truth for headline numbers", (
     // any inline count re-derivation is a contract violation.
     const root = resolve(__dirname, "../../..")
     const banned = [/summary\.events\.length/, /summary\.activeCompanies\.length/, /summary\.blockedCompanies\.length/, /summary\.cannotBlockSignals\.length/, /summary\.events\.filter\([^)]*isDiagnosticEvent/]
-    for (const file of ["src/popup.tsx", "src/tabs/report.tsx"]) {
+    for (const file of ["src/popup.tsx", "src/tabs/report.tsx", "src/components/report/EvidenceView.tsx", "src/components/report/AuditBrief.tsx", "src/hooks/useReportModel.ts"]) {
       const source = readFileSync(resolve(root, file), "utf8")
       for (const pattern of banned) {
         expect(pattern.test(source), `${file} must not compute headline counts inline (${pattern})`).toBe(false)

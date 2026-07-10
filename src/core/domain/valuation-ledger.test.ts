@@ -40,7 +40,7 @@ describe("valuation ledger basics", () => {
     expect(normalizeValuationLedger({ schemaVersion: 1, siteVisits: [], trackerPresence: [] })).toEqual(createEmptyValuationLedger())
   })
 
-  it("records site visits by day and origin", () => {
+  it("records one entry per visitId and ignores replayed calls for the same visit", () => {
     let ledger = createEmptyValuationLedger()
     ledger = recordSiteVisit(ledger, "visit-1", "https://example.test", NOW)
     ledger = recordSiteVisit(ledger, "visit-1", "https://example.test", NOW + 1000)
@@ -48,7 +48,9 @@ describe("valuation ledger basics", () => {
     ledger = recordSiteVisit(ledger, "visit-3", "https://other.test", NOW)
 
     expect(ledger.siteVisits).toHaveLength(3)
-    expect(ledger.siteVisits.find((entry) => entry.visitId === "visit-1")?.visits).toBe(2)
+    // Visit dedupe lives at the caller (a fresh UUID per visit); a repeated
+    // visitId is a replay, not a second visit.
+    expect(ledger.siteVisits.find((entry) => entry.visitId === "visit-1")).toMatchObject({ visits: 1, firstVisitedAt: NOW, lastVisitedAt: NOW })
   })
 
   it("dedupes tracker presence by visit and tracker while preserving raw observation count", () => {

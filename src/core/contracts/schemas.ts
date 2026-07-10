@@ -25,6 +25,50 @@ export const FirstPartyPolicyLabelSchema = z.enum([
   "unknown_first_party"
 ])
 
+// THE event-type list. The ObserverEvent type, this schema, and every
+// subset list (e.g. PERSISTENCE_EVENT_TYPES in ~core/signals/persistence)
+// derive from this single const — adding an event type here is the only
+// edit that introduces one.
+export const OBSERVER_EVENT_TYPES = [
+  "request_seen",
+  "request_blocked",
+  "script_injected",
+  // A vendor SDK global (window.fbq, window.FS, …) present in the page.
+  // Catches trackers whose network requests were cached, first-party
+  // proxied, or CNAME-cloaked and therefore invisible to request matching.
+  "sdk_detected",
+  // Standardized consent/CMP APIs (IAB TCF, USP, GPP, Sourcepoint config)
+  // present in the page. These are not vendor SDK signatures: many CMPs
+  // expose the same API names, so this records privacy-signal plumbing
+  // without pretending to know the vendor unless separate evidence does.
+  "consent_signal_observed",
+  // The extension reporting on itself (bridge ready, hooks installed, scan
+  // attempts) — never an observation of page behavior. Kept separate so
+  // script_injected stays reserved for real dynamic-script detection.
+  "extension_diagnostic",
+  "browser_surface",
+  "canvas_read",
+  "audio_fingerprint",
+  "webgl_query",
+  "font_enumeration",
+  "identity_digest_observed",
+  "cookie_sync",
+  // Persistence surfaces (JS-visible subset): metadata-only observations of
+  // storage the page wrote — names, sizes, timing; never values. The
+  // storage_respawn_suspected from the spec is deliberately absent until
+  // an emitter exists: a schema that accepts a type nothing emits is pure
+  // forgery surface.
+  "cookie_observed",
+  "storage_write",
+  "indexeddb_access",
+  "cache_storage_access",
+  "service_worker_registered",
+  "cache_validator_seen",
+  "webrtc_probe"
+] as const
+
+export type ObserverEventType = (typeof OBSERVER_EVENT_TYPES)[number]
+
 export const ObserverEventSchema = z.object({
   id: z.string().min(1),
   tabId: z.number().int(),
@@ -36,28 +80,7 @@ export const ObserverEventSchema = z.object({
   companyId: z.string().min(1).optional(),
   firstParty: z.boolean(),
   policyLabel: FirstPartyPolicyLabelSchema.optional(),
-  eventType: z.enum([
-    "request_seen",
-    "request_blocked",
-    "script_injected",
-    "sdk_detected",
-    "consent_signal_observed",
-    "extension_diagnostic",
-    "browser_surface",
-    "canvas_read",
-    "audio_fingerprint",
-    "webgl_query",
-    "font_enumeration",
-    "identity_digest_observed",
-    "cookie_sync",
-    "cookie_observed",
-    "storage_write",
-    "indexeddb_access",
-    "cache_storage_access",
-    "service_worker_registered",
-    "cache_validator_seen",
-    "webrtc_probe"
-  ]),
+  eventType: z.enum(OBSERVER_EVENT_TYPES),
   blockability: BlockabilityClassSchema,
   status: ObservationStatusSchema,
   confidence: DetectionConfidenceSchema,
@@ -130,7 +153,7 @@ export const UserSettingsSchema = z.object({
 
 export const ValuationPeriodSchema = z.enum(["day", "week", "month", "all"])
 
-const MonetizationFlowSchema = z.enum(["platform_ads", "programmatic", "identity_infra", "operator_saas"])
+export const MonetizationFlowSchema = z.enum(["platform_ads", "programmatic", "identity_infra", "operator_saas"])
 const EmptyValuationFlowRollups = MonetizationFlowSchema.options.map((flow) => ({
   flow,
   trackerCount: 0,
@@ -257,40 +280,6 @@ export const ConsentAuditRecordSchema = z.object({
   giveups: z.array(GiveupSchema),
   nothingDiscovered: z.boolean()
 })
-
-export const RuntimeMessageSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("OBSERVED_EVENT"), payload: ObserverEventSchema }),
-  z.object({ type: z.literal("PAGE_ERROR_OBSERVED"), payload: PageErrorSchema.omit({ id: true }) }),
-  z.object({ type: z.literal("GET_SITE_SUMMARY"), tabId: z.number().int() }),
-  z.object({ type: z.literal("SITE_SUMMARY"), payload: SiteSummarySchema }),
-  z.object({ type: z.literal("GET_COOKIE_METADATA_PERMISSION") }),
-  z.object({ type: z.literal("REQUEST_COOKIE_METADATA_PERMISSION") }),
-  z.object({ type: z.literal("COOKIE_METADATA_PERMISSION"), granted: z.boolean() }),
-  z.object({ type: z.literal("SCAN_SITE_COOKIES"), tabId: z.number().int() }),
-  z.object({ type: z.literal("COOKIE_METADATA_SCAN"), payload: CookieMetadataScanResultSchema }),
-  z.object({ type: z.literal("INSPECT_SITE_COOKIE_VALUES"), tabId: z.number().int() }),
-  z.object({ type: z.literal("COOKIE_VALUE_INSPECT"), payload: CookieValueInspectResultSchema }),
-  z.object({ type: z.literal("GET_VALUATION_ROLLUP"), period: ValuationPeriodSchema }),
-  z.object({ type: z.literal("VALUATION_ROLLUP"), payload: RollingValuationSummarySchema }),
-  z.object({ type: z.literal("REFRESH_TAB_SCAN"), tabId: z.number().int() }),
-  z.object({ type: z.literal("RUN_CONSENT_AUDIT"), tabId: z.number().int() }),
-  z.object({ type: z.literal("CONSENT_AUDIT"), payload: ConsentAuditRecordSchema }),
-  z.object({ type: z.literal("CONSENT_AUDIT_FAILED"), reason: z.enum(["no_tab", "restricted_page", "anchor_harvest_failed"]) }),
-  z.object({
-    type: z.literal("GENERATE_AI_AUDIT_REPORT"),
-    payload: z.object({
-      tabId: z.number().int(),
-      auditPayload: z.string().min(1)
-    })
-  }),
-  z.object({ type: z.literal("AI_AUDIT_REPORT"), payload: z.object({ report: z.string().min(1) }) }),
-  z.object({ type: z.literal("AI_AUDIT_REPORT_FAILED"), error: z.string().min(1) }),
-  z.object({ type: z.literal("GET_SETTINGS") }),
-  z.object({ type: z.literal("SETTINGS"), payload: UserSettingsSchema }),
-  z.object({ type: z.literal("UPDATE_SETTINGS"), payload: UserSettingsSchema.partial() }),
-  z.object({ type: z.literal("CLEAR_VALUATION_LEDGER") }),
-  z.object({ type: z.literal("CLEAR_LOCAL_DATA") })
-])
 
 export const TrackerSourceFamilySchema = z.enum([
   "manual_seed",

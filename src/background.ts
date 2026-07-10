@@ -1,22 +1,12 @@
 import browser from "webextension-polyfill"
-import type { Runtime } from "webextension-polyfill"
-import * as z from "zod"
 
-import { runConsentAudit, type AnchorInput, type ConsentAuditRecord } from "~core/atlas/audit"
+import { generateAiAuditReport } from "~core/ai/audit-client"
+import { runConsentAuditForTab } from "~core/atlas/tab-audit"
 import { hasCookieMetadataPermission, inspectSiteCookieValues, requestCookieMetadataPermission, scanSiteCookieMetadata } from "~core/browser/cookie-store"
-import { RuntimeMessageSchema } from "~core/contracts/schemas"
-import {
-  findInstalledBlockRuleMetadataForRequest,
-  getDynamicBlockRuleMetadata,
-  installDynamicBlockRules,
-  uninstallDynamicBlockRules,
-  type DynamicBlockRuleMetadata
-} from "~core/db/dnr"
+import { installDynamicBlockRules, uninstallDynamicBlockRules } from "~core/db/dnr"
 import { validateTrackerDatabase } from "~core/db/validate"
 import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
 import { matchTrackerRequest } from "~core/domain/network-match"
-import { untrustedObservedEventReason } from "~core/domain/message-guards"
-import { isSameSite, registrableDomain } from "~core/domain/party"
 import { filterBlockableTrackerIds } from "~core/domain/blocking-policy"
 import {
   createEmptyValuationLedger,
@@ -26,23 +16,16 @@ import {
   rollupValuationLedger,
   upsertValuationLedgerEvent
 } from "~core/domain/valuation-ledger"
-import { detectCookieSync } from "~core/signals/cookie-sync"
+import { createRuntimeMessageRouter } from "~core/messaging/router"
+import { registerNetworkObserver } from "~core/network/observer"
 import { badgeTextForSummary } from "~core/report/badge"
 import { normalizeConsentSignal } from "~core/signals/consent-signals"
 import { normalizeIdentityDigestEvent } from "~core/signals/identity-digest"
 import { normalizePersistenceEvent } from "~core/signals/persistence"
 import { enrichSdkDetection } from "~core/signals/sdk-globals"
 import { createCoalescedWriter } from "~core/state/coalesced-writer"
-import {
-  annotateEventDetail,
-  createEmptySiteSummary,
-  normalizeSiteSummary,
-  pruneExpiredEvents,
-  recordPageError,
-  supersedeEvent,
-  upsertEvent
-} from "~core/state/summaries"
-import type { ObserverEvent, PageError, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
+import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, upsertEvent } from "~core/state/summaries"
+import type { ObserverEvent, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
 
 const summaries = new Map<number, SiteSummary>()
 const recentEventFingerprints = new Map<string, number>()
@@ -50,10 +33,6 @@ const SUMMARY_STORAGE_KEY = "siteSummaries"
 const SETTINGS_STORAGE_KEY = "userSettings"
 const VALUATION_LEDGER_STORAGE_KEY = "valuationLedger"
 const CONTENT_EVENT_DEDUPE_TTL_MS = 750
-// The audit prompt, the model choice, and the product OpenRouter key all live
-// in the proxy (worker/ai-audit-proxy) — nothing credential-shaped ships in
-// this bundle. Update this URL if the worker is deployed under another route.
-const AI_AUDIT_PROXY_URL = "https://pulse-ai-audit.kenshiki.workers.dev/"
 
 // This is primarily an observer, not a blocker: blockedTrackerIds starts
 // empty so installing/enabling the extension never changes site behavior by
@@ -74,16 +53,6 @@ const DEFAULT_SETTINGS: UserSettings = {
 let settings = DEFAULT_SETTINGS
 let valuationLedger = createEmptyValuationLedger()
 const hydration = hydrateState()
-
-function senderOrigin(sender: Runtime.MessageSender) {
-  const url = sender.url ?? sender.tab?.url
-  if (!url) return null
-  try {
-    return new URL(url).origin
-  } catch {
-    return null
-  }
-}
 
 function plainSummaries() {
   return Object.fromEntries([...summaries.entries()].map(([tabId, summary]) => [String(tabId), summary]))
@@ -161,21 +130,6 @@ async function clearValuationLedger() {
   await browser.storage.local.remove(VALUATION_LEDGER_STORAGE_KEY)
 }
 
-function originMatchesSender(event: ObserverEvent, sender: Runtime.MessageSender) {
-  const origin = senderOrigin(sender)
-  return !origin || origin === event.origin
-}
-
-// Extension pages (popup, options, the report tab) load from the extension's
-// own origin; content scripts report the web page's URL. The report page opens
-// in a normal tab, so sender.tab presence cannot be the discriminator — the
-// sender URL's origin is.
-const EXTENSION_ORIGIN = browser.runtime.getURL("")
-
-function isExtensionPageSender(sender: Runtime.MessageSender) {
-  return typeof sender.url === "string" && sender.url.startsWith(EXTENSION_ORIGIN)
-}
-
 function sameTrackerIdSet(a: readonly string[], b: readonly string[]) {
   if (a.length !== b.length) return false
   const bSet = new Set(b)
@@ -193,7 +147,7 @@ function readSummary(tabId: number, origin = "unknown") {
 }
 
 // Shared by both the OBSERVED_EVENT message handler (content-script/api-hook
-// events) and the webRequest network observer below — one place that reads,
+// events) and the webRequest network observer — one place that reads,
 // merges, and persists a summary update.
 async function recordEvent(event: ObserverEvent) {
   // The webRequest listeners register synchronously at worker startup and can
@@ -272,32 +226,14 @@ async function syncBlockingRules() {
 
 // Kept as a named promise: dynamic DNR rules survive a service-worker restart
 // but the attribution metadata map does not, so the blocked-signal listeners
-// below await this before matching — otherwise blocks by our own persisted
-// rules would go unattributed between worker wake and this sync finishing.
+// in the network observer await this before matching — otherwise blocks by
+// our own persisted rules would go unattributed between worker wake and this
+// sync finishing.
 const initialRuleSync = ensureHydrated()
   .then(syncBlockingRules)
   .catch((error: unknown) => console.warn("Failed to sync DNR rules", error))
 
 const { trackers } = validateTrackerDatabase()
-const UNCLASSIFIED_REQUEST_TYPES = new Set(["script", "xmlhttprequest", "image", "ping", "media", "sub_frame", "websocket"])
-const CACHE_VALIDATOR_HEADERS = new Set(["etag", "if-none-match", "last-modified", "if-modified-since"])
-
-function requestOrigin(details: { initiator?: string | undefined; url: string }): string {
-  const source = details.initiator && details.initiator !== "null" ? details.initiator : details.url
-  try {
-    return new URL(source).origin
-  } catch {
-    return "unknown"
-  }
-}
-
-function requestEventId(prefix: string, tabId: number, requestId: string, trackerId: string) {
-  return `${prefix}:${tabId}:${requestId}:${trackerId}`
-}
-
-function requestDetails(url: string, requestType: string, requestId: string): Record<string, string | number | boolean> {
-  return { requestId, requestType, url }
-}
 
 function originFromUrl(url: string | undefined) {
   if (!url) return "unknown"
@@ -305,107 +241,6 @@ function originFromUrl(url: string | undefined) {
     return new URL(url).origin
   } catch {
     return "unknown"
-  }
-}
-
-function hostnameFromUrl(url: string) {
-  try {
-    return new URL(url).hostname.toLowerCase()
-  } catch {
-    return "unknown"
-  }
-}
-
-function isThirdPartyRequest(origin: string, url: string) {
-  if (origin === "unknown") return false
-  try {
-    // Registrable-domain comparison, not exact hostname: media.cnn.com on
-    // www.cnn.com is the site's own infrastructure, and calling it a
-    // "third-party request" would be a false claim.
-    return !isSameSite(new URL(origin).hostname, new URL(url).hostname)
-  } catch {
-    return false
-  }
-}
-
-// First/third-party must be judged against the TOP-LEVEL tab origin, not the
-// request initiator. A request the Stripe iframe makes to js.stripe.com has
-// initiator js.stripe.com, so an initiator-relative check calls it
-// first-party and launders an embedded third party into the site itself.
-// The tab's pinned top origin (set on main-frame navigation) is the honest
-// reference; fall back to the initiator only before it is known.
-function tabTopOrigin(tabId: number, fallback: string): string {
-  const pinned = summaries.get(tabId)?.origin
-  return pinned && pinned !== "unknown" ? pinned : fallback
-}
-
-function shouldRecordUnclassifiedRequest(details: chrome.webRequest.WebRequestBodyDetails, topOrigin: string) {
-  if (!UNCLASSIFIED_REQUEST_TYPES.has(details.type)) return false
-  return isThirdPartyRequest(topOrigin, details.url)
-}
-
-type HeaderLike = { name: string }
-
-function cacheValidatorHeaderNames(headers: HeaderLike[] | undefined): string[] {
-  return [
-    ...new Set(
-      (headers ?? [])
-        .map((header) => header.name)
-        .filter((name) => CACHE_VALIDATOR_HEADERS.has(name.toLowerCase()))
-    )
-  ]
-}
-
-function recordCacheValidatorEvents(
-  details: {
-    frameId: number
-    initiator?: string | undefined
-    requestId: string
-    tabId: number
-    timeStamp: number
-    type: string
-    url: string
-  },
-  headers: HeaderLike[] | undefined,
-  direction: "request" | "response"
-) {
-  if (details.tabId < 0) return
-
-  const headerNames = cacheValidatorHeaderNames(headers)
-  if (headerNames.length === 0) return
-
-  const origin = requestOrigin(details)
-  const host = hostnameFromUrl(details.url)
-  const firstParty = !isThirdPartyRequest(tabTopOrigin(details.tabId, origin), details.url)
-
-  for (const headerName of headerNames) {
-    recordEvent({
-      // Keyed by host + header, not requestId: nearly every static asset on
-      // an ordinary page carries cache validators, and a request-keyed id
-      // would flood the per-tab cap with one event per resource (evicting
-      // classified tracker evidence). Host-keyed repeats merge into count.
-      id: `cache_validator_seen:${details.tabId}:${host}:${direction}:${headerName.toLowerCase()}`,
-      tabId: details.tabId,
-      frameId: details.frameId,
-      origin,
-      observedAt: Math.round(details.timeStamp),
-      source: "network",
-      firstParty,
-      ...(firstParty ? { policyLabel: "unknown_first_party" as const } : {}),
-      eventType: "cache_validator_seen",
-      blockability: "observable_only",
-      status: "active",
-      confidence: "confirmed",
-      evidenceTier: "observed",
-      evidence: [`${direction === "request" ? "Request" : "Response"} used cache validator header ${headerName} for ${host}. Header values are never recorded.`],
-      details: {
-        direction,
-        headerName,
-        host,
-        requestId: details.requestId,
-        requestType: details.type
-      }
-    }).catch((error: unknown) => console.warn("Failed to record cache validator event", error))
   }
 }
 
@@ -499,285 +334,15 @@ async function inspectCookieValuesForTab(tabId: number): Promise<RuntimeMessage>
   return { type: "COOKIE_VALUE_INSPECT", payload: await inspectSiteCookieValues({ origin: originFromUrl(tab.url) }) }
 }
 
-function urlIsGov(url: string | undefined) {
-  if (!url) return false
-  try {
-    return new URL(url).hostname.toLowerCase().endsWith(".gov")
-  } catch {
-    return false
-  }
-}
-
-async function generateAiAuditReport({ auditPayload, tabId }: { auditPayload: string; tabId: number }): Promise<RuntimeMessage> {
-  try {
-    // Gate on the tab's real URL, not anything asserted inside the payload —
-    // the payload is caller-supplied text and proves nothing about the site.
-    let tab: browser.Tabs.Tab
-    try {
-      tab = await browser.tabs.get(tabId)
-    } catch {
-      return { type: "AI_AUDIT_REPORT_FAILED", error: "The audited tab is no longer open." }
-    }
-    if (!urlIsGov(tab.url)) {
-      return { type: "AI_AUDIT_REPORT_FAILED", error: "AI audit reports are enabled only for .gov origins." }
-    }
-
-    const response = await fetch(AI_AUDIT_PROXY_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ auditPayload })
-    })
-
-    const data = (await response.json().catch(() => null)) as { error?: unknown; report?: unknown } | null
-    if (!response.ok) {
-      const error = typeof data?.error === "string" ? data.error : `The audit service is unavailable right now (${response.status}).`
-      return { type: "AI_AUDIT_REPORT_FAILED", error }
-    }
-    if (typeof data?.report !== "string" || data.report.trim().length === 0) {
-      return { type: "AI_AUDIT_REPORT_FAILED", error: "The audit service returned an empty report." }
-    }
-
-    return { type: "AI_AUDIT_REPORT", payload: { report: data.report.trim() } }
-  } catch (error) {
-    return { type: "AI_AUDIT_REPORT_FAILED", error: error instanceof Error ? error.message : String(error) }
-  }
-}
-
-// Live consent audit of the site currently seen (docs/consent-atlas-tab-spec.md).
-// The page's own anchors replace the atlas crawler: harvest them on demand,
-// classify legal-document links, fetch documents on this site's own domain,
-// and run the deterministic clause detector. User-initiated only — never per
-// navigation. Cached by registrable domain with a short TTL: repeat opens of
-// the tab reuse the cached record instead of re-fetching up to five policy
-// documents; a fresh audit runs once the TTL lapses.
-const consentAudits = new Map<string, ConsentAuditRecord>()
-const CONSENT_AUDIT_TTL_MS = 15 * 60 * 1000
-
-const HarvestedAnchorsSchema = z.array(z.object({ text: z.string(), href: z.string() }))
-
-async function runConsentAuditForTab(tabId: number): Promise<RuntimeMessage> {
-  let tabUrl: string
-  try {
-    const tab = await browser.tabs.get(tabId)
-    if (!tab.url || !/^https?:/i.test(tab.url)) return { type: "CONSENT_AUDIT_FAILED", reason: "restricted_page" }
-    tabUrl = tab.url
-  } catch {
-    return { type: "CONSENT_AUDIT_FAILED", reason: "no_tab" }
-  }
-
-  const domain = registrableDomain(new URL(tabUrl).hostname) || new URL(tabUrl).hostname
-
-  const cached = consentAudits.get(domain)
-  if (cached && Date.now() - cached.auditedAt < CONSENT_AUDIT_TTL_MS) {
-    return { type: "CONSENT_AUDIT", payload: cached }
-  }
-
-  let anchors: AnchorInput[]
-  try {
-    const [result] = await chrome.scripting.executeScript({
-      target: { tabId },
-      world: "ISOLATED",
-      func: () =>
-        Array.from(document.querySelectorAll<HTMLAnchorElement>("a[href]"), (anchor) => ({
-          text: (anchor.textContent ?? "").trim().slice(0, 200),
-          href: anchor.href
-        }))
-    })
-    const parsedAnchors = HarvestedAnchorsSchema.safeParse(result?.result ?? [])
-    if (!parsedAnchors.success) return { type: "CONSENT_AUDIT_FAILED", reason: "anchor_harvest_failed" }
-    anchors = parsedAnchors.data
-  } catch (error) {
-    console.warn("Consent audit could not read this page's links", error)
-    return { type: "CONSENT_AUDIT_FAILED", reason: "anchor_harvest_failed" }
-  }
-
-  const record = await runConsentAudit(domain, anchors, tabUrl)
-  consentAudits.set(domain, record)
-  return { type: "CONSENT_AUDIT", payload: record }
-}
-
-function registerNetworkObserver() {
-  chrome.webRequest?.onBeforeSendHeaders?.addListener(
-    (details) => recordCacheValidatorEvents(details, details.requestHeaders, "request"),
-    { urls: ["<all_urls>"] },
-    ["requestHeaders"]
-  )
-
-  chrome.webRequest?.onHeadersReceived?.addListener(
-    (details) => recordCacheValidatorEvents(details, details.responseHeaders, "response"),
-    { urls: ["<all_urls>"] },
-    ["responseHeaders"]
-  )
-
-  chrome.webRequest?.onBeforeRequest?.addListener(
-    (details: chrome.webRequest.WebRequestBodyDetails) => {
-      if (details.tabId < 0) return
-      const matches = matchTrackerRequest({ type: details.type, url: details.url }, trackers)
-      const origin = requestOrigin(details)
-      const topOrigin = tabTopOrigin(details.tabId, origin)
-
-      if (matches.length === 0 && shouldRecordUnclassifiedRequest(details, topOrigin)) {
-        const host = hostnameFromUrl(details.url)
-        // Keyed by host, not requestId: repeats merge into count via
-        // upsertEvent. A request-keyed id would store every unmatched
-        // request as a new event and let a busy page evict classified
-        // tracker evidence out of the maxEventsPerTab cap.
-        recordEvent({
-          id: `request_unclassified:${details.tabId}:${host}`,
-          tabId: details.tabId,
-          frameId: details.frameId,
-          origin,
-          observedAt: Math.round(details.timeStamp),
-          source: "network",
-          firstParty: false,
-          eventType: "request_seen",
-          blockability: "observable_only",
-          status: "active",
-          confidence: "confirmed",
-          evidenceTier: "observed",
-          evidence: [`Third-party request observed to ${host}; no tracker record matched it.`],
-          details: { ...requestDetails(details.url, details.type, details.requestId), host }
-        }).catch((error: unknown) => console.warn("Failed to record unclassified network event", error))
-        return
-      }
-
-      for (const match of matches) {
-        recordEvent({
-          id: requestEventId("request_seen", details.tabId, details.requestId, match.tracker.id),
-          tabId: details.tabId,
-          frameId: details.frameId,
-          origin,
-          observedAt: Math.round(details.timeStamp),
-          source: "network",
-          trackerId: match.tracker.id,
-          companyId: match.tracker.companyId,
-          firstParty: false,
-          eventType: "request_seen",
-          blockability: match.tracker.browserAction.blockability,
-          status: "active",
-          confidence: match.tracker.confidence,
-          evidence: match.evidence,
-          details: requestDetails(details.url, details.type, details.requestId)
-        }).catch((error: unknown) => console.warn("Failed to record network observer event", error))
-
-        // ID-sync detection rides the same match: a sync-shaped request is
-        // recorded as its own cookie_sync observation so the report can say
-        // "these companies merged their profiles of you" with URL evidence.
-        const sync = detectCookieSync(details.url, match.tracker, trackers)
-        if (sync) {
-          recordEvent({
-            id: requestEventId("cookie_sync", details.tabId, details.requestId, match.tracker.id),
-            tabId: details.tabId,
-            frameId: details.frameId,
-            origin,
-            observedAt: Math.round(details.timeStamp),
-            source: "network",
-            trackerId: match.tracker.id,
-            companyId: match.tracker.companyId,
-            firstParty: false,
-            eventType: "cookie_sync",
-            blockability: match.tracker.browserAction.blockability,
-            status: "active",
-            confidence: sync.confidence,
-            evidence: sync.evidence,
-            details: { ...requestDetails(details.url, details.type, details.requestId), syncIndicators: sync.indicators.join(", ") }
-          }).catch((error: unknown) => console.warn("Failed to record cookie sync event", error))
-        }
-      }
-    },
-    { urls: ["<all_urls>"] }
-  )
-
-  // Shared by both deterministic block signals: onRuleMatchedDebug (richer,
-  // unpacked dev builds only) and onErrorOccurred + ERR_BLOCKED_BY_CLIENT
-  // matched against an installed rule (packed/store builds). One recorder so
-  // the two paths can never drift in how they supersede the seen-event or
-  // shape the blocked event. Both fire for the same request in dev builds:
-  // the first records, the second only annotates blockSignals — one blocked
-  // request never counts twice, and the stored event shows every
-  // deterministic signal that confirmed it.
-  async function recordBlockedOutcome(
-    metadata: DynamicBlockRuleMetadata,
-    request: { frameId: number; requestId: string; tabId: number; type: string; url: string; initiator?: string | undefined },
-    signal: "rule_matched_debug" | "err_blocked_by_client"
-  ) {
-    // Same cold-start rule as recordEvent: never read or write summaries
-    // before hydration has finished restoring them.
-    await ensureHydrated()
-    const blockedEventId = requestEventId("request_blocked", request.tabId, request.requestId, metadata.tracker.id)
-    const current = summaries.get(request.tabId)
-    const existingBlocked = current?.events.find((event) => event.id === blockedEventId)
-
-    if (existingBlocked && current) {
-      const signals = new Set(
-        String(existingBlocked.details?.blockSignals ?? "")
-          .split(",")
-          .filter(Boolean)
-      )
-      if (signals.has(signal)) return
-      signals.add(signal)
-      summaries.set(request.tabId, annotateEventDetail(current, blockedEventId, "blockSignals", [...signals].sort().join(",")))
-      summaryWriter.schedule()
-      return
-    }
-
-    const seenEventId = requestEventId("request_seen", request.tabId, request.requestId, metadata.tracker.id)
-    if (current) summaries.set(request.tabId, supersedeEvent(current, seenEventId))
-
-    recordEvent({
-      id: blockedEventId,
-      tabId: request.tabId,
-      frameId: request.frameId,
-      origin: requestOrigin(request),
-      observedAt: Date.now(),
-      source: "network",
-      trackerId: metadata.tracker.id,
-      companyId: metadata.tracker.companyId,
-      firstParty: false,
-      eventType: "request_blocked",
-      blockability: metadata.tracker.browserAction.blockability,
-      status: "blocked",
-      confidence: metadata.tracker.confidence,
-      evidence: [metadata.evidence],
-      details: { ...requestDetails(request.url, request.type, request.requestId), blockSignals: signal }
-    }).catch((error: unknown) => console.warn("Failed to record blocked network event", error))
-  }
-
-  chrome.declarativeNetRequest?.onRuleMatchedDebug?.addListener((info) => {
-    if (info.request.tabId < 0) return
-
-    initialRuleSync
-      .then(() => {
-        const metadata = getDynamicBlockRuleMetadata(info.rule.ruleId)
-        if (!metadata) return
-        return recordBlockedOutcome(metadata, info.request, "rule_matched_debug")
-      })
-      .catch((error: unknown) => console.warn("Failed to record blocked outcome", error))
-  })
-
-  // Production blocked-state signal: onRuleMatchedDebug never fires in a
-  // packed build, but DNR cancellation surfaces as onErrorOccurred with
-  // net::ERR_BLOCKED_BY_CLIENT. That error alone is not proof — another
-  // extension could have blocked the request — so blocked is only claimed
-  // when the URL provably matches a rule this extension installed. Anything
-  // else stays seen/active per the spec's deterministic-signal rule.
-  chrome.webRequest?.onErrorOccurred?.addListener(
-    (details) => {
-      if (details.tabId < 0 || details.error !== "net::ERR_BLOCKED_BY_CLIENT") return
-
-      initialRuleSync
-        .then(() => {
-          const metadata = findInstalledBlockRuleMetadataForRequest(details.url, details.type)
-          if (!metadata) return
-          return recordBlockedOutcome(metadata, details, "err_blocked_by_client")
-        })
-        .catch((error: unknown) => console.warn("Failed to record blocked outcome", error))
-    },
-    { urls: ["<all_urls>"] }
-  )
-}
-
-registerNetworkObserver()
+registerNetworkObserver({
+  ensureHydrated,
+  recordEvent,
+  readTabSummary: (tabId) => summaries.get(tabId),
+  writeTabSummary: (tabId, summary) => summaries.set(tabId, summary),
+  scheduleSummaryWrite: () => summaryWriter.schedule(),
+  initialRuleSync,
+  trackers
+})
 
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -842,110 +407,42 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
     .catch((error: unknown) => console.warn("Failed to reset summary on navigation", error))
 })
 
-browser.runtime.onMessage.addListener((rawMessage: unknown, sender: Runtime.MessageSender) => {
-  const parsedMessage = RuntimeMessageSchema.safeParse(rawMessage)
-  if (!parsedMessage.success) return Promise.resolve({ ok: false, error: "invalid_message" })
-
-  const message = parsedMessage.data as RuntimeMessage
-
-  return (async () => {
-    await ensureHydrated()
-
-    if (message.type === "OBSERVED_EVENT") {
-      const event = { ...message.payload, tabId: sender.tab?.id ?? message.payload.tabId } as ObserverEvent
-      if (!originMatchesSender(event, sender)) return { ok: false, error: "origin_mismatch" }
-
-      const untrustedReason = untrustedObservedEventReason(event)
-      if (untrustedReason) return { ok: false, error: untrustedReason }
-
-      await recordEvent(normalizePersistenceEvent(normalizeIdentityDigestEvent(normalizeConsentSignal(enrichSdkDetection(enrichScriptInjection(event), trackers)))))
-      return { ok: true }
-    }
-
-    if (message.type === "PAGE_ERROR_OBSERVED") {
-      const tabId = sender.tab?.id
-      if (tabId === undefined) return { ok: false, error: "no_tab_id" }
-
-      const pageError: PageError = { id: crypto.randomUUID(), ...message.payload }
-      const current = readSummary(tabId, senderOrigin(sender) ?? "unknown")
-      const summary = recordPageError(current, pageError)
+browser.runtime.onMessage.addListener(
+  createRuntimeMessageRouter({
+    ensureHydrated,
+    recordObservedEvent: (event) =>
+      recordEvent(normalizePersistenceEvent(normalizeIdentityDigestEvent(normalizeConsentSignal(enrichSdkDetection(enrichScriptInjection(event), trackers))))),
+    recordPageError: (tabId, origin, pageError) => {
+      const summary = recordPageError(readSummary(tabId, origin), pageError)
       summaries.set(tabId, summary)
       updateActionBadge(tabId, summary)
       summaryWriter.schedule()
-      return { ok: true }
-    }
-
-    // Everything below is a privileged operation reachable only from the
-    // extension's own pages (popup, options, report tab). Content scripts run
-    // inside every <all_urls> page context, so a compromised page context
-    // must never be able to wipe local data, rewrite settings, or trigger
-    // scans — the two message types above are the whole content-script API.
-    if (!isExtensionPageSender(sender)) return { ok: false, error: "unauthorized_sender" }
-
-    if (message.type === "GET_SITE_SUMMARY") {
-      return { type: "SITE_SUMMARY", payload: readSummary(message.tabId) }
-    }
-
-    if (message.type === "GET_COOKIE_METADATA_PERMISSION") {
-      return { type: "COOKIE_METADATA_PERMISSION", granted: await hasCookieMetadataPermission() }
-    }
-
-    if (message.type === "REQUEST_COOKIE_METADATA_PERMISSION") {
-      return { type: "COOKIE_METADATA_PERMISSION", granted: await requestCookieMetadataPermission() }
-    }
-
-    if (message.type === "SCAN_SITE_COOKIES") {
-      return scanCookieMetadataForTab(message.tabId)
-    }
-
-    if (message.type === "INSPECT_SITE_COOKIE_VALUES") {
-      return inspectCookieValuesForTab(message.tabId)
-    }
-
-    if (message.type === "GET_VALUATION_ROLLUP") {
-      return { type: "VALUATION_ROLLUP", payload: rollupValuationLedger(valuationLedger, message.period) }
-    }
-
-    if (message.type === "REFRESH_TAB_SCAN") {
-      const summary = { ...(await recordActiveTabScan(message.tabId)), updatedAt: Date.now() }
-      summaries.set(message.tabId, summary)
-      updateActionBadge(message.tabId, summary)
+    },
+    readSummary,
+    hasCookieMetadataPermission,
+    requestCookieMetadataPermission,
+    scanCookieMetadataForTab,
+    inspectCookieValuesForTab,
+    rollupValuation: (period) => rollupValuationLedger(valuationLedger, period),
+    refreshTabScan: async (tabId) => {
+      const summary = { ...(await recordActiveTabScan(tabId)), updatedAt: Date.now() }
+      summaries.set(tabId, summary)
+      updateActionBadge(tabId, summary)
       summaryWriter.schedule()
-      return { type: "SITE_SUMMARY", payload: summary }
-    }
-
-    if (message.type === "RUN_CONSENT_AUDIT") {
-      return runConsentAuditForTab(message.tabId)
-    }
-
-    if (message.type === "GENERATE_AI_AUDIT_REPORT") {
-      return generateAiAuditReport(message.payload)
-    }
-
-    if (message.type === "GET_SETTINGS") {
-      return { type: "SETTINGS", payload: settings }
-    }
-
-    if (message.type === "UPDATE_SETTINGS") {
+      return summary
+    },
+    runConsentAuditForTab,
+    generateAiAuditReport,
+    getSettings: () => settings,
+    updateSettings: async (payload) => {
       const blockingChanged =
-        message.payload.blockedTrackerIds !== undefined &&
-        !sameTrackerIdSet(message.payload.blockedTrackerIds, settings.blockedTrackerIds)
-      settings = { ...settings, ...message.payload }
+        payload.blockedTrackerIds !== undefined && !sameTrackerIdSet(payload.blockedTrackerIds, settings.blockedTrackerIds)
+      settings = { ...settings, ...payload }
       await persistSettings()
       if (blockingChanged) await syncBlockingRules()
-      return { ok: true, payload: settings }
-    }
-
-    if (message.type === "CLEAR_VALUATION_LEDGER") {
-      await clearValuationLedger()
-      return { ok: true }
-    }
-
-    if (message.type === "CLEAR_LOCAL_DATA") {
-      await clearLocalData()
-      return { ok: true }
-    }
-
-    return { ok: false, error: "unhandled_message" }
-  })()
-})
+      return settings
+    },
+    clearValuationLedger,
+    clearLocalData
+  })
+)

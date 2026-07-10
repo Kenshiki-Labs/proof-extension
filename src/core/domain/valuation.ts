@@ -101,10 +101,16 @@ export function rollupObservedValuations(events: ObserverEvent[]): ValuationRoll
     advertisers_and_maybe_you: 0,
     only_their_business: 0
   }
-  const onlyTheirs = perTracker.filter((entry) => getTrackerServes(entry.trackerId)?.category === "only_their_business")
+  let onlyTheirBusinessAnnualLowUsd = 0
+  let onlyTheirBusinessAnnualHighUsd = 0
   for (const entry of perTracker) {
     const serves = getTrackerServes(entry.trackerId)
-    if (serves) servesCounts[serves.category] += 1
+    if (!serves) continue
+    servesCounts[serves.category] += 1
+    if (serves.category === "only_their_business") {
+      onlyTheirBusinessAnnualLowUsd += entry.value.annual.low_usd
+      onlyTheirBusinessAnnualHighUsd += entry.value.annual.high_usd
+    }
   }
   return {
     perTracker,
@@ -117,8 +123,8 @@ export function rollupObservedValuations(events: ObserverEvent[]): ValuationRoll
     annualOperatorCostHighUsd: sum(cost, (value) => value.annual.high_usd),
     costTrackerCount: cost.length,
     servesCounts,
-    onlyTheirBusinessAnnualLowUsd: sum(onlyTheirs, (value) => value.annual.low_usd),
-    onlyTheirBusinessAnnualHighUsd: sum(onlyTheirs, (value) => value.annual.high_usd),
+    onlyTheirBusinessAnnualLowUsd,
+    onlyTheirBusinessAnnualHighUsd,
     disclaimer: VALUATION_DISCLAIMER
   }
 }
@@ -176,7 +182,9 @@ export function buildUnclassifiedGraphEdges(events: ObserverEvent[], origin: str
 }
 
 export function formatUsd(value: number): string {
-  if (value === 0) return "$0"
+  // Valuation data is validated nonnegative, but a display formatter must
+  // not render "$NaN"/"$Infinity"/"$-3" if garbage arrives anyway.
+  if (!Number.isFinite(value) || value <= 0) return "$0"
   if (value >= 1) return `$${Math.round(value).toLocaleString("en-US")}`
   if (value >= 0.01) return `$${value.toFixed(2)}`
   // Sub-cent amounts: two significant digits, never exponential notation.

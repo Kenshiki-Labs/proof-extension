@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import { resolve } from "node:path"
 
 import { describe, expect, it } from "vitest"
@@ -50,11 +50,16 @@ describe("surface vocabulary guard", () => {
   })
 
   it("keeps the report's act titles in user language and its debug sections gone", () => {
+    // The act titles have lived in src/tabs/report.tsx and (post component
+    // extraction) src/components/report/EvidenceView.tsx — scan both so the
+    // guard follows the vocabulary, not the file layout.
     const report = readFileSync(resolve(root, "src/tabs/report.tsx"), "utf8")
+    const evidenceViewPath = resolve(root, "src/components/report/EvidenceView.tsx")
+    const evidenceView = existsSync(evidenceViewPath) ? readFileSync(evidenceViewPath, "utf8") : ""
     const narrowingPanel = readFileSync(resolve(root, "src/components/NarrowingPanel.tsx"), "utf8")
 
     const actTitles = [
-      ...[...report.matchAll(/SectionTitle number="0[234]" title="([^"]+)"/g)].map((match) => match[1] ?? ""),
+      ...[...(report + evidenceView).matchAll(/SectionTitle number="0[234]" title="([^"]+)"/g)].map((match) => match[1] ?? ""),
       ...[...narrowingPanel.matchAll(/<h2[^>]*>(?:\{[^}]+\})?0?1 · ([^<]+)<\/h2>/g)].map((match) => match[1] ?? "")
     ]
     expect(actTitles.length).toBeGreaterThanOrEqual(3)

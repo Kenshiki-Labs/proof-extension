@@ -8,6 +8,7 @@ import {
   buildLocalStatePurposeRollup,
   buildLocalStateRollup,
   buildCopyPayload,
+  classifyStoragePurpose,
   compactEvents,
   compactPageErrors,
   detailEntries,
@@ -342,6 +343,27 @@ describe("buildLocalStatePurposeRollup", () => {
       expect.stringContaining("clear operation wiped"),
       expect.stringContaining("analytics and event queues")
     ]))
+  })
+})
+
+describe("classifyStoragePurpose", () => {
+  it("does not classify downloads or uploads keys as advertising", () => {
+    // Regression: the bare `ads` alternation matched inside "downloads" and
+    // "uploads" before word boundaries were added.
+    expect(classifyStoragePurpose("downloads")).toBe("Unclassified storage keys")
+    expect(classifyStoragePurpose("uploads")).toBe("Unclassified storage keys")
+    expect(classifyStoragePurpose("pending_downloads")).toBe("Unclassified storage keys")
+  })
+
+  it("still classifies genuine ad and event-queue keys", () => {
+    expect(classifyStoragePurpose("ads_prefs")).toBe("Advertising and attribution")
+    expect(classifyStoragePurpose("ad.id")).toBe("Advertising and attribution")
+    expect(classifyStoragePurpose("gclid")).toBe("Advertising and attribution")
+    expect(classifyStoragePurpose("amzn:fwcim:events")).toBe("Analytics and event queues")
+    expect(classifyStoragePurpose("event_queue")).toBe("Analytics and event queues")
+    // Tightened event bucket: "prevent" or "eventual" must not read as an
+    // event queue.
+    expect(classifyStoragePurpose("preventRedirect")).toBe("Unclassified storage keys")
   })
 })
 

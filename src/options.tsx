@@ -2,8 +2,9 @@ import "~style.css"
 
 import { useEffect, useState } from "react"
 import browser from "webextension-polyfill"
+import type { Storage } from "webextension-polyfill"
 
-import { RuntimeMessageSchema } from "~core/contracts/schemas"
+import { RuntimeMessageSchema } from "~core/contracts/messages"
 import { validateTrackerDatabase } from "~core/db/validate"
 import type { UserSettings } from "~core/domain/types"
 import Button from "~components/system/Button"
@@ -103,6 +104,17 @@ function OptionsPage() {
     }
 
     loadSettings().catch(() => setStatus("Could not load settings from the background service."))
+
+    // Options can stay open while the popup or report flips a setting
+    // (blocking a tracker, granting cookie metadata) — without this, the
+    // blocked-tracker list here goes stale the moment that happens.
+    function onStorageChanged(changes: Record<string, Storage.StorageChange>, area: string) {
+      if (area !== "local") return
+      if ("userSettings" in changes) loadSettings().catch(() => undefined)
+    }
+
+    browser.storage.onChanged.addListener(onStorageChanged)
+    return () => browser.storage.onChanged.removeListener(onStorageChanged)
   }, [])
 
   async function updateSettings(patch: Partial<UserSettings>) {

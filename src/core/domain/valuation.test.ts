@@ -110,6 +110,14 @@ describe("usd formatting", () => {
     expect(formatUsdRange(0, 0)).toBe("$0")
     expect(formatUsdRange(1234, 5678)).toBe("$1,234–$5,678")
   })
+
+  it("renders garbage input as $0 instead of $NaN or a negative amount", () => {
+    expect(formatUsd(Number.NaN)).toBe("$0")
+    expect(formatUsd(Number.POSITIVE_INFINITY)).toBe("$0")
+    expect(formatUsd(Number.NEGATIVE_INFINITY)).toBe("$0")
+    expect(formatUsd(-3)).toBe("$0")
+    expect(formatUsd(-0.004)).toBe("$0")
+  })
 })
 
 describe("buildTabValuationEdges — the per-page Network graph, not the cross-site ledger", () => {

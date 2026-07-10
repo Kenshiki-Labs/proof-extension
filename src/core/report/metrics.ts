@@ -1,6 +1,6 @@
-import { compactEvents, pageActivityEvents } from "~core/report/display"
+import { compactEvents } from "~core/report/display"
 import { countIdentifiedObservers, countPrivacyTradeObservers, countSiteToolObservers, countSourceBackedActiveObservers, countUnclassifiedParties, countWatchingObservers } from "~core/domain/observer-counts"
-import { isDiagnosticEvent, isExposureScanEvent, isLocalPageSignalEvent, isPersistenceSurfaceEvent, isUnclassifiedObservation } from "~core/state/summaries"
+import { isDiagnosticEvent, isExposureScanEvent, isLocalPageSignalEvent, isPageActivityEvent, isPersistenceSurfaceEvent, isUnclassifiedObservation } from "~core/state/summaries"
 import type { SiteSummary } from "~core/domain/types"
 
 // THE single source of truth for every headline number the popup, the
@@ -11,12 +11,13 @@ import type { SiteSummary } from "~core/domain/types"
 // lives in exactly one place.
 
 export type SummaryMetrics = {
-  // Grouped observations: one per observer + signal combination. What a
-  // user should read as "how many distinct things were seen".
+  // Grouped observations: one per observer + signal combination (merged by
+  // the compaction key). What a user should read as "how many distinct
+  // things were seen".
   observations: number
-  // Recorded page-activity events — excludes the extension's own
-  // diagnostics AND the extension-run exposure scan, neither of which is
-  // something the page did.
+  // Raw recorded page-activity entries, before any merging — always >= the
+  // observations count. Excludes the extension's own diagnostics AND the
+  // extension-run exposure scan, neither of which is something the page did.
   recordedEvents: number
   // Extension-run exposure scan events (what Pulse could read locally).
   exposureEvents: number
@@ -47,8 +48,14 @@ export type SummaryMetrics = {
 }
 
 export function summaryMetrics(summary: SiteSummary): SummaryMetrics {
+  // One compaction pass, filtered per metric. Filtering compacted rows is
+  // exactly equivalent to compacting a pre-filtered list: the merge key
+  // includes event.source, so page-activity and extension-scan events can
+  // never merge into one row (and diagnostics are skipped by compactEvents).
+  const compacted = compactEvents(summary.events)
+
   return {
-    observations: compactEvents(pageActivityEvents(summary.events)).length,
+    observations: compacted.filter(({ event }) => isPageActivityEvent(event)).length,
     recordedEvents: summary.events.filter((event) => !isDiagnosticEvent(event) && !isExposureScanEvent(event)).length,
     exposureEvents: summary.events.filter((event) => isExposureScanEvent(event) && !isDiagnosticEvent(event)).length,
     watchingCompanies: countWatchingObservers(summary.events),
@@ -60,9 +67,9 @@ export function summaryMetrics(summary: SiteSummary): SummaryMetrics {
     blockedCompanies: summary.blockedCompanies.length,
     mitigatedCompanies: summary.mitigatedCompanies.length,
     cannotBlockSignals: summary.cannotBlockSignals.length,
-    unclassifiedObservations: compactEvents(summary.events).filter(({ event }) => isUnclassifiedObservation(event)).length,
-    persistenceObservations: compactEvents(summary.events).filter(({ event }) => isPersistenceSurfaceEvent(event)).length,
-    localPageSignals: compactEvents(summary.events).filter(({ event }) => isLocalPageSignalEvent(event)).length,
+    unclassifiedObservations: compacted.filter(({ event }) => isUnclassifiedObservation(event)).length,
+    persistenceObservations: compacted.filter(({ event }) => isPersistenceSurfaceEvent(event)).length,
+    localPageSignals: compacted.filter(({ event }) => isLocalPageSignalEvent(event)).length,
     diagnostics: summary.events.filter(isDiagnosticEvent).length,
     storedEvents: summary.events.length
   }

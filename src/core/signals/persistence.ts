@@ -14,13 +14,16 @@ import type { ObserverEvent } from "~core/domain/types"
 // metadata — it can never smuggle a raw value, forge status/blockability, or
 // author its own evidence strings. Same trust model as enrichSdkDetection.
 
+// `satisfies` ties this subset to the canonical OBSERVER_EVENT_TYPES union
+// (~core/contracts/schemas) — renaming an event type there fails to compile
+// here instead of silently orphaning the persistence pipeline.
 export const PERSISTENCE_EVENT_TYPES = [
   "cookie_observed",
   "storage_write",
   "indexeddb_access",
   "cache_storage_access",
   "service_worker_registered"
-] as const
+] as const satisfies readonly ObserverEvent["eventType"][]
 
 export type PersistenceEventType = (typeof PERSISTENCE_EVENT_TYPES)[number]
 

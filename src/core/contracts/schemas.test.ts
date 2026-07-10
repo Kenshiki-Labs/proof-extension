@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
-import { ObserverEventSchema, RuntimeMessageSchema } from "./schemas"
+import { RuntimeMessageSchema } from "./messages"
+import { ObserverEventSchema } from "./schemas"
 
 const observerEvent = {
   id: "event-1",

@@ -1,10 +1,11 @@
-import { RollingValuationSummarySchema, ValuationLedgerSchema } from "~core/contracts/schemas"
+import { MonetizationFlowSchema, RollingValuationSummarySchema, ValuationLedgerSchema } from "~core/contracts/schemas"
 import { getTrackerServes, getTrackerValuation, VALUATION_DISCLAIMER } from "~core/domain/valuation"
 import { isPageActivityEvent } from "~core/state/summaries"
-import type { MonetizationFlow, ObserverEvent, RollingValuationItem, RollingValuationSummary, TrackerPresenceLedgerEntry, ValuationLedger, ValuationPeriod, ValuationSnapshot } from "~core/domain/types"
+import type { ObserverEvent, RollingValuationItem, RollingValuationSummary, TrackerPresenceLedgerEntry, ValuationLedger, ValuationPeriod, ValuationSnapshot } from "~core/domain/types"
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
-const MONETIZATION_FLOWS: MonetizationFlow[] = ["platform_ads", "programmatic", "identity_infra", "operator_saas"]
+// Derived from the schema so the flow list cannot drift from the contract.
+const MONETIZATION_FLOWS = MonetizationFlowSchema.options
 
 export function createEmptyValuationLedger(): ValuationLedger {
   return { schemaVersion: 1, siteVisits: [], trackerPresence: [] }
@@ -15,6 +16,9 @@ export function normalizeValuationLedger(raw: unknown): ValuationLedger {
   return parsed.success ? parsed.data : createEmptyValuationLedger()
 }
 
+// UTC calendar date. The stored `day` field is currently write-only — every
+// period computation filters on the raw timestamps instead — so its first
+// consumer must not assume it reflects the user's local date.
 export function dayKey(timestamp: number): string {
   return new Date(timestamp).toISOString().slice(0, 10)
 }
@@ -34,18 +38,17 @@ function trackerPresenceKey(visitId: string, trackerId: string) {
   return `${visitId}|${trackerId}`
 }
 
+// One entry per visitId, always with visits: 1. Visit dedupe happens at the
+// caller (background.ts ensureSiteVisitForTab mints a fresh UUID per
+// tab+origin visit and reuses it via activeVisitByTabId), so a repeated
+// visitId can only be a replayed call for the same visit — kept idempotent
+// here rather than counted as a phantom extra visit.
 export function recordSiteVisit(ledger: ValuationLedger, visitId: string, siteOrigin: string, observedAt: number): ValuationLedger {
-  const day = dayKey(observedAt)
   const key = siteVisitKey(visitId)
-  const existing = ledger.siteVisits.find((entry) => siteVisitKey(entry.visitId) === key)
-  const siteVisits = existing
-    ? ledger.siteVisits.map((entry) =>
-        siteVisitKey(entry.visitId) === key
-          ? { ...entry, firstVisitedAt: Math.min(entry.firstVisitedAt, observedAt), lastVisitedAt: Math.max(entry.lastVisitedAt, observedAt), visits: entry.visits + 1 }
-          : entry
-      )
-    : [...ledger.siteVisits, { day, visitId, siteOrigin, firstVisitedAt: observedAt, lastVisitedAt: observedAt, visits: 1 }]
+  if (ledger.siteVisits.some((entry) => siteVisitKey(entry.visitId) === key)) return ledger
 
+  const entry = { day: dayKey(observedAt), visitId, siteOrigin, firstVisitedAt: observedAt, lastVisitedAt: observedAt, visits: 1 }
+  const siteVisits = [...ledger.siteVisits, entry]
   return { ...ledger, siteVisits: siteVisits.sort((left, right) => siteVisitKey(left.visitId).localeCompare(siteVisitKey(right.visitId))) }
 }
 

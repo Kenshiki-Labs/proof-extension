@@ -5,10 +5,9 @@ import { Eye, LineChart } from "lucide-react"
 import browser from "webextension-polyfill"
 import type { Storage } from "webextension-polyfill"
 
-import { RuntimeMessageSchema } from "~core/contracts/schemas"
+import { RuntimeMessageSchema } from "~core/contracts/messages"
 import { EMPTY_SUMMARY, parseSiteSummaryResponse } from "~core/report/display"
 import { buildWatcherListModel } from "~core/report/watchers"
-import BetaBreadthNotice from "~components/BetaBreadthNotice"
 import Button from "~components/system/Button"
 import { NarrowingMirror } from "~components/NarrowingPanel"
 import SiteLogo from "~components/system/SiteLogo"
@@ -219,13 +218,19 @@ function IndexPopup() {
   }
 
   return (
-    <main className="max-h-[640px] min-w-[480px] overflow-y-auto bg-background p-4 font-body text-foreground">
+    <main className="h-[400px] w-[640px] overflow-y-auto bg-background p-4 font-body text-foreground">
       <header className={`${UI.panel} ${UI.inset} flex items-start justify-between gap-3`}>
         <SiteLogo textClass="text-base" sublabel="Pulse Observer" />
         <HeaderIconButton label="Open value ledger" onClick={() => openValueLedger().catch(() => undefined)}>
           <LineChart aria-hidden="true" size={16} strokeWidth={1.8} />
         </HeaderIconButton>
       </header>
+
+      <div className="mt-3.5">
+        <Button disabled={summary.tabId < 0} onClick={() => openFullReport().catch(() => undefined)}>
+          Open audit report
+        </Button>
+      </div>
 
       {loadError ? (
         <section className="mt-3.5 border border-danger bg-card p-3 shadow-sm" role="alert">
@@ -236,25 +241,6 @@ function IndexPopup() {
 
       <NarrowingMirror model={narrowingModel} />
       <VerdictBanner compact summary={summary} />
-      <BetaBreadthNotice compact />
-      <section className={`mt-3.5 ${UI.panel} ${UI.inset}`}>
-        <Toggle
-          checked={settings.cookieMetadataEnabled}
-          label="Observe browser cookie metadata"
-          note="Adds HttpOnly/SameSite/Secure metadata to reports for pages you visit. Values are hidden unless you inspect them locally in the report."
-          onChange={(checked) => toggleCookieMetadata(checked).catch(() => undefined)}
-        />
-      </section>
-      <VisitFrequencyAsk
-        annualHighUsd={valuationRollup.annualRevenueHighUsd}
-        annualLowUsd={valuationRollup.annualRevenueLowUsd}
-        compact
-        domain={siteDomain}
-        frequency={siteDomain ? (settings.siteVisitFrequency[siteDomain] ?? null) : null}
-        onAnswer={(frequency) => answerVisitFrequency(frequency).catch(() => undefined)}
-        revenueTrackerCount={valuationRollup.revenueTrackerCount}
-      />
-
       {watcherModel.rows.length > 0 ? (
         <SurfaceSection className={`mt-3.5 ${UI.panel} ${UI.inset}`} icon={Eye} title="Who is watching — worst first">
           <WatcherList
@@ -265,11 +251,24 @@ function IndexPopup() {
         </SurfaceSection>
       ) : null}
 
-      <div className="mt-3.5">
-        <Button disabled={summary.tabId < 0} onClick={() => openFullReport().catch(() => undefined)}>
-          Open audit report
-        </Button>
-      </div>
+      <VisitFrequencyAsk
+        annualHighUsd={valuationRollup.annualRevenueHighUsd}
+        annualLowUsd={valuationRollup.annualRevenueLowUsd}
+        compact
+        domain={siteDomain}
+        frequency={siteDomain ? (settings.siteVisitFrequency[siteDomain] ?? null) : null}
+        onAnswer={(frequency) => answerVisitFrequency(frequency).catch(() => undefined)}
+        revenueTrackerCount={valuationRollup.revenueTrackerCount}
+      />
+
+      <section className={`mt-3.5 ${UI.panel} ${UI.inset}`}>
+        <Toggle
+          checked={settings.cookieMetadataEnabled}
+          label="Observe browser cookie metadata"
+          note="Adds HttpOnly/SameSite/Secure metadata to reports for pages you visit. Values are hidden unless you inspect them locally in the report."
+          onChange={(checked) => toggleCookieMetadata(checked).catch(() => undefined)}
+        />
+      </section>
 
       <footer className={`${TYPE.small} mt-3.5 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-2.5`}>
         <span className="break-all">{summary.origin}</span>

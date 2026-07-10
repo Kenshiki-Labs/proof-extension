@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import browser from "webextension-polyfill"
 import type { Storage } from "webextension-polyfill"
 
-import { RuntimeMessageSchema } from "~core/contracts/schemas"
+import { RuntimeMessageSchema } from "~core/contracts/messages"
 import type { RollingValuationSummary, ValuationPeriod } from "~core/domain/types"
 
 export function useValuationRollup(initialPeriod: ValuationPeriod = "day") {

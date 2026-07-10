@@ -4,6 +4,7 @@ import { ClipboardCopy, ExternalLink, Trash2 } from "lucide-react"
 import { rankObservers, type AttentionTier } from "~core/domain/attention"
 import { getObserverRemediation, type ObserverRemediation } from "~core/domain/remediation"
 import type { ObserverEvent } from "~core/domain/types"
+import { useTransientState } from "~hooks/useTransientState"
 import { TYPE, UI } from "~components/system/tokens"
 
 // The batch remediation flow: fourteen per-card decisions become one
@@ -58,7 +59,7 @@ function checklistText(queue: QueueItem[]): string {
 export default function CleanupFlow({ events }: { events: ObserverEvent[] }) {
   const queue = useMemo(() => buildQueue(events), [events])
   const [done, setDone] = useState<Set<string>>(new Set())
-  const [copied, setCopied] = useState(false)
+  const [copied, flashCopied] = useTransientState(false)
 
   if (queue.length === 0) {
     return <p className={`${TYPE.body} mt-3`}>No source-level remediation path is known for the current observations.</p>
@@ -68,8 +69,7 @@ export default function CleanupFlow({ events }: { events: ObserverEvent[] }) {
 
   async function copyChecklist() {
     await navigator.clipboard.writeText(checklistText(queue))
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    flashCopied(true, 2000)
   }
 
   return (

@@ -3,23 +3,75 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "2e6a2a564449d9dd721bd4224faf14dbdaf8db7a773f1cfb912903ca3ce12a90"
+      "sha256": "0cb3da41ba8fd961fe763ac4d2e1fb31427bd24029c97f5fbebf8e952e48c062"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "002fbd9f7b83796b5fcd7f1f66f684191d59315e506dc9bbb64ac99bd27d0278"
+      "sha256": "791d7a9da5262bf4398f58ab0d019771bb57089b1112bcd1ddb760fa9951a281"
+    },
+    {
+      "file": "src/components/report/AiAuditPanel.tsx",
+      "sha256": "5960b3177a3150355212873820a7667da87ea5a3ab2d9b5d0642706f482443cf"
+    },
+    {
+      "file": "src/components/report/AuditBrief.tsx",
+      "sha256": "99d3b7b47bb0ce8d915f85710b0b5721dfb61093c6763d421afe082b99c88a15"
+    },
+    {
+      "file": "src/components/report/EvidenceAppendix.tsx",
+      "sha256": "fb228961b6036abbc98b6c2ff7d8e6e3cdda8c551846223b9ac085a474fd33f4"
+    },
+    {
+      "file": "src/components/report/EvidenceTimeline.tsx",
+      "sha256": "f05a6ed87ab9805eeba1f5a0b2be7a617a56c885d86cdfe6089094e016379575"
+    },
+    {
+      "file": "src/components/report/EvidenceView.tsx",
+      "sha256": "547afa145e8976105cf25158e62dddd140e75cf64f6c0a13d0aa1692b66035b3"
+    },
+    {
+      "file": "src/components/report/LocalStateView.tsx",
+      "sha256": "f10b6620bd242dcfc6dec653d1752adb35d0ac79cb9baeaabd265e09099b7ab4"
+    },
+    {
+      "file": "src/components/report/ObservationTable.tsx",
+      "sha256": "5c2cd226777ac559a7735a5b69ed26a6becdd7c83054f4a48aeba8e64fbe6f9f"
+    },
+    {
+      "file": "src/components/report/RemediationPanel.tsx",
+      "sha256": "8fdb67f367f7d089d01b2e54e74c787a3e48fe3cf7db250e4dcb0a21a881d49c"
+    },
+    {
+      "file": "src/components/report/ValuationSection.tsx",
+      "sha256": "cd619eef7df4c12790a81f0c99a7895b557d6852390e8b31fcac78f768df7020"
+    },
+    {
+      "file": "src/components/report/shared.tsx",
+      "sha256": "fb61876c223a1d6a2d77c7f2e4b31c4bdef4ba111d7fac43f58e598264568448"
+    },
+    {
+      "file": "src/components/value/LedgerTables.tsx",
+      "sha256": "4db72e5dd5b683b4df670d1096692c0093ef5c3b2b44b014e8405f93a48d8e6e"
+    },
+    {
+      "file": "src/components/value/Methodology.tsx",
+      "sha256": "2edbbd7fc34f76e91b96ca107d180c66c5ca3459c2ace7b0d156dfd661a480c1"
+    },
+    {
+      "file": "src/components/value/SupplyChainMap.tsx",
+      "sha256": "61f43afee780447df0b65324fdfbacfe4ffa12ee4bd2df34bf2cf4084ca06b39"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
-      "sha256": "7e63fdd6d0274e66fd8cc128634393c5c69b54313e182cbb85b96ad279838c55"
+      "sha256": "abad084b406f55881bad52fcc90b36aa008a0591a346a6ef83605e7347b8b0fb"
     },
     {
       "file": "src/core/report/display.ts",
-      "sha256": "2eb4f705cfc13914589988c41b34dada9d5e9672f00a8706ee176d63ac0dee9d"
+      "sha256": "165d68363adad3e7928cac5d62a4de863ea556799d8fd8a9b41900875636a130"
     },
     {
       "file": "src/core/domain/valuation.ts",
-      "sha256": "0b26a74466399407ff927f54a634b80bf85e456384ea301fab37e73bbd5563ef"
+      "sha256": "ddb1c41ffda06077bcfc91615b5451d1394ca619ca31e6b80836207acd18daa6"
     }
   ],
   "canonicalTerms": [
@@ -30,10 +82,12 @@
     },
     {
       "term": "Blocked",
-      "total": 10,
+      "total": 11,
       "files": {
         "src/popup.tsx": 4,
-        "src/tabs/report.tsx": 3,
+        "src/tabs/report.tsx": 2,
+        "src/components/report/EvidenceView.tsx": 1,
+        "src/components/report/ObservationTable.tsx": 1,
         "src/core/report/display.ts": 3
       }
     },
@@ -41,14 +95,14 @@
       "term": "Blocking changes",
       "total": 1,
       "files": {
-        "src/tabs/report.tsx": 1
+        "src/components/report/RemediationPanel.tsx": 1
       }
     },
     {
       "term": "Blocking does not change",
       "total": 1,
       "files": {
-        "src/tabs/report.tsx": 1
+        "src/components/report/RemediationPanel.tsx": 1
       }
     },
     {
@@ -75,30 +129,39 @@
       "term": "Estimated data value",
       "total": 1,
       "files": {
-        "src/tabs/report.tsx": 1
+        "src/components/report/ValuationSection.tsx": 1
       }
     },
     {
       "term": "Evidence",
-      "total": 36,
+      "total": 34,
       "files": {
         "src/popup.tsx": 1,
-        "src/tabs/report.tsx": 31,
-        "src/core/report/display.ts": 4
+        "src/tabs/report.tsx": 3,
+        "src/components/report/AiAuditPanel.tsx": 1,
+        "src/components/report/AuditBrief.tsx": 3,
+        "src/components/report/EvidenceAppendix.tsx": 12,
+        "src/components/report/EvidenceTimeline.tsx": 3,
+        "src/components/report/EvidenceView.tsx": 1,
+        "src/components/report/LocalStateView.tsx": 3,
+        "src/components/report/ObservationTable.tsx": 2,
+        "src/components/report/shared.tsx": 3,
+        "src/core/report/display.ts": 2
       }
     },
     {
       "term": "Evidence type",
       "total": 2,
       "files": {
-        "src/tabs/report.tsx": 2
+        "src/components/report/EvidenceAppendix.tsx": 1,
+        "src/components/report/ObservationTable.tsx": 1
       }
     },
     {
       "term": "Evidence types",
       "total": 2,
       "files": {
-        "src/tabs/report.tsx": 2
+        "src/components/report/EvidenceAppendix.tsx": 2
       }
     },
     {
@@ -111,7 +174,8 @@
       "total": 4,
       "files": {
         "src/tabs/report.tsx": 1,
-        "src/components/value/ValueLedgerView.tsx": 3
+        "src/components/value/Methodology.tsx": 1,
+        "src/components/value/ValueLedgerView.tsx": 2
       }
     },
     {
@@ -121,11 +185,18 @@
     },
     {
       "term": "Observations",
-      "total": 72,
+      "total": 42,
       "files": {
-        "src/tabs/report.tsx": 31,
-        "src/components/value/ValueLedgerView.tsx": 7,
-        "src/core/report/display.ts": 30,
+        "src/tabs/report.tsx": 1,
+        "src/components/report/EvidenceAppendix.tsx": 4,
+        "src/components/report/EvidenceTimeline.tsx": 3,
+        "src/components/report/EvidenceView.tsx": 7,
+        "src/components/report/LocalStateView.tsx": 7,
+        "src/components/report/ObservationTable.tsx": 5,
+        "src/components/report/RemediationPanel.tsx": 4,
+        "src/components/value/LedgerTables.tsx": 2,
+        "src/components/value/SupplyChainMap.tsx": 3,
+        "src/components/value/ValueLedgerView.tsx": 2,
         "src/core/domain/valuation.ts": 4
       }
     },
@@ -138,7 +209,9 @@
       "term": "Sites",
       "total": 10,
       "files": {
-        "src/components/value/ValueLedgerView.tsx": 9,
+        "src/components/value/LedgerTables.tsx": 2,
+        "src/components/value/SupplyChainMap.tsx": 3,
+        "src/components/value/ValueLedgerView.tsx": 4,
         "src/core/domain/valuation.ts": 1
       }
     },
@@ -151,7 +224,8 @@
       "term": "Stop at source",
       "total": 3,
       "files": {
-        "src/tabs/report.tsx": 2,
+        "src/components/report/EvidenceView.tsx": 1,
+        "src/components/report/RemediationPanel.tsx": 1,
         "src/core/report/display.ts": 1
       }
     },
@@ -159,41 +233,49 @@
       "term": "This period",
       "total": 6,
       "files": {
-        "src/components/value/ValueLedgerView.tsx": 6
+        "src/components/value/LedgerTables.tsx": 2,
+        "src/components/value/ValueLedgerView.tsx": 4
       }
     },
     {
       "term": "Trackers",
       "total": 20,
       "files": {
-        "src/tabs/report.tsx": 3,
-        "src/components/value/ValueLedgerView.tsx": 11,
+        "src/components/report/ObservationTable.tsx": 1,
+        "src/components/report/ValuationSection.tsx": 2,
+        "src/components/value/LedgerTables.tsx": 2,
+        "src/components/value/SupplyChainMap.tsx": 4,
+        "src/components/value/ValueLedgerView.tsx": 5,
         "src/core/domain/valuation.ts": 6
       }
     },
     {
       "term": "Value ledger",
-      "total": 8,
+      "total": 9,
       "files": {
         "src/popup.tsx": 1,
-        "src/tabs/report.tsx": 4,
-        "src/components/value/ValueLedgerView.tsx": 3
+        "src/tabs/report.tsx": 2,
+        "src/components/report/EvidenceView.tsx": 1,
+        "src/components/report/shared.tsx": 2,
+        "src/components/value/Methodology.tsx": 1,
+        "src/components/value/ValueLedgerView.tsx": 2
       }
     },
     {
       "term": "Visits",
       "total": 7,
       "files": {
-        "src/components/value/ValueLedgerView.tsx": 5,
+        "src/components/value/LedgerTables.tsx": 2,
+        "src/components/value/ValueLedgerView.tsx": 3,
         "src/core/report/display.ts": 2
       }
     },
     {
       "term": "Watching",
-      "total": 7,
+      "total": 6,
       "files": {
         "src/popup.tsx": 1,
-        "src/tabs/report.tsx": 4,
+        "src/components/report/EvidenceView.tsx": 3,
         "src/core/domain/valuation.ts": 2
       }
     },
@@ -287,31 +369,51 @@
   ],
   "topWords": [
     {
+      "word": "components",
+      "count": 69
+    },
+    {
       "word": "mt-",
-      "count": 51
+      "count": 61
     },
     {
       "word": "core",
-      "count": 37
+      "count": 56
     },
     {
-      "word": "cookie",
-      "count": 32
-    },
-    {
-      "word": "page",
-      "count": 31
+      "word": "report",
+      "count": 53
     },
     {
       "word": "gap-",
-      "count": 29
-    },
-    {
-      "word": "components",
-      "count": 28
+      "count": 39
     },
     {
       "word": "domain",
+      "count": 31
+    },
+    {
+      "word": "page",
+      "count": 30
+    },
+    {
+      "word": "failed",
+      "count": 29
+    },
+    {
+      "word": "system",
+      "count": 29
+    },
+    {
+      "word": "cookie",
+      "count": 25
+    },
+    {
+      "word": "flex",
+      "count": 23
+    },
+    {
+      "word": "not",
       "count": 23
     },
     {
@@ -319,59 +421,55 @@
       "count": 22
     },
     {
-      "word": "not",
-      "count": 22
+      "word": "flex-wrap",
+      "count": 21
+    },
+    {
+      "word": "grid",
+      "count": 21
+    },
+    {
+      "word": "grid-cols-",
+      "count": 21
     },
     {
       "word": "can",
       "count": 20
     },
     {
-      "word": "storage",
+      "word": "site",
       "count": 19
     },
     {
-      "word": "flex",
-      "count": 17
-    },
-    {
-      "word": "observed",
-      "count": 17
-    },
-    {
       "word": "border-border",
-      "count": 16
+      "count": 18
     },
     {
-      "word": "grid",
-      "count": 16
+      "word": "idle",
+      "count": 17
+    },
+    {
+      "word": "types",
+      "count": 17
     },
     {
       "word": "metadata",
       "count": 16
     },
     {
-      "word": "site",
+      "word": "tokens",
       "count": 16
-    },
-    {
-      "word": "flex-wrap",
-      "count": 15
-    },
-    {
-      "word": "grid-cols-",
-      "count": 15
-    },
-    {
-      "word": "report",
-      "count": 15
     },
     {
       "word": "data",
       "count": 14
     },
     {
-      "word": "failed",
+      "word": "display",
+      "count": 14
+    },
+    {
+      "word": "only",
       "count": 13
     },
     {
@@ -379,23 +477,27 @@
       "count": 13
     },
     {
-      "word": "seen",
+      "word": "font-display",
       "count": 12
     },
     {
-      "word": "cache",
-      "count": 11
-    },
-    {
-      "word": "font-display",
-      "count": 11
-    },
-    {
       "word": "font-semibold",
+      "count": 12
+    },
+    {
+      "word": "justify-between",
+      "count": 12
+    },
+    {
+      "word": "audit",
       "count": 11
     },
     {
-      "word": "only",
+      "word": "copied",
+      "count": 11
+    },
+    {
+      "word": "evidence",
       "count": 11
     },
     {
@@ -403,7 +505,11 @@
       "count": 11
     },
     {
-      "word": "system",
+      "word": "seen",
+      "count": 11
+    },
+    {
+      "word": "tab",
       "count": 11
     },
     {
@@ -415,19 +521,15 @@
       "count": 11
     },
     {
-      "word": "evidence",
-      "count": 10
-    },
-    {
       "word": "extension",
       "count": 10
     },
     {
-      "word": "idle",
+      "word": "observed",
       "count": 10
     },
     {
-      "word": "justify-between",
+      "word": "shared",
       "count": 10
     },
     {
@@ -451,16 +553,12 @@
       "count": 9
     },
     {
+      "word": "network",
+      "count": 9
+    },
+    {
       "word": "revenue",
       "count": 9
-    },
-    {
-      "word": "tab",
-      "count": 9
-    },
-    {
-      "word": "access",
-      "count": 8
     },
     {
       "word": "border",
@@ -471,35 +569,19 @@
       "count": 8
     },
     {
+      "word": "copy",
+      "count": 8
+    },
+    {
       "word": "identity",
       "count": 8
     },
     {
-      "word": "session",
-      "count": 8
-    },
-    {
-      "word": "update",
-      "count": 8
-    },
-    {
-      "word": "write",
+      "word": "secondary",
       "count": 8
     },
     {
       "word": "bg-background",
-      "count": 7
-    },
-    {
-      "word": "cookies",
-      "count": 7
-    },
-    {
-      "word": "copied",
-      "count": 7
-    },
-    {
-      "word": "httponly",
       "count": 7
     },
     {
@@ -511,15 +593,7 @@
       "count": 7
     },
     {
-      "word": "min-w-",
-      "count": 7
-    },
-    {
-      "word": "network",
-      "count": 7
-    },
-    {
-      "word": "recorded",
+      "word": "react",
       "count": 7
     },
     {
@@ -527,15 +601,15 @@
       "count": 7
     },
     {
-      "word": "secure",
-      "count": 7
-    },
-    {
       "word": "settings",
       "count": 7
     },
     {
-      "word": "state",
+      "word": "source",
+      "count": 7
+    },
+    {
+      "word": "text-base",
       "count": 7
     },
     {
@@ -547,15 +621,19 @@
       "count": 7
     },
     {
-      "word": "types",
-      "count": 7
-    },
-    {
       "word": "w-full",
       "count": 7
     },
     {
+      "word": "was",
+      "count": 7
+    },
+    {
       "word": "ai-audit",
+      "count": 6
+    },
+    {
+      "word": "available",
       "count": 6
     },
     {
@@ -567,7 +645,11 @@
       "count": 6
     },
     {
-      "word": "copy",
+      "word": "contracts",
+      "count": 6
+    },
+    {
+      "word": "cookies",
       "count": 6
     },
     {
@@ -579,7 +661,23 @@
       "count": 6
     },
     {
+      "word": "hooks",
+      "count": 6
+    },
+    {
+      "word": "items-center",
+      "count": 6
+    },
+    {
+      "word": "items-start",
+      "count": 6
+    },
+    {
       "word": "ledger",
+      "count": 6
+    },
+    {
+      "word": "min-w-",
       "count": 6
     },
     {
@@ -587,23 +685,7 @@
       "count": 6
     },
     {
-      "word": "secondary",
-      "count": 6
-    },
-    {
-      "word": "service",
-      "count": 6
-    },
-    {
-      "word": "source",
-      "count": 6
-    },
-    {
-      "word": "string",
-      "count": 6
-    },
-    {
-      "word": "surface",
+      "word": "running",
       "count": 6
     }
   ]

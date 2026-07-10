@@ -3,11 +3,13 @@ import browser from "webextension-polyfill"
 
 import { TYPE, UI } from "~components/system/tokens"
 import type { ConsentAuditRecord } from "~core/atlas/audit"
-import { reconcile, type ConsentAudit, type ReconciledClass } from "~core/atlas/reconcile"
-import { CATEGORY_BOOSTS, RUBRIC_VERSION, WEIGHTS } from "~core/atlas/scoring"
-import type { Giveup } from "~core/atlas/types"
-import { RuntimeMessageSchema } from "~core/contracts/schemas"
+import { reconcile, type ConsentAudit } from "~core/atlas/reconcile"
+import { RuntimeMessageSchema } from "~core/contracts/messages"
 import type { SiteSummary } from "~core/domain/types"
+
+import { ClauseCard, ObservedClassCard } from "~components/contract/ClauseCard"
+import ProvenanceFooter from "~components/contract/ProvenanceFooter"
+import SeverityMethodology from "~components/contract/SeverityMethodology"
 
 // Done vs. Declared (docs/consent-atlas-tab-spec.md): reconciles what this
 // page DID (the observed event stream) with what its own legal documents SAY
@@ -20,85 +22,10 @@ import type { SiteSummary } from "~core/domain/types"
 // mount, i.e. when the user selects the Contract view. Still user-initiated:
 // selecting the view IS the request to read the documents.
 
-const DOC_LABELS: Record<string, string> = {
-  privacy_policy: "Privacy policy",
-  terms_of_use: "Terms of use",
-  cookie_policy: "Cookie policy",
-  community_guidelines: "Community guidelines",
-  subscription_terms: "Subscription terms",
-}
-
 type AuditState =
   | { status: "loading" }
   | { status: "failed"; reason: "no_tab" | "restricted_page" | "anchor_harvest_failed" | "malformed" }
   | { status: "ready"; record: ConsentAuditRecord }
-
-function docLabel(docType: string): string {
-  return DOC_LABELS[docType] ?? docType
-}
-
-function ClauseQuote({ giveup }: { giveup: Giveup }) {
-  return (
-    <blockquote className="mt-2 border-l-2 border-border pl-3 font-mono text-xs leading-5 text-muted-foreground">
-      {giveup.source_quote}
-    </blockquote>
-  )
-}
-
-function ClauseCard({ giveup }: { giveup: Giveup }) {
-  return (
-    <div className={`${UI.subtlePanel} p-3`}>
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="text-sm font-semibold">{giveup.short_label}</p>
-        <a className={`${TYPE.mono} text-muted-foreground underline decoration-dotted hover:text-foreground`} href="#severity-method">
-          severity {giveup.scoring.score} / 100 · {docLabel(giveup.source_document)}
-        </a>
-      </div>
-      <p className={`${TYPE.small} mt-1`}>{giveup.plain_english_summary}</p>
-      <ClauseQuote giveup={giveup} />
-      <div className={`${TYPE.small} mt-2 flex flex-wrap items-center justify-between gap-2`}>
-        <span className="text-muted-foreground">{giveup.why_it_matters}</span>
-        {giveup.source_url ? (
-          <a className="underline hover:text-foreground" href={giveup.source_url} rel="noreferrer" target="_blank">
-            Read the clause in place →
-          </a>
-        ) : null}
-      </div>
-    </div>
-  )
-}
-
-function ObservedClassCard({ entry, onShowEvidence }: { entry: ReconciledClass; onShowEvidence: () => void }) {
-  return (
-    <div className={`${UI.subtlePanel} ${entry.status === "undeclared" ? "border-amber-700/60" : ""} p-3`}>
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="text-sm font-semibold">{entry.label}</p>
-        <span className={`${TYPE.mono} text-muted-foreground`}>
-          {entry.parties > 0 ? `${entry.parties} ${entry.parties === 1 ? "party" : "parties"} · ` : ""}
-          {entry.tier === "observed" ? "observed on this page" : "readable by every script here"}
-        </span>
-      </div>
-      {entry.status === "declared" ? (
-        <div className="mt-2 flex flex-col gap-2">
-          <p className={TYPE.small}>Their own documents claim this right. The clause:</p>
-          {entry.clauses.slice(0, 2).map((clause) => (
-            <ClauseCard giveup={clause} key={clause.id} />
-          ))}
-        </div>
-      ) : (
-        <p className={`${TYPE.small} mt-2`}>
-          No authorizing clause was found in the documents we read. That is a statement about our read, not proof the
-          contract is silent — but they did it, and we could not find where they told you.
-        </p>
-      )}
-      <p className={`${TYPE.small} mt-2`}>
-        <button className="underline hover:text-foreground" onClick={onShowEvidence} type="button">
-          See the observed evidence →
-        </button>
-      </p>
-    </div>
-  )
-}
 
 function ContractSectionTitle({ index, title }: { index: string; title: string }) {
   return (
@@ -120,99 +47,6 @@ function VerdictHeader({ audit, domain }: { audit: ConsentAudit; domain: string 
         <strong className="tabular-nums">{undeclared}</strong>, and reserve{" "}
         <strong className="tabular-nums">{dormant}</strong> further {dormant === 1 ? "power" : "powers"} you never saw
         exercised.
-      </p>
-    </section>
-  )
-}
-
-// Human-readable meaning for each severity factor. The numbers themselves are
-// imported from ~core/atlas/scoring — this section can never drift from the
-// math actually used, because it renders the same constants the scorer reads.
-const FACTOR_EXPLANATIONS: Array<{ key: keyof typeof WEIGHTS; label: string; meaning: string }> = [
-  { key: "surprise", label: "Surprise", meaning: "How unexpected this is to a reasonable person" },
-  { key: "data_sensitivity", label: "Data sensitivity", meaning: "How sensitive the data or rights implicated are" },
-  { key: "scope_or_sharing", label: "Scope / sharing", meaning: "How broadly it applies or spreads downstream" },
-  { key: "irreversibility", label: "Irreversibility", meaning: "Retention, permanence — whether it can be undone" },
-  { key: "remedy_or_economic", label: "Remedy / economic", meaning: "Lost legal remedies or economic lock-in" },
-  { key: "actionability_inverse", label: "Hard to avoid", meaning: "How difficult opting out actually is (inverse of actionability)" },
-]
-
-const BOOST_LABELS: Record<string, string> = {
-  biometric_or_sensitive: "Biometric / sensitive data",
-  arbitration_class_action_waiver: "Forced arbitration & class-action waiver",
-  jury_trial_waiver: "Jury trial waiver",
-  children_data: "Children's data",
-  content_license: "Broad content license",
-}
-
-function SeverityMethodology() {
-  return (
-    <section className={`mt-6 ${UI.panel} ${UI.reportInset}`} id="severity-method">
-      <h2 className={TYPE.label}>How severity is scored</h2>
-      <p className={`${TYPE.body} mt-2 max-w-3xl`}>
-        Every clause gets a deterministic 0–100 score — the same clause always scores the same, and no model or
-        judgment call is involved. Six factors, each rated 0–1, are combined with fixed weights, scaled to 100:
-      </p>
-      <div className="mt-3 divide-y divide-border">
-        {FACTOR_EXPLANATIONS.map((factor) => (
-          <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3 py-2 text-sm sm:grid-cols-[6rem_12rem_minmax(0,1fr)]" key={factor.key}>
-            <span className="font-mono tabular-nums">× {WEIGHTS[factor.key].toFixed(2)}</span>
-            <span className="font-semibold">{factor.label}</span>
-            <span className="text-muted-foreground max-sm:col-span-2">{factor.meaning}</span>
-          </div>
-        ))}
-      </div>
-      <p className={`${TYPE.body} mt-4 max-w-3xl`}>
-        Some clause types are alarming regardless of phrasing, so they add fixed points afterward (capped at 100):
-      </p>
-      <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1">
-        {Object.entries(CATEGORY_BOOSTS).map(([category, boost]) => (
-          <span className={`${TYPE.small} font-mono`} key={category}>
-            +{boost} {BOOST_LABELS[category] ?? category}
-          </span>
-        ))}
-      </div>
-      <p className={`${TYPE.small} mt-3`}>
-        Rubric {RUBRIC_VERSION} — identical to the Consumer Consent Atlas rubric, so a clause scores the same here and
-        there. Higher = more alarming to a reasonable person; this is a consumer-alarm score, not a corporate
-        legal-risk score.
-      </p>
-    </section>
-  )
-}
-
-function ProvenanceFooter({ record }: { record: ConsentAuditRecord }) {
-  return (
-    <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-      <h2 className={TYPE.label}>Documents read for this audit</h2>
-      <div className="mt-3 divide-y divide-border">
-        {record.documents.map((doc) => (
-          <div className="flex flex-wrap items-baseline justify-between gap-2 py-2 text-sm" key={doc.docType}>
-            <span>
-              <strong>{docLabel(doc.docType)}</strong>{" "}
-              {doc.fetchError ? (
-                <span className="text-danger">fetch failed ({doc.fetchError})</span>
-              ) : (
-                <a className="underline hover:text-foreground" href={doc.finalUrl} rel="noreferrer" target="_blank">
-                  {doc.finalUrl}
-                </a>
-              )}
-              {!doc.fetchError && doc.thinContent ? (
-                <span className="text-danger"> — no readable text (script-rendered page); excluded from detection</span>
-              ) : null}
-            </span>
-            <span className={`${TYPE.mono} text-muted-foreground`}>
-              {doc.lastUpdated ? `last updated ${doc.lastUpdated} · ` : ""}
-              {doc.textLength.toLocaleString()} chars · {doc.textHash || "no text"}
-            </span>
-          </div>
-        ))}
-      </div>
-      <p className={`${TYPE.small} mt-3`}>
-        Fetched now, at your request, from documents this page links to on its own domain — redirects may land on a
-        policy-center host, and the final address shown is where the text actually came from. Clause detection is
-        deterministic (rule set {record.giveups[0]?.ontology_version ?? "consent-dark-patterns-0.1.0"}); a clause we
-        did not find is reported as not found — never as not existing.
       </p>
     </section>
   )

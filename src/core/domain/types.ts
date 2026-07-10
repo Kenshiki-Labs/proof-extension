@@ -1,280 +1,116 @@
-import type { ConsentAuditRecord } from "~core/atlas/audit"
-import type { VisitFrequency } from "~core/domain/visit-frequency"
+import type * as z from "zod"
 
-export type BlockabilityClass =
-  | "network_blockable"
-  | "content_mitigatable"
-  | "observable_only"
-  | "pre_request_unblockable"
-  | "server_side_unblockable"
-  | "user_action_required"
+import type { RuntimeMessageSchema } from "~core/contracts/messages"
 
-export type ObservationStatus = "active" | "blocked" | "mitigated" | "cannot_block"
+import type {
+  BlockabilityClassSchema,
+  CookieMetadataScanResultSchema,
+  CookieValueInspectResultSchema,
+  DetectionConfidenceSchema,
+  EvidenceTierSchema,
+  FirstPartyPolicyLabelSchema,
+  MonetizationFlowSchema,
+  ObservationStatusSchema,
+  ObserverEventSchema,
+  PageErrorSchema,
+  RollingValuationItemSchema,
+  RollingValuationSummarySchema,
+  SiteSummarySchema,
+  SiteVisitLedgerEntrySchema,
+  TrackerPresenceLedgerEntrySchema,
+  UserSettingsSchema,
+  ValuationFlowRollupSchema,
+  ValuationLedgerSchema,
+  ValuationPeriodSchema,
+  ValuationSnapshotSchema
+} from "~core/contracts/schemas"
 
-export type DetectionConfidence = "confirmed" | "probable" | "weak"
+// Every runtime-validated shape is derived (z.infer) from its zod schema in
+// ~core/contracts/schemas — the schema is the single source of truth, and a
+// schema edit updates the type in the same commit or fails typecheck. Only
+// shapes with no schema (UnclassifiedGraphEdge and the derived aliases) are
+// declared by hand here. Imports are type-only, so this module stays free of
+// runtime dependencies.
 
-export type EvidenceTier = "observed" | "classified" | "attributed" | "explained" | "actionable"
+export type BlockabilityClass = z.infer<typeof BlockabilityClassSchema>
 
-export type FirstPartyPolicyLabel =
-  | "site_functionality"
-  | "security_or_fraud"
-  | "analytics"
-  | "fingerprinting"
-  | "behavioral_profiling"
-  | "unknown_first_party"
+export type ObservationStatus = z.infer<typeof ObservationStatusSchema>
 
-export type ObserverEvent = {
-  id: string
-  tabId: number
-  frameId?: number | undefined
-  origin: string
-  observedAt: number
-  source: "network" | "content" | "api-hook" | "extension-scan"
-  trackerId?: string | undefined
-  companyId?: string | undefined
-  firstParty: boolean
-  policyLabel?: FirstPartyPolicyLabel | undefined
-  eventType:
-    | "request_seen"
-    | "request_blocked"
-    | "script_injected"
-    // A vendor SDK global (window.fbq, window.FS, …) present in the page.
-    // Catches trackers whose network requests were cached, first-party
-    // proxied, or CNAME-cloaked and therefore invisible to request matching.
-    | "sdk_detected"
-    // Standardized consent/CMP APIs (IAB TCF, USP, GPP, Sourcepoint config)
-    // present in the page. These are not vendor SDK signatures: many CMPs
-    // expose the same API names, so this records privacy-signal plumbing
-    // without pretending to know the vendor unless separate evidence does.
-    | "consent_signal_observed"
-    // The extension reporting on itself (bridge ready, hooks installed, scan
-    // attempts) — never an observation of page behavior. Kept separate so
-    // script_injected stays reserved for real dynamic-script detection.
-    | "extension_diagnostic"
-    | "browser_surface"
-    | "canvas_read"
-    | "audio_fingerprint"
-    | "webgl_query"
-    | "font_enumeration"
-    | "identity_digest_observed"
-    | "cookie_sync"
-    // Persistence surfaces (JS-visible subset): metadata-only observations of
-    // storage the page wrote — names, sizes, timing; never values. The
-    // storage_respawn_suspected from the spec is deliberately absent until
-    // an emitter exists: a schema that accepts a type nothing emits is pure
-    // forgery surface.
-    | "cookie_observed"
-    | "storage_write"
-    | "indexeddb_access"
-    | "cache_storage_access"
-    | "service_worker_registered"
-    | "cache_validator_seen"
-    | "webrtc_probe"
-  blockability: BlockabilityClass
-  status: ObservationStatus
-  confidence: DetectionConfidence
-  evidenceTier?: EvidenceTier | undefined
-  evidence: string[]
-  // How many times this observation recurred; merged by upsertEvent when an
-  // event with the same id is recorded again. Absent means 1.
-  count?: number | undefined
-  details?: Record<string, string | number | boolean> | undefined
-}
+export type DetectionConfidence = z.infer<typeof DetectionConfidenceSchema>
+
+export type EvidenceTier = z.infer<typeof EvidenceTierSchema>
+
+export type FirstPartyPolicyLabel = z.infer<typeof FirstPartyPolicyLabelSchema>
+
+// The eventType union (and its documentation) lives on OBSERVER_EVENT_TYPES
+// in ~core/contracts/schemas.
+export type ObserverEvent = z.infer<typeof ObserverEventSchema>
 
 // A page-level uncaught error observed while this extension was active on
 // the tab. Correlation, not causation — the spec bans false certainty, and
 // attributing a page error to our own hooks vs. a pre-existing site bug is
 // not reliably knowable from a stack trace alone. The point is to never stay
 // silent if the page might have broken while we were running on it.
-export type PageError = {
-  id: string
-  observedAt: number
-  message: string
-  stackPreview?: string | undefined
-}
+export type PageError = z.infer<typeof PageErrorSchema>
 
-export type SiteSummary = {
-  origin: string
-  tabId: number
-  activeCompanies: string[]
-  blockedCompanies: string[]
-  mitigatedCompanies: string[]
-  exposedSignals: string[]
-  cannotBlockSignals: string[]
-  events: ObserverEvent[]
-  pageErrors: PageError[]
-  incomplete: boolean
-  updatedAt: number
-}
+export type SiteSummary = z.infer<typeof SiteSummarySchema>
 
-export type CookieMetadataScanStatus = "available" | "permission_required" | "unsupported" | "no_tab" | "restricted_page"
+export type CookieMetadataScanResult = z.infer<typeof CookieMetadataScanResultSchema>
 
-export type CookieMetadataScanResult = {
-  status: CookieMetadataScanStatus
-  events: ObserverEvent[]
-}
+export type CookieMetadataScanStatus = CookieMetadataScanResult["status"]
 
-export type CookieValueInspectEntry = {
-  domain: string
-  expirationDate?: number | undefined
-  httpOnly: boolean
-  name: string
-  path: string
-  sameSite: string
-  secure: boolean
-  session: boolean
-  value: string
-}
+export type CookieValueInspectResult = z.infer<typeof CookieValueInspectResultSchema>
 
-export type CookieValueInspectResult = {
-  status: CookieMetadataScanStatus
-  cookies: CookieValueInspectEntry[]
-}
+export type CookieValueInspectEntry = CookieValueInspectResult["cookies"][number]
 
-export type UserSettings = {
-  retentionDays: number
-  maxEventsPerTab: number
-  blockedTrackerIds: string[]
-  mitigateCanvas: boolean
-  mitigateAudio: boolean
-  mitigateWebgl: boolean
-  skipReportOpenConfirm: boolean
-  cookieMetadataEnabled: boolean
-  // The user's stated visit rate per registrable domain ("How often are you
-  // here?") — calibrates the annual value line. Absent domain = not asked yet.
-  siteVisitFrequency: Record<string, VisitFrequency>
-}
+// Includes siteVisitFrequency: the user's stated visit rate per registrable
+// domain ("How often are you here?") — calibrates the annual value line.
+// Absent domain = not asked yet.
+export type UserSettings = z.infer<typeof UserSettingsSchema>
 
-export type ValuationPeriod = "day" | "week" | "month" | "all"
+export type ValuationPeriod = z.infer<typeof ValuationPeriodSchema>
 
-export type MonetizationFlow = "platform_ads" | "programmatic" | "identity_infra" | "operator_saas"
+export type MonetizationFlow = z.infer<typeof MonetizationFlowSchema>
 
-export type ValuationSnapshot = {
-  sourceFindingIds: string[]
-  valueType: "revenue" | "cost"
-  monetizationFlow: MonetizationFlow
-  perVisitMicrodollars: number
-  annualLowUsd: number
-  annualHighUsd: number
-  confidence: "sourced" | "estimated"
-}
+export type ValuationSnapshot = z.infer<typeof ValuationSnapshotSchema>
 
-export type SiteVisitLedgerEntry = {
-  day: string
-  visitId: string
-  siteOrigin: string
-  firstVisitedAt: number
-  lastVisitedAt: number
-  visits: number
-}
+export type SiteVisitLedgerEntry = z.infer<typeof SiteVisitLedgerEntrySchema>
 
-export type TrackerPresenceLedgerEntry = {
-  day: string
-  visitId: string
-  siteOrigin: string
-  trackerId: string
-  companyId?: string | undefined
-  firstObservedAt: number
-  lastObservedAt: number
-  observations: number
-  pageVisitsWithTracker: number
-  valuation: ValuationSnapshot
-}
+export type TrackerPresenceLedgerEntry = z.infer<typeof TrackerPresenceLedgerEntrySchema>
 
-export type ValuationLedger = {
-  schemaVersion: 1
-  siteVisits: SiteVisitLedgerEntry[]
-  trackerPresence: TrackerPresenceLedgerEntry[]
-}
+export type ValuationLedger = z.infer<typeof ValuationLedgerSchema>
 
-export type RollingValuationItem = {
-  id: string
-  siteCount?: number | undefined
-  visitCount?: number | undefined
-  trackerCount?: number | undefined
-  observations: number
-  thisPeriodVisitUsd: number
-  annualLowUsd?: number | undefined
-  annualHighUsd?: number | undefined
-}
+export type RollingValuationItem = z.infer<typeof RollingValuationItemSchema>
 
-export type ValuationFlowRollup = {
-  flow: MonetizationFlow
-  trackerCount: number
-  observations: number
-  thisPeriodVisitUsd: number
-  annualLowUsd: number
-  annualHighUsd: number
-}
+export type ValuationFlowRollup = z.infer<typeof ValuationFlowRollupSchema>
+
+export type RollingValuationSummary = z.infer<typeof RollingValuationSummarySchema>
 
 // One site↔tracker connection in the selected period — the edge list that
 // powers the network graph. servesCategory colors the edge by who the
 // tracker actually serves.
-export type ValuationEdge = {
-  siteOrigin: string
-  trackerId: string
-  observations: number
-  thisPeriodVisitUsd: number
-  servesCategory: "you_and_the_site" | "the_site" | "advertisers_and_maybe_you" | "only_their_business"
-}
+export type ValuationEdge = RollingValuationSummary["edges"][number]
 
 // A site↔host connection the graph can show but cannot price or name — an
 // observed third party with no tracker-DB match. Kept as a separate type
 // (not a loosened ValuationEdge) because "unclassified" is a presentation
 // fact, not a valuation fact: it never carries a servesCategory or a price,
 // and must never be persisted into the valuation ledger as if it were one.
+// No schema exists for it — it is never parsed at a trust boundary — so it
+// stays hand-written.
 export type UnclassifiedGraphEdge = {
   siteOrigin: string
   host: string
   observations: number
 }
 
-export type RollingValuationSummary = {
-  period: ValuationPeriod
-  siteCount: number
-  visitCount: number
-  trackerCount: number
-  observations: number
-  thisPeriodVisitUsd: number
-  annualRevenueLowUsd: number
-  annualRevenueHighUsd: number
-  revenueTrackerCount: number
-  annualOperatorCostLowUsd: number
-  annualOperatorCostHighUsd: number
-  costTrackerCount: number
-  flowRollups: ValuationFlowRollup[]
-  topTrackers: RollingValuationItem[]
-  topSites: RollingValuationItem[]
-  edges: ValuationEdge[]
-  servesCounts: Record<ValuationEdge["servesCategory"], number>
-  onlyTheirBusinessAnnualLowUsd: number
-  onlyTheirBusinessAnnualHighUsd: number
-  disclaimer: string
-}
+type InferredRuntimeMessage = z.infer<typeof RuntimeMessageSchema>
 
+// Derived from the schema except for one member: UserSettingsSchema.partial()
+// infers `retentionDays?: number | undefined` (and friends), which
+// exactOptionalPropertyTypes treats as a wider shape than Partial<UserSettings>.
+// Consumers spread the payload over full settings, so the narrower Partial
+// contract is kept for UPDATE_SETTINGS.
 export type RuntimeMessage =
-  | { type: "OBSERVED_EVENT"; payload: ObserverEvent }
-  | { type: "PAGE_ERROR_OBSERVED"; payload: Omit<PageError, "id"> }
-  | { type: "GET_SITE_SUMMARY"; tabId: number }
-  | { type: "SITE_SUMMARY"; payload: SiteSummary }
-  | { type: "GET_COOKIE_METADATA_PERMISSION" }
-  | { type: "REQUEST_COOKIE_METADATA_PERMISSION" }
-  | { type: "COOKIE_METADATA_PERMISSION"; granted: boolean }
-  | { type: "SCAN_SITE_COOKIES"; tabId: number }
-  | { type: "COOKIE_METADATA_SCAN"; payload: CookieMetadataScanResult }
-  | { type: "INSPECT_SITE_COOKIE_VALUES"; tabId: number }
-  | { type: "COOKIE_VALUE_INSPECT"; payload: CookieValueInspectResult }
-  | { type: "GET_VALUATION_ROLLUP"; period: ValuationPeriod }
-  | { type: "VALUATION_ROLLUP"; payload: RollingValuationSummary }
-  | { type: "REFRESH_TAB_SCAN"; tabId: number }
-  | { type: "RUN_CONSENT_AUDIT"; tabId: number }
-  | { type: "CONSENT_AUDIT"; payload: ConsentAuditRecord }
-  | { type: "CONSENT_AUDIT_FAILED"; reason: "no_tab" | "restricted_page" | "anchor_harvest_failed" }
-  | { type: "GENERATE_AI_AUDIT_REPORT"; payload: { tabId: number; auditPayload: string } }
-  | { type: "AI_AUDIT_REPORT"; payload: { report: string } }
-  | { type: "AI_AUDIT_REPORT_FAILED"; error: string }
-  | { type: "GET_SETTINGS" }
-  | { type: "SETTINGS"; payload: UserSettings }
+  | Exclude<InferredRuntimeMessage, { type: "UPDATE_SETTINGS" }>
   | { type: "UPDATE_SETTINGS"; payload: Partial<UserSettings> }
-  | { type: "CLEAR_VALUATION_LEDGER" }
-  | { type: "CLEAR_LOCAL_DATA" }

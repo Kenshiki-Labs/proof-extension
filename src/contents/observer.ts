@@ -1,7 +1,8 @@
+import { RuntimeMessageSchema } from "~core/contracts/messages"
 import browser from "webextension-polyfill"
 import type { PlasmoCSConfig } from "plasmo"
 
-import { ObserverEventSchema, PageErrorSchema, RuntimeMessageSchema } from "~core/contracts/schemas"
+import { ObserverEventSchema, PageErrorSchema } from "~core/contracts/schemas"
 import { collectBrowserSurfaceExposure } from "~core/signals/browser-surface"
 import type { ObserverEvent } from "~core/domain/types"
 
@@ -100,9 +101,11 @@ function emitBridgeReady() {
 }
 
 async function syncSettingsToPage() {
-  const response = await browser.runtime.sendMessage({ type: "GET_SETTINGS" })
+  // Content scripts get the narrow settings view only — full GET_SETTINGS is
+  // reserved for extension pages by the router's sender gate.
+  const response = await browser.runtime.sendMessage({ type: "GET_CONTENT_SCRIPT_SETTINGS" })
   const parsed = RuntimeMessageSchema.safeParse(response)
-  if (!parsed.success || parsed.data.type !== "SETTINGS") return
+  if (!parsed.success || parsed.data.type !== "CONTENT_SCRIPT_SETTINGS") return
 
   document.documentElement.dataset.proofExtensionMitigateCanvas = String(parsed.data.payload.mitigateCanvas)
   for (const event of collectBrowserSurfaceExposure(location.origin)) emit(event)
