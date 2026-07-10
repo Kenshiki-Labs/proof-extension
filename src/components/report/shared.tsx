@@ -19,9 +19,9 @@ export function reportTabId(): number | null {
 }
 
 const FOOTER_LINKS = [
-  { label: "About", href: "https://kenshiki.ai/about" },
-  { label: "Privacy", href: "https://kenshiki.ai/privacy" },
-  { label: "TOS", href: "https://kenshiki.ai/terms" }
+  { label: "About", href: "https://kenshikilabs.com" },
+  { label: "Privacy", href: "https://proofyouarehuman.com/privacy" },
+  { label: "TOS", href: "https://proofyouarehuman.com/terms" }
 ] as const
 
 // The one Metric tile — the report and the value ledger render the same
