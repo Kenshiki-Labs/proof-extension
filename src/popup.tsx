@@ -237,8 +237,10 @@ function IndexPopup() {
     }
   }
 
+  // 600px is Chrome's hard cap on popup height (800×600 max) — taller would
+  // be clamped and grow a second, outer scrollbar.
   return (
-    <main className="h-[400px] w-[640px] overflow-y-auto bg-background p-4 font-body text-foreground">
+    <main className="h-[600px] w-[640px] overflow-y-auto bg-background p-4 font-body text-foreground">
       <header className={`${UI.panel} ${UI.inset} flex items-start justify-between gap-3`}>
         <SiteLogo textClass="text-base" sublabel="Pulse Observer" />
         <HeaderIconButton label="Open value ledger" onClick={() => openValueLedger().catch(() => undefined)}>
