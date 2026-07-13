@@ -100,6 +100,18 @@ function emitBridgeReady() {
   })
 }
 
+// The MAIN world reads these flags to know whether an opt-in feature is on.
+// Write the attribute ONLY when the setting is enabled — an absent attribute
+// means "off". Writing "false" on every page would broadcast, to any site,
+// both that the extension is installed and which toggles the user set: an
+// extension-detection and fingerprinting bit that contradicts the promise
+// that installing changes nothing a site can read. With everything off, the
+// page sees no proof-extension attributes at all.
+function syncPageFlag(flag: "proofExtensionMitigateCanvas" | "proofExtensionGpc", enabled: boolean) {
+  if (enabled) document.documentElement.dataset[flag] = "true"
+  else delete document.documentElement.dataset[flag]
+}
+
 async function syncSettingsToPage() {
   // Content scripts get the narrow settings view only — full GET_SETTINGS is
   // reserved for extension pages by the router's sender gate.
@@ -107,8 +119,8 @@ async function syncSettingsToPage() {
   const parsed = RuntimeMessageSchema.safeParse(response)
   if (!parsed.success || parsed.data.type !== "CONTENT_SCRIPT_SETTINGS") return
 
-  document.documentElement.dataset.proofExtensionMitigateCanvas = String(parsed.data.payload.mitigateCanvas)
-  document.documentElement.dataset.proofExtensionGpc = String(parsed.data.payload.gpcEnabled)
+  syncPageFlag("proofExtensionMitigateCanvas", parsed.data.payload.mitigateCanvas)
+  syncPageFlag("proofExtensionGpc", parsed.data.payload.gpcEnabled)
   for (const event of collectBrowserSurfaceExposure(location.origin)) emit(event)
 }
 

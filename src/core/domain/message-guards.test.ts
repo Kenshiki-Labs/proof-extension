@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent } from "~core/domain/types"
-import { untrustedObservedEventReason } from "./message-guards"
+import { stripPageSuppliedAttribution, untrustedObservedEventReason } from "./message-guards"
 
 function event(overrides: Partial<ObserverEvent> = {}): ObserverEvent {
   return {
@@ -43,7 +43,33 @@ describe("untrustedObservedEventReason", () => {
     expect(untrustedObservedEventReason(event({ eventType: "canvas_read", status: "blocked" }))).toBe("blocked_status_reserved")
   })
 
-  it("still allows mitigated status for future content mitigation hooks", () => {
+  it("allows mitigated status only for canvas_read, whose normalizer re-derives it from settings", () => {
     expect(untrustedObservedEventReason(event({ eventType: "canvas_read", status: "mitigated", source: "api-hook" }))).toBeNull()
+  })
+
+  it("rejects a forged mitigated status on any event type the background does not re-derive", () => {
+    // A hostile page marking an observation "mitigated" would otherwise land
+    // in mitigatedCompanies and claim protection that never happened.
+    for (const eventType of ["webgl_query", "font_enumeration", "audio_fingerprint", "webrtc_probe", "sdk_detected"] as const) {
+      expect(untrustedObservedEventReason(event({ eventType, status: "mitigated", source: "api-hook" }))).toBe(
+        "mitigated_status_reserved"
+      )
+    }
+  })
+})
+
+describe("stripPageSuppliedAttribution", () => {
+  it("clears trackerId and companyId a page tried to inject", () => {
+    const forged = event({ eventType: "webgl_query", trackerId: "google-analytics", companyId: "google", confidence: "confirmed" })
+    const stripped = stripPageSuppliedAttribution(forged)
+    expect(stripped.trackerId).toBeUndefined()
+    expect(stripped.companyId).toBeUndefined()
+    // Everything else is left for the normalizers to decide.
+    expect(stripped.confidence).toBe("confirmed")
+  })
+
+  it("returns the same object when there is nothing to strip", () => {
+    const clean = event({ eventType: "storage_write" })
+    expect(stripPageSuppliedAttribution(clean)).toBe(clean)
   })
 })

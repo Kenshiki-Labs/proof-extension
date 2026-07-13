@@ -1,5 +1,5 @@
 import { formatBits, formatCandidates, POPULATION_BASE, type NarrowingModel } from "~core/report/narrowing"
-import { joinTraits, portraitCloser, portraitTraits } from "~core/report/portrait"
+import { joinTraits, portraitCloser, portraitTraits, zoneLabel } from "~core/report/portrait"
 import { TYPE, UI } from "~components/system/tokens"
 
 function compactPopulation(value: number) {
@@ -7,14 +7,15 @@ function compactPopulation(value: number) {
 }
 
 // The one location signal the popup can state with ZERO egress: the device's
-// own IANA timezone (e.g. "America/Los_Angeles"). Crucially this is a ZONE, not
-// a city — "America/Los_Angeles" is the identifier for all of US Pacific time
-// (WA, OR, CA), so it must NOT be rendered as "you're in Los Angeles". It's the
-// honest tease for the real city, which comes from MaxMind IP geolocation in
-// the report, behind the one deliberate, disclosed network call.
-function deviceTimezone(model: NarrowingModel): string | null {
+// own IANA timezone. Crucially this is a ZONE, not a city — "America/Los_Angeles"
+// is the identifier for all of US Pacific time (WA, OR, CA), so it must NOT be
+// rendered as "you're in Los Angeles". It's the honest tease for the real city,
+// which comes from MaxMind IP geolocation in the report, behind the one
+// deliberate, disclosed network call. Rendered through zoneLabel so even an
+// unmapped zone shows a city-free label (its UTC offset), never the raw id.
+function deviceTimezoneLabel(model: NarrowingModel): string | null {
   const timezone = model.steps.find((step) => step.key === "timezone")?.detail
-  return timezone && timezone.length > 0 ? timezone : null
+  return timezone && timezone.length > 0 ? zoneLabel(timezone) : null
 }
 
 // The mirror performs the product thesis — "the internet met your digital
@@ -26,7 +27,7 @@ function deviceTimezone(model: NarrowingModel): string | null {
 export function NarrowingMirror({ model }: { model: NarrowingModel }) {
   if (model.values.length === 0) return null
 
-  const timezone = deviceTimezone(model)
+  const timezoneLabel = deviceTimezoneLabel(model)
   const traits = portraitTraits(model.steps)
 
   return (
@@ -43,9 +44,9 @@ export function NarrowingMirror({ model }: { model: NarrowingModel }) {
           </p>
         </>
       ) : null}
-      {timezone ? (
+      {timezoneLabel ? (
         <p className={`${TYPE.small} mt-2`}>
-          So far, location is only your device's own clock — <strong>{timezone}</strong>, a whole time zone. Your IP narrows that to a city on a map. The full report shows you that meeting too.
+          So far, location is only your device's own clock, set to <strong>{timezoneLabel}</strong>. Your IP narrows that to a city on a map. The full report shows you that meeting too.
         </p>
       ) : null}
       <details className="mt-2">

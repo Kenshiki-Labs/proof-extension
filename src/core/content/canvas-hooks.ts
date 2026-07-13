@@ -79,12 +79,16 @@ type Context2DPrototypeLike = {
 // altered. Uses the pre-wrap getImageData so the copy itself is not
 // double-noised or re-reported. Returns null when a faithful noised copy is
 // impossible (zero-size, no 2d context) — callers must then fall back to
-// the original, unnoised read rather than break or blank the export.
+// the original, unnoised read rather than break or blank the export. The
+// returned `touched` count is how the caller decides whether it may claim
+// mitigation: at a 1-in-64 flip rate, a read smaller than ~64 pixels can
+// yield a byte-identical copy, and reporting that as "mitigated" would be a
+// forged protection claim — the one thing this extension must never do.
 function noisedCanvasCopy(
   canvas: CanvasLike,
   originalGetImageData: Context2DPrototypeLike["getImageData"],
   seed: number
-): CanvasLike | null {
+): { copy: CanvasLike; touched: number } | null {
   const { width, height } = canvas
   if (!width || !height || !canvas.ownerDocument) return null
 
@@ -101,9 +105,9 @@ function noisedCanvasCopy(
   // toDataURL would have thrown. The caller's catch delegates to the
   // original so the page sees the error it expects, not ours.
   const imageData = Reflect.apply(originalGetImageData, context, [0, 0, width, height])
-  applyCanvasNoise(imageData.data, seed)
+  const touched = applyCanvasNoise(imageData.data, seed)
   context.putImageData(imageData, 0, 0)
-  return copy
+  return { copy, touched }
 }
 
 export function installCanvasElementReadHooks(
@@ -124,10 +128,10 @@ export function installCanvasElementReadHooks(
   const wrapExport = (method: "toDataURL" | "toBlob") => {
     const original = canvasPrototype[method]
     canvasPrototype[method] = function (this: CanvasLike, ...args: unknown[]) {
-      let noisedCopy: CanvasLike | null = null
+      let noised: { copy: CanvasLike; touched: number } | null = null
       if (isMitigationEnabled()) {
         try {
-          noisedCopy = noisedCanvasCopy(this, originalGetImageData, seed)
+          noised = noisedCanvasCopy(this, originalGetImageData, seed)
         } catch {
           // Fall through to the original, unnoised read — and report it as
           // unmitigated, because it was.
@@ -136,13 +140,16 @@ export function installCanvasElementReadHooks(
       try {
         report({
           api: method,
-          mitigated: noisedCopy !== null,
+          // Only claim mitigation when noise actually changed a pixel; a
+          // byte-identical copy (too small to hit the flip rate) is reported
+          // honestly as unmitigated.
+          mitigated: (noised?.touched ?? 0) > 0,
           details: { api: method, width: this.width ?? 0, height: this.height ?? 0 }
         })
       } catch {
         /* never let observation break the page's canvas call */
       }
-      return Reflect.apply(original, noisedCopy ?? this, args)
+      return Reflect.apply(original, noised?.copy ?? this, args)
     }
   }
 
@@ -151,18 +158,18 @@ export function installCanvasElementReadHooks(
 
   context2dPrototype.getImageData = function (this: unknown, ...args: unknown[]) {
     const result = Reflect.apply(originalGetImageData, this, args)
-    let mitigated = false
+    let touched = 0
     if (isMitigationEnabled()) {
       try {
-        applyCanvasNoise(result.data, seed)
-        mitigated = true
+        touched = applyCanvasNoise(result.data, seed)
       } catch {
         /* unnoised result is returned and reported as such */
       }
     }
     try {
       const region = result.data ? result.data.length >> 2 : 0
-      report({ api: "getImageData", mitigated, details: { api: "getImageData", pixels: region } })
+      // mitigated only when a pixel actually changed — see wrapExport.
+      report({ api: "getImageData", mitigated: touched > 0, details: { api: "getImageData", pixels: region } })
     } catch {
       /* never let observation break the page's canvas call */
     }

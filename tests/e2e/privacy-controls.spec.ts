@@ -81,11 +81,20 @@ async function waitForGpcRuleInstalled(worker: Worker, installed: boolean) {
     .toBe(installed)
 }
 
-async function waitForSyncedFlag(page: Page, datasetKey: string, value: string) {
+// The flag attribute exists only when the setting is on; "off" is the
+// attribute being absent (not the string "false"), so a page with everything
+// off sees no proof-extension attributes at all.
+async function waitForSyncedFlag(page: Page, datasetKey: string, enabled: boolean) {
   await page.waitForFunction(
-    ([key, expected]) => document.documentElement.dataset[key] === expected,
-    [datasetKey, value] as [string, string],
+    ([key, on]) => (document.documentElement.dataset[key] === "true") === on,
+    [datasetKey, enabled] as [string, boolean],
     { timeout: 15_000 }
+  )
+}
+
+async function pageHasProofExtensionAttributes(page: Page): Promise<boolean> {
+  return page.evaluate(() =>
+    Array.from(document.documentElement.attributes).some((attr) => attr.name.startsWith("data-proof-extension"))
   )
 }
 
@@ -122,7 +131,7 @@ test("canvas mitigation noises exports only after opt-in, stably within a sessio
       // Default off: the export must be byte-identical to what the page drew.
       const page = await context.newPage()
       await page.goto(`${baseUrl}/`)
-      await waitForSyncedFlag(page, "proofExtensionMitigateCanvas", "false")
+      await waitForSyncedFlag(page, "proofExtensionMitigateCanvas", false)
       const unmitigated = await page.evaluate(() => (window as never as { readCanvas: () => string }).readCanvas())
       const unmitigatedRepeat = await page.evaluate(() => (window as never as { readCanvas: () => string }).readCanvas())
       expect(unmitigatedRepeat).toBe(unmitigated)
@@ -131,7 +140,7 @@ test("canvas mitigation noises exports only after opt-in, stably within a sessio
       await waitForStoredSetting(worker, "mitigateCanvas", true)
 
       await page.reload()
-      await waitForSyncedFlag(page, "proofExtensionMitigateCanvas", "true")
+      await waitForSyncedFlag(page, "proofExtensionMitigateCanvas", true)
       const mitigated = await page.evaluate(() => (window as never as { readCanvas: () => string }).readCanvas())
       const mitigatedRepeat = await page.evaluate(() => (window as never as { readCanvas: () => string }).readCanvas())
 
@@ -159,9 +168,12 @@ test("GPC is silent by default and, once opted in, appears on the wire and on na
       // installing the extension never changes what a site receives.
       const page = await context.newPage()
       await page.goto(`${baseUrl}/`)
-      await waitForSyncedFlag(page, "proofExtensionGpc", "false")
+      await waitForSyncedFlag(page, "proofExtensionGpc", false)
       expect(seenGpcHeaders.every((header) => header === null)).toBe(true)
       expect(await page.evaluate(() => "globalPrivacyControl" in navigator)).toBe(false)
+      // With every toggle off, the page must see NO proof-extension marker at
+      // all — not even a "false" flag that would out the extension's presence.
+      expect(await pageHasProofExtensionAttributes(page)).toBe(false)
 
       await setOptionsToggle(context, extensionId, "send Global Privacy Control", true)
       await waitForStoredSetting(worker, "gpcEnabled", true)
@@ -169,7 +181,7 @@ test("GPC is silent by default and, once opted in, appears on the wire and on na
 
       const requestsBeforeEnabledReload = seenGpcHeaders.length
       await page.reload()
-      await waitForSyncedFlag(page, "proofExtensionGpc", "true")
+      await waitForSyncedFlag(page, "proofExtensionGpc", true)
       const enabledPhase = seenGpcHeaders.slice(requestsBeforeEnabledReload)
       expect(enabledPhase.length).toBeGreaterThan(0)
       expect(enabledPhase.every((header) => header === "1")).toBe(true)
@@ -185,7 +197,7 @@ test("GPC is silent by default and, once opted in, appears on the wire and on na
 
       const requestsBeforeDisabledReload = seenGpcHeaders.length
       await page.reload()
-      await waitForSyncedFlag(page, "proofExtensionGpc", "false")
+      await waitForSyncedFlag(page, "proofExtensionGpc", false)
       const disabledPhase = seenGpcHeaders.slice(requestsBeforeDisabledReload)
       expect(disabledPhase.length).toBeGreaterThan(0)
       expect(disabledPhase.every((header) => header === null)).toBe(true)

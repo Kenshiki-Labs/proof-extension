@@ -36,9 +36,19 @@ describe("portraitTraits", () => {
     ])
   })
 
-  it("never renders a timezone as a city: unmapped zones keep their IANA id", () => {
-    expect(portraitTraits(stepsFor([{ key: "timezone", detail: "Europe/Berlin" }]))).toEqual([
-      "live in the Europe/Berlin time zone"
+  it("never renders a timezone as a city: unmapped zones fall back to a city-free UTC offset", () => {
+    const [trait] = portraitTraits(stepsFor([{ key: "timezone", detail: "Europe/Berlin" }]))
+    // The exact offset is DST-dependent, but it must never contain the IANA
+    // id (and its city name) and must read as a zone.
+    expect(trait).not.toContain("Berlin")
+    expect(trait).not.toContain("/")
+    expect(trait).toMatch(/^live in the UTC[+−]\d/)
+    expect(trait).toContain("time zone")
+  })
+
+  it("degrades to a generic city-free phrase when the zone has no derivable offset", () => {
+    expect(portraitTraits(stepsFor([{ key: "timezone", detail: "Not/AZone" }]))).toEqual([
+      "live in your device's local time zone"
     ])
   })
 

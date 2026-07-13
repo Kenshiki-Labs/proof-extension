@@ -11,7 +11,9 @@ import type { NarrowingStep } from "~core/domain/identity-entropy"
 // IANA zone → colloquial zone name. Zone-level on purpose: the honesty rule
 // on this surface is that a timezone must NEVER be rendered as a city
 // ("America/Los_Angeles" is all of US Pacific). Only unambiguous zone-wide
-// names belong here; anything unmapped keeps its IANA id.
+// names belong here; anything unmapped falls back to its UTC offset (also
+// zone-level, also city-free) via zoneLabel — never the raw IANA id, whose
+// "America/Detroit" would surface the very city name this table avoids.
 const ZONE_NAMES: Record<string, string> = {
   "America/Los_Angeles": "US Pacific time",
   "America/Denver": "US Mountain time",
@@ -20,6 +22,30 @@ const ZONE_NAMES: Record<string, string> = {
   "America/New_York": "US Eastern time",
   "America/Anchorage": "Alaska time",
   "Pacific/Honolulu": "Hawaii time"
+}
+
+// The current UTC offset of an IANA zone as a city-free label ("UTC−5"),
+// derived without hardcoding so any zone on earth degrades to an honest,
+// zone-level phrasing instead of leaking its city. DST-dependent by nature;
+// that's fine — it's a tease for the real location, not a precise claim.
+function utcOffsetLabel(timeZone: string): string | null {
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "shortOffset" }).formatToParts(new Date())
+    const name = parts.find((part) => part.type === "timeZoneName")?.value
+    if (name && /GMT|UTC/.test(name)) return name.replace("GMT", "UTC").replace("-", "−")
+  } catch {
+    /* invalid zone, or a runtime without shortOffset support */
+  }
+  return null
+}
+
+// The zone label shared by the portrait trait and the panel's IP tease, so
+// both read the same and neither ever prints the raw IANA id.
+export function zoneLabel(detail: string): string {
+  const named = ZONE_NAMES[detail]
+  if (named) return named
+  const offset = utcOffsetLabel(detail)
+  return offset ? `the ${offset} time zone` : "your device's local time zone"
 }
 
 const PLATFORM_NAMES: Record<string, string> = {
@@ -57,8 +83,9 @@ function languageName(tag: string): string {
 // Traits are second-person clauses completing "You …" — the mirror talks TO
 // the person it describes, not about a specimen.
 function timezoneTrait(detail: string): string {
-  const zone = ZONE_NAMES[detail]
-  return zone ? `live on ${zone}` : `live in the ${detail} time zone`
+  // Named zones read with "on" (live on US Pacific time); the offset and
+  // generic fallbacks read with "in" (live in the UTC−5 time zone).
+  return ZONE_NAMES[detail] ? `live on ${zoneLabel(detail)}` : `live in ${zoneLabel(detail)}`
 }
 
 function screenTrait(detail: string): string {

@@ -2,7 +2,7 @@ import browser from "webextension-polyfill"
 import type { Runtime } from "webextension-polyfill"
 
 import { RuntimeMessageSchema } from "~core/contracts/messages"
-import { untrustedObservedEventReason } from "~core/domain/message-guards"
+import { stripPageSuppliedAttribution, untrustedObservedEventReason } from "~core/domain/message-guards"
 import type {
   ObserverEvent,
   PageError,
@@ -70,7 +70,14 @@ export function createRuntimeMessageRouter(deps: RuntimeMessageRouterDeps) {
       await deps.ensureHydrated()
 
       if (message.type === "OBSERVED_EVENT") {
-        const event = { ...message.payload, tabId: sender.tab?.id ?? message.payload.tabId } as ObserverEvent
+        // tabId comes from the authenticated sender, not the payload, so a
+        // page cannot target another tab. Attribution is stripped before any
+        // downstream handling — the background is the only authority on which
+        // company an observation names.
+        const event = stripPageSuppliedAttribution({
+          ...message.payload,
+          tabId: sender.tab?.id ?? message.payload.tabId
+        } as ObserverEvent)
         if (!originMatchesSender(event, sender)) return { ok: false, error: "origin_mismatch" }
 
         const untrustedReason = untrustedObservedEventReason(event)

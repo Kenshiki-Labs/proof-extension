@@ -35,13 +35,21 @@ describe("applyCanvasNoise", () => {
       else expect([200, 201]).toContain(data[i])
     }
   })
+
+  it("returns 0 and mutates nothing when a read is too small to hit the flip rate", () => {
+    // seed 0 on a single pixel: (1*K ^ 0) & 63 = 49 != 0, so no flip.
+    const data = pixels(1, 100)
+    const before = Array.from(data)
+    expect(applyCanvasNoise(data, 0)).toBe(0)
+    expect(Array.from(data)).toEqual(before)
+  })
 })
 
 type StubImageData = { data: Uint8ClampedArray }
 
-function makeStubWorld() {
+function makeStubWorld(pixelCount = 4096) {
   const observations: CanvasReadObservation[] = []
-  const source = pixels(4096, 100)
+  const source = pixels(pixelCount, 100)
 
   const makeContext = (backing: Uint8ClampedArray) => ({
     drawImage: (from: { backing: Uint8ClampedArray }) => backing.set(from.backing),
@@ -160,6 +168,43 @@ describe("installCanvasElementReadHooks", () => {
       mitigated: true,
       details: { api: "getImageData", pixels: 4096 }
     })
+  })
+
+  it("does not claim mitigation for an export too small to be noised, and leaves output identical", () => {
+    // seed 0 + a 1-pixel canvas flips nothing; the honest report is
+    // mitigated:false and the exported bytes must match the original exactly.
+    const world = makeStubWorld(1)
+    installCanvasElementReadHooks(
+      (observation) => world.observations.push(observation),
+      () => true,
+      0,
+      world.canvasPrototype as never,
+      world.context2dPrototype as never
+    )
+
+    const canvas = world.makeCanvas(world.source)
+    const exported = world.canvasPrototype.toDataURL.call(canvas as never)
+
+    expect(exported).toBe(Array.from(world.source).join(","))
+    expect(world.observations[0]).toMatchObject({ api: "toDataURL", mitigated: false })
+  })
+
+  it("does not claim mitigation for a getImageData read too small to be noised", () => {
+    const world = makeStubWorld()
+    installCanvasElementReadHooks(
+      (observation) => world.observations.push(observation),
+      () => true,
+      0,
+      world.canvasPrototype as never,
+      world.context2dPrototype as never
+    )
+
+    const backing = pixels(1, 100)
+    const context = { getImageData: () => ({ data: backing }) }
+    const result = world.context2dPrototype.getImageData.call(context as never) as StubImageData
+
+    expect(Array.from(result.data)).toEqual(Array.from(pixels(1, 100)))
+    expect(world.observations[0]).toMatchObject({ api: "getImageData", mitigated: false, details: { pixels: 1 } })
   })
 
   it("never lets a reporter crash break the page's canvas call", () => {

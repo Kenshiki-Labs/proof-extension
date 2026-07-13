@@ -238,13 +238,22 @@ function installGpcSignal() {
   const enabled = () => document.documentElement.dataset.proofExtensionGpc === "true"
   let defined = false
 
-  const defineIfEnabled = () => {
+  const observer = new MutationObserver(() => defineIfEnabled())
+
+  function defineIfEnabled() {
     if (defined || !enabled()) return
     defined = true
+    // Once defined the getter reads the live flag, so the observer's job is
+    // done — disconnect it rather than watch the attribute for the life of
+    // the frame.
+    observer.disconnect()
     try {
       Object.defineProperty(Navigator.prototype, "globalPrivacyControl", {
         configurable: true,
-        enumerable: true,
+        // Non-enumerable, matching every native Navigator accessor: an
+        // enumerable property would let a page distinguish this injected
+        // signal from a browser-native GPC and so fingerprint the extension.
+        enumerable: false,
         get() {
           return document.documentElement.dataset.proofExtensionGpc === "true"
         }
@@ -255,7 +264,7 @@ function installGpcSignal() {
   }
 
   defineIfEnabled()
-  new MutationObserver(defineIfEnabled).observe(document.documentElement, {
+  observer.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ["data-proof-extension-gpc"]
   })

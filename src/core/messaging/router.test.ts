@@ -129,6 +129,37 @@ describe("createRuntimeMessageRouter", () => {
     expect(deps.recordObservedEvent).not.toHaveBeenCalled()
   })
 
+  it("rejects an OBSERVED_EVENT forging a mitigated status the background does not re-derive", async () => {
+    const deps = makeDeps()
+    const route = createRuntimeMessageRouter(deps)
+
+    await expect(
+      route(
+        { type: "OBSERVED_EVENT", payload: trustedObservedEvent({ eventType: "webgl_query", status: "mitigated" }) },
+        WEB_PAGE_SENDER
+      )
+    ).resolves.toEqual({ ok: false, error: "mitigated_status_reserved" })
+    expect(deps.recordObservedEvent).not.toHaveBeenCalled()
+  })
+
+  it("strips page-supplied tracker/company attribution before recording", async () => {
+    const deps = makeDeps()
+    const route = createRuntimeMessageRouter(deps)
+
+    await expect(
+      route(
+        {
+          type: "OBSERVED_EVENT",
+          payload: trustedObservedEvent({ eventType: "webgl_query", trackerId: "google-analytics", companyId: "google" })
+        },
+        WEB_PAGE_SENDER
+      )
+    ).resolves.toEqual({ ok: true })
+    expect(deps.recordObservedEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ trackerId: undefined, companyId: undefined })
+    )
+  })
+
   it("records PAGE_ERROR_OBSERVED against the sender tab and rejects it without one", async () => {
     const deps = makeDeps()
     const route = createRuntimeMessageRouter(deps)
