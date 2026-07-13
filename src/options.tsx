@@ -181,7 +181,7 @@ function OptionsPage() {
           checked={settings.mitigateCanvas}
           onChange={(checked) => updateSettings({ mitigateCanvas: checked })}
           label="mitigate canvas"
-          note="Answers canvas pixel reads with invisible per-session noise. This makes your canvas fingerprint unstable across sessions — different, not invisible: sites can detect that a fingerprint is randomized. May subtly affect canvas-based image tools. Applies to pages loaded from now on."
+          note="Answers 2D-canvas pixel reads (toDataURL, toBlob, getImageData) with invisible per-session noise, so that fingerprint is unstable across sessions — different, not invisible: sites can still detect that a fingerprint is randomized. Does not cover OffscreenCanvas or WebGL readbacks. May subtly affect canvas-based image tools. Applies to pages loaded from now on."
         />
         {/* Audio and WebGL hooks currently observe only — no code constrains
             their API results yet. A toggle that changes nothing would imply
