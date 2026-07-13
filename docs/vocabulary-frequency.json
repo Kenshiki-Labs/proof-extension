@@ -7,7 +7,7 @@
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "106f66cf86e22fb6634bd8b0f4efa027f1eef703209faf8a2ce3dca2f01560ea"
+      "sha256": "043ed3a9ab276d3a0806a0f037243088deb712bfaa7140819780b9277149bbb1"
     },
     {
       "file": "src/components/report/AiAuditPanel.tsx",
@@ -15,7 +15,7 @@
     },
     {
       "file": "src/components/report/AuditBrief.tsx",
-      "sha256": "1afbd2c2e2117c4672483587b81f22c05987520f39ed9334d8e66fd84e5b4448"
+      "sha256": "d59cb885df0978a44f2bd6df413201bacf70a89dbae013a6fc82d3af223bfc21"
     },
     {
       "file": "src/components/report/EvidenceAppendix.tsx",
@@ -137,12 +137,12 @@
     },
     {
       "term": "Evidence",
-      "total": 34,
+      "total": 32,
       "files": {
         "src/popup.tsx": 1,
-        "src/tabs/report.tsx": 3,
+        "src/tabs/report.tsx": 2,
         "src/components/report/AiAuditPanel.tsx": 1,
-        "src/components/report/AuditBrief.tsx": 2,
+        "src/components/report/AuditBrief.tsx": 1,
         "src/components/report/EvidenceAppendix.tsx": 12,
         "src/components/report/EvidenceTimeline.tsx": 3,
         "src/components/report/EvidenceView.tsx": 1,
@@ -387,7 +387,7 @@
     },
     {
       "word": "report",
-      "count": 53
+      "count": 52
     },
     {
       "word": "gap-",
@@ -466,11 +466,11 @@
       "count": 16
     },
     {
-      "word": "display",
-      "count": 14
+      "word": "you",
+      "count": 15
     },
     {
-      "word": "you",
+      "word": "display",
       "count": 14
     },
     {
@@ -494,6 +494,10 @@
       "count": 12
     },
     {
+      "word": "your",
+      "count": 12
+    },
+    {
       "word": "copied",
       "count": 11
     },
@@ -511,10 +515,6 @@
     },
     {
       "word": "tabular-nums",
-      "count": 11
-    },
-    {
-      "word": "your",
       "count": 11
     },
     {
@@ -548,10 +548,6 @@
     {
       "word": "revenue",
       "count": 9
-    },
-    {
-      "word": "audit",
-      "count": 8
     },
     {
       "word": "copy",
@@ -628,6 +624,10 @@
     {
       "word": "was",
       "count": 7
+    },
+    {
+      "word": "audit",
+      "count": 6
     },
     {
       "word": "available",

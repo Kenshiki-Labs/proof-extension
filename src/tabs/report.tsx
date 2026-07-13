@@ -172,7 +172,7 @@ function ReportTab() {
                   ? "Debug data"
                   : reportView === "contract"
                     ? "Done vs. declared"
-                    : "Runtime audit report"}
+                    : "Your digital self, in full"}
             </h1>
             <p className={`${TYPE.body} mt-2 break-all`}>
               {reportView === "value"
@@ -181,7 +181,7 @@ function ReportTab() {
                   ? `Raw pipeline data for ${originLabel} — fail-open, uncurated, for diagnosing what the product surfaces show.`
                   : reportView === "contract"
                     ? `What this page did, reconciled against the legal documents it links to — ${originLabel}`
-                    : `Browser-local evidence for ${originLabel}`}
+                    : `The whole introduction ${originLabel} made to you — every read named, measured on your device, nothing sent anywhere. Then, how to take it back.`}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
