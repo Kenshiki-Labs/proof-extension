@@ -1,3 +1,4 @@
+import { CONTENT_SETTING_DATASET_FLAG, type ContentScriptSettingKey } from "~core/contracts/content-settings"
 import { RuntimeMessageSchema } from "~core/contracts/messages"
 import browser from "webextension-polyfill"
 import type { PlasmoCSConfig } from "plasmo"
@@ -107,7 +108,7 @@ function emitBridgeReady() {
 // extension-detection and fingerprinting bit that contradicts the promise
 // that installing changes nothing a site can read. With everything off, the
 // page sees no proof-extension attributes at all.
-function syncPageFlag(flag: "proofExtensionMitigateCanvas" | "proofExtensionGpc", enabled: boolean) {
+function syncPageFlag(flag: string, enabled: boolean) {
   if (enabled) document.documentElement.dataset[flag] = "true"
   else delete document.documentElement.dataset[flag]
 }
@@ -119,8 +120,11 @@ async function syncSettingsToPage() {
   const parsed = RuntimeMessageSchema.safeParse(response)
   if (!parsed.success || parsed.data.type !== "CONTENT_SCRIPT_SETTINGS") return
 
-  syncPageFlag("proofExtensionMitigateCanvas", parsed.data.payload.mitigateCanvas)
-  syncPageFlag("proofExtensionGpc", parsed.data.payload.gpcEnabled)
+  // Driven off the one content-settings source of truth: every content-visible
+  // flag is synced here without a hand-maintained list to fall out of step.
+  for (const key of Object.keys(CONTENT_SETTING_DATASET_FLAG) as ContentScriptSettingKey[]) {
+    syncPageFlag(CONTENT_SETTING_DATASET_FLAG[key], parsed.data.payload[key])
+  }
   for (const event of collectBrowserSurfaceExposure(location.origin)) emit(event)
 }
 

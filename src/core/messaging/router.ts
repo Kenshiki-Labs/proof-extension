@@ -2,6 +2,7 @@ import browser from "webextension-polyfill"
 import type { Runtime } from "webextension-polyfill"
 
 import { RuntimeMessageSchema } from "~core/contracts/messages"
+import { projectContentScriptSettings } from "~core/contracts/content-settings"
 import { stripPageSuppliedAttribution, untrustedObservedEventReason } from "~core/domain/message-guards"
 import type {
   ObserverEvent,
@@ -101,8 +102,7 @@ export function createRuntimeMessageRouter(deps: RuntimeMessageRouterDeps) {
       // blockedTrackerIds and per-domain visit frequencies must not be
       // readable from arbitrary page contexts.
       if (message.type === "GET_CONTENT_SCRIPT_SETTINGS") {
-        const { mitigateCanvas, gpcEnabled } = deps.getSettings()
-        return { type: "CONTENT_SCRIPT_SETTINGS", payload: { mitigateCanvas, gpcEnabled } }
+        return { type: "CONTENT_SCRIPT_SETTINGS", payload: projectContentScriptSettings(deps.getSettings()) }
       }
 
       // The blocked-space marker asks one question: "did this extension block

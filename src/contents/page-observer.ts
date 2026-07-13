@@ -18,26 +18,57 @@ const PAGE_EVENT_TYPE = "proof-extension:observer-event"
 const PAGE_ERROR_EVENT_TYPE = "proof-extension:page-error"
 const MAX_PAGE_ERRORS_REPORTED = 5
 
-function emitObserverReady() {
-  const message = {
-    type: PAGE_EVENT_TYPE,
-    payload: {
-      id: `observer_ready:${location.origin}`,
-      origin: location.origin,
-      observedAt: Date.now(),
-      source: "api-hook",
-      firstParty: true,
-      policyLabel: "unknown_first_party",
-      eventType: "extension_diagnostic",
-      blockability: "observable_only",
-      status: "active",
-      confidence: "confirmed",
-      evidence: ["Proof main-world observer installed page API hooks."]
-    }
-  }
+// Every MAIN-world observation shares the same invariant frame: an api-hook
+// read of the first party, stamped with the page origin and the read time.
+// The MAIN world only ever asserts CLAIMS — the privileged side rebuilds
+// evidence and owns attribution — so fixing that frame in one place keeps the
+// contract visible and stops the six observers below from drifting apart.
+type ApiHookPayloadFields = {
+  id: string
+  eventType: string
+  policyLabel: string
+  blockability: string
+  status: string
+  confidence: string
+  evidence: string[]
+  details?: Record<string, string | number>
+}
 
-  document.dispatchEvent(new CustomEvent(PAGE_EVENT_TYPE, { detail: message.payload }))
-  window.postMessage(message, location.origin)
+function makeApiHookPayload(fields: ApiHookPayloadFields) {
+  const payload: Record<string, unknown> = {
+    id: fields.id,
+    origin: location.origin,
+    observedAt: Date.now(),
+    source: "api-hook",
+    firstParty: true,
+    policyLabel: fields.policyLabel,
+    eventType: fields.eventType,
+    blockability: fields.blockability,
+    status: fields.status,
+    confidence: fields.confidence,
+    evidence: fields.evidence
+  }
+  if (fields.details !== undefined) payload.details = fields.details
+  return payload
+}
+
+function postApiHookEvent(fields: ApiHookPayloadFields) {
+  window.postMessage({ type: PAGE_EVENT_TYPE, payload: makeApiHookPayload(fields) }, location.origin)
+}
+
+function emitObserverReady() {
+  const payload = makeApiHookPayload({
+    id: `observer_ready:${location.origin}`,
+    policyLabel: "unknown_first_party",
+    eventType: "extension_diagnostic",
+    blockability: "observable_only",
+    status: "active",
+    confidence: "confirmed",
+    evidence: ["Proof main-world observer installed page API hooks."]
+  })
+
+  document.dispatchEvent(new CustomEvent(PAGE_EVENT_TYPE, { detail: payload }))
+  window.postMessage({ type: PAGE_EVENT_TYPE, payload }, location.origin)
 }
 
 emitObserverReady()
@@ -53,12 +84,8 @@ function scanSdkGlobals(reportedGlobals: Set<string>) {
     if ((window as unknown as Record<string, unknown>)[globalName] === undefined) continue
 
     reportedGlobals.add(globalName)
-    const payload = {
+    postApiHookEvent({
       id: `sdk_global:${location.origin}:${globalName}`,
-      origin: location.origin,
-      observedAt: Date.now(),
-      source: "api-hook",
-      firstParty: true,
       policyLabel: "unknown_first_party",
       eventType: "sdk_detected",
       blockability: "network_blockable",
@@ -66,8 +93,7 @@ function scanSdkGlobals(reportedGlobals: Set<string>) {
       confidence: "weak",
       evidence: [`Global variable ${globalName} was present in the page.`],
       details: { global: globalName }
-    }
-    window.postMessage({ type: PAGE_EVENT_TYPE, payload }, location.origin)
+    })
   }
 }
 
@@ -90,12 +116,8 @@ function scanConsentSignals(reportedGlobals: Set<string>) {
     if ((window as unknown as Record<string, unknown>)[globalName] === undefined) continue
 
     reportedGlobals.add(globalName)
-    const payload = {
+    postApiHookEvent({
       id: `consent_signal:${location.origin}:${globalName}`,
-      origin: location.origin,
-      observedAt: Date.now(),
-      source: "api-hook",
-      firstParty: true,
       policyLabel: "unknown_first_party",
       eventType: "consent_signal_observed",
       blockability: "observable_only",
@@ -103,8 +125,7 @@ function scanConsentSignals(reportedGlobals: Set<string>) {
       confidence: "weak",
       evidence: [`Consent signal global ${globalName} was present in the page.`],
       details: { global: globalName }
-    }
-    window.postMessage({ type: PAGE_EVENT_TYPE, payload }, location.origin)
+    })
   }
 }
 
@@ -122,12 +143,8 @@ observeConsentSignals()
 
 function observeIdentityDigests() {
   const send = createRateLimitedReporter<{ details: Record<string, string | number> }>((id, { details }) => {
-    const payload = {
+    postApiHookEvent({
       id,
-      origin: location.origin,
-      observedAt: Date.now(),
-      source: "api-hook",
-      firstParty: true,
       policyLabel: "behavioral_profiling",
       eventType: "identity_digest_observed",
       blockability: "observable_only",
@@ -135,8 +152,7 @@ function observeIdentityDigests() {
       confidence: "weak",
       evidence: ["Reported by the identity digest observer; evidence is rebuilt by the extension before recording."],
       details
-    }
-    window.postMessage({ type: PAGE_EVENT_TYPE, payload }, location.origin)
+    })
   })
 
   installIdentityDigestHook(({ key, details }) => {
@@ -157,12 +173,8 @@ function observePersistenceSurfaces() {
   type PersistencePayload = { eventType: string; details: Record<string, string | number> }
 
   const send = createRateLimitedReporter<PersistencePayload>((id, { eventType, details }) => {
-    const payload = {
+    postApiHookEvent({
       id,
-      origin: location.origin,
-      observedAt: Date.now(),
-      source: "api-hook",
-      firstParty: true,
       policyLabel: "unknown_first_party",
       eventType,
       blockability: "observable_only",
@@ -170,8 +182,7 @@ function observePersistenceSurfaces() {
       confidence: "confirmed",
       evidence: ["Reported by the persistence observer; evidence is rebuilt by the extension before recording."],
       details
-    }
-    window.postMessage({ type: PAGE_EVENT_TYPE, payload }, location.origin)
+    })
   })
 
   installPersistenceHooks(({ eventType, key, details }) => {
@@ -194,12 +205,8 @@ function observeCanvasReads() {
 
   const send = createRateLimitedReporter<{ mitigated: boolean; details: Record<string, string | number> }>(
     (id, { mitigated, details }) => {
-      const payload = {
+      postApiHookEvent({
         id,
-        origin: location.origin,
-        observedAt: Date.now(),
-        source: "api-hook",
-        firstParty: true,
         policyLabel: "unknown_first_party",
         eventType: "canvas_read",
         blockability: "content_mitigatable",
@@ -207,8 +214,7 @@ function observeCanvasReads() {
         confidence: "confirmed",
         evidence: ["Reported by the canvas observer; evidence is rebuilt by the extension before recording."],
         details
-      }
-      window.postMessage({ type: PAGE_EVENT_TYPE, payload }, location.origin)
+      })
     }
   )
 
