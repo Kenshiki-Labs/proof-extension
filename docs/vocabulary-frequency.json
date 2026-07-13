@@ -3,75 +3,75 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "bbf5f0349579604a696e97ea7a18ad86e73d49e2de65d20420afc2a38ba43773"
+      "sha256": "9930e556b8ee89925a912d93c1b67bbe986b4d4b64d9c652562cd13f66546dde"
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "1f6c1a8a5550b59e73bdd062f9f70c6a9a66c061179c474ac0611702dae9ed3b"
+      "sha256": "4e89c8125322b2f5a119ddeca2189087633ab36885156527fb9b9265c66e782e"
     },
     {
       "file": "src/components/report/AiAuditPanel.tsx",
-      "sha256": "41a12ba1ca90157fb0bd97ce384227be06367cf87121d12803448b921dbd8212"
+      "sha256": "a3961e445d241bf2d64c7c36fbd8aa05e13d2df2bc0308519d95bbdd94b8ad49"
     },
     {
       "file": "src/components/report/AuditBrief.tsx",
-      "sha256": "a7dc22700c5616cc31aacdd082483a803847a49022df1f764eadc0c8bc7eebdb"
+      "sha256": "18303f382772d94f437be71ff4db9e60b31a8bc27d763f471b9e919090e5c181"
     },
     {
       "file": "src/components/report/EvidenceAppendix.tsx",
-      "sha256": "fb228961b6036abbc98b6c2ff7d8e6e3cdda8c551846223b9ac085a474fd33f4"
+      "sha256": "1c75be9076e2768d7c02c539152f156962653ee705bd4a2dcb5eb346c4e7e5a0"
     },
     {
       "file": "src/components/report/EvidenceTimeline.tsx",
-      "sha256": "f05a6ed87ab9805eeba1f5a0b2be7a617a56c885d86cdfe6089094e016379575"
+      "sha256": "0d7706b9213f7862e364b054a69e6afce1833c799f35fe0376d6f40f103af8e9"
     },
     {
       "file": "src/components/report/EvidenceView.tsx",
-      "sha256": "8370348e648284aa84067fc78d083001e59aaaad4068d7b19366486bd86e06e5"
+      "sha256": "8f702799582c46df7184039bee0c5e64bd07ad7ddc33998f356ad72f6e4a8fa2"
     },
     {
       "file": "src/components/report/LocalStateView.tsx",
-      "sha256": "f10b6620bd242dcfc6dec653d1752adb35d0ac79cb9baeaabd265e09099b7ab4"
+      "sha256": "f620f88478bf1658d943f15dc47e164181aa7f94f05d424d29ea81d00ebce4ca"
     },
     {
       "file": "src/components/report/ObservationTable.tsx",
-      "sha256": "5c2cd226777ac559a7735a5b69ed26a6becdd7c83054f4a48aeba8e64fbe6f9f"
+      "sha256": "b3e800c073f8bc563cb0da91d505ffc87226a5ab6ea08227bab8692c847dc465"
     },
     {
       "file": "src/components/report/RemediationPanel.tsx",
-      "sha256": "8fdb67f367f7d089d01b2e54e74c787a3e48fe3cf7db250e4dcb0a21a881d49c"
+      "sha256": "c5ffc719ac325b37e24ba02de75303e49adc400705af77b44c5bc997e1769c63"
     },
     {
       "file": "src/components/report/ValuationSection.tsx",
-      "sha256": "a30213f4f830e31f749d84cdd56f52be099d14086eddc267404d76f33792d26c"
+      "sha256": "b03a318cf458af293bd77c755bf19ae74ab3fff591226a512fd48f4f294e08eb"
     },
     {
       "file": "src/components/report/shared.tsx",
-      "sha256": "5ee324e5159b4528324d352c63a3cbf56bea23616eeb098781507fad8c22aac8"
+      "sha256": "957ab08c64b3a623840ed36c47c7d0022d982ad11cc9dd5aa1269a05197ed505"
     },
     {
       "file": "src/components/value/LedgerTables.tsx",
-      "sha256": "4db72e5dd5b683b4df670d1096692c0093ef5c3b2b44b014e8405f93a48d8e6e"
+      "sha256": "bc96f589b77595b21d69ed5f4a3e37f05785f8bd3673990d2c1ff7982833b711"
     },
     {
       "file": "src/components/value/Methodology.tsx",
-      "sha256": "2edbbd7fc34f76e91b96ca107d180c66c5ca3459c2ace7b0d156dfd661a480c1"
+      "sha256": "18962aa82055115e7ccb467e9758e5c7800378e51885390282b74d57d2e229f3"
     },
     {
       "file": "src/components/value/SupplyChainMap.tsx",
-      "sha256": "61f43afee780447df0b65324fdfbacfe4ffa12ee4bd2df34bf2cf4084ca06b39"
+      "sha256": "12c9f093586fa9c35364962e355d0f2e630c27518f0cdf44ae7fdbd79adc0c6f"
     },
     {
       "file": "src/components/value/ValueLedgerView.tsx",
-      "sha256": "abad084b406f55881bad52fcc90b36aa008a0591a346a6ef83605e7347b8b0fb"
+      "sha256": "a04760517d15fa643c8143a7cc781edeb66cbbad831d6bb31dab1b7115abf0d9"
     },
     {
       "file": "src/core/report/display.ts",
-      "sha256": "165d68363adad3e7928cac5d62a4de863ea556799d8fd8a9b41900875636a130"
+      "sha256": "2947c6cb8f62656d49cc6cee7b724118844b8cfac25d94d306dfe239921114d4"
     },
     {
       "file": "src/core/domain/valuation.ts",
-      "sha256": "034dd01d84b883aad4c74dc9ddce816a624bb8cab505322057d4c15d3d81dbcd"
+      "sha256": "7521aafe38bab095f95fb77185d8ac1546c782d5783b256095a29eea0f4b1312"
     }
   ],
   "canonicalTerms": [

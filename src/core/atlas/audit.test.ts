@@ -18,7 +18,12 @@ const ANCHORS = [{ text: "Privacy Policy", href: "https://acme.test/privacy" }]
 
 describe("runConsentAudit", () => {
   it("fetches on-domain policy docs, detects giveups, and records provenance", async () => {
-    const record = await runConsentAudit("acme.test", ANCHORS, "https://acme.test", stubFetch({ "https://acme.test/privacy": { body: POLICY } }))
+    const record = await runConsentAudit(
+      "acme.test",
+      ANCHORS,
+      "https://acme.test",
+      stubFetch({ "https://acme.test/privacy": { body: POLICY } })
+    )
     expect(record.nothingDiscovered).toBe(false)
     expect(record.documents.some((doc) => doc.docType === "privacy_policy" && doc.fetchError === null)).toBe(true)
     expect(record.giveups.length).toBeGreaterThan(0)
@@ -36,19 +41,34 @@ describe("runConsentAudit", () => {
   })
 
   it("records a fetch error without inventing findings", async () => {
-    const record = await runConsentAudit("acme.test", ANCHORS, "https://acme.test", stubFetch({ "https://acme.test/privacy": { ok: false, status: 403, body: "" } }))
+    const record = await runConsentAudit(
+      "acme.test",
+      ANCHORS,
+      "https://acme.test",
+      stubFetch({ "https://acme.test/privacy": { ok: false, status: 403, body: "" } })
+    )
     expect(record.documents[0]?.fetchError).toBe("http_403")
     expect(record.giveups).toHaveLength(0)
   })
 
   it("keeps thin documents in provenance but out of detection", async () => {
-    const record = await runConsentAudit("acme.test", ANCHORS, "https://acme.test", stubFetch({ "https://acme.test/privacy": { body: "too short to be a policy" } }))
+    const record = await runConsentAudit(
+      "acme.test",
+      ANCHORS,
+      "https://acme.test",
+      stubFetch({ "https://acme.test/privacy": { body: "too short to be a policy" } })
+    )
     expect(record.documents[0]?.thinContent).toBe(true)
     expect(record.giveups).toHaveLength(0)
   })
 
   it("flags nothingDiscovered when no legal links are present", async () => {
-    const record = await runConsentAudit("acme.test", [{ text: "Home", href: "https://acme.test/home" }], "https://acme.test", stubFetch({}))
+    const record = await runConsentAudit(
+      "acme.test",
+      [{ text: "Home", href: "https://acme.test/home" }],
+      "https://acme.test",
+      stubFetch({})
+    )
     expect(record.nothingDiscovered).toBe(true)
     expect(record.documents).toHaveLength(0)
   })

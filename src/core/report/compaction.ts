@@ -1,5 +1,12 @@
-import { isDiagnosticEvent, isExposureScanEvent, isLocalPageSignalEvent, isPageActivityEvent, isPersistenceSurfaceEvent, isUnclassifiedObservation } from "~core/state/summaries"
 import type { ObserverEvent, PageError, SiteSummary } from "~core/domain/types"
+import {
+  isDiagnosticEvent,
+  isExposureScanEvent,
+  isLocalPageSignalEvent,
+  isPageActivityEvent,
+  isPersistenceSurfaceEvent,
+  isUnclassifiedObservation
+} from "~core/state/summaries"
 
 // The correctness-load-bearing keying logic: how raw recorded events merge
 // into the observation rows every surface displays. A bug here miscounts —
@@ -61,12 +68,18 @@ export function displayEventKey(event: ObserverEvent) {
   // Keyed for every source, not just extension scans: page-hook cookie
   // writes carry details.name too, and without it every distinctly named
   // cookie a page sets collapsed into one merged observation row.
-  const cookieMetadataKey = event.eventType === "cookie_observed"
-    ? [event.details?.name ?? "", event.details?.domain ?? "", event.details?.httpOnly ?? "", event.details?.secure ?? "", event.details?.sameSite ?? ""].join(":")
-    : ""
-  const storageMetadataKey = event.eventType === "storage_write"
-    ? [event.details?.area ?? "", event.details?.op ?? "", event.details?.key ?? ""].join(":")
-    : ""
+  const cookieMetadataKey =
+    event.eventType === "cookie_observed"
+      ? [
+          event.details?.name ?? "",
+          event.details?.domain ?? "",
+          event.details?.httpOnly ?? "",
+          event.details?.secure ?? "",
+          event.details?.sameSite ?? ""
+        ].join(":")
+      : ""
+  const storageMetadataKey =
+    event.eventType === "storage_write" ? [event.details?.area ?? "", event.details?.op ?? "", event.details?.key ?? ""].join(":") : ""
 
   return [
     event.companyId ?? "",

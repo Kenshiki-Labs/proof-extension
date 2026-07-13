@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react"
 import browser from "webextension-polyfill"
 
+import { ClauseCard, ObservedClassCard } from "~components/contract/ClauseCard"
+import ProvenanceFooter from "~components/contract/ProvenanceFooter"
+import SeverityMethodology from "~components/contract/SeverityMethodology"
 import { TYPE, UI } from "~components/system/tokens"
 import type { ConsentAuditRecord } from "~core/atlas/audit"
 import { reconcile, type ConsentAudit } from "~core/atlas/reconcile"
 import { RuntimeMessageSchema } from "~core/contracts/messages"
 import type { SiteSummary } from "~core/domain/types"
-
-import { ClauseCard, ObservedClassCard } from "~components/contract/ClauseCard"
-import ProvenanceFooter from "~components/contract/ProvenanceFooter"
-import SeverityMethodology from "~components/contract/SeverityMethodology"
 
 // Done vs. Declared (docs/consent-atlas-tab-spec.md): reconciles what this
 // page DID (the observed event stream) with what its own legal documents SAY
@@ -42,10 +41,9 @@ function VerdictHeader({ audit, domain }: { audit: ConsentAudit; domain: string 
       <p className={TYPE.label}>Done vs. declared</p>
       <p className="mt-2 max-w-3xl text-lg leading-snug">
         We observed <strong className="tabular-nums">{observedClasses}</strong> extraction{" "}
-        {observedClasses === 1 ? "behavior" : "behaviors"} on <strong>{domain}</strong>. Its own documents claim the
-        right to <strong className="tabular-nums">{declared}</strong> of them, are silent on{" "}
-        <strong className="tabular-nums">{undeclared}</strong>, and reserve{" "}
-        <strong className="tabular-nums">{dormant}</strong> further {dormant === 1 ? "power" : "powers"} you never saw
+        {observedClasses === 1 ? "behavior" : "behaviors"} on <strong>{domain}</strong>. Its own documents claim the right to{" "}
+        <strong className="tabular-nums">{declared}</strong> of them, are silent on <strong className="tabular-nums">{undeclared}</strong>,
+        and reserve <strong className="tabular-nums">{dormant}</strong> further {dormant === 1 ? "power" : "powers"} you never saw
         exercised.
       </p>
     </section>
@@ -99,7 +97,9 @@ export default function ContractAuditView({ tabId, summary, summaryReady, summar
   // Documents discovered but none READABLE (fetch failed or a JS-rendered
   // shell with no extractable text): the reconciliation must NOT run —
   // "silent on N" may only rest on documents actually read as text.
-  const noneReadable = record ? record.documents.length > 0 && record.documents.every((doc) => doc.fetchError !== null || doc.thinContent) : false
+  const noneReadable = record
+    ? record.documents.length > 0 && record.documents.every((doc) => doc.fetchError !== null || doc.thinContent)
+    : false
   const audit = record && summaryReady && !noneReadable ? reconcile(summary.events, record.giveups) : null
 
   const declared = audit?.observed.filter((entry) => entry.status === "declared") ?? []
@@ -110,8 +110,7 @@ export default function ContractAuditView({ tabId, summary, summaryReady, summar
       {auditState.status === "loading" ? (
         <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
           <p className={TYPE.body}>
-            Reading this site's own legal documents — the privacy policy, terms, and cookie policy its footer links
-            to. One moment.
+            Reading this site's own legal documents — the privacy policy, terms, and cookie policy its footer links to. One moment.
           </p>
         </section>
       ) : null}
@@ -134,8 +133,7 @@ export default function ContractAuditView({ tabId, summary, summaryReady, summar
       {record && !summaryReady && !summaryFailed ? (
         <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
           <p className={TYPE.body}>
-            Documents read. Waiting for this tab's observed evidence before reconciling — no claim is made until both
-            sides are confirmed.
+            Documents read. Waiting for this tab's observed evidence before reconciling — no claim is made until both sides are confirmed.
           </p>
         </section>
       ) : null}
@@ -144,8 +142,8 @@ export default function ContractAuditView({ tabId, summary, summaryReady, summar
         <section className={`mt-6 ${UI.panel} ${UI.reportInset}`} role="alert">
           <h2 className={TYPE.label}>Could not read the observed evidence for this tab</h2>
           <p className={`${TYPE.body} mt-2`}>
-            The documents below were read, but the observed side of the reconciliation is unavailable — so no claim is
-            made about what happened on this page.
+            The documents below were read, but the observed side of the reconciliation is unavailable — so no claim is made about what
+            happened on this page.
           </p>
         </section>
       ) : null}
@@ -154,10 +152,9 @@ export default function ContractAuditView({ tabId, summary, summaryReady, summar
         <section className={`mt-6 ${UI.panel} ${UI.reportInset}`} role="alert">
           <h2 className={TYPE.label}>Documents found, but none could be read</h2>
           <p className={`${TYPE.body} mt-2`}>
-            This page links to {record.documents.length} legal {record.documents.length === 1 ? "document" : "documents"},
-            but none yielded readable text — fetches failed or the pages render their text with scripts we do not run.
-            No claim is made about what the contract says: the reconciliation only runs against documents actually
-            read.
+            This page links to {record.documents.length} legal {record.documents.length === 1 ? "document" : "documents"}, but none yielded
+            readable text — fetches failed or the pages render their text with scripts we do not run. No claim is made about what the
+            contract says: the reconciliation only runs against documents actually read.
           </p>
         </section>
       ) : null}
@@ -166,9 +163,8 @@ export default function ContractAuditView({ tabId, summary, summaryReady, summar
         <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
           <h2 className={TYPE.label}>No public legal documents were discoverable from this page</h2>
           <p className={`${TYPE.body} mt-2`}>
-            This page's links did not lead to a privacy policy, terms of use, or cookie policy we could classify. That
-            is itself worth knowing: the extraction observed in the evidence view is running without a discoverable
-            written basis on this page.
+            This page's links did not lead to a privacy policy, terms of use, or cookie policy we could classify. That is itself worth
+            knowing: the extraction observed in the evidence view is running without a discoverable written basis on this page.
           </p>
         </section>
       ) : null}
@@ -206,9 +202,7 @@ export default function ContractAuditView({ tabId, summary, summaryReady, summar
           {audit.dormant.length > 0 ? (
             <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
               <ContractSectionTitle index="03" title="Declared — powers you never saw exercised" />
-              <p className={`${TYPE.small} mt-2`}>
-                Also in the contract, with no observed counterpart this session. Worst first.
-              </p>
+              <p className={`${TYPE.small} mt-2`}>Also in the contract, with no observed counterpart this session. Worst first.</p>
               <div className="mt-3 flex flex-col gap-3">
                 {audit.dormant.map((giveup) => (
                   <ClauseCard giveup={giveup} key={giveup.id} />
@@ -228,7 +222,9 @@ export default function ContractAuditView({ tabId, summary, summaryReady, summar
                 <div className={`${UI.subtlePanel} border-amber-700/60 p-3`}>
                   <p className={TYPE.label}>What the contract takes anyway</p>
                   <p className={`${TYPE.small} mt-2`}>
-                    Everything above — plus {audit.consentTheater.cookieClauses.length > 0 ? "the consent mechanics below" : "the readable browser surface"}, which exist regardless of your banner answer.
+                    Everything above — plus{" "}
+                    {audit.consentTheater.cookieClauses.length > 0 ? "the consent mechanics below" : "the readable browser surface"}, which
+                    exist regardless of your banner answer.
                   </p>
                 </div>
               </div>

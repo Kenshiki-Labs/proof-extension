@@ -1,3 +1,5 @@
+import { Metric, SectionTitle } from "~components/report/shared"
+import { TYPE, UI } from "~components/system/tokens"
 import type { ObserverEvent } from "~core/domain/types"
 import {
   formatUsd,
@@ -12,9 +14,6 @@ import {
   type ValuationRollup
 } from "~core/domain/valuation"
 import { calibratedAnnualUsd, type VisitFrequency } from "~core/domain/visit-frequency"
-import { TYPE, UI } from "~components/system/tokens"
-
-import { Metric, SectionTitle } from "~components/report/shared"
 
 // "Mitigated" matches the watcher list's toggle and the page marker — one
 // user-facing word per intervention across every surface.
@@ -70,10 +69,7 @@ export default function ValuationSection({
           label={`Site-paid tool fees/yr (${rollup.costTrackerCount} ${rollup.costTrackerCount === 1 ? "tool" : "tools"})`}
           value={formatUsdRange(rollup.annualOperatorCostLowUsd, rollup.annualOperatorCostHighUsd)}
         />
-        <Metric
-          label={anythingStopped ? "This visit, reached them" : "This visit"}
-          value={formatUsd(outcomes.reached.thisVisitUsd)}
-        />
+        <Metric label={anythingStopped ? "This visit, reached them" : "This visit"} value={formatUsd(outcomes.reached.thisVisitUsd)} />
       </div>
       {anythingStopped ? (
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -89,7 +85,8 @@ export default function ValuationSection({
                   : null
                 const requests = `${outcomes.denied.requestCount} blocked ${outcomes.denied.requestCount === 1 ? "request" : "requests"}`
                 const costNote = outcomes.denied.costTrackerCount > 0 ? " · site-paid tools not counted here" : ""
-                if (calibrated !== null) return `${requests} · est. ${formatUsd(calibrated)}/yr at your stated visit rate, if your blocks hold${costNote}`
+                if (calibrated !== null)
+                  return `${requests} · est. ${formatUsd(calibrated)}/yr at your stated visit rate, if your blocks hold${costNote}`
                 if (outcomes.denied.annualRevenueHighUsd > 0)
                   return `${requests} · est. ${formatUsdRange(outcomes.denied.annualRevenueLowUsd, outcomes.denied.annualRevenueHighUsd)}/yr for an average visitor, if your blocks hold${costNote}`
                 return `${requests} · blocks site-paid tools; the fees saved go to the site, not you`
@@ -126,18 +123,26 @@ export default function ValuationSection({
             {rollup.perTracker.map(({ trackerId, value }) => (
               <tr className="border-t border-border align-top" key={trackerId}>
                 <td className={`${TYPE.body} p-2`}>{trackerId}</td>
-                <td className={`${TYPE.small} p-2 ${outcomeByTracker.get(trackerId) === "reached" || !outcomeByTracker.has(trackerId) ? "" : "text-signal"}`}>
+                <td
+                  className={`${TYPE.small} p-2 ${outcomeByTracker.get(trackerId) === "reached" || !outcomeByTracker.has(trackerId) ? "" : "text-signal"}`}>
                   {OUTCOME_LABELS[outcomeByTracker.get(trackerId) ?? "reached"]}
                 </td>
                 <td className={`${TYPE.small} p-2`}>{MONETIZATION_FLOW_LABELS[value.monetizationFlow]}</td>
-                <td className={`${TYPE.small} p-2`}>{(() => { const serves = getTrackerServes(trackerId); return serves ? SERVES_LABELS[serves.category] : "—" })()}</td>
+                <td className={`${TYPE.small} p-2`}>
+                  {(() => {
+                    const serves = getTrackerServes(trackerId)
+                    return serves ? SERVES_LABELS[serves.category] : "—"
+                  })()}
+                </td>
                 <td className={`${TYPE.body} p-2`}>
                   {value.valueType === "cost" && value.annual.high_usd === 0
                     ? "$0 (free tool)"
                     : formatUsdRange(value.annual.low_usd, value.annual.high_usd)}
                 </td>
                 <td className={`${TYPE.small} p-2`}>{formatUsd(value.perVisit.dollars)}</td>
-                <td className={`${TYPE.small} p-2`}>{value.valueNote} ({value.confidence}: {value.sourceNote})</td>
+                <td className={`${TYPE.small} p-2`}>
+                  {value.valueNote} ({value.confidence}: {value.sourceNote})
+                </td>
               </tr>
             ))}
           </tbody>

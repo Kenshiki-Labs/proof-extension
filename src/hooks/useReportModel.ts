@@ -1,13 +1,24 @@
 import { useMemo } from "react"
 
+import { domainForOrigin } from "~components/report/shared"
 import { rankObservers } from "~core/domain/attention"
 import { functionalCategoryBreakdown } from "~core/domain/functional-category"
 import type { SiteSummary } from "~core/domain/types"
-import { buildTabValuationEdges, buildUnclassifiedGraphEdges, rollupObservedValuations, rollupValuationOutcomes } from "~core/domain/valuation"
-import { buildAtomicSignalRows, compactEvents, exposureScanEvents, localPageSignalObservations, persistenceSurfaceObservations } from "~core/report/display"
+import {
+  buildTabValuationEdges,
+  buildUnclassifiedGraphEdges,
+  rollupObservedValuations,
+  rollupValuationOutcomes
+} from "~core/domain/valuation"
+import {
+  buildAtomicSignalRows,
+  compactEvents,
+  exposureScanEvents,
+  localPageSignalObservations,
+  persistenceSurfaceObservations
+} from "~core/report/display"
 import { buildNarrowingModel } from "~core/report/narrowing"
 import { buildWatcherGroups } from "~core/report/watchers"
-import { domainForOrigin } from "~components/report/shared"
 
 // Every derived view of the summary in one memo: these passes (ranking,
 // compaction, grouping, graph edges) walk the full event stream, so they
@@ -16,10 +27,13 @@ import { domainForOrigin } from "~components/report/shared"
 export function useReportModel(summary: SiteSummary) {
   return useMemo(() => {
     const observations = rankObservers(summary.events).map(({ observation }) => observation)
-    const allObservations = compactEvents(summary.events.filter((event) => event.source !== "extension-scan"))
-      .sort((left, right) => right.count - left.count || right.event.observedAt - left.event.observedAt)
+    const allObservations = compactEvents(summary.events.filter((event) => event.source !== "extension-scan")).sort(
+      (left, right) => right.count - left.count || right.event.observedAt - left.event.observedAt
+    )
     const localPageSignals = localPageSignalObservations(summary.events)
-    const browserCookieObservations = compactEvents(summary.events.filter((event) => event.eventType === "cookie_observed" && event.source === "extension-scan"))
+    const browserCookieObservations = compactEvents(
+      summary.events.filter((event) => event.eventType === "cookie_observed" && event.source === "extension-scan")
+    )
     const localStateObservations = persistenceSurfaceObservations(summary.events)
     const atomicSignalRows = buildAtomicSignalRows(summary.events)
     const exposureEvents = exposureScanEvents(summary.events)

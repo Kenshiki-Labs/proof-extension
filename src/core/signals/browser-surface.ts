@@ -77,10 +77,36 @@ function readCanvasHash(): { hash: string; masked: boolean } {
 
 const BASE_FONTS = ["monospace", "sans-serif", "serif"]
 const PROBE_FONTS = [
-  "Arial", "Courier New", "Georgia", "Times New Roman", "Comic Sans MS", "Impact", "Menlo", "Monaco",
-  "Segoe UI", "Roboto", "Ubuntu", "Chalkduster", "Papyrus", "Gill Sans", "Optima", "Futura",
-  "Baskerville", "Consolas", "Cambria", "Calibri", "Tahoma", "Verdana", "Trebuchet MS", "Palatino",
-  "Garamond", "Avenir", "Helvetica Neue", "Andale Mono", "Lucida Console", "Courier"
+  "Arial",
+  "Courier New",
+  "Georgia",
+  "Times New Roman",
+  "Comic Sans MS",
+  "Impact",
+  "Menlo",
+  "Monaco",
+  "Segoe UI",
+  "Roboto",
+  "Ubuntu",
+  "Chalkduster",
+  "Papyrus",
+  "Gill Sans",
+  "Optima",
+  "Futura",
+  "Baskerville",
+  "Consolas",
+  "Cambria",
+  "Calibri",
+  "Tahoma",
+  "Verdana",
+  "Trebuchet MS",
+  "Palatino",
+  "Garamond",
+  "Avenir",
+  "Helvetica Neue",
+  "Andale Mono",
+  "Lucida Console",
+  "Courier"
 ]
 
 // Font enumeration by measurement: a probe font is present if it changes the

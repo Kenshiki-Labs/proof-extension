@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent } from "~core/domain/types"
 import { createEmptySiteSummary, upsertEvent } from "~core/state/summaries"
+
 import { badgeTextForEventCount, badgeTextForSummary } from "./badge"
 
 function event(overrides: Partial<ObserverEvent> = {}): ObserverEvent {

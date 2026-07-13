@@ -3,6 +3,7 @@ import type { Runtime } from "webextension-polyfill"
 
 import type { ObserverEvent, RuntimeMessage, UserSettings } from "~core/domain/types"
 import { createEmptySiteSummary } from "~core/state/summaries"
+
 import { createRuntimeMessageRouter, type RuntimeMessageRouterDeps } from "./router"
 
 vi.mock("webextension-polyfill", () => ({
@@ -110,7 +111,9 @@ describe("createRuntimeMessageRouter", () => {
     const deps = makeDeps()
     const route = createRuntimeMessageRouter(deps)
 
-    const tabOnlySender: Runtime.MessageSender = { tab: { id: 3, url: "https://news.example/a" } as NonNullable<Runtime.MessageSender["tab"]> }
+    const tabOnlySender: Runtime.MessageSender = {
+      tab: { id: 3, url: "https://news.example/a" } as NonNullable<Runtime.MessageSender["tab"]>
+    }
     await expect(route({ type: "OBSERVED_EVENT", payload: trustedObservedEvent() }, tabOnlySender)).resolves.toEqual({ ok: true })
 
     // Unparseable sender URL: origin cannot be judged, so the event passes the origin gate.
@@ -123,9 +126,9 @@ describe("createRuntimeMessageRouter", () => {
     const deps = makeDeps()
     const route = createRuntimeMessageRouter(deps)
 
-    await expect(
-      route({ type: "OBSERVED_EVENT", payload: trustedObservedEvent({ source: "network" }) }, WEB_PAGE_SENDER)
-    ).resolves.toEqual({ ok: false, error: "network_source_reserved" })
+    await expect(route({ type: "OBSERVED_EVENT", payload: trustedObservedEvent({ source: "network" }) }, WEB_PAGE_SENDER)).resolves.toEqual(
+      { ok: false, error: "network_source_reserved" }
+    )
     expect(deps.recordObservedEvent).not.toHaveBeenCalled()
   })
 
@@ -134,10 +137,7 @@ describe("createRuntimeMessageRouter", () => {
     const route = createRuntimeMessageRouter(deps)
 
     await expect(
-      route(
-        { type: "OBSERVED_EVENT", payload: trustedObservedEvent({ eventType: "webgl_query", status: "mitigated" }) },
-        WEB_PAGE_SENDER
-      )
+      route({ type: "OBSERVED_EVENT", payload: trustedObservedEvent({ eventType: "webgl_query", status: "mitigated" }) }, WEB_PAGE_SENDER)
     ).resolves.toEqual({ ok: false, error: "mitigated_status_reserved" })
     expect(deps.recordObservedEvent).not.toHaveBeenCalled()
   })
@@ -155,9 +155,7 @@ describe("createRuntimeMessageRouter", () => {
         WEB_PAGE_SENDER
       )
     ).resolves.toEqual({ ok: true })
-    expect(deps.recordObservedEvent).toHaveBeenCalledWith(
-      expect.objectContaining({ trackerId: undefined, companyId: undefined })
-    )
+    expect(deps.recordObservedEvent).toHaveBeenCalledWith(expect.objectContaining({ trackerId: undefined, companyId: undefined }))
   })
 
   it("records PAGE_ERROR_OBSERVED against the sender tab and rejects it without one", async () => {

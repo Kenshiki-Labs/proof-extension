@@ -1,8 +1,8 @@
+import { CompanyDatabaseSchema, RemediationDatabaseSchema, TrackerDatabaseSchema } from "~core/contracts/schemas"
+import type { TrackerRecord, TrackerSource } from "~core/contracts/schemas"
 import companies from "~core/db/companies.json"
 import remediation from "~core/db/remediation.json"
 import trackers from "~core/db/trackers.json"
-import { CompanyDatabaseSchema, RemediationDatabaseSchema, TrackerDatabaseSchema } from "~core/contracts/schemas"
-import type { TrackerRecord, TrackerSource } from "~core/contracts/schemas"
 
 const BLOCKING_POLICY_SOURCE_FAMILIES = new Set<TrackerSource["family"]>([
   "manual_seed",
@@ -13,11 +13,7 @@ const BLOCKING_POLICY_SOURCE_FAMILIES = new Set<TrackerSource["family"]>([
   "first_party_evidence"
 ])
 
-const SOURCE_URL_REQUIRED_FAMILIES = new Set<TrackerSource["family"]>([
-  "duckduckgo_tracker_radar",
-  "easyprivacy",
-  "easylist"
-])
+const SOURCE_URL_REQUIRED_FAMILIES = new Set<TrackerSource["family"]>(["duckduckgo_tracker_radar", "easyprivacy", "easylist"])
 
 const TRACKER_CLAIM_SOURCE_FAMILIES = new Set<TrackerSource["family"]>([
   "manual_fixture",

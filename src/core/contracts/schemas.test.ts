@@ -28,15 +28,17 @@ describe("ObserverEventSchema", () => {
   })
 
   it("accepts extension browser-surface exposure scan events", () => {
-    expect(ObserverEventSchema.parse({
-      ...observerEvent,
-      id: "browser_surface:https://example.test:passive",
-      source: "extension-scan",
-      eventType: "browser_surface",
-      blockability: "observable_only",
-      confidence: "confirmed",
-      evidence: ["Browser APIs exposed passive surface fields to the extension scan."]
-    })).toMatchObject({
+    expect(
+      ObserverEventSchema.parse({
+        ...observerEvent,
+        id: "browser_surface:https://example.test:passive",
+        source: "extension-scan",
+        eventType: "browser_surface",
+        blockability: "observable_only",
+        confidence: "confirmed",
+        evidence: ["Browser APIs exposed passive surface fields to the extension scan."]
+      })
+    ).toMatchObject({
       source: "extension-scan",
       eventType: "browser_surface"
     })
@@ -51,43 +53,51 @@ describe("RuntimeMessageSchema", () => {
   })
 
   it("validates cookie metadata scan responses", () => {
-    expect(RuntimeMessageSchema.parse({
-      type: "COOKIE_METADATA_SCAN",
-      payload: {
-        status: "available",
-        events: [{
-          ...observerEvent,
-          id: "cookie_observed:12:example.test:session_id",
-          source: "extension-scan",
-          eventType: "cookie_observed",
-          blockability: "observable_only",
-          confidence: "confirmed",
-          firstParty: true,
-          policyLabel: "unknown_first_party",
-          evidence: ["Cookie values are never recorded — only the name and attributes."],
-          details: { name: "session_id", httpOnly: true }
-        }]
-      }
-    })).toMatchObject({ type: "COOKIE_METADATA_SCAN" })
+    expect(
+      RuntimeMessageSchema.parse({
+        type: "COOKIE_METADATA_SCAN",
+        payload: {
+          status: "available",
+          events: [
+            {
+              ...observerEvent,
+              id: "cookie_observed:12:example.test:session_id",
+              source: "extension-scan",
+              eventType: "cookie_observed",
+              blockability: "observable_only",
+              confidence: "confirmed",
+              firstParty: true,
+              policyLabel: "unknown_first_party",
+              evidence: ["Cookie values are never recorded — only the name and attributes."],
+              details: { name: "session_id", httpOnly: true }
+            }
+          ]
+        }
+      })
+    ).toMatchObject({ type: "COOKIE_METADATA_SCAN" })
   })
 
   it("validates explicit local cookie value inspect responses", () => {
-    expect(RuntimeMessageSchema.parse({
-      type: "COOKIE_VALUE_INSPECT",
-      payload: {
-        status: "available",
-        cookies: [{
-          domain: "example.test",
-          httpOnly: true,
-          name: "session_id",
-          path: "/",
-          sameSite: "lax",
-          secure: true,
-          session: false,
-          value: "local-user-only-value"
-        }]
-      }
-    })).toMatchObject({ type: "COOKIE_VALUE_INSPECT" })
+    expect(
+      RuntimeMessageSchema.parse({
+        type: "COOKIE_VALUE_INSPECT",
+        payload: {
+          status: "available",
+          cookies: [
+            {
+              domain: "example.test",
+              httpOnly: true,
+              name: "session_id",
+              path: "/",
+              sameSite: "lax",
+              secure: true,
+              session: false,
+              value: "local-user-only-value"
+            }
+          ]
+        }
+      })
+    ).toMatchObject({ type: "COOKIE_VALUE_INSPECT" })
   })
 
   it("defaults legacy settings to cookie metadata disabled", () => {

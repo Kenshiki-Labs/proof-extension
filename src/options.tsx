@@ -4,15 +4,14 @@ import { useEffect, useState } from "react"
 import browser from "webextension-polyfill"
 import type { Storage } from "webextension-polyfill"
 
-import { RuntimeMessageSchema } from "~core/contracts/messages"
-import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
-import { validateTrackerDatabase } from "~core/db/validate"
-import type { UserSettings } from "~core/domain/types"
 import Button from "~components/system/Button"
 import Section from "~components/system/Section"
-import { TYPE } from "~components/system/tokens"
 import Toggle from "~components/system/Toggle"
-
+import { TYPE } from "~components/system/tokens"
+import { RuntimeMessageSchema } from "~core/contracts/messages"
+import { validateTrackerDatabase } from "~core/db/validate"
+import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
+import type { UserSettings } from "~core/domain/types"
 
 const dbCounts = (() => {
   try {
@@ -146,20 +145,22 @@ function OptionsPage() {
       <Section
         title="Blocking"
         description={
-          'This is primarily an observer, not a blocker. There is no global on/off switch here — blocking is a per-tracker choice you make from the popup, right next to the specific company or script it applies to. Nothing is blocked by default.'
+          "This is primarily an observer, not a blocker. There is no global on/off switch here — blocking is a per-tracker choice you make from the popup, right next to the specific company or script it applies to. Nothing is blocked by default."
         }>
         {settings.blockedTrackerIds.length === 0 ? (
           <p className={TYPE.small}>No trackers are currently blocked.</p>
         ) : (
           <div>
             <p className={TYPE.small}>
-              {settings.blockedTrackerIds.length} tracker{settings.blockedTrackerIds.length === 1 ? "" : "s"} currently blocked — each was enabled by a click in the popup or report; nothing blocks by default:
+              {settings.blockedTrackerIds.length} tracker{settings.blockedTrackerIds.length === 1 ? "" : "s"} currently blocked — each was
+              enabled by a click in the popup or report; nothing blocks by default:
             </p>
             <ul className="mt-2 space-y-1.5">
               {[...settings.blockedTrackerIds].sort().map((trackerId) => (
                 <li className="flex items-center gap-2" key={trackerId}>
                   <span className={`${TYPE.body} flex-1`}>{trackerId}</span>
-                  <Button onClick={() => updateSettings({ blockedTrackerIds: settings.blockedTrackerIds.filter((id) => id !== trackerId) })}>
+                  <Button
+                    onClick={() => updateSettings({ blockedTrackerIds: settings.blockedTrackerIds.filter((id) => id !== trackerId) })}>
                     Unblock
                   </Button>
                 </li>
@@ -187,8 +188,20 @@ function OptionsPage() {
             their API results yet. A toggle that changes nothing would imply
             protection that does not exist, so these stay disabled until the
             mitigation paths are implemented. */}
-        <Toggle checked={false} onChange={() => undefined} label="mitigate audio" disabled note="Not implemented yet — audio is observed, not constrained." />
-        <Toggle checked={false} onChange={() => undefined} label="mitigate webgl" disabled note="Not implemented yet — WebGL is observed, not constrained." />
+        <Toggle
+          checked={false}
+          onChange={() => undefined}
+          label="mitigate audio"
+          disabled
+          note="Not implemented yet — audio is observed, not constrained."
+        />
+        <Toggle
+          checked={false}
+          onChange={() => undefined}
+          label="mitigate webgl"
+          disabled
+          note="Not implemented yet — WebGL is observed, not constrained."
+        />
       </Section>
 
       <Section
@@ -211,13 +224,15 @@ function OptionsPage() {
         }>
         <ul className="mt-2 space-y-1.5">
           <li className={TYPE.small}>
-            Your IP address. It belongs to the network path, not the browser. Only something that actually routes your traffic elsewhere — a VPN, Tor — changes what servers see.
+            Your IP address. It belongs to the network path, not the browser. Only something that actually routes your traffic elsewhere — a
+            VPN, Tor — changes what servers see.
           </li>
           <li className={TYPE.small}>
             Your connection's transport fingerprint (TLS/JA3-style). It is produced below the layer any extension can reach.
           </li>
           <li className={TYPE.small}>
-            Server-side collection. What a site's own servers record, share, or resell happens entirely outside the browser. The real lever is revocation at the source — see "Stop at source" in the audit report.
+            Server-side collection. What a site's own servers record, share, or resell happens entirely outside the browser. The real lever
+            is revocation at the source — see "Stop at source" in the audit report.
           </li>
           <li className={TYPE.small}>
             Identity you hand over. Logging in or providing an email links your activity regardless of any client-side protection.

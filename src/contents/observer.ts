@@ -1,11 +1,11 @@
+import type { PlasmoCSConfig } from "plasmo"
+import browser from "webextension-polyfill"
+
 import { CONTENT_SETTING_DATASET_FLAG, type ContentScriptSettingKey } from "~core/contracts/content-settings"
 import { RuntimeMessageSchema } from "~core/contracts/messages"
-import browser from "webextension-polyfill"
-import type { PlasmoCSConfig } from "plasmo"
-
 import { ObserverEventSchema, PageErrorSchema } from "~core/contracts/schemas"
-import { collectBrowserSurfaceExposure } from "~core/signals/browser-surface"
 import type { ObserverEvent } from "~core/domain/types"
+import { collectBrowserSurfaceExposure } from "~core/signals/browser-surface"
 
 const PAGE_EVENT_TYPE = "proof-extension:observer-event"
 const PAGE_ERROR_EVENT_TYPE = "proof-extension:page-error"

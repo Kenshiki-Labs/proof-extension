@@ -1,6 +1,6 @@
 import { hostForEvent, registrableDomain } from "~core/domain/party"
-import { getTrackerServes } from "~core/domain/valuation"
 import type { ObserverEvent } from "~core/domain/types"
+import { getTrackerServes } from "~core/domain/valuation"
 import { isDiagnosticEvent, isExposureScanEvent, isPersistenceSurfaceEvent, isUnclassifiedObservation } from "~core/state/summaries"
 
 export function isPrivacyTradeObserver(event: ObserverEvent) {

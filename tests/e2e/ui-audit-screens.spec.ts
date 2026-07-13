@@ -1,5 +1,5 @@
-import { expect, test } from "@playwright/test"
 import { mkdir } from "node:fs/promises"
+import { expect, test } from "@playwright/test"
 
 import { readAllEvents, stubTrackerRoutes, stubUnknownHostRoute, UNKNOWN_HOST, withExtensionContext, withFixtureServer } from "./fixtures"
 
@@ -41,13 +41,16 @@ test("capture UI audit screenshots", async () => {
 
       // Wait until the pipeline has named trackers AND the unknown host.
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          return {
-            named: ["google-ads", "fullstory", "liveramp"].filter((id) => events.some((event) => event.trackerId === id)).length,
-            unknown: events.some((event) => event.details?.host === UNKNOWN_HOST)
-          }
-        }, { timeout: 20_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            return {
+              named: ["google-ads", "fullstory", "liveramp"].filter((id) => events.some((event) => event.trackerId === id)).length,
+              unknown: events.some((event) => event.details?.host === UNKNOWN_HOST)
+            }
+          },
+          { timeout: 20_000 }
+        )
         .toEqual({ named: 3, unknown: true })
 
       // Popup empty state: popup opened as its own active tab targets itself.

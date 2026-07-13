@@ -1,5 +1,5 @@
-import browser from "webextension-polyfill"
 import type { PlasmoCSConfig } from "plasmo"
+import browser from "webextension-polyfill"
 
 import { RuntimeMessageSchema } from "~core/contracts/messages"
 

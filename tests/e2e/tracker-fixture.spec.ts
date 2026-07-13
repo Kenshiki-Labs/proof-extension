@@ -1,22 +1,22 @@
 import { expect, test } from "@playwright/test"
 
 import {
+  COOKIE_SYNC_FIXTURE_HTML,
   FIRST_PARTY_EXPOSURE_FIXTURE_HTML,
   FULLSTORY_FIXTURE_HTML,
   GOOGLE_ANALYTICS_ADS_FIXTURE_HTML,
   INJECTOR_FIXTURE_HTML,
   META_PIXEL_FIXTURE_HTML,
-  COOKIE_SYNC_FIXTURE_HTML,
   PERSISTENCE_FIXTURE_HTML,
   PLAIN_FIXTURE_HTML,
+  readAllEvents,
+  readSummaries,
   SDK_GLOBAL_FIXTURE_HTML,
+  stubTrackerRoutes,
+  stubUnknownHostRoute,
   TRACKER_FIXTURE_HTML,
   UNKNOWN_HOST,
   UNKNOWN_HOST_FIXTURE_HTML,
-  readAllEvents,
-  readSummaries,
-  stubTrackerRoutes,
-  stubUnknownHostRoute,
   withExtensionContext,
   withFixtureServer
 } from "./fixtures"
@@ -31,7 +31,14 @@ const EXPECTED_COMPANY_BY_TRACKER: Record<string, string> = {
 
 async function observedTrackerIds(worker: Parameters<typeof readAllEvents>[0]) {
   const events = await readAllEvents(worker)
-  return [...new Set(events.filter((event) => event.eventType === "request_seen").map((event) => event.trackerId).filter(Boolean))]
+  return [
+    ...new Set(
+      events
+        .filter((event) => event.eventType === "request_seen")
+        .map((event) => event.trackerId)
+        .filter(Boolean)
+    )
+  ]
 }
 
 test("plain fixture produces no tracker observations", async () => {
@@ -42,11 +49,14 @@ test("plain fixture produces no tracker observations", async () => {
       await expect(page.getByRole("heading", { name: "Plain fixture" })).toBeVisible()
 
       await expect
-        .poll(async () => {
-          const summaries = await readSummaries(worker)
-          const summary = summaries.find((item) => item.origin === new URL(baseUrl).origin)
-          return summary ? (summary.events ?? []).filter((event) => event.eventType === "request_seen").length : -1
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const summaries = await readSummaries(worker)
+            const summary = summaries.find((item) => item.origin === new URL(baseUrl).origin)
+            return summary ? (summary.events ?? []).filter((event) => event.eventType === "request_seen").length : -1
+          },
+          { timeout: 15_000 }
+        )
         .toBe(0)
     })
   })
@@ -74,10 +84,13 @@ test("Google Analytics and Ads fixture produces google-analytics and google-ads 
       await page.goto(`${baseUrl}/`)
 
       await expect
-        .poll(async () => {
-          const ids = await observedTrackerIds(worker)
-          return ["google-analytics", "google-ads"].filter((id) => ids.includes(id))
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const ids = await observedTrackerIds(worker)
+            return ["google-analytics", "google-ads"].filter((id) => ids.includes(id))
+          },
+          { timeout: 15_000 }
+        )
         .toEqual(["google-analytics", "google-ads"])
     })
   })
@@ -103,15 +116,18 @@ test("first-party exposure fixture produces extension-scan browser surface evide
       await page.goto(`${baseUrl}/`)
 
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          const exposure = events.find((event) => event.source === "extension-scan" && event.eventType === "browser_surface")
-          if (!exposure) return null
-          return {
-            origin: exposure.origin,
-            hasEvidence: exposure.evidence.some((line) => line.includes("Browser APIs exposed passive surface fields"))
-          }
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            const exposure = events.find((event) => event.source === "extension-scan" && event.eventType === "browser_surface")
+            if (!exposure) return null
+            return {
+              origin: exposure.origin,
+              hasEvidence: exposure.evidence.some((line) => line.includes("Browser APIs exposed passive surface fields"))
+            }
+          },
+          { timeout: 15_000 }
+        )
         .toEqual({ origin: new URL(baseUrl).origin, hasEvidence: true })
     })
   })
@@ -124,19 +140,22 @@ test("SDK globals are detected and attributed without any network request", asyn
       await page.goto(`${baseUrl}/`)
 
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          const sdkEvents = events.filter((event) => event.eventType === "sdk_detected")
-          return {
-            trackers: [...new Set(sdkEvents.map((event) => event.trackerId).filter(Boolean))].sort(),
-            inventedForOwnGlobal: sdkEvents.some((event) => event.details?.global === "myOwnAppGlobal"),
-            metaEvidenceIsFactual: sdkEvents.some(
-              (event) =>
-                event.trackerId === "meta-pixel" &&
-                event.evidence.some((line) => line.includes("Global variable fbq characteristic of Meta Pixel"))
-            )
-          }
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            const sdkEvents = events.filter((event) => event.eventType === "sdk_detected")
+            return {
+              trackers: [...new Set(sdkEvents.map((event) => event.trackerId).filter(Boolean))].sort(),
+              inventedForOwnGlobal: sdkEvents.some((event) => event.details?.global === "myOwnAppGlobal"),
+              metaEvidenceIsFactual: sdkEvents.some(
+                (event) =>
+                  event.trackerId === "meta-pixel" &&
+                  event.evidence.some((line) => line.includes("Global variable fbq characteristic of Meta Pixel"))
+              )
+            }
+          },
+          { timeout: 15_000 }
+        )
         .toEqual({
           trackers: ["fullstory", "meta-pixel"],
           inventedForOwnGlobal: false,
@@ -155,20 +174,23 @@ test("identifier sync requests produce cookie_sync observations with handoff evi
       await page.goto(`${baseUrl}/`)
 
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          const syncs = events.filter((event) => event.eventType === "cookie_sync")
-          return {
-            trackers: [...new Set(syncs.map((event) => event.trackerId))].sort(),
-            confirmedRedirect: syncs.some(
-              (event) =>
-                event.trackerId === "lotame" &&
-                event.confidence === "confirmed" &&
-                event.evidence.some((line) => line.includes("cross-company identifier handoff"))
-            ),
-            explainsWhy: syncs.every((event) => event.evidence.some((line) => line.includes("merge their profiles")))
-          }
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            const syncs = events.filter((event) => event.eventType === "cookie_sync")
+            return {
+              trackers: [...new Set(syncs.map((event) => event.trackerId))].sort(),
+              confirmedRedirect: syncs.some(
+                (event) =>
+                  event.trackerId === "lotame" &&
+                  event.confidence === "confirmed" &&
+                  event.evidence.some((line) => line.includes("cross-company identifier handoff"))
+              ),
+              explainsWhy: syncs.every((event) => event.evidence.some((line) => line.includes("merge their profiles")))
+            }
+          },
+          { timeout: 15_000 }
+        )
         .toEqual({ trackers: ["liveramp", "lotame"], confirmedRedirect: true, explainsWhy: true })
     })
   })
@@ -185,17 +207,22 @@ test("tracker fixture produces correct seen states", async () => {
         "/fullstory": FULLSTORY_FIXTURE_HTML
       },
       async (baseUrl) => {
-        await Promise.all(["/meta", "/google", "/fullstory"].map(async (path) => {
-          const page = await context.newPage()
-          await page.goto(`${baseUrl}${path}`)
-        }))
+        await Promise.all(
+          ["/meta", "/google", "/fullstory"].map(async (path) => {
+            const page = await context.newPage()
+            await page.goto(`${baseUrl}${path}`)
+          })
+        )
 
         await expect
-          .poll(async () => {
-            const events = await readAllEvents(worker)
-            const seen = events.filter((event) => event.eventType === "request_seen")
-            return ACCEPTANCE_TRACKERS.filter((id) => seen.some((event) => event.trackerId === id))
-          }, { timeout: 15_000 })
+          .poll(
+            async () => {
+              const events = await readAllEvents(worker)
+              const seen = events.filter((event) => event.eventType === "request_seen")
+              return ACCEPTANCE_TRACKERS.filter((id) => seen.some((event) => event.trackerId === id))
+            },
+            { timeout: 15_000 }
+          )
           .toEqual(ACCEPTANCE_TRACKERS)
 
         const events = await readAllEvents(worker)
@@ -223,10 +250,13 @@ test("blocking fullstory produces correct blocked states while others stay seen"
       // Wait for baseline seen states, then enable blocking for fullstory
       // through the same message the popup's Block button sends.
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          return events.some((event) => event.trackerId === "fullstory")
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            return events.some((event) => event.trackerId === "fullstory")
+          },
+          { timeout: 15_000 }
+        )
         .toBe(true)
 
       const settingsPage = await context.newPage()
@@ -260,12 +290,15 @@ test("blocking fullstory produces correct blocked states while others stay seen"
       // Storage is eventually consistent now that background writes are
       // coalesced — poll for the seen event instead of reading once.
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          return events.some(
-            (event) => event.eventType === "request_seen" && event.trackerId === "google-ads" && event.status === "active"
-          )
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            return events.some(
+              (event) => event.eventType === "request_seen" && event.trackerId === "google-ads" && event.status === "active"
+            )
+          },
+          { timeout: 15_000 }
+        )
         .toBe(true)
 
       const events = await readAllEvents(worker)
@@ -294,11 +327,14 @@ test("navigating to a new origin resets the tab summary", async () => {
         await page.goto(`${plainBase}/`)
 
         await expect
-          .poll(async () => {
-            const summaries = await readSummaries(worker)
-            const plain = summaries.find((summary) => summary.origin === new URL(plainBase).origin)
-            return plain ? (plain.events ?? []).filter((event) => event.eventType === "request_seen").length : -1
-          }, { timeout: 15_000 })
+          .poll(
+            async () => {
+              const summaries = await readSummaries(worker)
+              const plain = summaries.find((summary) => summary.origin === new URL(plainBase).origin)
+              return plain ? (plain.events ?? []).filter((event) => event.eventType === "request_seen").length : -1
+            },
+            { timeout: 15_000 }
+          )
           .toBe(0)
 
         const summaries = await readSummaries(worker)
@@ -319,11 +355,14 @@ test("persistence surfaces produce metadata-only observations without stored val
       await page.goto(`${baseUrl}/`)
 
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          const types = new Set<string>(events.map((event) => event.eventType))
-          return ["cookie_observed", "storage_write", "indexeddb_access"].filter((type) => types.has(type))
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            const types = new Set<string>(events.map((event) => event.eventType))
+            return ["cookie_observed", "storage_write", "indexeddb_access"].filter((type) => types.has(type))
+          },
+          { timeout: 15_000 }
+        )
         .toEqual(["cookie_observed", "storage_write", "indexeddb_access"])
 
       const events = await readAllEvents(worker)
@@ -363,17 +402,18 @@ test("dynamically injected tracker script is detected and attributed", async () 
       await page.goto(`${baseUrl}/`)
 
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          const injected = events.find(
-            (event) => event.eventType === "script_injected" && event.id.startsWith("dom_script:")
-          )
-          if (!injected) return null
-          return {
-            trackerId: injected.trackerId ?? null,
-            hasEvidence: injected.evidence.some((line) => line.includes("Script inserted after page load"))
-          }
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            const injected = events.find((event) => event.eventType === "script_injected" && event.id.startsWith("dom_script:"))
+            if (!injected) return null
+            return {
+              trackerId: injected.trackerId ?? null,
+              hasEvidence: injected.evidence.some((line) => line.includes("Script inserted after page load"))
+            }
+          },
+          { timeout: 15_000 }
+        )
         .toEqual({ trackerId: "fullstory", hasEvidence: true })
     })
   })
@@ -389,20 +429,21 @@ test("unknown third-party host is observed but never claimed as a named observer
       await page.goto(`${baseUrl}/`)
 
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          const unknown = events.find(
-            (event) => event.eventType === "request_seen" && event.details?.host === UNKNOWN_HOST
-          )
-          if (!unknown) return null
-          return {
-            trackerId: unknown.trackerId ?? null,
-            companyId: unknown.companyId ?? null,
-            evidenceTier: unknown.evidenceTier ?? null,
-            blockability: unknown.blockability,
-            statesUnmatched: unknown.evidence.some((line) => line.includes("no tracker record matched"))
-          }
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            const unknown = events.find((event) => event.eventType === "request_seen" && event.details?.host === UNKNOWN_HOST)
+            if (!unknown) return null
+            return {
+              trackerId: unknown.trackerId ?? null,
+              companyId: unknown.companyId ?? null,
+              evidenceTier: unknown.evidenceTier ?? null,
+              blockability: unknown.blockability,
+              statesUnmatched: unknown.evidence.some((line) => line.includes("no tracker record matched"))
+            }
+          },
+          { timeout: 15_000 }
+        )
         .toEqual({
           trackerId: null,
           companyId: null,
@@ -458,23 +499,28 @@ test("blocked state carries the production err_blocked_by_client signal, not jus
       // does not exist. This asserts the production path matched the URL
       // to OUR installed rule and recorded/confirmed the outcome.
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          const blocked = events.filter((event) => event.eventType === "request_blocked" && event.trackerId === "fullstory")
-          if (blocked.length === 0) return null
-          return {
-            productionSignalFired: blocked.some((event) => String(event.details?.blockSignals ?? "").includes("err_blocked_by_client")),
-            noDoubleCount: blocked.every((event) => (event.count ?? 1) === 1),
-            allBlocked: blocked.every((event) => event.status === "blocked")
-          }
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            const blocked = events.filter((event) => event.eventType === "request_blocked" && event.trackerId === "fullstory")
+            if (blocked.length === 0) return null
+            return {
+              productionSignalFired: blocked.some((event) => String(event.details?.blockSignals ?? "").includes("err_blocked_by_client")),
+              noDoubleCount: blocked.every((event) => (event.count ?? 1) === 1),
+              allBlocked: blocked.every((event) => event.status === "blocked")
+            }
+          },
+          { timeout: 15_000 }
+        )
         .toEqual({ productionSignalFired: true, noDoubleCount: true, allBlocked: true })
 
       // The seen-event for the same request must have been superseded —
       // fullstory is blocked, not simultaneously watching.
       const events = await readAllEvents(worker)
       const blockedRequestIds = new Set(
-        events.filter((event) => event.eventType === "request_blocked" && event.trackerId === "fullstory").map((event) => event.details?.requestId)
+        events
+          .filter((event) => event.eventType === "request_blocked" && event.trackerId === "fullstory")
+          .map((event) => event.details?.requestId)
       )
       const stillSeen = events.filter(
         (event) => event.eventType === "request_seen" && event.trackerId === "fullstory" && blockedRequestIds.has(event.details?.requestId)

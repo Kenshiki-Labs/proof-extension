@@ -36,23 +36,16 @@ export interface TokenStorage {
 // leak it. `phone_hash_` must be tested before `phone_` since the latter is a prefix of it.
 const OPAQUE_TOKEN = /^(psid_v1_|phone_hash_|phone_)[0-9a-f]+$/
 
-export async function setPhoneSubjectToken(
-  storage: TokenStorage,
-  token: PhoneSubjectToken,
-): Promise<void> {
+export async function setPhoneSubjectToken(storage: TokenStorage, token: PhoneSubjectToken): Promise<void> {
   for (const id of [token.phoneSubjectId, token.phoneSubjectIdV1]) {
     if (id != null && !OPAQUE_TOKEN.test(id)) {
-      throw new Error(
-        `refusing to store a non-opaque value as a phone-subject token (Store-safety guard): ${id.slice(0, 4)}…`,
-      )
+      throw new Error(`refusing to store a non-opaque value as a phone-subject token (Store-safety guard): ${id.slice(0, 4)}…`)
     }
   }
   await storage.set({ [PHONE_SUBJECT_TOKEN_KEY]: token })
 }
 
-export async function getPhoneSubjectToken(
-  storage: TokenStorage,
-): Promise<PhoneSubjectToken | null> {
+export async function getPhoneSubjectToken(storage: TokenStorage): Promise<PhoneSubjectToken | null> {
   const stored = await storage.get(PHONE_SUBJECT_TOKEN_KEY)
   const value = stored[PHONE_SUBJECT_TOKEN_KEY]
   return isPhoneSubjectToken(value) ? value : null
@@ -69,7 +62,7 @@ export async function browserTokenStorage(): Promise<TokenStorage> {
   return {
     get: (key) => browser.storage.local.get(key) as Promise<Record<string, unknown>>,
     set: (items) => browser.storage.local.set(items),
-    remove: (key) => browser.storage.local.remove(key),
+    remove: (key) => browser.storage.local.remove(key)
   }
 }
 

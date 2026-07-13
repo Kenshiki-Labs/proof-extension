@@ -1,13 +1,13 @@
 import { Activity, Building2, CalendarDays, CircleDollarSign, Globe2, MousePointerClick, Radar } from "lucide-react"
 
-import type { RollingValuationSummary, ValuationPeriod } from "~core/domain/types"
-import { formatUsd, formatUsdRange, SERVES_LABELS } from "~core/domain/valuation"
 import { Metric } from "~components/report/shared"
 import { TYPE, UI } from "~components/system/tokens"
 import LedgerTables from "~components/value/LedgerTables"
 import Methodology, { VALUE_LEDGER_EXPLAINER } from "~components/value/Methodology"
 import SupplyChainMap from "~components/value/SupplyChainMap"
 import TrackerGraph from "~components/value/TrackerGraph"
+import type { RollingValuationSummary, ValuationPeriod } from "~core/domain/types"
+import { formatUsd, formatUsdRange, SERVES_LABELS } from "~core/domain/valuation"
 
 export const VALUE_PERIODS: Array<{ label: string; value: ValuationPeriod }> = [
   { label: "Today", value: "day" },
@@ -16,7 +16,15 @@ export const VALUE_PERIODS: Array<{ label: string; value: ValuationPeriod }> = [
   { label: "All", value: "all" }
 ]
 
-function PeriodSelector({ onPeriodChange, period, periods }: { onPeriodChange: (period: ValuationPeriod) => void; period: ValuationPeriod; periods: typeof VALUE_PERIODS }) {
+function PeriodSelector({
+  onPeriodChange,
+  period,
+  periods
+}: {
+  onPeriodChange: (period: ValuationPeriod) => void
+  period: ValuationPeriod
+  periods: typeof VALUE_PERIODS
+}) {
   return (
     <div className="flex flex-wrap gap-1">
       {periods.map((item) => (
@@ -84,9 +92,26 @@ export default function ValueLedgerView({
           </dl>
         ) : (
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Metric description="Advertiser-funded value captured by tracker and ad-tech companies." icon={MousePointerClick} label="Ad-market value to trackers/yr" tone="amber" value={formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)} />
-            <Metric description="Sites pay this to tracking-tool vendors." icon={Building2} label="Site-paid tool fees/yr" value={formatUsdRange(rollup.annualOperatorCostLowUsd, rollup.annualOperatorCostHighUsd)} />
-            <Metric description="Observed presence estimate for visits in this period." icon={CircleDollarSign} label="This period" tone="signal" value={formatUsd(rollup.thisPeriodVisitUsd)} />
+            <Metric
+              description="Advertiser-funded value captured by tracker and ad-tech companies."
+              icon={MousePointerClick}
+              label="Ad-market value to trackers/yr"
+              tone="amber"
+              value={formatUsdRange(rollup.annualRevenueLowUsd, rollup.annualRevenueHighUsd)}
+            />
+            <Metric
+              description="Sites pay this to tracking-tool vendors."
+              icon={Building2}
+              label="Site-paid tool fees/yr"
+              value={formatUsdRange(rollup.annualOperatorCostLowUsd, rollup.annualOperatorCostHighUsd)}
+            />
+            <Metric
+              description="Observed presence estimate for visits in this period."
+              icon={CircleDollarSign}
+              label="This period"
+              tone="signal"
+              value={formatUsd(rollup.thisPeriodVisitUsd)}
+            />
             <Metric icon={Globe2} label="Sites" value={rollup.siteCount} />
             <Metric icon={CalendarDays} label="Visits" value={rollup.visitCount} />
             <Metric icon={Radar} label="Trackers" tone="signal" value={rollup.trackerCount} />
@@ -96,7 +121,10 @@ export default function ValueLedgerView({
         {!compact && rollup.edges.length > 0 ? (
           <div className="mt-5">
             <h3 className={TYPE.label}>Connections</h3>
-            <p className={`${TYPE.small} mt-1`}>Which trackers were waiting for you on which sites — built from this browser's local ledger. Switch to "Who makes what" to see who profits, sized by estimated annual value.</p>
+            <p className={`${TYPE.small} mt-1`}>
+              Which trackers were waiting for you on which sites — built from this browser's local ledger. Switch to "Who makes what" to see
+              who profits, sized by estimated annual value.
+            </p>
             <div className={`mt-2 ${UI.subtlePanel} p-4`}>
               <TrackerGraph edges={rollup.edges} />
             </div>
@@ -115,7 +143,8 @@ export default function ValueLedgerView({
                     <div className="mt-1 font-display text-xl font-semibold tabular-nums">{rollup.servesCounts[category]}</div>
                     {category === "only_their_business" && rollup.servesCounts[category] > 0 ? (
                       <p className={`${TYPE.small} mt-1`}>
-                        {formatUsdRange(rollup.onlyTheirBusinessAnnualLowUsd, rollup.onlyTheirBusinessAnnualHighUsd)}/yr with nothing flowing back to you
+                        {formatUsdRange(rollup.onlyTheirBusinessAnnualLowUsd, rollup.onlyTheirBusinessAnnualHighUsd)}/yr with nothing
+                        flowing back to you
                       </p>
                     ) : null}
                   </div>

@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import { buildCopyPayload, EMPTY_SUMMARY } from "~core/report/display"
+
 import { summaryMetrics } from "./metrics"
 
 function event(overrides: Partial<ObserverEvent>): ObserverEvent {
@@ -35,9 +36,31 @@ const summary: SiteSummary = {
     event({ id: "seen-2", trackerId: "meta-pixel", companyId: "meta", observedAt: 200 }),
     event({ id: "seen-3", trackerId: "fullstory", companyId: "fullstory" }),
     event({ id: "unknown", blockability: "observable_only", evidenceTier: "observed", details: { host: "cdn.example" } }),
-    event({ id: "cache-validator", eventType: "cache_validator_seen", blockability: "observable_only", evidenceTier: "observed", firstParty: true, details: { headerName: "ETag", host: "example.test" } }),
-    event({ id: "consent", eventType: "consent_signal_observed", blockability: "observable_only", evidenceTier: "observed", firstParty: true, details: { global: "__tcfapi" } }),
-    event({ id: "digest", eventType: "identity_digest_observed", blockability: "observable_only", evidenceTier: "observed", firstParty: true, policyLabel: "behavioral_profiling", details: { algorithm: "SHA-256", inputBytes: 19 } }),
+    event({
+      id: "cache-validator",
+      eventType: "cache_validator_seen",
+      blockability: "observable_only",
+      evidenceTier: "observed",
+      firstParty: true,
+      details: { headerName: "ETag", host: "example.test" }
+    }),
+    event({
+      id: "consent",
+      eventType: "consent_signal_observed",
+      blockability: "observable_only",
+      evidenceTier: "observed",
+      firstParty: true,
+      details: { global: "__tcfapi" }
+    }),
+    event({
+      id: "digest",
+      eventType: "identity_digest_observed",
+      blockability: "observable_only",
+      evidenceTier: "observed",
+      firstParty: true,
+      policyLabel: "behavioral_profiling",
+      details: { algorithm: "SHA-256", inputBytes: 19 }
+    }),
     event({ id: "exposure", source: "extension-scan", eventType: "browser_surface", blockability: "observable_only", firstParty: true }),
     event({ id: "diag", source: "content", eventType: "extension_diagnostic", blockability: "observable_only", firstParty: true })
   ]
@@ -82,8 +105,20 @@ describe("summaryMetrics — the single source of truth for headline numbers", (
     // own arithmetic under shared labels. UI files must read summaryMetrics;
     // any inline count re-derivation is a contract violation.
     const root = resolve(__dirname, "../../..")
-    const banned = [/summary\.events\.length/, /summary\.activeCompanies\.length/, /summary\.blockedCompanies\.length/, /summary\.cannotBlockSignals\.length/, /summary\.events\.filter\([^)]*isDiagnosticEvent/]
-    for (const file of ["src/popup.tsx", "src/tabs/report.tsx", "src/components/report/EvidenceView.tsx", "src/components/report/AuditBrief.tsx", "src/hooks/useReportModel.ts"]) {
+    const banned = [
+      /summary\.events\.length/,
+      /summary\.activeCompanies\.length/,
+      /summary\.blockedCompanies\.length/,
+      /summary\.cannotBlockSignals\.length/,
+      /summary\.events\.filter\([^)]*isDiagnosticEvent/
+    ]
+    for (const file of [
+      "src/popup.tsx",
+      "src/tabs/report.tsx",
+      "src/components/report/EvidenceView.tsx",
+      "src/components/report/AuditBrief.tsx",
+      "src/hooks/useReportModel.ts"
+    ]) {
       const source = readFileSync(resolve(root, file), "utf8")
       for (const pattern of banned) {
         expect(pattern.test(source), `${file} must not compute headline counts inline (${pattern})`).toBe(false)

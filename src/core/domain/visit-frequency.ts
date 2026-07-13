@@ -11,14 +11,7 @@
 
 export type VisitFrequency = "several_daily" | "daily" | "few_weekly" | "weekly" | "rarely" | "once"
 
-export const VISIT_FREQUENCIES: readonly VisitFrequency[] = [
-  "several_daily",
-  "daily",
-  "few_weekly",
-  "weekly",
-  "rarely",
-  "once",
-]
+export const VISIT_FREQUENCIES: readonly VisitFrequency[] = ["several_daily", "daily", "few_weekly", "weekly", "rarely", "once"]
 
 // Deliberately round, defensible midpoints: ~3.3/day, 1/day, ~3/week, 1/week,
 // ~1/month, and a single visit. Estimates, labeled as such in the UI.
@@ -28,7 +21,7 @@ export const VISITS_PER_YEAR: Record<VisitFrequency, number> = {
   few_weekly: 150,
   weekly: 52,
   rarely: 12,
-  once: 1,
+  once: 1
 }
 
 export const FREQUENCY_LABELS: Record<VisitFrequency, string> = {
@@ -37,7 +30,7 @@ export const FREQUENCY_LABELS: Record<VisitFrequency, string> = {
   few_weekly: "A few times a week",
   weekly: "Weekly",
   rarely: "Rarely",
-  once: "Just this once",
+  once: "Just this once"
 }
 
 export function isVisitFrequency(value: unknown): value is VisitFrequency {
@@ -65,7 +58,7 @@ const RANGE_POSITION: Record<VisitFrequency, number> = {
   few_weekly: 0.6,
   weekly: 0.35,
   rarely: 0.1,
-  once: 0,
+  once: 0
 }
 
 // Position the user inside the sourced annual range by stated frequency.

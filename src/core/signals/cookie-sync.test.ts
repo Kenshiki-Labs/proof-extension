@@ -55,11 +55,7 @@ describe("detectCookieSync", () => {
   })
 
   it("does not treat the matched tracker's own domain as a sync partner", () => {
-    const detection = detectCookieSync(
-      "https://id5-sync.com/gif?cb=https%3A%2F%2Fid5-sync.com%2Fdone",
-      byId("id5"),
-      trackers
-    )
+    const detection = detectCookieSync("https://id5-sync.com/gif?cb=https%3A%2F%2Fid5-sync.com%2Fdone", byId("id5"), trackers)
     // Own-domain callback with no other signal: no detection at all — and
     // certainly no redirect_partner claim against the tracker itself.
     expect(detection).toBeNull()

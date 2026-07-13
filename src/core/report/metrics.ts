@@ -1,7 +1,21 @@
-import { compactEvents } from "~core/report/display"
-import { countIdentifiedObservers, countPrivacyTradeObservers, countSiteToolObservers, countSourceBackedActiveObservers, countUnclassifiedParties, countWatchingObservers } from "~core/domain/observer-counts"
-import { isDiagnosticEvent, isExposureScanEvent, isLocalPageSignalEvent, isPageActivityEvent, isPersistenceSurfaceEvent, isUnclassifiedObservation } from "~core/state/summaries"
+import {
+  countIdentifiedObservers,
+  countPrivacyTradeObservers,
+  countSiteToolObservers,
+  countSourceBackedActiveObservers,
+  countUnclassifiedParties,
+  countWatchingObservers
+} from "~core/domain/observer-counts"
 import type { SiteSummary } from "~core/domain/types"
+import { compactEvents } from "~core/report/display"
+import {
+  isDiagnosticEvent,
+  isExposureScanEvent,
+  isLocalPageSignalEvent,
+  isPageActivityEvent,
+  isPersistenceSurfaceEvent,
+  isUnclassifiedObservation
+} from "~core/state/summaries"
 
 // THE single source of truth for every headline number the popup, the
 // report tab, and the copy payload display. Both surfaces read the same

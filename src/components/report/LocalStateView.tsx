@@ -1,26 +1,30 @@
-import { useEffect, useRef, useState } from "react"
 import { ClipboardCopy } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
 import browser from "webextension-polyfill"
 
+import ObservationTable from "~components/report/ObservationTable"
+import { Metric, SectionTitle } from "~components/report/shared"
+import Button from "~components/system/Button"
+import Disclosure from "~components/system/Disclosure"
+import { TYPE, UI } from "~components/system/tokens"
 import { RuntimeMessageSchema } from "~core/contracts/messages"
 import type { CookieMetadataScanResult, CookieValueInspectEntry, CookieValueInspectResult } from "~core/domain/types"
 import type { DisplayObservation } from "~core/report/display"
 import { buildCookieMetadataRollup, buildLocalStatePurposeRollup, buildLocalStateRollup, formatCopyEvent } from "~core/report/display"
 import { useTransientState } from "~hooks/useTransientState"
-import Button from "~components/system/Button"
-import Disclosure from "~components/system/Disclosure"
-import { TYPE, UI } from "~components/system/tokens"
-
-import ObservationTable from "~components/report/ObservationTable"
-import { Metric, SectionTitle } from "~components/report/shared"
 
 type CookieMetadataUiStatus = CookieMetadataScanResult["status"] | "idle" | "scanning" | "error"
 type CookieValueInspectUiStatus = CookieValueInspectResult["status"] | "idle" | "scanning" | "error"
 
 function cookieMetadataStatusCopy(status: CookieMetadataUiStatus, count: number, enabled: boolean) {
-  if (!enabled) return "Enable browser cookie metadata in the popup to add HttpOnly/SameSite/Secure cookie records to reports for pages you visit."
-  if (status === "available") return count === 0 ? "Browser cookie metadata was available; no matching first-party cookies were found." : `Browser cookie metadata scanned ${count} first-party ${count === 1 ? "cookie record" : "cookie records"}.`
-  if (status === "permission_required") return "Cookie metadata is enabled in Pulse, but Chrome has not granted the optional cookies permission. Re-enable the popup checkbox to grant it."
+  if (!enabled)
+    return "Enable browser cookie metadata in the popup to add HttpOnly/SameSite/Secure cookie records to reports for pages you visit."
+  if (status === "available")
+    return count === 0
+      ? "Browser cookie metadata was available; no matching first-party cookies were found."
+      : `Browser cookie metadata scanned ${count} first-party ${count === 1 ? "cookie record" : "cookie records"}.`
+  if (status === "permission_required")
+    return "Cookie metadata is enabled in Pulse, but Chrome has not granted the optional cookies permission. Re-enable the popup checkbox to grant it."
   if (status === "unsupported") return "This browser does not expose the optional cookie metadata API to the extension."
   if (status === "restricted_page") return "Cookie metadata can only be inspected on normal http or https pages."
   if (status === "no_tab") return "No source tab was available for this report."
@@ -30,8 +34,12 @@ function cookieMetadataStatusCopy(status: CookieMetadataUiStatus, count: number,
 }
 
 function cookieValueInspectStatusCopy(status: CookieValueInspectUiStatus, count: number) {
-  if (status === "available") return count === 0 ? "No current-site cookie values were returned." : `${count} current-site ${count === 1 ? "cookie value is" : "cookie values are"} loaded in this page only.`
-  if (status === "permission_required") return "Chrome has not granted the optional cookies permission. Re-enable the popup checkbox to grant it."
+  if (status === "available")
+    return count === 0
+      ? "No current-site cookie values were returned."
+      : `${count} current-site ${count === 1 ? "cookie value is" : "cookie values are"} loaded in this page only.`
+  if (status === "permission_required")
+    return "Chrome has not granted the optional cookies permission. Re-enable the popup checkbox to grant it."
   if (status === "unsupported") return "This browser does not expose the optional cookie API to the extension."
   if (status === "restricted_page") return "Cookie values can only be inspected on normal http or https pages."
   if (status === "no_tab") return "No source tab was available for this report."
@@ -61,18 +69,22 @@ function localStateCopyPayload({
   statusCopy: string
   webStoragePurposeRollup: ReturnType<typeof buildLocalStatePurposeRollup>
 }) {
-  return JSON.stringify({
-    generatedAt: new Date().toISOString(),
-    origin,
-    surface: "local-state",
-    valuePolicy: "Metadata only. Explicitly revealed cookie values are not included in this copy payload.",
-    status: statusCopy,
-    localStateRollup,
-    webStoragePurposeRollup,
-    cookieRollup,
-    localStateObservations: localStateObservations.map(({ event, count }) => formatCopyEvent(event, count)),
-    browserCookieMetadataObservations: browserCookieObservations.map(({ event, count }) => formatCopyEvent(event, count))
-  }, null, 2)
+  return JSON.stringify(
+    {
+      generatedAt: new Date().toISOString(),
+      origin,
+      surface: "local-state",
+      valuePolicy: "Metadata only. Explicitly revealed cookie values are not included in this copy payload.",
+      status: statusCopy,
+      localStateRollup,
+      webStoragePurposeRollup,
+      cookieRollup,
+      localStateObservations: localStateObservations.map(({ event, count }) => formatCopyEvent(event, count)),
+      browserCookieMetadataObservations: browserCookieObservations.map(({ event, count }) => formatCopyEvent(event, count))
+    },
+    null,
+    2
+  )
 }
 
 function CookieValueInspectPanel({ enabled, tabId }: { enabled: boolean; tabId: number | null }) {
@@ -123,13 +135,21 @@ function CookieValueInspectPanel({ enabled, tabId }: { enabled: boolean; tabId: 
         <div>
           <h3 className={TYPE.label}>Inspect cookie values locally</h3>
           <p className={`${TYPE.small} mt-2`}>
-            This loads current-site cookie values into this report page only. They are not recorded, copied, exported, added to debug data, or sent off-device. HttpOnly values are browser-only data page scripts cannot read.
+            This loads current-site cookie values into this report page only. They are not recorded, copied, exported, added to debug data,
+            or sent off-device. HttpOnly values are browser-only data page scripts cannot read.
           </p>
           <p className={`${TYPE.body} mt-2`}>{cookieValueInspectStatusCopy(status, cookies.length)}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {cookies.length > 0 ? <Button onClick={hideValues} variant="secondary">Hide values</Button> : null}
-          <Button disabled={!enabled || status === "scanning" || !tabId} onClick={() => inspectValues().catch(() => setStatus("error"))} variant="secondary">
+          {cookies.length > 0 ? (
+            <Button onClick={hideValues} variant="secondary">
+              Hide values
+            </Button>
+          ) : null}
+          <Button
+            disabled={!enabled || status === "scanning" || !tabId}
+            onClick={() => inspectValues().catch(() => setStatus("error"))}
+            variant="secondary">
             {status === "scanning" ? "Loading" : "Inspect values"}
           </Button>
         </div>
@@ -153,10 +173,24 @@ function CookieValueInspectPanel({ enabled, tabId }: { enabled: boolean; tabId: 
                 return (
                   <tr className="border-b border-border align-top last:border-b-0" key={key}>
                     <td className={`${TYPE.body} p-2 break-all`}>{cookie.name || "(unnamed)"}</td>
-                    <td className={`${TYPE.small} p-2 break-all`}>{cookie.domain}{cookie.path}</td>
-                    <td className={`${TYPE.small} p-2`}>{[cookie.httpOnly ? "HttpOnly" : "script-readable", cookie.secure ? "Secure" : "not Secure", cookie.session ? "session" : "durable", cookie.sameSite].join(" · ")}</td>
+                    <td className={`${TYPE.small} p-2 break-all`}>
+                      {cookie.domain}
+                      {cookie.path}
+                    </td>
+                    <td className={`${TYPE.small} p-2`}>
+                      {[
+                        cookie.httpOnly ? "HttpOnly" : "script-readable",
+                        cookie.secure ? "Secure" : "not Secure",
+                        cookie.session ? "session" : "durable",
+                        cookie.sameSite
+                      ].join(" · ")}
+                    </td>
                     <td className={`${TYPE.small} max-w-md p-2 break-all font-mono`}>{revealed ? cookie.value : "••••••••"}</td>
-                    <td className="p-2"><Button onClick={() => toggleReveal(key)} variant="secondary">{revealed ? "Hide" : "Reveal"}</Button></td>
+                    <td className="p-2">
+                      <Button onClick={() => toggleReveal(key)} variant="secondary">
+                        {revealed ? "Hide" : "Reveal"}
+                      </Button>
+                    </td>
                   </tr>
                 )
               })}
@@ -213,15 +247,17 @@ export default function LocalStateSection({
   }
 
   async function copyLocalState() {
-    await navigator.clipboard.writeText(localStateCopyPayload({
-      browserCookieObservations: observations,
-      cookieRollup,
-      localStateObservations,
-      localStateRollup,
-      origin,
-      statusCopy,
-      webStoragePurposeRollup
-    }))
+    await navigator.clipboard.writeText(
+      localStateCopyPayload({
+        browserCookieObservations: observations,
+        cookieRollup,
+        localStateObservations,
+        localStateRollup,
+        origin,
+        statusCopy,
+        webStoragePurposeRollup
+      })
+    )
     flashLocalStateCopyState("copied", 2000)
   }
 
@@ -245,7 +281,8 @@ export default function LocalStateSection({
         </button>
       </div>
       <p className={`${TYPE.small} mt-2`}>
-        What this site left in your browser: cookies, storage, local databases, cache, and background workers. Default report rows are metadata only; values appear only if you explicitly inspect them below.
+        What this site left in your browser: cookies, storage, local databases, cache, and background workers. Default report rows are
+        metadata only; values appear only if you explicitly inspect them below.
       </p>
       <section className={`mt-4 ${UI.densePanel}`}>
         <h3 className={TYPE.label}>What this site left behind</h3>
@@ -262,7 +299,11 @@ export default function LocalStateSection({
         </div>
         {localStateRollup.families.length > 0 ? (
           <ul className={`${TYPE.small} mt-3 flex flex-wrap gap-x-4 gap-y-1`}>
-            {localStateRollup.families.map((family) => <li key={family.label}>{family.label} <span className="tabular-nums">{family.count}</span></li>)}
+            {localStateRollup.families.map((family) => (
+              <li key={family.label}>
+                {family.label} <span className="tabular-nums">{family.count}</span>
+              </li>
+            ))}
           </ul>
         ) : null}
       </section>
@@ -290,7 +331,9 @@ export default function LocalStateSection({
                   <tr className="border-b border-border align-top last:border-b-0" key={purpose.label}>
                     <td className={`${TYPE.body} p-2`}>{purpose.label}</td>
                     <td className={`${TYPE.body} p-2 tabular-nums`}>{purpose.count}</td>
-                    <td className={`${TYPE.small} p-2 break-all`}>{purpose.keyExamples.length > 0 ? purpose.keyExamples.join(" · ") : "Keys were hidden or unavailable"}</td>
+                    <td className={`${TYPE.small} p-2 break-all`}>
+                      {purpose.keyExamples.length > 0 ? purpose.keyExamples.join(" · ") : "Keys were hidden or unavailable"}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -301,9 +344,14 @@ export default function LocalStateSection({
       <div className={`mt-4 flex flex-wrap items-center justify-between gap-3 ${UI.subtlePanel} p-4`}>
         <div>
           <p className={TYPE.body}>{statusCopy}</p>
-          <p className={`${TYPE.small} mt-1`}>{enabled ? "Global setting is on. This report scans the current page only." : "Global setting is off."}</p>
+          <p className={`${TYPE.small} mt-1`}>
+            {enabled ? "Global setting is on. This report scans the current page only." : "Global setting is off."}
+          </p>
         </div>
-        <Button disabled={!enabled || status === "scanning" || !tabId} onClick={() => scanCookies().catch(() => setStatus("error"))} variant="secondary">
+        <Button
+          disabled={!enabled || status === "scanning" || !tabId}
+          onClick={() => scanCookies().catch(() => setStatus("error"))}
+          variant="secondary">
           {status === "scanning" ? "Scanning" : "Scan current page"}
         </Button>
       </div>
@@ -322,11 +370,20 @@ export default function LocalStateSection({
         <h3 className={TYPE.label}>What this tells you</h3>
         {localStateRollup.takeaways.length > 0 || webStoragePurposeRollup.takeaways.length > 0 || cookieRollup.takeaways.length > 0 ? (
           <ul className={`${TYPE.body} mt-3 list-disc pl-5`}>
-            {[...localStateRollup.takeaways, ...webStoragePurposeRollup.takeaways, ...cookieRollup.takeaways].map((takeaway, index) => <li key={`${takeaway}-${index}`}>{takeaway}</li>)}
-            <li>Cookie and storage values can name server-side records, carts, sessions, or preferences; the browser can show the local token, but not what the server attaches to it.</li>
+            {[...localStateRollup.takeaways, ...webStoragePurposeRollup.takeaways, ...cookieRollup.takeaways].map((takeaway, index) => (
+              <li key={`${takeaway}-${index}`}>{takeaway}</li>
+            ))}
+            <li>
+              Cookie and storage values can name server-side records, carts, sessions, or preferences; the browser can show the local token,
+              but not what the server attaches to it.
+            </li>
           </ul>
         ) : (
-          <p className={`${TYPE.body} mt-3`}>{enabled ? "No matching first-party browser cookie metadata has been recorded for this page yet." : "Enable the popup setting to inspect this page’s browser cookie metadata."}</p>
+          <p className={`${TYPE.body} mt-3`}>
+            {enabled
+              ? "No matching first-party browser cookie metadata has been recorded for this page yet."
+              : "Enable the popup setting to inspect this page’s browser cookie metadata."}
+          </p>
         )}
       </section>
       <CookieValueInspectPanel enabled={enabled} tabId={tabId} />

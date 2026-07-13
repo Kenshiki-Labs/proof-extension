@@ -1,8 +1,8 @@
 import browser from "webextension-polyfill"
 import type { Runtime } from "webextension-polyfill"
 
-import { RuntimeMessageSchema } from "~core/contracts/messages"
 import { projectContentScriptSettings } from "~core/contracts/content-settings"
+import { RuntimeMessageSchema } from "~core/contracts/messages"
 import { stripPageSuppliedAttribution, untrustedObservedEventReason } from "~core/domain/message-guards"
 import type {
   ObserverEvent,

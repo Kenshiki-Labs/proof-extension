@@ -17,7 +17,7 @@ function event(overrides: Partial<ObserverEvent>): ObserverEvent {
     status: "active",
     confidence: "confirmed",
     evidence: ["fixture"],
-    ...overrides,
+    ...overrides
   }
 }
 
@@ -48,10 +48,10 @@ function giveup(overrides: Partial<Giveup> & Pick<Giveup, "category">): Giveup {
         scope_or_sharing: 0.5,
         irreversibility: 0.5,
         remedy_or_economic: 0.5,
-        actionability_inverse: 0.5,
-      },
+        actionability_inverse: 0.5
+      }
     },
-    ...overrides,
+    ...overrides
   } as Giveup
 }
 
@@ -105,7 +105,23 @@ describe("deriveObservedClasses", () => {
 describe("reconcile", () => {
   it("splits observed classes into declared and undeclared, and leaves the rest dormant", () => {
     const sharing = giveup({ category: "data_sharing_third_parties" })
-    const arbitration = giveup({ category: "arbitration_class_action_waiver", scoring: { rubric_version: "atlas-severity-1.0.0", score: 64, base: 58, boost: 6, per_factor: { surprise: 0.7, data_sensitivity: 0.2, scope_or_sharing: 0.4, irreversibility: 0.7, remedy_or_economic: 0.95, actionability_inverse: 0.75 } } })
+    const arbitration = giveup({
+      category: "arbitration_class_action_waiver",
+      scoring: {
+        rubric_version: "atlas-severity-1.0.0",
+        score: 64,
+        base: 58,
+        boost: 6,
+        per_factor: {
+          surprise: 0.7,
+          data_sensitivity: 0.2,
+          scope_or_sharing: 0.4,
+          irreversibility: 0.7,
+          remedy_or_economic: 0.95,
+          actionability_inverse: 0.75
+        }
+      }
+    })
     const audit = reconcile([TRACKER_EVENT, CANVAS_BY_PAGE], [sharing, arbitration])
 
     const contact = audit.observed.find((c) => c.key === "third_party_contact")
@@ -173,8 +189,40 @@ describe("reconcile", () => {
   })
 
   it("dormant powers sort by deterministic score, highest first", () => {
-    const retention = giveup({ category: "data_retention", scoring: { rubric_version: "atlas-severity-1.0.0", score: 40, base: 40, boost: 0, per_factor: { surprise: 0.4, data_sensitivity: 0.5, scope_or_sharing: 0.4, irreversibility: 0.8, remedy_or_economic: 0.3, actionability_inverse: 0.55 } } })
-    const arbitration = giveup({ category: "arbitration_class_action_waiver", scoring: { rubric_version: "atlas-severity-1.0.0", score: 64, base: 58, boost: 6, per_factor: { surprise: 0.7, data_sensitivity: 0.2, scope_or_sharing: 0.4, irreversibility: 0.7, remedy_or_economic: 0.95, actionability_inverse: 0.75 } } })
+    const retention = giveup({
+      category: "data_retention",
+      scoring: {
+        rubric_version: "atlas-severity-1.0.0",
+        score: 40,
+        base: 40,
+        boost: 0,
+        per_factor: {
+          surprise: 0.4,
+          data_sensitivity: 0.5,
+          scope_or_sharing: 0.4,
+          irreversibility: 0.8,
+          remedy_or_economic: 0.3,
+          actionability_inverse: 0.55
+        }
+      }
+    })
+    const arbitration = giveup({
+      category: "arbitration_class_action_waiver",
+      scoring: {
+        rubric_version: "atlas-severity-1.0.0",
+        score: 64,
+        base: 58,
+        boost: 6,
+        per_factor: {
+          surprise: 0.7,
+          data_sensitivity: 0.2,
+          scope_or_sharing: 0.4,
+          irreversibility: 0.7,
+          remedy_or_economic: 0.95,
+          actionability_inverse: 0.75
+        }
+      }
+    })
     const audit = reconcile([], [retention, arbitration])
     expect(audit.dormant.map((g) => g.category)).toEqual(["arbitration_class_action_waiver", "data_retention"])
   })

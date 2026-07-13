@@ -6,17 +6,13 @@ import { validateTrackerDatabase } from "~core/db/validate"
 // delivery) — the extension observes and explains instead of offering a
 // toggle that generates support-ticket breakage.
 
-export type BlockingGuidance =
-  | { offerBlocking: true; warning: string | null }
-  | { offerBlocking: false; reason: string }
+export type BlockingGuidance = { offerBlocking: true; warning: string | null } | { offerBlocking: false; reason: string }
 
 let cachedBreakage: Map<string, { risk: "low" | "medium" | "high"; note: string; affects: string[] }> | null = null
 
 function breakageByTrackerId() {
   if (!cachedBreakage) {
-    cachedBreakage = new Map(
-      validateTrackerDatabase().trackers.map((tracker) => [tracker.id, tracker.browserAction.siteBreakage])
-    )
+    cachedBreakage = new Map(validateTrackerDatabase().trackers.map((tracker) => [tracker.id, tracker.browserAction.siteBreakage]))
   }
   return cachedBreakage
 }

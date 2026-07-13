@@ -28,10 +28,13 @@ test("main-world observer attaches without breaking the page", async () => {
 
       // The bridge reports itself as a diagnostic, never as page behavior.
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          return events.some((event) => event.eventType === "extension_diagnostic")
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            return events.some((event) => event.eventType === "extension_diagnostic")
+          },
+          { timeout: 15_000 }
+        )
         .toBe(true)
 
       const summaries = await readSummaries(worker)

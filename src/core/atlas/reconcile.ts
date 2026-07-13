@@ -1,7 +1,7 @@
-import { partyKey, isThirdPartyObserverEvent } from "~core/domain/observer-counts"
-import { isPageActivityEvent } from "~core/state/summaries"
-import type { ObserverEvent } from "~core/domain/types"
 import type { Giveup, GiveupCategory } from "~core/atlas/types"
+import { isThirdPartyObserverEvent, partyKey } from "~core/domain/observer-counts"
+import type { ObserverEvent } from "~core/domain/types"
+import { isPageActivityEvent } from "~core/state/summaries"
 
 // Done vs. Declared reconciliation (docs/consent-atlas-tab-spec.md).
 //
@@ -19,11 +19,7 @@ import type { Giveup, GiveupCategory } from "~core/atlas/types"
 // which policies authorize under tracking-technology language — never under
 // "biometric" (a policy's "fingerprint" means a finger, not a GPU).
 
-export type ObservedClassKey =
-  | "third_party_contact"
-  | "fingerprint_read"
-  | "identifier_handoff"
-  | "ip_visibility"
+export type ObservedClassKey = "third_party_contact" | "fingerprint_read" | "identifier_handoff" | "ip_visibility"
 
 // "observed" = page activity did it (isPageActivityEvent). "capability" = only
 // our own probe proved the surface readable (extension-scan) — the claim must
@@ -62,7 +58,7 @@ const AUTHORIZING: Record<ObservedClassKey, readonly GiveupCategory[]> = {
   third_party_contact: ["data_sharing_third_parties", "tracking_advertising"],
   fingerprint_read: ["tracking_advertising", "sensitive_inference", "cross_device_tracking"],
   identifier_handoff: ["data_sharing_third_parties", "cross_device_tracking", "data_broker_enrichment"],
-  ip_visibility: ["location_tracking", "data_sharing_third_parties"],
+  ip_visibility: ["location_tracking", "data_sharing_third_parties"]
 }
 
 // Cookie/banner-mechanics clauses reconcile against the consent banner, not
@@ -72,7 +68,7 @@ const COOKIE_FAMILY: readonly GiveupCategory[] = [
   "cookie_reject_friction",
   "multi_click_cookie_rejection",
   "non_private_defaults",
-  "confusing_cookie_notice",
+  "confusing_cookie_notice"
 ]
 
 const FINGERPRINT_EVENT_TYPES = new Set<ObserverEvent["eventType"]>([
@@ -81,7 +77,7 @@ const FINGERPRINT_EVENT_TYPES = new Set<ObserverEvent["eventType"]>([
   "webgl_query",
   "font_enumeration",
   "webrtc_probe",
-  "browser_surface",
+  "browser_surface"
 ])
 
 const HANDOFF_EVENT_TYPES = new Set<ObserverEvent["eventType"]>(["cookie_sync", "identity_digest_observed"])
@@ -120,7 +116,7 @@ export function deriveObservedClasses(events: ObserverEvent[]): ObservedClass[] 
       tier: "observed",
       parties: distinctParties(networkContact),
       eventCount: totalCount(networkContact),
-      authorizedBy: AUTHORIZING.third_party_contact,
+      authorizedBy: AUTHORIZING.third_party_contact
     })
     // Every request that left carried the IP; each contacted party received
     // it. That is observed fact, not capability — the packet went out.
@@ -130,7 +126,7 @@ export function deriveObservedClasses(events: ObserverEvent[]): ObservedClass[] 
       tier: "observed",
       parties: distinctParties(networkContact),
       eventCount: totalCount(networkContact),
-      authorizedBy: AUTHORIZING.ip_visibility,
+      authorizedBy: AUTHORIZING.ip_visibility
     })
   }
 
@@ -147,7 +143,7 @@ export function deriveObservedClasses(events: ObserverEvent[]): ObservedClass[] 
       tier: observedByPage ? "observed" : "capability",
       parties: distinctParties(active),
       eventCount: totalCount(active),
-      authorizedBy: AUTHORIZING.fingerprint_read,
+      authorizedBy: AUTHORIZING.fingerprint_read
     })
   }
 
@@ -159,7 +155,7 @@ export function deriveObservedClasses(events: ObserverEvent[]): ObservedClass[] 
       tier: "observed",
       parties: distinctParties(handoff),
       eventCount: totalCount(handoff),
-      authorizedBy: AUTHORIZING.identifier_handoff,
+      authorizedBy: AUTHORIZING.identifier_handoff
     })
   }
 
@@ -194,9 +190,7 @@ export function reconcile(events: ObserverEvent[], giveups: Giveup[]): ConsentAu
   const cookieClauses = bannerObserved ? COOKIE_FAMILY.flatMap((category) => byCategory.get(category) ?? []) : []
   for (const clause of cookieClauses) matchedCategories.add(clause.category)
 
-  const dormant = giveups
-    .filter((giveup) => !matchedCategories.has(giveup.category))
-    .sort((a, b) => b.scoring.score - a.scoring.score)
+  const dormant = giveups.filter((giveup) => !matchedCategories.has(giveup.category)).sort((a, b) => b.scoring.score - a.scoring.score)
 
   return {
     observed,
@@ -206,7 +200,7 @@ export function reconcile(events: ObserverEvent[], giveups: Giveup[]): ConsentAu
       observedClasses: observed.length,
       declared: observed.filter((entry) => entry.status === "declared").length,
       undeclared: observed.filter((entry) => entry.status === "undeclared").length,
-      dormant: dormant.length,
-    },
+      dormant: dormant.length
+    }
   }
 }

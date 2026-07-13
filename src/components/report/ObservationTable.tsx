@@ -1,11 +1,20 @@
 import { Fragment } from "react"
 
+import Button from "~components/system/Button"
+import { TYPE } from "~components/system/tokens"
 import { blockingGuidance } from "~core/domain/blocking-policy"
 import { getObserverRemediation } from "~core/domain/remediation"
 import type { DisplayObservation } from "~core/report/display"
-import { blockabilitySummary, detailEntries, displayEventKey, eventSummary, formatDetailKey, formatTime, observerName, titleCase } from "~core/report/display"
-import Button from "~components/system/Button"
-import { TYPE } from "~components/system/tokens"
+import {
+  blockabilitySummary,
+  detailEntries,
+  displayEventKey,
+  eventSummary,
+  formatDetailKey,
+  formatTime,
+  observerName,
+  titleCase
+} from "~core/report/display"
 
 export default function ObservationTable({
   blockedTrackerIds = [],
@@ -37,7 +46,12 @@ export default function ObservationTable({
           {observations.map(({ event, count }) => {
             const remediation = getObserverRemediation(event)
             const guidance = blockingGuidance(event.trackerId)
-            const canBlock = !readOnly && Boolean(onToggleBlocking) && event.blockability === "network_blockable" && Boolean(event.trackerId) && guidance.offerBlocking
+            const canBlock =
+              !readOnly &&
+              Boolean(onToggleBlocking) &&
+              event.blockability === "network_blockable" &&
+              Boolean(event.trackerId) &&
+              guidance.offerBlocking
             const isBlocked = canBlock && blockedTrackerIds.includes(event.trackerId as string)
             const details = detailEntries(event)
 
@@ -50,7 +64,9 @@ export default function ObservationTable({
                   </td>
                   <td className="p-3">
                     <p className={TYPE.body}>{titleCase(event.eventType)}</p>
-                    <p className={`${TYPE.small} mt-1`}>{titleCase(event.source)} · {titleCase(event.confidence)}</p>
+                    <p className={`${TYPE.small} mt-1`}>
+                      {titleCase(event.source)} · {titleCase(event.confidence)}
+                    </p>
                   </td>
                   <td className="p-3">
                     <p className={TYPE.body}>{blockabilitySummary(event)}</p>
@@ -73,7 +89,9 @@ export default function ObservationTable({
                         <Button onClick={() => onToggleBlocking?.(event.trackerId as string, !isBlocked)}>
                           {isBlocked ? "Unblock" : "Block"}
                         </Button>
-                      ) : <span className={TYPE.small}>No browser block</span>}
+                      ) : (
+                        <span className={TYPE.small}>No browser block</span>
+                      )}
                     </td>
                   )}
                 </tr>

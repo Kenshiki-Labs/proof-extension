@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent, PageError } from "~core/domain/types"
+
 import {
   annotateEventDetail,
   createEmptySiteSummary,
@@ -110,11 +111,24 @@ describe("upsertEvent", () => {
   it("keeps local page signals out of active company buckets", () => {
     const first = upsertEvent(
       createEmptySiteSummary("https://example.test", 1),
-      event({ id: "consent", eventType: "consent_signal_observed", blockability: "observable_only", evidenceTier: "observed", details: { global: "__tcfapi" } })
+      event({
+        id: "consent",
+        eventType: "consent_signal_observed",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        details: { global: "__tcfapi" }
+      })
     )
     const summary = upsertEvent(
       first,
-      event({ id: "digest", eventType: "identity_digest_observed", blockability: "observable_only", evidenceTier: "observed", policyLabel: "behavioral_profiling", details: { algorithm: "SHA-256", inputBytes: 19 } })
+      event({
+        id: "digest",
+        eventType: "identity_digest_observed",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        policyLabel: "behavioral_profiling",
+        details: { algorithm: "SHA-256", inputBytes: 19 }
+      })
     )
 
     expect(summary.activeCompanies).toEqual([])
@@ -256,10 +270,7 @@ describe("normalizeSiteSummary", () => {
 
 describe("pruneExpiredEvents", () => {
   it("returns the same summary when every event is inside retention", () => {
-    const summary = upsertEvent(
-      createEmptySiteSummary("https://example.test", 1),
-      event({ observedAt: 1000 })
-    )
+    const summary = upsertEvent(createEmptySiteSummary("https://example.test", 1), event({ observedAt: 1000 }))
 
     expect(pruneExpiredEvents(summary, 1, 2000)).toBe(summary)
   })
@@ -295,10 +306,7 @@ describe("recordPageError", () => {
 
   it("caps retained page errors", () => {
     const summary = createEmptySiteSummary("https://example.test", 1)
-    const withErrors = ["error-1", "error-2", "error-3"].reduce(
-      (current, id) => recordPageError(current, pageError(id), 2),
-      summary
-    )
+    const withErrors = ["error-1", "error-2", "error-3"].reduce((current, id) => recordPageError(current, pageError(id), 2), summary)
 
     expect(withErrors.pageErrors.map((item) => item.id)).toEqual(["error-2", "error-3"])
   })

@@ -1,6 +1,6 @@
+import { TYPE, UI } from "~components/system/tokens"
 import { formatBits, formatCandidates, POPULATION_BASE, type NarrowingModel } from "~core/report/narrowing"
 import { joinTraits, portraitCloser, portraitTraits, zoneLabel } from "~core/report/portrait"
-import { TYPE, UI } from "~components/system/tokens"
 
 function compactPopulation(value: number) {
   return value === POPULATION_BASE ? "330,000,000" : formatCandidates(value)
@@ -46,7 +46,8 @@ export function NarrowingMirror({ model }: { model: NarrowingModel }) {
       ) : null}
       {timezoneLabel ? (
         <p className={`${TYPE.small} mt-2`}>
-          So far, location is only your device's own clock, set to <strong>{timezoneLabel}</strong>. Your IP narrows that to a city on a map. The full report shows you that meeting too.
+          So far, location is only your device's own clock, set to <strong>{timezoneLabel}</strong>. Your IP narrows that to a city on a
+          map. The full report shows you that meeting too.
         </p>
       ) : null}
       <details className="mt-2">
@@ -67,7 +68,9 @@ export function NarrowingMirror({ model }: { model: NarrowingModel }) {
         </div>
       </details>
       {model.hasConsentSignal ? (
-        <p className={`${TYPE.small} mt-2 border-l-2 border-amber-700 pl-2`}>This page asked for cookie consent. The readable surface above exists regardless of that answer.</p>
+        <p className={`${TYPE.small} mt-2 border-l-2 border-amber-700 pl-2`}>
+          This page asked for cookie consent. The readable surface above exists regardless of that answer.
+        </p>
       ) : null}
     </section>
   )
@@ -89,13 +92,16 @@ export function NarrowingReportSection({ model }: { model: NarrowingModel }) {
             <span className="min-w-0">
               <strong>{step.label}</strong> <span className="text-muted-foreground">{step.detail}</span>
             </span>
-            <span className="text-right font-mono text-xs tabular-nums text-muted-foreground max-sm:hidden">+{formatBits(step.bits)} bits</span>
+            <span className="text-right font-mono text-xs tabular-nums text-muted-foreground max-sm:hidden">
+              +{formatBits(step.bits)} bits
+            </span>
             <span className="text-right font-mono tabular-nums">{compactPopulation(step.remaining)}</span>
           </div>
         ))}
       </div>
       <p className={`${TYPE.small} mt-3`}>
-        Additive estimate using the proof app's narrowing model. Timezone and screen weights are measured from EFF Panopticlick; the rest are conservative estimates.
+        Additive estimate using the proof app's narrowing model. Timezone and screen weights are measured from EFF Panopticlick; the rest
+        are conservative estimates.
       </p>
       {model.hasConsentSignal ? (
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

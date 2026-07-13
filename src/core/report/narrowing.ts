@@ -1,10 +1,4 @@
-import {
-  buildNarrowing,
-  formatCandidates,
-  POPULATION_BASE,
-  type IdentityReading,
-  type NarrowingStep
-} from "~core/domain/identity-entropy"
+import { buildNarrowing, formatCandidates, POPULATION_BASE, type IdentityReading, type NarrowingStep } from "~core/domain/identity-entropy"
 import { countWatchingObservers } from "~core/domain/observer-counts"
 import type { ObserverEvent } from "~core/domain/types"
 

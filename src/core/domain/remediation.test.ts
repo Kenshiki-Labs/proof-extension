@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent } from "~core/domain/types"
+
 import { getObserverRemediation } from "./remediation"
 
 function event(overrides: Partial<ObserverEvent> = {}): ObserverEvent {

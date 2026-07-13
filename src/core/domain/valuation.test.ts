@@ -1,10 +1,20 @@
-import { describe, expect, it } from "vitest"
 import { readFileSync } from "node:fs"
 import { resolve } from "node:path"
+import { describe, expect, it } from "vitest"
 
 import { validateTrackerDatabase } from "~core/db/validate"
 import type { ObserverEvent } from "~core/domain/types"
-import { buildTabValuationEdges, buildUnclassifiedGraphEdges, formatUsd, formatUsdRange, getTrackerValuation, rollupObservedValuations, rollupValuationOutcomes, VALUATION_DISCLAIMER } from "./valuation"
+
+import {
+  buildTabValuationEdges,
+  buildUnclassifiedGraphEdges,
+  formatUsd,
+  formatUsdRange,
+  getTrackerValuation,
+  rollupObservedValuations,
+  rollupValuationOutcomes,
+  VALUATION_DISCLAIMER
+} from "./valuation"
 
 const root = resolve(__dirname, "../../..")
 const normalizedValuations = JSON.parse(readFileSync(resolve(root, "intelligence/normalized/valuations.json"), "utf8"))
@@ -42,9 +52,19 @@ describe("perPersonValue database", () => {
     const totalLow = trackers.reduce((sum, tracker) => sum + tracker.perPersonValue.annual.low_usd, 0)
     const totalHigh = trackers.reduce((sum, tracker) => sum + tracker.perPersonValue.annual.high_usd, 0)
     const totalMicro = trackers.reduce((sum, tracker) => sum + tracker.perPersonValue.perVisit.microdollars, 0)
-    const normalizedLow = normalizedValuations.records.reduce((sum: number, record: { perPersonValue: { annual: { low_usd: number } } }) => sum + record.perPersonValue.annual.low_usd, 0)
-    const normalizedHigh = normalizedValuations.records.reduce((sum: number, record: { perPersonValue: { annual: { high_usd: number } } }) => sum + record.perPersonValue.annual.high_usd, 0)
-    const normalizedMicro = normalizedValuations.records.reduce((sum: number, record: { perPersonValue: { perVisit: { microdollars: number } } }) => sum + record.perPersonValue.perVisit.microdollars, 0)
+    const normalizedLow = normalizedValuations.records.reduce(
+      (sum: number, record: { perPersonValue: { annual: { low_usd: number } } }) => sum + record.perPersonValue.annual.low_usd,
+      0
+    )
+    const normalizedHigh = normalizedValuations.records.reduce(
+      (sum: number, record: { perPersonValue: { annual: { high_usd: number } } }) => sum + record.perPersonValue.annual.high_usd,
+      0
+    )
+    const normalizedMicro = normalizedValuations.records.reduce(
+      (sum: number, record: { perPersonValue: { perVisit: { microdollars: number } } }) =>
+        sum + record.perPersonValue.perVisit.microdollars,
+      0
+    )
     expect(totalLow).toBeCloseTo(normalizedLow, 8)
     expect(totalHigh).toBeCloseTo(normalizedHigh, 8)
     expect(totalMicro).toBeCloseTo(normalizedMicro, 8)
@@ -202,11 +222,11 @@ describe("buildUnclassifiedGraphEdges — unnamed third parties, still in the pi
 describe("who-it-serves slice", () => {
   it("splits the rollup by beneficiary and prices the no-trade subset", () => {
     const rollup = rollupObservedValuations([
-      event("liveramp", "e1"),     // only_their_business, 0.5–5
-      event("tapad", "e2"),        // only_their_business, 0.5–3
-      event("google-ads", "e3"),   // advertisers_and_maybe_you
-      event("fullstory", "e4"),    // the_site
-      event("intercom", "e5")      // you_and_the_site
+      event("liveramp", "e1"), // only_their_business, 0.5–5
+      event("tapad", "e2"), // only_their_business, 0.5–3
+      event("google-ads", "e3"), // advertisers_and_maybe_you
+      event("fullstory", "e4"), // the_site
+      event("intercom", "e5") // you_and_the_site
     ])
 
     expect(rollup.servesCounts).toEqual({
@@ -239,10 +259,7 @@ describe("rollupValuationOutcomes", () => {
   })
 
   it("counts a tracker as reached if even one of its requests got through — worst case is the honest case", () => {
-    const rollup = rollupValuationOutcomes([
-      statusEvent("fullstory", "b1", "blocked"),
-      statusEvent("fullstory", "a1", "active")
-    ])
+    const rollup = rollupValuationOutcomes([statusEvent("fullstory", "b1", "blocked"), statusEvent("fullstory", "a1", "active")])
 
     expect(rollup.reached.trackerIds).toEqual(["fullstory"])
     expect(rollup.denied.trackerIds).toEqual([])
@@ -342,10 +359,7 @@ describe("outcome rollup audit regressions", () => {
   it("a mixed-status tracker's blocked requests never count as 'answered locally'", () => {
     // criteo: 2 mitigated requests + 3 blocked requests -> shimmed bucket,
     // but only the 2 mitigated ones were answered by the shim.
-    const rollup = rollupValuationOutcomes([
-      statusEvent("criteo", "m1", "mitigated", 2),
-      statusEvent("criteo", "b1", "blocked", 3)
-    ])
+    const rollup = rollupValuationOutcomes([statusEvent("criteo", "m1", "mitigated", 2), statusEvent("criteo", "b1", "blocked", 3)])
     expect(rollup.shimmed.trackerIds).toEqual(["criteo"])
     expect(rollup.shimmed.requestCount).toBe(2)
   })
@@ -355,10 +369,7 @@ describe("outcome rollup audit regressions", () => {
     const revenueTracker = trackers.find((tracker) => tracker.perPersonValue.valueType === "revenue")!
     const costTracker = trackers.find((tracker) => tracker.perPersonValue.valueType === "cost")!
 
-    const rollup = rollupValuationOutcomes([
-      statusEvent(revenueTracker.id, "b1", "blocked"),
-      statusEvent(costTracker.id, "b2", "blocked")
-    ])
+    const rollup = rollupValuationOutcomes([statusEvent(revenueTracker.id, "b1", "blocked"), statusEvent(costTracker.id, "b2", "blocked")])
 
     expect(rollup.denied.costTrackerCount).toBe(1)
     expect(rollup.denied.annualRevenueLowUsd).toBe(revenueTracker.perPersonValue.annual.low_usd)

@@ -1,5 +1,5 @@
-import CategoryChip from "~components/watchers/CategoryChip"
 import { TYPE, UI } from "~components/system/tokens"
+import CategoryChip from "~components/watchers/CategoryChip"
 import type { AttentionTier } from "~core/domain/attention"
 import type { WatcherListModel, WatcherRow } from "~core/report/watchers"
 

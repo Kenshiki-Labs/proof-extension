@@ -1,6 +1,5 @@
 import { existsSync, readFileSync } from "node:fs"
 import { resolve } from "node:path"
-
 import { describe, expect, it } from "vitest"
 
 // docs/surface-contract.md vocabulary rule: product surfaces speak the
@@ -43,9 +42,7 @@ function stringLiterals(source: string): string[] {
 describe("surface vocabulary guard", () => {
   it("keeps pipeline vocabulary out of every popup string", () => {
     const popup = readFileSync(resolve(root, "src/popup.tsx"), "utf8")
-    const offending = stringLiterals(popup).filter((literal) =>
-      BANNED_ON_PRODUCT_SURFACES.some((pattern) => pattern.test(literal))
-    )
+    const offending = stringLiterals(popup).filter((literal) => BANNED_ON_PRODUCT_SURFACES.some((pattern) => pattern.test(literal)))
     expect(offending, `popup.tsx renders pipeline vocabulary: ${offending.join(" | ")}`).toEqual([])
   })
 

@@ -1,7 +1,7 @@
+import { TYPE, UI } from "~components/system/tokens"
 import { groupBySupplyChainStage } from "~core/domain/supply-chain"
 import type { MonetizationFlow, RollingValuationSummary, ValuationFlowRollup } from "~core/domain/types"
 import { formatUsdRange } from "~core/domain/valuation"
-import { TYPE, UI } from "~components/system/tokens"
 
 const FLOW_ROLE_COPY: Record<MonetizationFlow, { label: string; money: string; note: string; position: string }> = {
   identity_infra: {
@@ -35,7 +35,16 @@ function formatCount(value: number) {
 }
 
 function findFlowRollup(rollup: RollingValuationSummary, flow: MonetizationFlow) {
-  return rollup.flowRollups.find((flowRollup) => flowRollup.flow === flow) ?? { annualHighUsd: 0, annualLowUsd: 0, flow, observations: 0, thisPeriodVisitUsd: 0, trackerCount: 0 }
+  return (
+    rollup.flowRollups.find((flowRollup) => flowRollup.flow === flow) ?? {
+      annualHighUsd: 0,
+      annualLowUsd: 0,
+      flow,
+      observations: 0,
+      thisPeriodVisitUsd: 0,
+      trackerCount: 0
+    }
+  )
 }
 
 function BillOfMaterials({ rollup }: { rollup: RollingValuationSummary }) {
@@ -87,7 +96,9 @@ function BillOfMaterials({ rollup }: { rollup: RollingValuationSummary }) {
   return (
     <section className="mt-4">
       <h4 className={TYPE.label}>Bill of materials</h4>
-      <p className={`${TYPE.body} mt-2 max-w-4xl`}>The ledger is an invoice for the raw material and the factory stages around it, not a clean split of one payment.</p>
+      <p className={`${TYPE.body} mt-2 max-w-4xl`}>
+        The ledger is an invoice for the raw material and the factory stages around it, not a clean split of one payment.
+      </p>
       <ol className="mt-3 grid gap-3 lg:grid-cols-2">
         {stages.map((stage) => (
           <li className={`${UI.subtlePanel} p-3`} key={stage.label}>
@@ -105,13 +116,30 @@ function BillOfMaterials({ rollup }: { rollup: RollingValuationSummary }) {
           <h5 className={TYPE.label}>Missing input contract</h5>
           <div className="font-display text-base font-semibold tabular-nums">$0 to you</div>
         </div>
-        <p className={`${TYPE.body} mt-2`}>The unusual part is not that the factory exists. It is that the raw-material source sits outside the ledger: observed, priced, optimized against, and unpaid.</p>
+        <p className={`${TYPE.body} mt-2`}>
+          The unusual part is not that the factory exists. It is that the raw-material source sits outside the ledger: observed, priced,
+          optimized against, and unpaid.
+        </p>
       </div>
     </section>
   )
 }
 
-function FlowRow({ amount, from, label, note, to, via }: { amount: string; from: string; label: string; note: string; to: string; via: string }) {
+function FlowRow({
+  amount,
+  from,
+  label,
+  note,
+  to,
+  via
+}: {
+  amount: string
+  from: string
+  label: string
+  note: string
+  to: string
+  via: string
+}) {
   return (
     <div className={`${UI.subtlePanel} p-3`}>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -149,8 +177,12 @@ function FlowRoleCard({ rollup }: { rollup: ValuationFlowRollup }) {
           <p className={`${TYPE.small} mt-1`}>{copy.position}</p>
         </div>
         <div className="text-right">
-          <div className="font-display text-base font-semibold tabular-nums">{formatUsdRange(rollup.annualLowUsd, rollup.annualHighUsd)}</div>
-          <div className={TYPE.small}>{rollup.trackerCount} {rollup.trackerCount === 1 ? "tracker" : "trackers"}</div>
+          <div className="font-display text-base font-semibold tabular-nums">
+            {formatUsdRange(rollup.annualLowUsd, rollup.annualHighUsd)}
+          </div>
+          <div className={TYPE.small}>
+            {rollup.trackerCount} {rollup.trackerCount === 1 ? "tracker" : "trackers"}
+          </div>
         </div>
       </div>
       <p className={`${TYPE.body} mt-3`}>{copy.money}</p>
@@ -164,7 +196,8 @@ export default function SupplyChainMap({ rollup }: { rollup: RollingValuationSum
     <section className={`mt-5 ${UI.subtlePanel} p-4`}>
       <h3 className={TYPE.label}>Value supply chain</h3>
       <p className={`${TYPE.body} mt-2 max-w-4xl`}>
-        Not a pie. The same observation can help sell one ad, measure a conversion, enrich an identity graph, optimize a page, or feed the next auction. This ledger prices only defensible rails and labels the rest as not estimated.
+        Not a pie. The same observation can help sell one ad, measure a conversion, enrich an identity graph, optimize a page, or feed the
+        next auction. This ledger prices only defensible rails and labels the rest as not estimated.
       </p>
       <BillOfMaterials rollup={rollup} />
       <div className="mt-4 grid gap-3">
@@ -186,7 +219,9 @@ export default function SupplyChainMap({ rollup }: { rollup: RollingValuationSum
         />
       </div>
       <div className="mt-4 grid gap-3 lg:grid-cols-2">
-        {rollup.flowRollups.map((flowRollup) => <FlowRoleCard key={flowRollup.flow} rollup={flowRollup} />)}
+        {rollup.flowRollups.map((flowRollup) => (
+          <FlowRoleCard key={flowRollup.flow} rollup={flowRollup} />
+        ))}
       </div>
       <dl className="mt-4 grid gap-3 sm:grid-cols-3">
         <div>

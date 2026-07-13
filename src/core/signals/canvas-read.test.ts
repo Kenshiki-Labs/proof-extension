@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
-import { normalizeCanvasReadEvent } from "~core/signals/canvas-read"
 import type { ObserverEvent } from "~core/domain/types"
+import { normalizeCanvasReadEvent } from "~core/signals/canvas-read"
 
 function canvasEvent(overrides: Partial<ObserverEvent> = {}): ObserverEvent {
   return {
@@ -64,8 +64,6 @@ describe("normalizeCanvasReadEvent", () => {
     expect(normalized.status).toBe("active")
     expect(normalized.confidence).toBe("weak")
     expect(normalized.details).toBeUndefined()
-    expect(normalized.evidence).toEqual([
-      "A canvas read report arrived with malformed metadata and was recorded without detail."
-    ])
+    expect(normalized.evidence).toEqual(["A canvas read report arrived with malformed metadata and was recorded without detail."])
   })
 })

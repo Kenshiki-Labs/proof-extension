@@ -14,7 +14,10 @@ describe("installIdentityDigestHook", () => {
     await subtle.digest("SHA-256", input)
 
     expect(originalDigest).toHaveBeenCalledWith("SHA-256", input)
-    expect(report).toHaveBeenCalledWith({ key: `sha-256:${input.byteLength}`, details: { algorithm: "SHA-256", inputBytes: input.byteLength } })
+    expect(report).toHaveBeenCalledWith({
+      key: `sha-256:${input.byteLength}`,
+      details: { algorithm: "SHA-256", inputBytes: input.byteLength }
+    })
     expect(JSON.stringify(report.mock.calls)).not.toContain("person@example.test")
   })
 

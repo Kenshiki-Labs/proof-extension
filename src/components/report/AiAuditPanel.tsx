@@ -1,15 +1,14 @@
 import { useState } from "react"
 import browser from "webextension-polyfill"
 
+import { MarkdownReport } from "~components/report/Markdown"
+import { SectionTitle } from "~components/report/shared"
+import Button from "~components/system/Button"
+import { TYPE, UI } from "~components/system/tokens"
 import { RuntimeMessageSchema } from "~core/contracts/messages"
 import type { SiteSummary } from "~core/domain/types"
 import { buildCopyPayload } from "~core/report/display"
 import { useTransientState } from "~hooks/useTransientState"
-import Button from "~components/system/Button"
-import { TYPE, UI } from "~components/system/tokens"
-
-import { MarkdownReport } from "~components/report/Markdown"
-import { SectionTitle } from "~components/report/shared"
 
 function safeReportSlug(origin: string) {
   try {
@@ -39,7 +38,11 @@ export default function AiAuditReportPanel({ summary, tabId }: { summary: SiteSu
 
   async function generateReport() {
     if (!eligibleHostname || !tabId) {
-      setError(eligibleHostname ? "This report page is missing its tab context; reopen it from the popup." : "AI audit generation is enabled only for .gov domains.")
+      setError(
+        eligibleHostname
+          ? "This report page is missing its tab context; reopen it from the popup."
+          : "AI audit generation is enabled only for .gov domains."
+      )
       setStatus("failed")
       return
     }
@@ -95,8 +98,8 @@ export default function AiAuditReportPanel({ summary, tabId }: { summary: SiteSu
         <div>
           <SectionTitle number="AI" title="Government trust opportunity" />
           <p className={`${TYPE.body} mt-2 max-w-4xl`}>
-            Generate a concise report on whether this .gov service is missing opportunities to bind legitimate users to
-            high-stakes actions without increasing surveillance.
+            Generate a concise report on whether this .gov service is missing opportunities to bind legitimate users to high-stakes actions
+            without increasing surveillance.
           </p>
           <p className={`${TYPE.small} mt-2`}>
             {eligibleHostname ? `Ready for ${eligibleHostname}.` : `AI reports are available only for .gov domains.`}

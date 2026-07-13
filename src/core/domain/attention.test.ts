@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import { EMPTY_SUMMARY } from "~core/report/display"
+
 import { attentionScore, attentionTier, buildVerdict, rankObservers } from "./attention"
 
 function event(overrides: Partial<ObserverEvent>): ObserverEvent {
@@ -44,10 +45,7 @@ describe("attention score", () => {
     // LiveRamp ($0.50–5/yr, no trade) must outrank Google Ads ($420–500/yr,
     // ads trade): the classification is the harm story, enforced by the
     // tier-first sort rather than by weight tuning.
-    const ranked = rankObservers([
-      event({ id: "e1", trackerId: "google-ads" }),
-      event({ id: "e2", trackerId: "liveramp" })
-    ])
+    const ranked = rankObservers([event({ id: "e1", trackerId: "google-ads" }), event({ id: "e2", trackerId: "liveramp" })])
     expect(ranked.map((item) => item.observation.event.trackerId)).toEqual(["liveramp", "google-ads"])
   })
 
@@ -64,9 +62,31 @@ describe("rankObservers", () => {
       event({ id: "e1", trackerId: "hotjar" }),
       event({ id: "e2", trackerId: "liveramp" }),
       event({ id: "e3", source: "extension-scan", eventType: "browser_surface", blockability: "observable_only", firstParty: true }),
-      event({ id: "e4", firstParty: false, trackerId: undefined, companyId: undefined, blockability: "observable_only", evidenceTier: "observed", details: { host: "cdn.example" } }),
-      event({ id: "e5", firstParty: true, eventType: "storage_write", blockability: "observable_only", evidenceTier: "observed", details: { area: "sessionStorage", op: "set", key: "theme" } }),
-      event({ id: "e6", firstParty: true, eventType: "cache_validator_seen", blockability: "observable_only", evidenceTier: "observed", details: { headerName: "ETag", host: "example.test" } })
+      event({
+        id: "e4",
+        firstParty: false,
+        trackerId: undefined,
+        companyId: undefined,
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        details: { host: "cdn.example" }
+      }),
+      event({
+        id: "e5",
+        firstParty: true,
+        eventType: "storage_write",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        details: { area: "sessionStorage", op: "set", key: "theme" }
+      }),
+      event({
+        id: "e6",
+        firstParty: true,
+        eventType: "cache_validator_seen",
+        blockability: "observable_only",
+        evidenceTier: "observed",
+        details: { headerName: "ETag", host: "example.test" }
+      })
     ])
     expect(ranked[0]?.observation.event.trackerId).toBe("liveramp")
     expect(ranked.some((item) => item.observation.event.source === "extension-scan")).toBe(false)
@@ -104,9 +124,31 @@ describe("buildVerdict", () => {
       origin: "https://example.test",
       tabId: 1,
       events: [
-        event({ id: "unknown-host", firstParty: false, trackerId: undefined, companyId: undefined, blockability: "observable_only", evidenceTier: "observed", details: { host: "cdn.example" } }),
-        event({ id: "session-storage", firstParty: true, eventType: "storage_write", blockability: "observable_only", evidenceTier: "observed", details: { area: "sessionStorage", op: "set", key: "theme" } }),
-        event({ id: "cache-validator", firstParty: true, eventType: "cache_validator_seen", blockability: "observable_only", evidenceTier: "observed", details: { headerName: "ETag", host: "example.test" } })
+        event({
+          id: "unknown-host",
+          firstParty: false,
+          trackerId: undefined,
+          companyId: undefined,
+          blockability: "observable_only",
+          evidenceTier: "observed",
+          details: { host: "cdn.example" }
+        }),
+        event({
+          id: "session-storage",
+          firstParty: true,
+          eventType: "storage_write",
+          blockability: "observable_only",
+          evidenceTier: "observed",
+          details: { area: "sessionStorage", op: "set", key: "theme" }
+        }),
+        event({
+          id: "cache-validator",
+          firstParty: true,
+          eventType: "cache_validator_seen",
+          blockability: "observable_only",
+          evidenceTier: "observed",
+          details: { headerName: "ETag", host: "example.test" }
+        })
       ]
     })
 

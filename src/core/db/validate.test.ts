@@ -38,7 +38,11 @@ const tracker = {
   browserAction: {
     blockability: "network_blockable",
     method: "network-block",
-    siteBreakage: { risk: "low", affects: [], note: "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only." }
+    siteBreakage: {
+      risk: "low",
+      affects: [],
+      note: "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+    }
   },
   supplyChainRole: "site_tooling",
   whoItServes: { category: "the_site", note: "Replays visits so the site can fix problems. You benefit indirectly, if the site improves." },
@@ -102,7 +106,11 @@ const highFidelityFields = {
   browserAction: {
     blockability: "network_blockable",
     method: "network-block",
-    siteBreakage: { risk: "low", affects: [], note: "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only." },
+    siteBreakage: {
+      risk: "low",
+      affects: [],
+      note: "No visible site functionality is known to depend on this tracker; blocking is expected to affect tracking only."
+    },
     whatBlockingChanges: ["Blocks future browser requests matching FullStory domains."],
     whatBlockingDoesNotChange: ["Does not delete prior records held by FullStory or the site."]
   }
@@ -122,9 +130,7 @@ describe("validateTrackerDatabase", () => {
   })
 
   it("rejects duplicate ids", () => {
-    expect(() => validateTrackerDatabaseRecords([tracker, tracker], [company], [remediation])).toThrow(
-      "Duplicate tracker id"
-    )
+    expect(() => validateTrackerDatabaseRecords([tracker, tracker], [company], [remediation])).toThrow("Duplicate tracker id")
   })
 
   it("rejects unknown company references", () => {
@@ -134,9 +140,9 @@ describe("validateTrackerDatabase", () => {
   })
 
   it("rejects unknown remediation references", () => {
-    expect(() =>
-      validateTrackerDatabaseRecords([{ ...tracker, remediationId: "missing" }], [company], [remediation])
-    ).toThrow("unknown remediation")
+    expect(() => validateTrackerDatabaseRecords([{ ...tracker, remediationId: "missing" }], [company], [remediation])).toThrow(
+      "unknown remediation"
+    )
   })
 
   it("rejects trackers without provenance", () => {
@@ -147,57 +153,92 @@ describe("validateTrackerDatabase", () => {
   })
 
   it("rejects network-blockable trackers without a blocking-policy source", () => {
-    expect(() => validateTrackerDatabaseRecords([
-      {
-        ...tracker,
-        sources: [{ ...tracker.sources[0], family: "duckduckgo_tracker_radar", url: "https://example.com/radar" }]
-      }
-    ], [company], [remediation])).toThrow("network_blockable without a blocking-policy source")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [
+          {
+            ...tracker,
+            sources: [{ ...tracker.sources[0], family: "duckduckgo_tracker_radar", url: "https://example.com/radar" }]
+          }
+        ],
+        [company],
+        [remediation]
+      )
+    ).toThrow("network_blockable without a blocking-policy source")
   })
 
   it("rejects source-backed review without tracker-claim provenance", () => {
-    expect(() => validateTrackerDatabaseRecords([
-      {
-        ...tracker,
-        review: { ...tracker.review, status: "source_backed" }
-      }
-    ], [company], [remediation])).toThrow("without tracker-claim provenance")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [
+          {
+            ...tracker,
+            review: { ...tracker.review, status: "source_backed" }
+          }
+        ],
+        [company],
+        [remediation]
+      )
+    ).toThrow("without tracker-claim provenance")
 
-    expect(() => validateTrackerDatabaseRecords([
-      {
-        ...tracker,
-        sources: [...tracker.sources, { family: "market_research", name: "Market research", license: "Kenshiki", transform_notes: "Valuation only." }],
-        review: { ...tracker.review, status: "source_backed" }
-      }
-    ], [company], [remediation])).toThrow("without tracker-claim provenance")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [
+          {
+            ...tracker,
+            sources: [
+              ...tracker.sources,
+              { family: "market_research", name: "Market research", license: "Kenshiki", transform_notes: "Valuation only." }
+            ],
+            review: { ...tracker.review, status: "source_backed" }
+          }
+        ],
+        [company],
+        [remediation]
+      )
+    ).toThrow("without tracker-claim provenance")
   })
 
   it("rejects imported source families without required source URLs", () => {
-    expect(() => validateTrackerDatabaseRecords([
-      {
-        ...tracker,
-        browserAction: { ...tracker.browserAction, blockability: "observable_only" },
-        sources: [{ ...tracker.sources[0], family: "duckduckgo_tracker_radar" }]
-      }
-    ], [company], [remediation])).toThrow("requires url")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [
+          {
+            ...tracker,
+            browserAction: { ...tracker.browserAction, blockability: "observable_only" },
+            sources: [{ ...tracker.sources[0], family: "duckduckgo_tracker_radar" }]
+          }
+        ],
+        [company],
+        [remediation]
+      )
+    ).toThrow("requires url")
   })
 
   it("rejects path-only tracker rules", () => {
-    expect(() => validateTrackerDatabaseRecords([
-      { ...tracker, match: { domains: [], paths: ["/collect"], requestTypes: ["script"] } }
-    ], [company], [remediation])).toThrow("path rules without domains")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [{ ...tracker, match: { domains: [], paths: ["/collect"], requestTypes: ["script"] } }],
+        [company],
+        [remediation]
+      )
+    ).toThrow("path rules without domains")
   })
 
   it("rejects malformed tracker domains", () => {
-    expect(() => validateTrackerDatabaseRecords([
-      { ...tracker, match: { ...tracker.match, domains: ["https://fullstory.com"] } }
-    ], [company], [remediation])).toThrow("malformed domain")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [{ ...tracker, match: { ...tracker.match, domains: ["https://fullstory.com"] } }],
+        [company],
+        [remediation]
+      )
+    ).toThrow("malformed domain")
   })
 
   it("rejects tracker paths without a leading slash", () => {
-    expect(() => validateTrackerDatabaseRecords([
-      { ...tracker, match: { ...tracker.match, paths: ["collect"] } }
-    ], [company], [remediation])).toThrow("path must start with /")
+    expect(() =>
+      validateTrackerDatabaseRecords([{ ...tracker, match: { ...tracker.match, paths: ["collect"] } }], [company], [remediation])
+    ).toThrow("path must start with /")
   })
 
   it("allows v1 seed records to migrate gradually while enforcing high-fidelity fields on v2 records", () => {
@@ -205,62 +246,94 @@ describe("validateTrackerDatabase", () => {
     expect(() => validateTrackerDatabaseRecords([{ ...tracker, schemaVersion: 2 }], [company], [remediation])).toThrow(
       "v2 requires displayName"
     )
-    expect(() => validateTrackerDatabaseRecords([{ ...tracker, schemaVersion: 2, ...highFidelityFields }], [company], [remediation])).not.toThrow()
+    expect(() =>
+      validateTrackerDatabaseRecords([{ ...tracker, schemaVersion: 2, ...highFidelityFields }], [company], [remediation])
+    ).not.toThrow()
   })
 
   it("rejects inconsistent valuation math and mislabeled sourced valuation notes", () => {
-    expect(() => validateTrackerDatabaseRecords([
-      { ...tracker, perPersonValue: { ...tracker.perPersonValue, perVisit: { ...tracker.perPersonValue.perVisit, dollars: 1 } } }
-    ], [company], [remediation])).toThrow("inconsistent per-visit valuation math")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [{ ...tracker, perPersonValue: { ...tracker.perPersonValue, perVisit: { ...tracker.perPersonValue.perVisit, dollars: 1 } } }],
+        [company],
+        [remediation]
+      )
+    ).toThrow("inconsistent per-visit valuation math")
 
-    expect(() => validateTrackerDatabaseRecords([
-      { ...tracker, perPersonValue: { ...tracker.perPersonValue, annual: { low_usd: 5, high_usd: 1, midpoint_usd: 3 } } }
-    ], [company], [remediation])).toThrow("inconsistent annual valuation range")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [{ ...tracker, perPersonValue: { ...tracker.perPersonValue, annual: { low_usd: 5, high_usd: 1, midpoint_usd: 3 } } }],
+        [company],
+        [remediation]
+      )
+    ).toThrow("inconsistent annual valuation range")
 
-    expect(() => validateTrackerDatabaseRecords([
-      { ...tracker, perPersonValue: { ...tracker.perPersonValue, confidence: "sourced", sourceNote: "Vendor pricing tiers" } }
-    ], [company], [remediation])).toThrow("generic sourceNote")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [{ ...tracker, perPersonValue: { ...tracker.perPersonValue, confidence: "sourced", sourceNote: "Vendor pricing tiers" } }],
+        [company],
+        [remediation]
+      )
+    ).toThrow("generic sourceNote")
   })
 
   it("rejects network blocking language that omits deletion limits", () => {
-    expect(() => validateTrackerDatabaseRecords([
-      {
-        ...tracker,
-        schemaVersion: 2,
-        ...highFidelityFields,
-        browserAction: {
-          ...highFidelityFields.browserAction,
-          whatBlockingDoesNotChange: ["Server-side events may still happen."]
-        }
-      }
-    ], [company], [remediation])).toThrow("blocking does not delete prior records")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [
+          {
+            ...tracker,
+            schemaVersion: 2,
+            ...highFidelityFields,
+            browserAction: {
+              ...highFidelityFields.browserAction,
+              whatBlockingDoesNotChange: ["Server-side events may still happen."]
+            }
+          }
+        ],
+        [company],
+        [remediation]
+      )
+    ).toThrow("blocking does not delete prior records")
   })
 
   it("rejects high-breakage trackers classified as network_blockable", () => {
     // The blocking-policy gate never offers blocking for high-breakage
     // trackers, so a network_blockable class on one claims a capability the
     // product never exercises.
-    expect(() => validateTrackerDatabaseRecords([
-      {
-        ...tracker,
-        browserAction: {
-          ...tracker.browserAction,
-          siteBreakage: { risk: "high", affects: ["support chat"], note: "Blocking removes the site's chat widget." }
-        }
-      }
-    ], [company], [remediation])).toThrow("high-breakage (never offered blocking) but classified network_blockable")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [
+          {
+            ...tracker,
+            browserAction: {
+              ...tracker.browserAction,
+              siteBreakage: { risk: "high", affects: ["support chat"], note: "Blocking removes the site's chat widget." }
+            }
+          }
+        ],
+        [company],
+        [remediation]
+      )
+    ).toThrow("high-breakage (never offered blocking) but classified network_blockable")
 
-    expect(() => validateTrackerDatabaseRecords([
-      {
-        ...tracker,
-        browserAction: {
-          ...tracker.browserAction,
-          blockability: "user_action_required",
-          method: "source-remediation",
-          siteBreakage: { risk: "high", affects: ["support chat"], note: "Blocking removes the site's chat widget." }
-        }
-      }
-    ], [company], [remediation])).not.toThrow()
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [
+          {
+            ...tracker,
+            browserAction: {
+              ...tracker.browserAction,
+              blockability: "user_action_required",
+              method: "source-remediation",
+              siteBreakage: { risk: "high", affects: ["support chat"], note: "Blocking removes the site's chat widget." }
+            }
+          }
+        ],
+        [company],
+        [remediation]
+      )
+    ).not.toThrow()
   })
 
   it("rejects overlapping domain spaces across tracker records", () => {
@@ -274,22 +347,28 @@ describe("validateTrackerDatabase", () => {
       match: { ...tracker.match, domains: ["edge.fullstory.com"] }
     }
 
-    expect(() =>
-      validateTrackerDatabaseRecords([tracker, overlapping], [company, otherCompany], [remediation, otherRemediation])
-    ).toThrow("overlaps tracker")
+    expect(() => validateTrackerDatabaseRecords([tracker, overlapping], [company, otherCompany], [remediation, otherRemediation])).toThrow(
+      "overlaps tracker"
+    )
   })
 
   it("rejects reassurance language in tracker explanations and blocking copy", () => {
-    expect(() => validateTrackerDatabaseRecords([
-      {
-        ...tracker,
-        schemaVersion: 2,
-        ...highFidelityFields,
-        userImpact: {
-          ...highFidelityFields.userImpact,
-          whyItMatters: ["Blocking makes this tracker safe."]
-        }
-      }
-    ], [company], [remediation])).toThrow("forbidden reassurance language")
+    expect(() =>
+      validateTrackerDatabaseRecords(
+        [
+          {
+            ...tracker,
+            schemaVersion: 2,
+            ...highFidelityFields,
+            userImpact: {
+              ...highFidelityFields.userImpact,
+              whyItMatters: ["Blocking makes this tracker safe."]
+            }
+          }
+        ],
+        [company],
+        [remediation]
+      )
+    ).toThrow("forbidden reassurance language")
   })
 })

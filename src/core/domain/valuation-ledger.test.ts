@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent } from "~core/domain/types"
+
 import {
   createEmptyValuationLedger,
   dayKey,
@@ -50,7 +51,11 @@ describe("valuation ledger basics", () => {
     expect(ledger.siteVisits).toHaveLength(3)
     // Visit dedupe lives at the caller (a fresh UUID per visit); a repeated
     // visitId is a replay, not a second visit.
-    expect(ledger.siteVisits.find((entry) => entry.visitId === "visit-1")).toMatchObject({ visits: 1, firstVisitedAt: NOW, lastVisitedAt: NOW })
+    expect(ledger.siteVisits.find((entry) => entry.visitId === "visit-1")).toMatchObject({
+      visits: 1,
+      firstVisitedAt: NOW,
+      lastVisitedAt: NOW
+    })
   })
 
   it("dedupes tracker presence by visit and tracker while preserving raw observation count", () => {
@@ -59,14 +64,23 @@ describe("valuation ledger basics", () => {
     ledger = upsertValuationLedgerEvent(ledger, event({ id: "event-2", count: 2, observedAt: NOW + 10 }), "visit-1")
 
     expect(ledger.trackerPresence).toHaveLength(1)
-    expect(ledger.trackerPresence[0]).toMatchObject({ visitId: "visit-1", trackerId: "meta-pixel", observations: 42, pageVisitsWithTracker: 1 })
+    expect(ledger.trackerPresence[0]).toMatchObject({
+      visitId: "visit-1",
+      trackerId: "meta-pixel",
+      observations: 42,
+      pageVisitsWithTracker: 1
+    })
     expect(ledger.trackerPresence[0]?.valuation).toMatchObject({ perVisitMicrodollars: 420, annualLowUsd: 185, annualHighUsd: 250 })
   })
 
   it("ignores diagnostics, exposure scans, and unknown trackers", () => {
     let ledger = createEmptyValuationLedger()
     ledger = upsertValuationLedgerEvent(ledger, event({ eventType: "extension_diagnostic", trackerId: "meta-pixel" }), "visit-1")
-    ledger = upsertValuationLedgerEvent(ledger, event({ source: "extension-scan", eventType: "browser_surface", trackerId: "meta-pixel" }), "visit-1")
+    ledger = upsertValuationLedgerEvent(
+      ledger,
+      event({ source: "extension-scan", eventType: "browser_surface", trackerId: "meta-pixel" }),
+      "visit-1"
+    )
     ledger = upsertValuationLedgerEvent(ledger, event({ trackerId: "unknown-tracker" }), "visit-1")
     expect(ledger.trackerPresence).toEqual([])
   })
@@ -80,7 +94,11 @@ describe("rollupValuationLedger", () => {
     ledger = recordSiteVisit(ledger, "visit-3", "https://one.test", NOW + 1000)
     ledger = upsertValuationLedgerEvent(ledger, event({ origin: "https://one.test", count: 40 }), "visit-1")
     ledger = upsertValuationLedgerEvent(ledger, event({ origin: "https://two.test", count: 1 }), "visit-2")
-    ledger = upsertValuationLedgerEvent(ledger, event({ origin: "https://one.test", trackerId: "fullstory", companyId: "fullstory" }), "visit-3")
+    ledger = upsertValuationLedgerEvent(
+      ledger,
+      event({ origin: "https://one.test", trackerId: "fullstory", companyId: "fullstory" }),
+      "visit-3"
+    )
 
     const rollup = rollupValuationLedger(ledger, "day", NOW)
 
@@ -92,9 +110,24 @@ describe("rollupValuationLedger", () => {
     expect(rollup.annualRevenueLowUsd).toBe(185)
     expect(rollup.annualRevenueHighUsd).toBe(250)
     expect(rollup.annualOperatorCostLowUsd).toBe(0.5)
-    expect(rollup.flowRollups.find((entry) => entry.flow === "platform_ads")).toMatchObject({ trackerCount: 1, observations: 41, annualLowUsd: 185, annualHighUsd: 250 })
-    expect(rollup.flowRollups.find((entry) => entry.flow === "operator_saas")).toMatchObject({ trackerCount: 1, observations: 1, annualLowUsd: 0.5, annualHighUsd: 5 })
-    expect(rollup.flowRollups.find((entry) => entry.flow === "programmatic")).toMatchObject({ trackerCount: 0, observations: 0, annualLowUsd: 0, annualHighUsd: 0 })
+    expect(rollup.flowRollups.find((entry) => entry.flow === "platform_ads")).toMatchObject({
+      trackerCount: 1,
+      observations: 41,
+      annualLowUsd: 185,
+      annualHighUsd: 250
+    })
+    expect(rollup.flowRollups.find((entry) => entry.flow === "operator_saas")).toMatchObject({
+      trackerCount: 1,
+      observations: 1,
+      annualLowUsd: 0.5,
+      annualHighUsd: 5
+    })
+    expect(rollup.flowRollups.find((entry) => entry.flow === "programmatic")).toMatchObject({
+      trackerCount: 0,
+      observations: 0,
+      annualLowUsd: 0,
+      annualHighUsd: 0
+    })
     expect(rollup.topTrackers[0]).toMatchObject({ id: "meta-pixel", siteCount: 2, visitCount: 2, observations: 41 })
     expect(rollup.topSites[0]).toMatchObject({ id: "https://one.test", trackerCount: 2, visitCount: 2 })
   })

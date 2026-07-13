@@ -3,7 +3,16 @@ import { describe, expect, it } from "vitest"
 import { buildVerdict, rankObservers } from "~core/domain/attention"
 import type { ObserverEvent } from "~core/domain/types"
 import { createEmptySiteSummary, supersedeEvent, upsertEvent } from "~core/state/summaries"
-import { buildAtomicSignalRows, buildCopyPayload, compactEvents, exposureScanEvents, pageActivityEvents, persistenceSurfaceObservations, unclassifiedObservations } from "./display"
+
+import {
+  buildAtomicSignalRows,
+  buildCopyPayload,
+  compactEvents,
+  exposureScanEvents,
+  pageActivityEvents,
+  persistenceSurfaceObservations,
+  unclassifiedObservations
+} from "./display"
 import { summaryMetrics } from "./metrics"
 import { buildNarrowingModel } from "./narrowing"
 
@@ -26,10 +35,7 @@ function event(overrides: Partial<ObserverEvent>): ObserverEvent {
 }
 
 function summaryFrom(events: ObserverEvent[]) {
-  return events.reduce(
-    (summary, item) => upsertEvent(summary, item),
-    createEmptySiteSummary("https://example.test", 1)
-  )
+  return events.reduce((summary, item) => upsertEvent(summary, item), createEmptySiteSummary("https://example.test", 1))
 }
 
 function verdictObserverCount(summary: ReturnType<typeof summaryFrom>) {
@@ -230,16 +236,20 @@ describe("UI callchain integration", () => {
     expect(verdict.tierCounts).toMatchObject({ red: 1, amber: 1, gray: 1 })
     expect(ranked.map((item) => item.observation.event.trackerId).sort()).toEqual(["fullstory", "liveramp", "meta-pixel"])
     expect(unclassifiedObservations(summary.events).map((item) => item.event.details?.host)).toEqual(["cdn.example"])
-    expect(persistenceSurfaceObservations(summary.events).map((item) => item.event.eventType).sort()).toEqual(["cache_validator_seen", "storage_write"])
+    expect(
+      persistenceSurfaceObservations(summary.events)
+        .map((item) => item.event.eventType)
+        .sort()
+    ).toEqual(["cache_validator_seen", "storage_write"])
     expect(exposureScanEvents(summary.events)).toHaveLength(1)
     expect(narrowing.values).toEqual(["America/Denver", "1512x982 @2x", "MacIntel · en-US"])
     expect(narrowing.steps.map((step) => step.key)).toEqual(["timezone", "screen", "platformLanguage"])
     expect(narrowing.watching).toBe(metrics.watchingCompanies)
-    expect(buildAtomicSignalRows(summary.events).map((row) => row.signal).sort()).toEqual([
-      "cache_validator_seen",
-      "request_seen",
-      "storage_write"
-    ])
+    expect(
+      buildAtomicSignalRows(summary.events)
+        .map((row) => row.signal)
+        .sort()
+    ).toEqual(["cache_validator_seen", "request_seen", "storage_write"])
     expect(compactEvents(summary.events).some(({ event: item }) => item.eventType === "extension_diagnostic")).toBe(false)
   })
 

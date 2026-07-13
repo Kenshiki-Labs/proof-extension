@@ -225,7 +225,9 @@ describe("versioned intelligence snapshot manifest", () => {
 
 describe("normalized valuation projections", () => {
   const valuations = NormalizedValuationsSchema.parse(valuationsRaw)
-  const trackerIds = JSON.parse(readFileSync(resolve(root, "src/core/db/trackers.json"), "utf8")).map((tracker: { id: string }) => tracker.id)
+  const trackerIds = JSON.parse(readFileSync(resolve(root, "src/core/db/trackers.json"), "utf8")).map(
+    (tracker: { id: string }) => tracker.id
+  )
   const entities = NormalizedEntitiesSchema.parse(entitiesRaw)
 
   it("projects every finding to exactly one live runtime tracker", () => {
@@ -247,7 +249,10 @@ describe("normalized valuation projections", () => {
 
   it("computes derived valuation fields and pins corpus totals", () => {
     for (const record of valuations.records) {
-      expect(record.perPersonValue.perVisit.dollars, record.trackerId).toBeCloseTo(record.perPersonValue.perVisit.microdollars / 1_000_000, 12)
+      expect(record.perPersonValue.perVisit.dollars, record.trackerId).toBeCloseTo(
+        record.perPersonValue.perVisit.microdollars / 1_000_000,
+        12
+      )
       expect(record.perPersonValue.annual.midpoint_usd, record.trackerId).toBeCloseTo(
         (record.perPersonValue.annual.low_usd + record.perPersonValue.annual.high_usd) / 2,
         8

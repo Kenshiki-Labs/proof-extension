@@ -1,7 +1,15 @@
 import { MonetizationFlowSchema, RollingValuationSummarySchema, ValuationLedgerSchema } from "~core/contracts/schemas"
+import type {
+  ObserverEvent,
+  RollingValuationItem,
+  RollingValuationSummary,
+  TrackerPresenceLedgerEntry,
+  ValuationLedger,
+  ValuationPeriod,
+  ValuationSnapshot
+} from "~core/domain/types"
 import { getTrackerServes, getTrackerValuation, VALUATION_DISCLAIMER } from "~core/domain/valuation"
 import { isPageActivityEvent } from "~core/state/summaries"
-import type { ObserverEvent, RollingValuationItem, RollingValuationSummary, TrackerPresenceLedgerEntry, ValuationLedger, ValuationPeriod, ValuationSnapshot } from "~core/domain/types"
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 // Derived from the schema so the flow list cannot drift from the contract.
@@ -154,9 +162,18 @@ function visitUsd(entry: TrackerPresenceLedgerEntry) {
 }
 
 function topTrackers(entries: TrackerPresenceLedgerEntry[]): RollingValuationItem[] {
-  const grouped = new Map<string, { sites: Set<string>; visits: Set<string>; observations: number; thisPeriodVisitUsd: number; latest: TrackerPresenceLedgerEntry }>()
+  const grouped = new Map<
+    string,
+    { sites: Set<string>; visits: Set<string>; observations: number; thisPeriodVisitUsd: number; latest: TrackerPresenceLedgerEntry }
+  >()
   for (const entry of entries) {
-    const existing = grouped.get(entry.trackerId) ?? { sites: new Set<string>(), visits: new Set<string>(), observations: 0, thisPeriodVisitUsd: 0, latest: entry }
+    const existing = grouped.get(entry.trackerId) ?? {
+      sites: new Set<string>(),
+      visits: new Set<string>(),
+      observations: 0,
+      thisPeriodVisitUsd: 0,
+      latest: entry
+    }
     existing.sites.add(entry.siteOrigin)
     existing.visits.add(entry.visitId)
     existing.observations += entry.observations
@@ -174,13 +191,24 @@ function topTrackers(entries: TrackerPresenceLedgerEntry[]): RollingValuationIte
       annualLowUsd: value.latest.valuation.annualLowUsd,
       annualHighUsd: value.latest.valuation.annualHighUsd
     }))
-    .sort((left, right) => (right.siteCount ?? 0) - (left.siteCount ?? 0) || (right.visitCount ?? 0) - (left.visitCount ?? 0) || right.observations - left.observations || left.id.localeCompare(right.id))
+    .sort(
+      (left, right) =>
+        (right.siteCount ?? 0) - (left.siteCount ?? 0) ||
+        (right.visitCount ?? 0) - (left.visitCount ?? 0) ||
+        right.observations - left.observations ||
+        left.id.localeCompare(right.id)
+    )
 }
 
 function topSites(entries: TrackerPresenceLedgerEntry[]): RollingValuationItem[] {
   const grouped = new Map<string, { trackers: Set<string>; visits: Set<string>; observations: number; thisPeriodVisitUsd: number }>()
   for (const entry of entries) {
-    const existing = grouped.get(entry.siteOrigin) ?? { trackers: new Set<string>(), visits: new Set<string>(), observations: 0, thisPeriodVisitUsd: 0 }
+    const existing = grouped.get(entry.siteOrigin) ?? {
+      trackers: new Set<string>(),
+      visits: new Set<string>(),
+      observations: 0,
+      thisPeriodVisitUsd: 0
+    }
     existing.trackers.add(entry.trackerId)
     existing.visits.add(entry.visitId)
     existing.observations += entry.observations
@@ -188,8 +216,20 @@ function topSites(entries: TrackerPresenceLedgerEntry[]): RollingValuationItem[]
     grouped.set(entry.siteOrigin, existing)
   }
   return [...grouped.entries()]
-    .map(([id, value]) => ({ id, visitCount: value.visits.size, trackerCount: value.trackers.size, observations: value.observations, thisPeriodVisitUsd: value.thisPeriodVisitUsd }))
-    .sort((left, right) => (right.trackerCount ?? 0) - (left.trackerCount ?? 0) || (right.visitCount ?? 0) - (left.visitCount ?? 0) || right.observations - left.observations || left.id.localeCompare(right.id))
+    .map(([id, value]) => ({
+      id,
+      visitCount: value.visits.size,
+      trackerCount: value.trackers.size,
+      observations: value.observations,
+      thisPeriodVisitUsd: value.thisPeriodVisitUsd
+    }))
+    .sort(
+      (left, right) =>
+        (right.trackerCount ?? 0) - (left.trackerCount ?? 0) ||
+        (right.visitCount ?? 0) - (left.visitCount ?? 0) ||
+        right.observations - left.observations ||
+        left.id.localeCompare(right.id)
+    )
 }
 
 // Site↔tracker edges for the network graph: one edge per pair in the
@@ -201,14 +241,24 @@ function buildEdges(entries: TrackerPresenceLedgerEntry[]) {
   const grouped = new Map<string, { siteOrigin: string; trackerId: string; observations: number; thisPeriodVisitUsd: number }>()
   for (const entry of entries) {
     const key = `${entry.siteOrigin}|${entry.trackerId}`
-    const existing = grouped.get(key) ?? { siteOrigin: entry.siteOrigin, trackerId: entry.trackerId, observations: 0, thisPeriodVisitUsd: 0 }
+    const existing = grouped.get(key) ?? {
+      siteOrigin: entry.siteOrigin,
+      trackerId: entry.trackerId,
+      observations: 0,
+      thisPeriodVisitUsd: 0
+    }
     existing.observations += entry.observations
     existing.thisPeriodVisitUsd += visitUsd(entry)
     grouped.set(key, existing)
   }
   return [...grouped.values()]
     .map((edge) => ({ ...edge, servesCategory: getTrackerServes(edge.trackerId)?.category ?? ("only_their_business" as const) }))
-    .sort((left, right) => right.observations - left.observations || left.siteOrigin.localeCompare(right.siteOrigin) || left.trackerId.localeCompare(right.trackerId))
+    .sort(
+      (left, right) =>
+        right.observations - left.observations ||
+        left.siteOrigin.localeCompare(right.siteOrigin) ||
+        left.trackerId.localeCompare(right.trackerId)
+    )
     .slice(0, MAX_EDGES)
 }
 

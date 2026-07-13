@@ -1,4 +1,5 @@
 import type { ObserverEvent } from "~core/domain/types"
+
 import type { DisplayObservation } from "./compaction"
 
 // Local-state rollups: aggregate the compacted observation rows into the
@@ -75,10 +76,22 @@ export function buildCookieMetadataRollup(observations: DisplayObservation[]): C
   const persistentCookies = cookieBooleanCount(observations, "session", false)
   const takeaways: string[] = []
 
-  if (javascriptReadableCookies > 0) takeaways.push(`${javascriptReadableCookies} ${javascriptReadableCookies === 1 ? "cookie is" : "cookies are"} readable by page scripts, so site code can use the name as a direct state or identifier handle.`)
-  if (httpOnlyCookies > 0) takeaways.push(`${httpOnlyCookies} ${httpOnlyCookies === 1 ? "cookie is" : "cookies are"} HttpOnly: page scripts cannot read them, but the browser still sends them back to this site.`)
-  if (insecureCookies > 0) takeaways.push(`${insecureCookies} ${insecureCookies === 1 ? "cookie is" : "cookies are"} not marked Secure, so the record is not constrained to HTTPS-only transport by this attribute.`)
-  if (persistentCookies > 0) takeaways.push(`${persistentCookies} ${persistentCookies === 1 ? "cookie persists" : "cookies persist"} beyond the current browser session.`)
+  if (javascriptReadableCookies > 0)
+    takeaways.push(
+      `${javascriptReadableCookies} ${javascriptReadableCookies === 1 ? "cookie is" : "cookies are"} readable by page scripts, so site code can use the name as a direct state or identifier handle.`
+    )
+  if (httpOnlyCookies > 0)
+    takeaways.push(
+      `${httpOnlyCookies} ${httpOnlyCookies === 1 ? "cookie is" : "cookies are"} HttpOnly: page scripts cannot read them, but the browser still sends them back to this site.`
+    )
+  if (insecureCookies > 0)
+    takeaways.push(
+      `${insecureCookies} ${insecureCookies === 1 ? "cookie is" : "cookies are"} not marked Secure, so the record is not constrained to HTTPS-only transport by this attribute.`
+    )
+  if (persistentCookies > 0)
+    takeaways.push(
+      `${persistentCookies} ${persistentCookies === 1 ? "cookie persists" : "cookies persist"} beyond the current browser session.`
+    )
 
   return {
     httpOnlyCookies,
@@ -117,7 +130,12 @@ function isBrowserOnlyLocalState(event: ObserverEvent) {
 }
 
 function isDurableLocalState(event: ObserverEvent) {
-  if (event.eventType === "indexeddb_access" || event.eventType === "cache_storage_access" || event.eventType === "service_worker_registered") return true
+  if (
+    event.eventType === "indexeddb_access" ||
+    event.eventType === "cache_storage_access" ||
+    event.eventType === "service_worker_registered"
+  )
+    return true
   if (event.eventType === "storage_write") return event.details?.area === "localStorage"
   if (event.eventType === "cookie_observed") return event.details?.session === false || event.source !== "extension-scan"
   return false
@@ -153,19 +171,32 @@ export function buildLocalStateRollup(observations: DisplayObservation[]): Local
   const totalRecords = observations.length
   const takeaways: string[] = []
 
-  if (scriptReadableRecords > 0) takeaways.push(`${scriptReadableRecords} ${scriptReadableRecords === 1 ? "record is" : "records are"} readable or writable by page scripts, so site code can use them directly while you browse.`)
-  if (browserOnlyRecords > 0) takeaways.push(`${browserOnlyRecords} ${browserOnlyRecords === 1 ? "record is" : "records are"} browser-only or network-managed: page scripts may not read the value, but the browser can still send or compare it for this site.`)
-  if (durableRecords > 0) takeaways.push(`${durableRecords} ${durableRecords === 1 ? "record can" : "records can"} survive beyond the current tab or browser session.`)
-  if (backgroundWorkers > 0) takeaways.push(`${backgroundWorkers} background ${backgroundWorkers === 1 ? "worker can" : "workers can"} keep site code active after the page is closed.`)
+  if (scriptReadableRecords > 0)
+    takeaways.push(
+      `${scriptReadableRecords} ${scriptReadableRecords === 1 ? "record is" : "records are"} readable or writable by page scripts, so site code can use them directly while you browse.`
+    )
+  if (browserOnlyRecords > 0)
+    takeaways.push(
+      `${browserOnlyRecords} ${browserOnlyRecords === 1 ? "record is" : "records are"} browser-only or network-managed: page scripts may not read the value, but the browser can still send or compare it for this site.`
+    )
+  if (durableRecords > 0)
+    takeaways.push(
+      `${durableRecords} ${durableRecords === 1 ? "record can" : "records can"} survive beyond the current tab or browser session.`
+    )
+  if (backgroundWorkers > 0)
+    takeaways.push(
+      `${backgroundWorkers} background ${backgroundWorkers === 1 ? "worker can" : "workers can"} keep site code active after the page is closed.`
+    )
 
   return {
     backgroundWorkers,
     browserOnlyRecords,
     durableRecords,
     families,
-    headline: totalRecords === 0
-      ? "No browser-local state has been recorded for this page yet."
-      : `This site left browser-local state in ${mechanisms} ${mechanisms === 1 ? "mechanism" : "mechanisms"}.`,
+    headline:
+      totalRecords === 0
+        ? "No browser-local state has been recorded for this page yet."
+        : `This site left browser-local state in ${mechanisms} ${mechanisms === 1 ? "mechanism" : "mechanisms"}.`,
     scriptReadableRecords,
     sessionRecords,
     takeaways,
@@ -200,9 +231,11 @@ export function classifyStoragePurpose(key: string): string {
   if (/cart|basket|checkout|buy|order|commerce/.test(normalized)) return "Cart and commerce"
   if (/consent|privacy|optanon|cmp|gdpr|ccpa|usp|tcf/.test(normalized)) return "Consent and privacy choices"
   if (/auth|login|token|csrf|xsrf|jwt|identity|session|sid\b/.test(normalized)) return "Authentication and session"
-  if (/(^|[^a-z])ads?([^a-z]|$)|advert|gclid|fbp|fbc|ttclid|campaign|attribution|pixel/.test(normalized)) return "Advertising and attribution"
+  if (/(^|[^a-z])ads?([^a-z]|$)|advert|gclid|fbp|fbc|ttclid|campaign|attribution|pixel/.test(normalized))
+    return "Advertising and attribution"
   if (/csm|perf|metric|rum|latency|timing|telemetry|diagnostic|eelsts/.test(normalized)) return "Performance and diagnostics"
-  if (/analytics|amplitude|mixpanel|segment|heap|(^|[_:\-.])ga([_:\-.]|$)|gtm|(^|[^a-z])events?([^a-z]|$)|fwcim/.test(normalized)) return "Analytics and event queues"
+  if (/analytics|amplitude|mixpanel|segment|heap|(^|[_:\-.])ga([_:\-.]|$)|gtm|(^|[^a-z])events?([^a-z]|$)|fwcim/.test(normalized))
+    return "Analytics and event queues"
   if (/pref|theme|locale|language|currency|region|zip|postal|store/.test(normalized)) return "Preferences and localization"
   if (/cache|offline|asset|preload/.test(normalized)) return "Cache and offline state"
   if (/test|debug|qa|probe/.test(normalized)) return "Diagnostics and tests"
@@ -243,18 +276,31 @@ export function buildLocalStatePurposeRollup(observations: DisplayObservation[])
   const takeaways: string[] = []
   const leadingPurpose = purposes[0]
 
-  if (localStorageRecords > 0) takeaways.push(`${localStorageRecords} ${localStorageRecords === 1 ? "action touched" : "actions touched"} localStorage, which can persist after this tab closes.`)
-  if (sessionStorageRecords > 0) takeaways.push(`${sessionStorageRecords} ${sessionStorageRecords === 1 ? "action touched" : "actions touched"} sessionStorage, which is scoped to this tab session.`)
-  if (deleteOperations > 0) takeaways.push(`${deleteOperations} ${deleteOperations === 1 ? "delete operation shows" : "delete operations show"} the site actively rotating or clearing local keys.`)
-  if (clearOperations > 0) takeaways.push(`${clearOperations} ${clearOperations === 1 ? "clear operation wiped" : "clear operations wiped"} all keys in a Web Storage area.`)
+  if (localStorageRecords > 0)
+    takeaways.push(
+      `${localStorageRecords} ${localStorageRecords === 1 ? "action touched" : "actions touched"} localStorage, which can persist after this tab closes.`
+    )
+  if (sessionStorageRecords > 0)
+    takeaways.push(
+      `${sessionStorageRecords} ${sessionStorageRecords === 1 ? "action touched" : "actions touched"} sessionStorage, which is scoped to this tab session.`
+    )
+  if (deleteOperations > 0)
+    takeaways.push(
+      `${deleteOperations} ${deleteOperations === 1 ? "delete operation shows" : "delete operations show"} the site actively rotating or clearing local keys.`
+    )
+  if (clearOperations > 0)
+    takeaways.push(
+      `${clearOperations} ${clearOperations === 1 ? "clear operation wiped" : "clear operations wiped"} all keys in a Web Storage area.`
+    )
   if (leadingPurpose) takeaways.push(`Most Web Storage activity looks like ${leadingPurpose.label.toLowerCase()} based on key names only.`)
 
   return {
     clearOperations,
     deleteOperations,
-    headline: totalRecords === 0
-      ? "No Web Storage actions have been recorded for this page yet."
-      : `This page made ${totalRecords} Web Storage ${totalRecords === 1 ? "action" : "actions"} across ${purposes.length} likely keyed ${purposes.length === 1 ? "purpose" : "purposes"}.`,
+    headline:
+      totalRecords === 0
+        ? "No Web Storage actions have been recorded for this page yet."
+        : `This page made ${totalRecords} Web Storage ${totalRecords === 1 ? "action" : "actions"} across ${purposes.length} likely keyed ${purposes.length === 1 ? "purpose" : "purposes"}.`,
     localStorageRecords,
     purposes,
     sessionStorageRecords,

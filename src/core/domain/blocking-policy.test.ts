@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import { validateTrackerDatabase } from "~core/db/validate"
+
 import { blockingGuidance, filterBlockableTrackerIds } from "./blocking-policy"
 
 describe("blockingGuidance", () => {
@@ -41,10 +42,7 @@ describe("blockingGuidance", () => {
 
 describe("filterBlockableTrackerIds", () => {
   it("strips high-risk and unknown ids, keeps the rest", () => {
-    expect(filterBlockableTrackerIds(["fullstory", "hubspot", "intercom", "meta-pixel", "bogus"])).toEqual([
-      "fullstory",
-      "meta-pixel"
-    ])
+    expect(filterBlockableTrackerIds(["fullstory", "hubspot", "intercom", "meta-pixel", "bogus"])).toEqual(["fullstory", "meta-pixel"])
   })
 
   it("every tracker record resolves to a decision", () => {

@@ -1,13 +1,13 @@
+import { TYPE, UI } from "~components/system/tokens"
 import type { ReconciledClass } from "~core/atlas/reconcile"
 import type { Giveup } from "~core/atlas/types"
-import { TYPE, UI } from "~components/system/tokens"
 
 const DOC_LABELS: Record<string, string> = {
   privacy_policy: "Privacy policy",
   terms_of_use: "Terms of use",
   cookie_policy: "Cookie policy",
   community_guidelines: "Community guidelines",
-  subscription_terms: "Subscription terms",
+  subscription_terms: "Subscription terms"
 }
 
 export function docLabel(docType: string): string {
@@ -64,8 +64,8 @@ export function ObservedClassCard({ entry, onShowEvidence }: { entry: Reconciled
         </div>
       ) : (
         <p className={`${TYPE.small} mt-2`}>
-          No authorizing clause was found in the documents we read. That is a statement about our read, not proof the
-          contract is silent — but they did it, and we could not find where they told you.
+          No authorizing clause was found in the documents we read. That is a statement about our read, not proof the contract is silent —
+          but they did it, and we could not find where they told you.
         </p>
       )}
       <p className={`${TYPE.small} mt-2`}>

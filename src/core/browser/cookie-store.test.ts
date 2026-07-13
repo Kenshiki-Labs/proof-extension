@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest"
 
-import { hasCookieMetadataPermission, inspectSiteCookieValues, requestCookieMetadataPermission, scanSiteCookieMetadata, type CookieStoreChromeApi } from "./cookie-store"
+import {
+  hasCookieMetadataPermission,
+  inspectSiteCookieValues,
+  requestCookieMetadataPermission,
+  scanSiteCookieMetadata,
+  type CookieStoreChromeApi
+} from "./cookie-store"
 
 function apiFixture({
   containsGranted = true,
@@ -128,10 +134,12 @@ describe("cookie-store adapter", () => {
   })
 
   it("does not reveal values without optional cookie permission", async () => {
-    await expect(inspectSiteCookieValues({
-      api: apiFixture({ containsGranted: false, cookies: [cookie()] }),
-      origin: "https://example.test"
-    })).resolves.toEqual({ status: "permission_required", cookies: [] })
+    await expect(
+      inspectSiteCookieValues({
+        api: apiFixture({ containsGranted: false, cookies: [cookie()] }),
+        origin: "https://example.test"
+      })
+    ).resolves.toEqual({ status: "permission_required", cookies: [] })
   })
 
   it("treats a permission-check runtime error as not granted", async () => {
@@ -145,7 +153,10 @@ describe("cookie-store adapter", () => {
     }
     await expect(hasCookieMetadataPermission(api)).resolves.toBe(false)
     await expect(requestCookieMetadataPermission(api)).resolves.toBe(false)
-    await expect(scanSiteCookieMetadata({ api, origin: "https://example.test", tabId: 1 })).resolves.toEqual({ status: "permission_required", events: [] })
+    await expect(scanSiteCookieMetadata({ api, origin: "https://example.test", tabId: 1 })).resolves.toEqual({
+      status: "permission_required",
+      events: []
+    })
   })
 
   it("returns no events when the cookie read itself errors", async () => {
@@ -162,10 +173,16 @@ describe("cookie-store adapter", () => {
         return call++ === 0 ? {} : { lastError: { message: "cookie read failed" } }
       }
     }
-    await expect(scanSiteCookieMetadata({ api, observedAt: 1, origin: "https://example.test", tabId: 1 })).resolves.toEqual({ status: "available", events: [] })
+    await expect(scanSiteCookieMetadata({ api, observedAt: 1, origin: "https://example.test", tabId: 1 })).resolves.toEqual({
+      status: "available",
+      events: []
+    })
   })
 
   it("treats an unparseable origin as a restricted page", async () => {
-    await expect(scanSiteCookieMetadata({ api: apiFixture({ cookies: [cookie()] }), origin: "http://[", tabId: 1 })).resolves.toEqual({ status: "restricted_page", events: [] })
+    await expect(scanSiteCookieMetadata({ api: apiFixture({ cookies: [cookie()] }), origin: "http://[", tabId: 1 })).resolves.toEqual({
+      status: "restricted_page",
+      events: []
+    })
   })
 })

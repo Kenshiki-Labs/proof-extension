@@ -1,5 +1,4 @@
 import http from "node:http"
-
 import { expect, test } from "@playwright/test"
 import type { BrowserContext, Page, Worker } from "@playwright/test"
 
@@ -93,18 +92,13 @@ async function waitForSyncedFlag(page: Page, datasetKey: string, enabled: boolea
 }
 
 async function pageHasProofExtensionAttributes(page: Page): Promise<boolean> {
-  return page.evaluate(() =>
-    Array.from(document.documentElement.attributes).some((attr) => attr.name.startsWith("data-proof-extension"))
-  )
+  return page.evaluate(() => Array.from(document.documentElement.attributes).some((attr) => attr.name.startsWith("data-proof-extension")))
 }
 
 // Serves fixture HTML while recording the Sec-GPC request header for every
 // request (main frame, favicon, all of it), so the header claim is verified
 // on the wire — not at the JS layer.
-async function withHeaderRecordingServer(
-  html: string,
-  run: (baseUrl: string, seenGpcHeaders: (string | null)[]) => Promise<void>
-) {
+async function withHeaderRecordingServer(html: string, run: (baseUrl: string, seenGpcHeaders: (string | null)[]) => Promise<void>) {
   const seenGpcHeaders: (string | null)[] = []
   const server = http.createServer((request, response) => {
     seenGpcHeaders.push(request.headers["sec-gpc"] === undefined ? null : String(request.headers["sec-gpc"]))
@@ -152,10 +146,13 @@ test("canvas mitigation noises exports only after opt-in, stably within a sessio
       // The evidence store must carry the read as mitigated — which the
       // background only grants because the setting is genuinely on.
       await expect
-        .poll(async () => {
-          const events = await readAllEvents(worker)
-          return events.some((event) => event.eventType === "canvas_read" && event.status === "mitigated")
-        }, { timeout: 15_000 })
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            return events.some((event) => event.eventType === "canvas_read" && event.status === "mitigated")
+          },
+          { timeout: 15_000 }
+        )
         .toBe(true)
     })
   })
@@ -185,9 +182,7 @@ test("GPC is silent by default and, once opted in, appears on the wire and on na
       const enabledPhase = seenGpcHeaders.slice(requestsBeforeEnabledReload)
       expect(enabledPhase.length).toBeGreaterThan(0)
       expect(enabledPhase.every((header) => header === "1")).toBe(true)
-      expect(
-        await page.evaluate(() => (navigator as never as { globalPrivacyControl?: boolean }).globalPrivacyControl)
-      ).toBe(true)
+      expect(await page.evaluate(() => (navigator as never as { globalPrivacyControl?: boolean }).globalPrivacyControl)).toBe(true)
 
       // Turning it off applies to the next page load: header gone from the
       // wire, JS surface gone from navigator.

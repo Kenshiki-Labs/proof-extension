@@ -1,7 +1,6 @@
 import type * as z from "zod"
 
 import type { RuntimeMessageSchema } from "~core/contracts/messages"
-
 import type {
   BlockabilityClassSchema,
   CookieMetadataScanResultSchema,

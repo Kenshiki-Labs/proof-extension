@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent } from "~core/domain/types"
+
 import { stripPageSuppliedAttribution, untrustedObservedEventReason } from "./message-guards"
 
 function event(overrides: Partial<ObserverEvent> = {}): ObserverEvent {
@@ -51,9 +52,7 @@ describe("untrustedObservedEventReason", () => {
     // A hostile page marking an observation "mitigated" would otherwise land
     // in mitigatedCompanies and claim protection that never happened.
     for (const eventType of ["webgl_query", "font_enumeration", "audio_fingerprint", "webrtc_probe", "sdk_detected"] as const) {
-      expect(untrustedObservedEventReason(event({ eventType, status: "mitigated", source: "api-hook" }))).toBe(
-        "mitigated_status_reserved"
-      )
+      expect(untrustedObservedEventReason(event({ eventType, status: "mitigated", source: "api-hook" }))).toBe("mitigated_status_reserved")
     }
   })
 })

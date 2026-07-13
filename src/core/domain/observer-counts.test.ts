@@ -1,12 +1,8 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent } from "~core/domain/types"
-import {
-  countIdentifiedObservers,
-  countThirdPartyObservers,
-  countUnclassifiedParties,
-  countWatchingObservers
-} from "./observer-counts"
+
+import { countIdentifiedObservers, countThirdPartyObservers, countUnclassifiedParties, countWatchingObservers } from "./observer-counts"
 
 function event(overrides: Partial<ObserverEvent>): ObserverEvent {
   return {
@@ -45,7 +41,11 @@ describe("countThirdPartyObservers — every distinct third party, named or not"
     // registrable domain max.com — one party.
     const events = [
       event({ id: "req", eventType: "request_seen", details: { host: "fly.live.cnn.us.prd.media.max.com" } }),
-      event({ id: "cache", eventType: "cache_validator_seen", details: { host: "fly.live.cnn.us.prd.media.max.com", headerName: "last-modified" } }),
+      event({
+        id: "cache",
+        eventType: "cache_validator_seen",
+        details: { host: "fly.live.cnn.us.prd.media.max.com", headerName: "last-modified" }
+      }),
       event({ id: "other", eventType: "request_seen", details: { host: "cdn2.max.com" } })
     ]
     expect(countThirdPartyObservers(events)).toBe(1)
@@ -66,7 +66,13 @@ describe("countThirdPartyObservers — every distinct third party, named or not"
   it("never counts first-party surfaces, diagnostics, exposure scans, or inactive parties", () => {
     const events = [
       event({ id: "fp", firstParty: true, eventType: "cache_validator_seen", details: { host: "media.cnn.com", headerName: "etag" } }),
-      event({ id: "storage", firstParty: true, source: "api-hook", eventType: "storage_write", details: { area: "localStorage", key: "x" } }),
+      event({
+        id: "storage",
+        firstParty: true,
+        source: "api-hook",
+        eventType: "storage_write",
+        details: { area: "localStorage", key: "x" }
+      }),
       event({ id: "scan", firstParty: true, source: "extension-scan", eventType: "browser_surface" }),
       event({ id: "diag", firstParty: true, source: "content", eventType: "extension_diagnostic" }),
       event({ id: "blocked", trackerId: "meta-pixel", companyId: "meta", status: "blocked" })

@@ -1,14 +1,10 @@
 import type { TrackerRecord } from "~core/contracts/schemas"
-import {
-  findInstalledBlockRuleMetadataForRequest,
-  getDynamicBlockRuleMetadata,
-  type DynamicBlockRuleMetadata
-} from "~core/db/dnr"
+import { findInstalledBlockRuleMetadataForRequest, getDynamicBlockRuleMetadata, type DynamicBlockRuleMetadata } from "~core/db/dnr"
 import { matchTrackerRequest } from "~core/domain/network-match"
 import { isSameSite } from "~core/domain/party"
+import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import { detectCookieSync } from "~core/signals/cookie-sync"
 import { annotateEventDetail, supersedeEvent } from "~core/state/summaries"
-import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 
 const UNCLASSIFIED_REQUEST_TYPES = new Set(["script", "xmlhttprequest", "image", "ping", "media", "sub_frame", "websocket"])
 const CACHE_VALIDATOR_HEADERS = new Set(["etag", "if-none-match", "last-modified", "if-modified-since"])
@@ -70,13 +66,7 @@ function shouldRecordUnclassifiedRequest(details: chrome.webRequest.WebRequestBo
 type HeaderLike = { name: string }
 
 function cacheValidatorHeaderNames(headers: HeaderLike[] | undefined): string[] {
-  return [
-    ...new Set(
-      (headers ?? [])
-        .map((header) => header.name)
-        .filter((name) => CACHE_VALIDATOR_HEADERS.has(name.toLowerCase()))
-    )
-  ]
+  return [...new Set((headers ?? []).map((header) => header.name).filter((name) => CACHE_VALIDATOR_HEADERS.has(name.toLowerCase())))]
 }
 
 export function registerNetworkObserver({
@@ -140,7 +130,9 @@ export function registerNetworkObserver({
         status: "active",
         confidence: "confirmed",
         evidenceTier: "observed",
-        evidence: [`${direction === "request" ? "Request" : "Response"} used cache validator header ${headerName} for ${host}. Header values are never recorded.`],
+        evidence: [
+          `${direction === "request" ? "Request" : "Response"} used cache validator header ${headerName} for ${host}. Header values are never recorded.`
+        ],
         details: {
           direction,
           headerName,

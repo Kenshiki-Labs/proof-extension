@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react"
 import { ClipboardCopy, ExternalLink, Trash2 } from "lucide-react"
+import { useMemo, useState } from "react"
 
+import { TYPE, UI } from "~components/system/tokens"
 import { rankObservers, type AttentionTier } from "~core/domain/attention"
 import { getObserverRemediation, type ObserverRemediation } from "~core/domain/remediation"
 import type { ObserverEvent } from "~core/domain/types"
 import { useTransientState } from "~hooks/useTransientState"
-import { TYPE, UI } from "~components/system/tokens"
 
 // The batch remediation flow: fourteen per-card decisions become one
 // decision plus a checklist. Worst first (attention rank), each row shows
@@ -112,7 +112,8 @@ export default function CleanupFlow({ events }: { events: ObserverEvent[] }) {
                   {item.tier === "red" ? "no trade" : item.tier === "amber" ? "ads trade" : "site tools"}
                 </span>
                 <span className={TYPE.small}>
-                  ≈{item.remediation.estimatedTimeMinutes} min · {item.remediation.identityVerificationRequired ? "ID check" : "no ID check"}
+                  ≈{item.remediation.estimatedTimeMinutes} min ·{" "}
+                  {item.remediation.identityVerificationRequired ? "ID check" : "no ID check"}
                 </span>
                 <span className="ml-auto flex items-center gap-2">
                   <a

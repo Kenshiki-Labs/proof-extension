@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent } from "~core/domain/types"
+
 import {
   createRateLimitedReporter,
   isPersistenceEventType,
@@ -96,9 +97,7 @@ describe("normalizePersistenceEvent", () => {
   })
 
   it("rebuilds evidence from sanitized details for cookie writes", () => {
-    const event = normalizePersistenceEvent(
-      persistenceEvent({ details: { name: "session", valueBytes: 25, attributes: "path, secure" } })
-    )
+    const event = normalizePersistenceEvent(persistenceEvent({ details: { name: "session", valueBytes: 25, attributes: "path, secure" } }))
 
     expect(event.confidence).toBe("confirmed")
     expect(event.evidenceTier).toBe("observed")
@@ -140,9 +139,7 @@ describe("normalizePersistenceEvent", () => {
   })
 
   it("degrades malformed metadata to weak with generic evidence", () => {
-    const event = normalizePersistenceEvent(
-      persistenceEvent({ eventType: "indexeddb_access", details: { op: "explode", database: "" } })
-    )
+    const event = normalizePersistenceEvent(persistenceEvent({ eventType: "indexeddb_access", details: { op: "explode", database: "" } }))
 
     expect(event.confidence).toBe("weak")
     expect(event.evidenceTier).toBe("observed")
@@ -176,14 +173,10 @@ describe("normalizePersistenceEvent", () => {
   })
 
   it("clamps forged byte counts to sane non-negative integers", () => {
-    const event = normalizePersistenceEvent(
-      persistenceEvent({ details: { name: "cid", valueBytes: -5, attributes: "" } })
-    )
+    const event = normalizePersistenceEvent(persistenceEvent({ details: { name: "cid", valueBytes: -5, attributes: "" } }))
     expect(event.details?.valueBytes).toBe(0)
 
-    const huge = normalizePersistenceEvent(
-      persistenceEvent({ details: { name: "cid", valueBytes: Number.MAX_SAFE_INTEGER } })
-    )
+    const huge = normalizePersistenceEvent(persistenceEvent({ details: { name: "cid", valueBytes: Number.MAX_SAFE_INTEGER } }))
     expect(huge.details?.valueBytes).toBe(1_000_000_000)
   })
 })
@@ -205,17 +198,23 @@ describe("normalizePersistenceEvent — durable storage families", () => {
   })
 
   it("records a cache-storage report with an unknown operation as malformed", () => {
-    const event = normalizePersistenceEvent(persistenceEvent({ eventType: "cache_storage_access", details: { op: "explode", cache: "site-cache" } }))
+    const event = normalizePersistenceEvent(
+      persistenceEvent({ eventType: "cache_storage_access", details: { op: "explode", cache: "site-cache" } })
+    )
     expect(event.confidence).toBe("weak")
     expect(event.details).toBeUndefined()
   })
 
   it("describes a registered service worker and drops one missing its scope", () => {
-    const registered = normalizePersistenceEvent(persistenceEvent({ eventType: "service_worker_registered", details: { scriptOrigin: "https://example.test", scopePath: "/app" } }))
+    const registered = normalizePersistenceEvent(
+      persistenceEvent({ eventType: "service_worker_registered", details: { scriptOrigin: "https://example.test", scopePath: "/app" } })
+    )
     expect(registered.confidence).toBe("confirmed")
     expect(registered.evidence.join(" ")).toContain("background worker")
 
-    const malformed = normalizePersistenceEvent(persistenceEvent({ eventType: "service_worker_registered", details: { scriptOrigin: "https://example.test" } }))
+    const malformed = normalizePersistenceEvent(
+      persistenceEvent({ eventType: "service_worker_registered", details: { scriptOrigin: "https://example.test" } })
+    )
     expect(malformed.confidence).toBe("weak")
     expect(malformed.details).toBeUndefined()
   })

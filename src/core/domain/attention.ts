@@ -1,10 +1,10 @@
-import { compactEvents, type DisplayObservation } from "~core/report/display"
-import { getObserverRemediation } from "~core/domain/remediation"
-import { getTrackerServes, getTrackerValuation, rollupObservedValuations } from "~core/domain/valuation"
 import { blockingGuidance } from "~core/domain/blocking-policy"
 import { countWatchingObservers } from "~core/domain/observer-counts"
-import { isPersistenceSurfaceEvent, isUnclassifiedObservation } from "~core/state/summaries"
+import { getObserverRemediation } from "~core/domain/remediation"
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
+import { getTrackerServes, getTrackerValuation, rollupObservedValuations } from "~core/domain/valuation"
+import { compactEvents, type DisplayObservation } from "~core/report/display"
+import { isPersistenceSurfaceEvent, isUnclassifiedObservation } from "~core/state/summaries"
 
 // The importance model. Every surface that lists observers sorts by this
 // score; users never have to work out what matters — the product ranks.

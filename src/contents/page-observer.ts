@@ -203,20 +203,18 @@ observePersistenceSurfaces()
 function observeCanvasReads() {
   const mitigationEnabled = () => document.documentElement.dataset.proofExtensionMitigateCanvas === "true"
 
-  const send = createRateLimitedReporter<{ mitigated: boolean; details: Record<string, string | number> }>(
-    (id, { mitigated, details }) => {
-      postApiHookEvent({
-        id,
-        policyLabel: "unknown_first_party",
-        eventType: "canvas_read",
-        blockability: "content_mitigatable",
-        status: mitigated ? "mitigated" : "active",
-        confidence: "confirmed",
-        evidence: ["Reported by the canvas observer; evidence is rebuilt by the extension before recording."],
-        details
-      })
-    }
-  )
+  const send = createRateLimitedReporter<{ mitigated: boolean; details: Record<string, string | number> }>((id, { mitigated, details }) => {
+    postApiHookEvent({
+      id,
+      policyLabel: "unknown_first_party",
+      eventType: "canvas_read",
+      blockability: "content_mitigatable",
+      status: mitigated ? "mitigated" : "active",
+      confidence: "confirmed",
+      evidence: ["Reported by the canvas observer; evidence is rebuilt by the extension before recording."],
+      details
+    })
+  })
 
   installCanvasElementReadHooks(
     ({ api, mitigated, details }) => send(`canvas_read:${location.origin}:${api}`, { mitigated, details }),

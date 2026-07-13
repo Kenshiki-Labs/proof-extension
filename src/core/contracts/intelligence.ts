@@ -174,12 +174,14 @@ export const NormalizedEntitiesSchema = z.object({
     appliedRecords: z.number().int().nonnegative()
   }),
   conflictReport: z.string().min(1),
-  scope: z.object({
-    purpose: z.enum(["extension_runtime", "quarantined_research"]),
-    rule: z.string().min(1),
-    quarantinedEntityCount: z.number().int().nonnegative().optional(),
-    quarantinePath: z.string().min(1).optional()
-  }).optional(),
+  scope: z
+    .object({
+      purpose: z.enum(["extension_runtime", "quarantined_research"]),
+      rule: z.string().min(1),
+      quarantinedEntityCount: z.number().int().nonnegative().optional(),
+      quarantinePath: z.string().min(1).optional()
+    })
+    .optional(),
   records: z.array(EntityRecordSchema).min(1)
 })
 
@@ -261,7 +263,13 @@ export const EntityAdjudicationsSchema = z.object({
 
 export const EntityConflictRecordSchema = z.object({
   id: z.string().min(1),
-  type: z.enum(["domain_points_to_multiple_entities", "domain_owner_conflict", "slug_owner_conflict", "low_confidence_join", "shared_infrastructure_domain"]),
+  type: z.enum([
+    "domain_points_to_multiple_entities",
+    "domain_owner_conflict",
+    "slug_owner_conflict",
+    "low_confidence_join",
+    "shared_infrastructure_domain"
+  ]),
   severity: z.enum(["medium", "high"]),
   status: z.enum(["needs_review", "adjudicated"]),
   entityIds: z.array(z.string().min(1)),
@@ -298,7 +306,10 @@ export const IntelligenceSnapshotManifestSchema = z.object({
       sha256: z.string().regex(/^[a-f0-9]{64}$/)
     })
   ),
-  signature: z.string().regex(/^[a-f0-9]{64}$/).nullable()
+  signature: z
+    .string()
+    .regex(/^[a-f0-9]{64}$/)
+    .nullable()
 })
 
 export type BrokerRecord = z.infer<typeof BrokerRecordSchema>

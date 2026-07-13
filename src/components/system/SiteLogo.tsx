@@ -13,7 +13,9 @@ export default function SiteLogo({ textClass = "text-base", sublabel }: SiteLogo
         <span className={`block font-display font-semibold tracking-tight text-foreground ${textClass}`}>
           Proof You Are <span className="text-signal">Human</span>
         </span>
-        {sublabel ? <span className="mt-1 block font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">{sublabel}</span> : null}
+        {sublabel ? (
+          <span className="mt-1 block font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">{sublabel}</span>
+        ) : null}
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import { validateTrackerDatabase } from "~core/db/validate"
+
 import { matchTracker, matchTrackerRequest } from "./network-match"
 
 const { trackers } = validateTrackerDatabase()

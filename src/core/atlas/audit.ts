@@ -58,10 +58,7 @@ function sameRegistrableDomain(url: string, domain: string): boolean {
   }
 }
 
-async function fetchDocumentText(
-  url: string,
-  fetchImpl: typeof fetch,
-): Promise<{ finalUrl: string; text: string } | { error: string }> {
+async function fetchDocumentText(url: string, fetchImpl: typeof fetch): Promise<{ finalUrl: string; text: string } | { error: string }> {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
   try {
@@ -80,7 +77,7 @@ export async function runConsentAudit(
   domain: string,
   anchors: AnchorInput[],
   baseUrl: string,
-  fetchImpl: typeof fetch = fetch,
+  fetchImpl: typeof fetch = fetch
 ): Promise<ConsentAuditRecord> {
   const discovered = discoverLegalLinks(anchors, baseUrl)
   const docTypes = Object.keys(discovered) as DocType[]
@@ -108,7 +105,7 @@ export async function runConsentAudit(
         textHash: "",
         textLength: 0,
         thinContent: true,
-        fetchError: result.error,
+        fetchError: result.error
       })
       continue
     }
@@ -121,7 +118,7 @@ export async function runConsentAudit(
       textHash: document.text_hash,
       textLength: document.text_length,
       thinContent: document.text_length < MIN_CONTENT_LENGTH,
-      fetchError: null,
+      fetchError: null
     })
     // Thin documents (JS-rendered shells) are recorded in provenance but must
     // not feed detection: "the contract is silent" may only rest on documents
@@ -136,6 +133,6 @@ export async function runConsentAudit(
     auditedAt: Date.now(),
     documents: audited,
     giveups: detectGiveups(documentsForDetection),
-    nothingDiscovered: docTypes.length === 0,
+    nothingDiscovered: docTypes.length === 0
   }
 }

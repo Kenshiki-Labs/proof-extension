@@ -41,7 +41,14 @@ export type IdentitySignalDef = {
 export const IDENTITY_SIGNALS: readonly IdentitySignalDef[] = [
   { key: "timezone", label: "Timezone", bits: 3.04, source: "measured", sourceNote: "EFF Panopticlick, 2010", tier: "passive" },
   { key: "screen", label: "Screen + pixel ratio", bits: 4.83, source: "measured", sourceNote: "EFF Panopticlick, 2010", tier: "passive" },
-  { key: "platformLanguage", label: "Platform + language", bits: 2.1, source: "estimated", sourceNote: "conservative estimate", tier: "passive" },
+  {
+    key: "platformLanguage",
+    label: "Platform + language",
+    bits: 2.1,
+    source: "estimated",
+    sourceNote: "conservative estimate",
+    tier: "passive"
+  },
   { key: "gpu", label: "GPU renderer", bits: 7, source: "estimated", sourceNote: "conservative estimate", tier: "probe" },
   { key: "canvas", label: "Canvas render hash", bits: 5, source: "estimated", sourceNote: "conservative estimate", tier: "probe" },
   { key: "audio", label: "Audio-stack fingerprint", bits: 3, source: "estimated", sourceNote: "conservative estimate", tier: "probe" },

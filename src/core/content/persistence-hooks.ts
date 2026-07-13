@@ -29,8 +29,7 @@ export type PersistenceReporter = (observation: PersistenceObservation) => void
 
 export function installCookieWriteHook(report: PersistenceReporter, doc: Document = document): boolean {
   const prototype = Object.getPrototypeOf(doc) as Document
-  const descriptor =
-    Object.getOwnPropertyDescriptor(prototype, "cookie") ?? Object.getOwnPropertyDescriptor(Document.prototype, "cookie")
+  const descriptor = Object.getOwnPropertyDescriptor(prototype, "cookie") ?? Object.getOwnPropertyDescriptor(Document.prototype, "cookie")
   if (!descriptor?.set || !descriptor.get || !descriptor.configurable) return false
 
   const originalSet = descriptor.set
@@ -77,10 +76,7 @@ export function installStorageWriteHooks(
     return null
   }
 
-  const wrap = (
-    method: "setItem" | "removeItem" | "clear",
-    describe: (area: string, args: unknown[]) => PersistenceObservation | null
-  ) => {
+  const wrap = (method: "setItem" | "removeItem" | "clear", describe: (area: string, args: unknown[]) => PersistenceObservation | null) => {
     const original = storagePrototype[method] as (...args: unknown[]) => unknown
     Object.defineProperty(storagePrototype, method, {
       configurable: true,
@@ -193,9 +189,7 @@ export function installServiceWorkerHook(
       const scriptUrl = String(args[0] ?? "")
       const options = args[1] as { scope?: string } | undefined
       const resolved = new URL(scriptUrl, `${pageOrigin}/`)
-      const scopePath = options?.scope
-        ? new URL(String(options.scope), `${pageOrigin}/`).pathname
-        : resolved.pathname.replace(/[^/]*$/, "")
+      const scopePath = options?.scope ? new URL(String(options.scope), `${pageOrigin}/`).pathname : resolved.pathname.replace(/[^/]*$/, "")
       report({
         eventType: "service_worker_registered",
         key: scopePath,

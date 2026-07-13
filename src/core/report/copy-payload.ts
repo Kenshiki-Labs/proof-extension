@@ -1,9 +1,16 @@
-import { countIdentifiedObservers, countSiteToolObservers, countSourceBackedActiveObservers, countUnclassifiedParties, countWatchingObservers } from "~core/domain/observer-counts"
+import {
+  countIdentifiedObservers,
+  countSiteToolObservers,
+  countSourceBackedActiveObservers,
+  countUnclassifiedParties,
+  countWatchingObservers
+} from "~core/domain/observer-counts"
 import { getObserverRemediation } from "~core/domain/remediation"
+import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import { rollupObservedValuations } from "~core/domain/valuation"
 import { isDiagnosticEvent, isLocalPageSignalEvent, isPersistenceSurfaceEvent, isUnclassifiedObservation } from "~core/state/summaries"
+
 import { compactEvents, exposureScanEvents, observerName, pageActivityEvents, visibleSignals } from "./compaction"
-import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 
 // The copy-to-clipboard report: a self-contained JSON snapshot of everything
 // the report tab shows, serialized for pasting into an issue or an email.

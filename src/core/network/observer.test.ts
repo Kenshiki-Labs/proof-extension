@@ -4,6 +4,7 @@ import { installDynamicBlockRules, uninstallDynamicBlockRules } from "~core/db/d
 import { validateTrackerDatabase } from "~core/db/validate"
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import { createEmptySiteSummary } from "~core/state/summaries"
+
 import { registerNetworkObserver, type NetworkObserverDeps } from "./observer"
 
 const { trackers } = validateTrackerDatabase()
@@ -365,7 +366,10 @@ describe("registerNetworkObserver: deterministic blocked outcomes", () => {
     expect(fullstoryRule).toBeTruthy()
 
     const { deps, onRuleMatchedDebug } = register()
-    onRuleMatchedDebug({ rule: { ruleId: fullstoryRule!.id }, request: requestOf({ requestId: "r10", url: "https://fullstory.com/s/fs.js" }) })
+    onRuleMatchedDebug({
+      rule: { ruleId: fullstoryRule!.id },
+      request: requestOf({ requestId: "r10", url: "https://fullstory.com/s/fs.js" })
+    })
     await flush()
 
     expect(deps.recordEvent).toHaveBeenCalledWith(

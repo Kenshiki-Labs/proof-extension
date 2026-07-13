@@ -1,0 +1,14 @@
+build
+.plasmo
+coverage
+node_modules
+test-results
+.playwright
+dist
+# Generated / vendored data, not hand-authored source
+intelligence
+docs/vocabulary-frequency.json
+*.min.js
+# Dense declarative rules table: prettier explodes its inline factor objects
+# into hundreds of noise lines with no readability gain. Kept compact by hand.
+src/core/atlas/rules.ts

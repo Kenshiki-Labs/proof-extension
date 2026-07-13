@@ -1,5 +1,5 @@
-import { validateTrackerDatabase } from "~core/db/validate"
 import type { TrackerRecord } from "~core/contracts/schemas"
+import { validateTrackerDatabase } from "~core/db/validate"
 
 // The ad-money supply chain, from raw behavioral events to the ad you see.
 // Stages are ordered by position in the money flow; the plain-language
@@ -78,7 +78,9 @@ export function getTrackerSupplyChainRole(trackerId: string | undefined): Supply
 // Group observed tracker ids by stage, preserving chain order. Stages with
 // no observed trackers are omitted — the map shows the chain that actually
 // ran on the user's browsing, not the theoretical one.
-export function groupBySupplyChainStage(trackerIds: string[]): Array<{ role: SupplyChainRole; label: string; description: string; trackerIds: string[] }> {
+export function groupBySupplyChainStage(
+  trackerIds: string[]
+): Array<{ role: SupplyChainRole; label: string; description: string; trackerIds: string[] }> {
   const byRole = new Map<SupplyChainRole, string[]>()
   for (const trackerId of [...new Set(trackerIds)].sort()) {
     const role = getTrackerSupplyChainRole(trackerId)

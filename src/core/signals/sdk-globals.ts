@@ -1,5 +1,5 @@
-import type { ObserverEvent } from "~core/domain/types"
 import type { TrackerRecord } from "~core/contracts/schemas"
+import type { ObserverEvent } from "~core/domain/types"
 
 // Distinctive vendor globals only. A signature earns a place here when the
 // property name is specific enough that its presence is a known-library

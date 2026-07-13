@@ -1,7 +1,6 @@
-import type { ConsentAuditRecord } from "~core/atlas/audit"
-import { TYPE, UI } from "~components/system/tokens"
-
 import { docLabel } from "~components/contract/ClauseCard"
+import { TYPE, UI } from "~components/system/tokens"
+import type { ConsentAuditRecord } from "~core/atlas/audit"
 
 export default function ProvenanceFooter({ record }: { record: ConsentAuditRecord }) {
   return (
@@ -31,10 +30,10 @@ export default function ProvenanceFooter({ record }: { record: ConsentAuditRecor
         ))}
       </div>
       <p className={`${TYPE.small} mt-3`}>
-        Fetched now, at your request, from documents this page links to on its own domain — redirects may land on a
-        policy-center host, and the final address shown is where the text actually came from. Clause detection is
-        deterministic (rule set {record.giveups[0]?.ontology_version ?? "consent-dark-patterns-0.1.0"}); a clause we
-        did not find is reported as not found — never as not existing.
+        Fetched now, at your request, from documents this page links to on its own domain — redirects may land on a policy-center host, and
+        the final address shown is where the text actually came from. Clause detection is deterministic (rule set{" "}
+        {record.giveups[0]?.ontology_version ?? "consent-dark-patterns-0.1.0"}); a clause we did not find is reported as not found — never
+        as not existing.
       </p>
     </section>
   )

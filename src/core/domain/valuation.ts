@@ -1,8 +1,8 @@
+import type { PerPersonValue } from "~core/contracts/schemas"
 import { validateTrackerDatabase } from "~core/db/validate"
 import { hostForEvent, registrableDomain } from "~core/domain/party"
-import { isUnclassifiedObservation } from "~core/state/summaries"
 import type { ObserverEvent, UnclassifiedGraphEdge, ValuationEdge } from "~core/domain/types"
-import type { PerPersonValue } from "~core/contracts/schemas"
+import { isUnclassifiedObservation } from "~core/state/summaries"
 
 // Per-person value rollups per docs/TRACKER_VALUE_SPEC.md. Every tracker
 // record embeds a perPersonValue block; this module answers, for a set of

@@ -31,9 +31,7 @@ describe("portraitTraits", () => {
   })
 
   it("keeps fractional pixel densities readable", () => {
-    expect(portraitTraits(stepsFor([{ key: "screen", detail: "2560x1440 @2.2x" }]))).toEqual([
-      "look at a 2560x1440 screen at 2.2× density"
-    ])
+    expect(portraitTraits(stepsFor([{ key: "screen", detail: "2560x1440 @2.2x" }]))).toEqual(["look at a 2560x1440 screen at 2.2× density"])
   })
 
   it("never renders a timezone as a city: unmapped zones fall back to a city-free UTC offset", () => {
@@ -47,9 +45,7 @@ describe("portraitTraits", () => {
   })
 
   it("degrades to a generic city-free phrase when the zone has no derivable offset", () => {
-    expect(portraitTraits(stepsFor([{ key: "timezone", detail: "Not/AZone" }]))).toEqual([
-      "live in your device's local time zone"
-    ])
+    expect(portraitTraits(stepsFor([{ key: "timezone", detail: "Not/AZone" }]))).toEqual(["live in your device's local time zone"])
   })
 
   it("falls back to honest generic phrasing when details do not parse", () => {
@@ -69,17 +65,13 @@ describe("portraitTraits", () => {
   })
 
   it("handles a language-only platformLanguage reading", () => {
-    expect(portraitTraits(stepsFor([{ key: "platformLanguage", detail: "en-GB" }]))).toEqual([
-      "browse in English (GB)"
-    ])
+    expect(portraitTraits(stepsFor([{ key: "platformLanguage", detail: "en-GB" }]))).toEqual(["browse in English (GB)"])
   })
 
   it("does not duplicate the region when the language subtag is unknown", () => {
     // Intl.DisplayNames echoes an unknown language code; the region must not
     // stay baked into the base and then be appended again ("xx-US (US)").
-    expect(portraitTraits(stepsFor([{ key: "platformLanguage", detail: "xx-US" }]))).toEqual([
-      "browse in xx (US)"
-    ])
+    expect(portraitTraits(stepsFor([{ key: "platformLanguage", detail: "xx-US" }]))).toEqual(["browse in xx (US)"])
   })
 })
 

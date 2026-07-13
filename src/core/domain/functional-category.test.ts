@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest"
 
 import { validateTrackerDatabase } from "~core/db/validate"
-import type { ObserverEvent } from "~core/domain/types"
 import { countWatchingObservers } from "~core/domain/observer-counts"
+import type { ObserverEvent } from "~core/domain/types"
+
 import { countByFunctionalCategory, functionalCategoryBreakdown, getFunctionalCategory } from "./functional-category"
 
 function event(overrides: Partial<ObserverEvent>): ObserverEvent {

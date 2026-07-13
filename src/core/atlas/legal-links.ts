@@ -87,9 +87,7 @@ export function discoverLegalLinks(
     const bucket = byType[type]
     if (!bucket) continue
     const seen = new Set<string>()
-    byType[type] = bucket
-      .sort((x, y) => y.confidence - x.confidence)
-      .filter((c) => (seen.has(c.url) ? false : (seen.add(c.url), true)))
+    byType[type] = bucket.sort((x, y) => y.confidence - x.confidence).filter((c) => (seen.has(c.url) ? false : (seen.add(c.url), true)))
   }
   return byType
 }

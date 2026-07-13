@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import { validateTrackerDatabase } from "~core/db/validate"
 import type { ObserverEvent } from "~core/domain/types"
+
 import { enrichSdkDetection, matchSdkGlobal, SDK_GLOBAL_SIGNATURES, sdkGlobalNames } from "./sdk-globals"
 
 const { trackers } = validateTrackerDatabase()

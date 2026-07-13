@@ -1,12 +1,12 @@
-import { blockingGuidance } from "~core/domain/blocking-policy"
 import { shimForTrackerId } from "~core/db/shims"
-import { buildUnclassifiedGraphEdges, formatUsdRange, getTrackerValuation } from "~core/domain/valuation"
-import { countWatchingObservers } from "~core/domain/observer-counts"
-import { FUNCTIONAL_CATEGORY_LABELS, getFunctionalCategory, type FunctionalCategory } from "~core/domain/functional-category"
-import { getObserverRemediation } from "~core/domain/remediation"
-import { observerName } from "~core/report/display"
 import { rankObservers, type AttentionTier } from "~core/domain/attention"
+import { blockingGuidance } from "~core/domain/blocking-policy"
+import { FUNCTIONAL_CATEGORY_LABELS, getFunctionalCategory, type FunctionalCategory } from "~core/domain/functional-category"
+import { countWatchingObservers } from "~core/domain/observer-counts"
+import { getObserverRemediation } from "~core/domain/remediation"
 import type { ObserverEvent } from "~core/domain/types"
+import { buildUnclassifiedGraphEdges, formatUsdRange, getTrackerValuation } from "~core/domain/valuation"
+import { observerName } from "~core/report/display"
 
 // The one watcher-list model both product surfaces render (popup top-N,
 // report act 3 groups). Popup and report drifting apart historically came

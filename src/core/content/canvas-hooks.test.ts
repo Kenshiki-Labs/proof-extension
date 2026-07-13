@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import {
-  applyCanvasNoise,
-  installCanvasElementReadHooks,
-  type CanvasReadObservation
-} from "~core/content/canvas-hooks"
+import { applyCanvasNoise, installCanvasElementReadHooks, type CanvasReadObservation } from "~core/content/canvas-hooks"
 
 function pixels(count: number, fill = 128): Uint8ClampedArray {
   return new Uint8ClampedArray(count * 4).fill(fill)
@@ -105,9 +101,7 @@ describe("installCanvasElementReadHooks", () => {
     const exported = world.canvasPrototype.toDataURL.call(canvas as never)
 
     expect(exported).toBe(Array.from(world.source).join(","))
-    expect(world.observations).toEqual([
-      { api: "toDataURL", mitigated: false, details: { api: "toDataURL", width: 64, height: 64 } }
-    ])
+    expect(world.observations).toEqual([{ api: "toDataURL", mitigated: false, details: { api: "toDataURL", width: 64, height: 64 } }])
   })
 
   it("answers exports with noised pixels and leaves the original canvas untouched when enabled", () => {

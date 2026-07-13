@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import { countWatchingObservers } from "~core/domain/observer-counts"
 import type { ObserverEvent } from "~core/domain/types"
+
 import { buildWatcherGroups, buildWatcherListModel, buildWatcherRows } from "./watchers"
 
 const ORIGIN = "https://example.test"
@@ -48,12 +49,7 @@ describe("buildWatcherRows", () => {
     )
 
     // liveramp (red, no-trade) outranks google-ads (amber); unclassified after named, volume-sorted.
-    expect(rows.map((row) => row.key)).toEqual([
-      "named:liveramp",
-      "named:google-ads",
-      "site:scorecardresearch.com",
-      "site:permutive.com"
-    ])
+    expect(rows.map((row) => row.key)).toEqual(["named:liveramp", "named:google-ads", "site:scorecardresearch.com", "site:permutive.com"])
     expect(rows[0]?.tier).toBe("red")
     expect(rows[1]?.categoryLabel).toBe("Advertising")
     expect(rows[2]?.category).toBe("unidentified")
@@ -65,7 +61,15 @@ describe("buildWatcherRows", () => {
       [
         event({ id: "blocked", trackerId: "google-ads", companyId: "google-ads", status: "blocked" }),
         event({ id: "fp", trackerId: "google-tag-manager", companyId: "google-tag-manager", firstParty: true }),
-        event({ id: "storage", firstParty: true, source: "api-hook", eventType: "storage_write", blockability: "observable_only", evidenceTier: "observed", details: { area: "localStorage", key: "x" } }),
+        event({
+          id: "storage",
+          firstParty: true,
+          source: "api-hook",
+          eventType: "storage_write",
+          blockability: "observable_only",
+          evidenceTier: "observed",
+          details: { area: "localStorage", key: "x" }
+        }),
         event({ id: "diag", firstParty: true, source: "content", eventType: "extension_diagnostic", blockability: "observable_only" })
       ],
       ORIGIN

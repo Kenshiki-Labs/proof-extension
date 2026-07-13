@@ -1,5 +1,5 @@
-import { buildCookieObservedEvent, cookieMatchesOrigin, type ObservedCookieMetadata } from "~core/signals/cookie-observer"
 import type { CookieMetadataScanResult, CookieValueInspectEntry, CookieValueInspectResult, ObserverEvent } from "~core/domain/types"
+import { buildCookieObservedEvent, cookieMatchesOrigin, type ObservedCookieMetadata } from "~core/signals/cookie-observer"
 
 type CookiePermissionApi = {
   contains: (permissions: chrome.permissions.Permissions, callback: (granted: boolean) => void) => void
@@ -27,10 +27,7 @@ function cookieStoreApi(api: CookieStoreChromeApi | undefined): { cookies: Cooki
   return { cookies: api.cookies, permissions: api.permissions }
 }
 
-function permissionCall(
-  api: CookieStoreChromeApi,
-  call: (callback: (granted: boolean) => void) => void
-): Promise<boolean> {
+function permissionCall(api: CookieStoreChromeApi, call: (callback: (granted: boolean) => void) => void): Promise<boolean> {
   return new Promise((resolve) => {
     call((granted) => {
       if (api.runtime?.lastError) {
@@ -69,7 +66,9 @@ function readCookiesForDomain(api: CookieStoreChromeApi, domain: string): Promis
   })
 }
 
-function toObservedCookieMetadata(cookie: Pick<chrome.cookies.Cookie, "name" | "domain" | "secure" | "httpOnly" | "session" | "sameSite">): ObservedCookieMetadata {
+function toObservedCookieMetadata(
+  cookie: Pick<chrome.cookies.Cookie, "name" | "domain" | "secure" | "httpOnly" | "session" | "sameSite">
+): ObservedCookieMetadata {
   return {
     name: cookie.name,
     domain: cookie.domain,

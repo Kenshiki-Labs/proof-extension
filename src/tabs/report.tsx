@@ -4,25 +4,24 @@ import { useEffect, useRef, useState } from "react"
 import browser from "webextension-polyfill"
 import type { Storage } from "webextension-polyfill"
 
-import { RuntimeMessageSchema } from "~core/contracts/messages"
-import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
-import type { SiteSummary, UserSettings } from "~core/domain/types"
-import type { VisitFrequency } from "~core/domain/visit-frequency"
-import { EMPTY_SUMMARY, buildCopyPayload, parseSiteSummaryResponse } from "~core/report/display"
-import { useReportModel } from "~hooks/useReportModel"
-import { useTransientState } from "~hooks/useTransientState"
-import { useValuationRollup } from "~hooks/useValuationRollup"
 import BetaBreadthNotice from "~components/BetaBreadthNotice"
 import ContractAuditView from "~components/contract/ContractAuditView"
 import DebugView from "~components/debug/DebugView"
 import EvidenceView from "~components/report/EvidenceView"
 import LocalStateSection from "~components/report/LocalStateView"
-import { ReportFooter, ReportViewSwitch, initialReportView, reportTabId, type ReportView } from "~components/report/shared"
+import { initialReportView, ReportFooter, reportTabId, ReportViewSwitch, type ReportView } from "~components/report/shared"
 import Button from "~components/system/Button"
 import SiteLogo from "~components/system/SiteLogo"
 import { TYPE, UI } from "~components/system/tokens"
 import ValueLedgerView from "~components/value/ValueLedgerView"
-
+import { RuntimeMessageSchema } from "~core/contracts/messages"
+import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
+import type { SiteSummary, UserSettings } from "~core/domain/types"
+import type { VisitFrequency } from "~core/domain/visit-frequency"
+import { buildCopyPayload, EMPTY_SUMMARY, parseSiteSummaryResponse } from "~core/report/display"
+import { useReportModel } from "~hooks/useReportModel"
+import { useTransientState } from "~hooks/useTransientState"
+import { useValuationRollup } from "~hooks/useValuationRollup"
 
 function ReportTab() {
   const [summary, setSummary] = useState<SiteSummary>(EMPTY_SUMMARY)
@@ -34,7 +33,13 @@ function ReportTab() {
   const [copyState, flashCopyState] = useTransientState<"idle" | "copied" | "failed">("idle")
   const [clearState, flashClearState] = useTransientState<"idle" | "failed">("idle")
   const [reportView, setReportView] = useState<ReportView>(initialReportView)
-  const { error: valuationError, period: valuationPeriod, refresh: refreshValuationRollup, rollup: valuationRollup, setPeriod: setValuationPeriod } = useValuationRollup("week")
+  const {
+    error: valuationError,
+    period: valuationPeriod,
+    refresh: refreshValuationRollup,
+    rollup: valuationRollup,
+    setPeriod: setValuationPeriod
+  } = useValuationRollup("week")
   const model = useReportModel(summary)
 
   async function loadSummary() {
@@ -54,7 +59,9 @@ function ReportTab() {
     const response = await browser.runtime.sendMessage({ type: "GET_SITE_SUMMARY", tabId })
     const parsed = parseSiteSummaryResponse(response)
     if (!parsed.success) {
-      setLoadError(`Background returned a malformed site summary: ${parsed.error.issues.map((issue) => issue.path.join(".") || issue.message).join(", ")}`)
+      setLoadError(
+        `Background returned a malformed site summary: ${parsed.error.issues.map((issue) => issue.path.join(".") || issue.message).join(", ")}`
+      )
       return
     }
 

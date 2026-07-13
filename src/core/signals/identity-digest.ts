@@ -4,7 +4,8 @@ export function normalizeIdentityDigestEvent(event: ObserverEvent): ObserverEven
   if (event.eventType !== "identity_digest_observed") return event
 
   const algorithm = typeof event.details?.algorithm === "string" ? event.details.algorithm.toUpperCase() : "SHA-256"
-  const inputBytes = typeof event.details?.inputBytes === "number" && Number.isFinite(event.details.inputBytes) ? event.details.inputBytes : 0
+  const inputBytes =
+    typeof event.details?.inputBytes === "number" && Number.isFinite(event.details.inputBytes) ? event.details.inputBytes : 0
 
   return {
     ...event,

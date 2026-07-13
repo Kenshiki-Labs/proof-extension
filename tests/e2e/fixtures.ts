@@ -1,7 +1,7 @@
-import { chromium, expect, type BrowserContext, type Worker } from "@playwright/test"
 import { readFile, rm } from "node:fs/promises"
 import http from "node:http"
 import path from "node:path"
+import { chromium, expect, type BrowserContext, type Worker } from "@playwright/test"
 
 import { MAIN_WORLD_SCRIPT_ID } from "../../src/core/domain/constants"
 import type { ObserverEvent } from "../../src/core/domain/types"
@@ -30,10 +30,7 @@ export async function waitForObserverReady(worker: Worker) {
  * Ephemeral-port HTTP server for fixture pages. Pass a single HTML string
  * for a one-page server, or a map of path -> HTML for multiple routes.
  */
-export async function withFixtureServer(
-  pages: string | Record<string, string>,
-  run: (baseUrl: string) => Promise<void>
-) {
+export async function withFixtureServer(pages: string | Record<string, string>, run: (baseUrl: string) => Promise<void>) {
   const routes: Record<string, string> = typeof pages === "string" ? { "/": pages } : pages
 
   const server = http.createServer((request, response) => {
@@ -93,7 +90,8 @@ export async function withExtensionContext(
   }
 }
 
-export const TRACKER_HOSTS = /(connect\.facebook\.net|facebook\.com|google-analytics\.com|googletagmanager\.com|doubleclick\.net|googleadservices\.com|googlesyndication\.com|fullstory\.com|rlcdn\.com|crwdcntrl\.net)/
+export const TRACKER_HOSTS =
+  /(connect\.facebook\.net|facebook\.com|google-analytics\.com|googletagmanager\.com|doubleclick\.net|googleadservices\.com|googlesyndication\.com|fullstory\.com|rlcdn\.com|crwdcntrl\.net)/
 
 /**
  * Intercepts all tracker-host requests and fulfills them locally so no real

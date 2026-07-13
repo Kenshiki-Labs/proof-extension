@@ -69,9 +69,18 @@ function companyKey(event: ObserverEvent): string | null {
 
 function rebuildSummary(summary: SiteSummary, events: ObserverEvent[], updatedAt = Date.now()): SiteSummary {
   const observations = events.filter(isPageActivityEvent)
-  const activeCompanies = observations.filter((item) => item.status === "active").map(companyKey).filter((value): value is string => Boolean(value))
-  const blockedCompanies = observations.filter((item) => item.status === "blocked").map(companyKey).filter((value): value is string => Boolean(value))
-  const mitigatedCompanies = observations.filter((item) => item.status === "mitigated").map(companyKey).filter((value): value is string => Boolean(value))
+  const activeCompanies = observations
+    .filter((item) => item.status === "active")
+    .map(companyKey)
+    .filter((value): value is string => Boolean(value))
+  const blockedCompanies = observations
+    .filter((item) => item.status === "blocked")
+    .map(companyKey)
+    .filter((value): value is string => Boolean(value))
+  const mitigatedCompanies = observations
+    .filter((item) => item.status === "mitigated")
+    .map(companyKey)
+    .filter((value): value is string => Boolean(value))
   const exposedSignals = observations.map((item) => item.eventType)
   const cannotBlockSignals = observations.filter((item) => item.status === "cannot_block").map((item) => item.eventType)
 
@@ -134,7 +143,10 @@ export function normalizeSiteSummary(summary: Partial<SiteSummary>, origin = "un
 // company as both "watching" and "blocked".
 export function supersedeEvent(summary: SiteSummary, eventId: string): SiteSummary {
   if (!summary.events.some((item) => item.id === eventId)) return summary
-  return rebuildSummary(summary, summary.events.filter((item) => item.id !== eventId))
+  return rebuildSummary(
+    summary,
+    summary.events.filter((item) => item.id !== eventId)
+  )
 }
 
 // Updates one detail key on an existing event without touching its count —
@@ -146,9 +158,7 @@ export function annotateEventDetail(summary: SiteSummary, eventId: string, key: 
   const event = summary.events.find((item) => item.id === eventId)
   if (!event || event.details?.[key] === value) return summary
 
-  const events = summary.events.map((item) =>
-    item.id === eventId ? { ...item, details: { ...item.details, [key]: value } } : item
-  )
+  const events = summary.events.map((item) => (item.id === eventId ? { ...item, details: { ...item.details, [key]: value } } : item))
   return { ...summary, events, updatedAt: Date.now() }
 }
 
@@ -180,11 +190,7 @@ function capEvents(events: ObserverEvent[], maxEventsPerTab: number): ObserverEv
   return afterObservedEviction.slice(-maxEventsPerTab)
 }
 
-export function upsertEvent(
-  summary: SiteSummary,
-  event: ObserverEvent,
-  maxEventsPerTab = DEFAULT_MAX_EVENTS_PER_TAB
-): SiteSummary {
+export function upsertEvent(summary: SiteSummary, event: ObserverEvent, maxEventsPerTab = DEFAULT_MAX_EVENTS_PER_TAB): SiteSummary {
   // Same id = same observation recurring, so accumulate its count instead of
   // silently replacing — the popup reports how many times a signal fired.
   const existing = summary.events.find((item) => item.id === event.id)

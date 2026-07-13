@@ -54,11 +54,17 @@ describe("buildDynamicBlockRuleSet with shimmed trackers", () => {
   it("redirects scripts to the shim, beacons to the pixel, and blocks the XHR/ping return path", () => {
     const { rules, metadata } = buildDynamicBlockRuleSet([], ["google-analytics"])
 
-    const script = rules.find((rule) => rule.action.type === REDIRECT && rule.condition.resourceTypes?.includes("script" as chrome.declarativeNetRequest.ResourceType))
+    const script = rules.find(
+      (rule) =>
+        rule.action.type === REDIRECT && rule.condition.resourceTypes?.includes("script" as chrome.declarativeNetRequest.ResourceType)
+    )
     expect(script?.action.redirect?.extensionPath).toBe("/shims/gtag.js")
     expect(script?.condition.urlFilter).toBe("||google-analytics.com^")
 
-    const image = rules.find((rule) => rule.action.type === REDIRECT && rule.condition.resourceTypes?.includes("image" as chrome.declarativeNetRequest.ResourceType))
+    const image = rules.find(
+      (rule) =>
+        rule.action.type === REDIRECT && rule.condition.resourceTypes?.includes("image" as chrome.declarativeNetRequest.ResourceType)
+    )
     expect(image?.action.redirect?.extensionPath).toBe("/shims/pixel.gif")
 
     const returnPath = rules.find((rule) => rule.action.type === BLOCK)

@@ -1,8 +1,8 @@
-import { compactPageErrors, diagnosticEvents, formatTime, observerName } from "~core/report/display"
-import { DEBUG_METRICS, metricItems } from "~core/report/surface-metrics"
-import { summaryMetrics } from "~core/report/metrics"
 import { TYPE, UI } from "~components/system/tokens"
 import type { SiteSummary, UserSettings } from "~core/domain/types"
+import { compactPageErrors, diagnosticEvents, formatTime, observerName } from "~core/report/display"
+import { summaryMetrics } from "~core/report/metrics"
+import { DEBUG_METRICS, metricItems } from "~core/report/surface-metrics"
 
 // The fail-open surface (docs/surface-contract.md): raw reality for
 // diagnosing the pipeline from the UI, never curated for presentation. This
@@ -39,7 +39,8 @@ function RawEventStream({ summary, settings }: { summary: SiteSummary; settings:
       <h2 className={TYPE.label}>Raw event stream</h2>
       <p className={`${TYPE.small} mt-2`}>
         Every stored event for this tab, newest first — all sources and evidence tiers, including extension diagnostics and exposure scans.
-        Retaining {summary.events.length} of a {settings.maxEventsPerTab}-event cap; observed-tier evidence evicts first when the cap is hit.
+        Retaining {summary.events.length} of a {settings.maxEventsPerTab}-event cap; observed-tier evidence evicts first when the cap is
+        hit.
       </p>
       <table className="mt-3 w-full min-w-[720px] text-left">
         <thead>
@@ -57,7 +58,9 @@ function RawEventStream({ summary, settings }: { summary: SiteSummary; settings:
         <tbody>
           {events.length === 0 ? (
             <tr>
-              <td className={`${TYPE.small} p-2`} colSpan={8}>No events stored for this tab.</td>
+              <td className={`${TYPE.small} p-2`} colSpan={8}>
+                No events stored for this tab.
+              </td>
             </tr>
           ) : (
             events.map((event) => (
@@ -116,7 +119,9 @@ function DiagnosticsAndErrors({ summary }: { summary: SiteSummary }) {
               <li key={pageError.id}>
                 {pageError.message}
                 {count > 1 ? ` × ${count}` : ""} · {formatTime(pageError.observedAt)}
-                {pageError.stackPreview ? <pre className="mt-1 whitespace-pre-wrap break-words text-[0.625rem]">{pageError.stackPreview}</pre> : null}
+                {pageError.stackPreview ? (
+                  <pre className="mt-1 whitespace-pre-wrap break-words text-[0.625rem]">{pageError.stackPreview}</pre>
+                ) : null}
               </li>
             ))}
           </ul>

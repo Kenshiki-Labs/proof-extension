@@ -28,7 +28,6 @@ describe("pattern shape lint", () => {
       expect(source, `${rule.id_base} has a proximity window ending a branch (dead tail)`).not.toMatch(/\{\d+,\d+\}(\||$)/)
     }
   })
-
 })
 
 describe("false-positive regressions", () => {

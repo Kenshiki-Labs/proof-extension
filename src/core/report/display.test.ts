@@ -1,13 +1,14 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
+
 import {
   blockabilitySummary,
   buildAtomicSignalRows,
   buildCookieMetadataRollup,
+  buildCopyPayload,
   buildLocalStatePurposeRollup,
   buildLocalStateRollup,
-  buildCopyPayload,
   classifyStoragePurpose,
   compactEvents,
   compactPageErrors,
@@ -165,7 +166,14 @@ describe("compactEvents", () => {
         evidenceTier: "observed",
         evidence: ["Cookie values are never recorded."],
         observedAt: 200,
-        details: { name: "FTR_Cache_Status", domain: "example.test", httpOnly: false, secure: false, session: true, sameSite: "unspecified" }
+        details: {
+          name: "FTR_Cache_Status",
+          domain: "example.test",
+          httpOnly: false,
+          secure: false,
+          session: true,
+          sameSite: "unspecified"
+        }
       })
     ])
 
@@ -236,12 +244,14 @@ describe("buildCookieMetadataRollup", () => {
       sessionCookies: 1,
       totalCookies: 2
     })
-    expect(buildCookieMetadataRollup(observations).takeaways).toEqual(expect.arrayContaining([
-      expect.stringContaining("readable by page scripts"),
-      expect.stringContaining("HttpOnly"),
-      expect.stringContaining("not marked Secure"),
-      expect.stringContaining("beyond the current browser session")
-    ]))
+    expect(buildCookieMetadataRollup(observations).takeaways).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("readable by page scripts"),
+        expect.stringContaining("HttpOnly"),
+        expect.stringContaining("not marked Secure"),
+        expect.stringContaining("beyond the current browser session")
+      ])
+    )
   })
 })
 
@@ -256,8 +266,18 @@ describe("buildLocalStateRollup", () => {
         evidence: ["Cookie values are never recorded."],
         details: { name: "session_id", domain: "example.test", httpOnly: true, secure: true, session: false, sameSite: "lax" }
       }),
-      event({ id: "storage", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "localStorage", key: "cart", valueBytes: 12 } }),
-      event({ id: "cache", eventType: "cache_storage_access", evidence: ["Cache Storage access observed."], details: { op: "open", cache: "site-cache" } }),
+      event({
+        id: "storage",
+        eventType: "storage_write",
+        evidence: ["Storage write observed."],
+        details: { area: "localStorage", key: "cart", valueBytes: 12 }
+      }),
+      event({
+        id: "cache",
+        eventType: "cache_storage_access",
+        evidence: ["Cache Storage access observed."],
+        details: { op: "open", cache: "site-cache" }
+      }),
       event({ id: "worker", eventType: "service_worker_registered", evidence: ["Service worker registered."], details: { scopePath: "/" } })
     ])
 
@@ -269,20 +289,40 @@ describe("buildLocalStateRollup", () => {
       sessionRecords: 0,
       totalRecords: 4
     })
-    expect(buildLocalStateRollup(observations).families.map((family) => family.label)).toEqual(expect.arrayContaining(["Cookies", "Web Storage", "Cache Storage", "Service workers"]))
+    expect(buildLocalStateRollup(observations).families.map((family) => family.label)).toEqual(
+      expect.arrayContaining(["Cookies", "Web Storage", "Cache Storage", "Service workers"])
+    )
   })
 
   it("classifies browser-only, session, and non-durable records without double-counting", () => {
     const observations = compactEvents([
       // Browser-only + non-durable + not script-readable: exercises the
       // fallbacks in the script-readable and durable classifiers.
-      event({ id: "cache-validator", eventType: "cache_validator_seen", blockability: "observable_only", evidence: ["Cache validator seen."], details: { header: "if-none-match" } }),
+      event({
+        id: "cache-validator",
+        eventType: "cache_validator_seen",
+        blockability: "observable_only",
+        evidence: ["Cache validator seen."],
+        details: { header: "if-none-match" }
+      }),
       // Session-scoped storage: durable classifier's storage_write branch takes
       // its false side; session classifier takes its true side.
-      event({ id: "session-storage", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "sessionStorage", key: "step", valueBytes: 4 } }),
+      event({
+        id: "session-storage",
+        eventType: "storage_write",
+        evidence: ["Storage write observed."],
+        details: { area: "sessionStorage", key: "step", valueBytes: 4 }
+      }),
       // Session cookie, script-readable (httpOnly false), NOT durable: exercises
       // the durable cookie condition's false side.
-      event({ id: "session-cookie", source: "extension-scan", eventType: "cookie_observed", blockability: "observable_only", evidence: ["Cookie values are never recorded."], details: { name: "csrf", domain: "example.test", httpOnly: false, secure: true, session: true, sameSite: "strict" } })
+      event({
+        id: "session-cookie",
+        source: "extension-scan",
+        eventType: "cookie_observed",
+        blockability: "observable_only",
+        evidence: ["Cookie values are never recorded."],
+        details: { name: "csrf", domain: "example.test", httpOnly: false, secure: true, session: true, sameSite: "strict" }
+      })
     ])
 
     expect(buildLocalStateRollup(observations)).toMatchObject({
@@ -311,12 +351,44 @@ describe("eventSummary", () => {
 describe("buildLocalStatePurposeRollup", () => {
   it("classifies Web Storage keys without using values", () => {
     const observations = compactEvents([
-      event({ id: "storage-cart", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "localStorage", op: "set", key: "cart", valueBytes: 12 } }),
-      event({ id: "storage-csm", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "localStorage", op: "set", key: "csm-hit", valueBytes: 69 } }),
-      event({ id: "storage-events", eventType: "storage_write", evidence: ["Storage write observed."], count: 3, details: { area: "sessionStorage", op: "set", key: "amzn:fwcim:events", valueBytes: 1353 } }),
-      event({ id: "storage-remove", eventType: "storage_write", evidence: ["Storage write observed."], count: 2, details: { area: "sessionStorage", op: "remove", key: "amzn:fwcim:events" } }),
-      event({ id: "storage-clear", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "localStorage", op: "clear" } }),
-      event({ id: "storage-hidden", eventType: "storage_write", evidence: ["Storage write observed."], details: { area: "sessionStorage", op: "set", key: "[hidden 20]", valueBytes: 1 } }),
+      event({
+        id: "storage-cart",
+        eventType: "storage_write",
+        evidence: ["Storage write observed."],
+        details: { area: "localStorage", op: "set", key: "cart", valueBytes: 12 }
+      }),
+      event({
+        id: "storage-csm",
+        eventType: "storage_write",
+        evidence: ["Storage write observed."],
+        details: { area: "localStorage", op: "set", key: "csm-hit", valueBytes: 69 }
+      }),
+      event({
+        id: "storage-events",
+        eventType: "storage_write",
+        evidence: ["Storage write observed."],
+        count: 3,
+        details: { area: "sessionStorage", op: "set", key: "amzn:fwcim:events", valueBytes: 1353 }
+      }),
+      event({
+        id: "storage-remove",
+        eventType: "storage_write",
+        evidence: ["Storage write observed."],
+        count: 2,
+        details: { area: "sessionStorage", op: "remove", key: "amzn:fwcim:events" }
+      }),
+      event({
+        id: "storage-clear",
+        eventType: "storage_write",
+        evidence: ["Storage write observed."],
+        details: { area: "localStorage", op: "clear" }
+      }),
+      event({
+        id: "storage-hidden",
+        eventType: "storage_write",
+        evidence: ["Storage write observed."],
+        details: { area: "sessionStorage", op: "set", key: "[hidden 20]", valueBytes: 1 }
+      }),
       event({ id: "cookie", eventType: "cookie_observed", evidence: ["Cookie observed."], details: { name: "cart" } })
     ])
 
@@ -330,19 +402,23 @@ describe("buildLocalStatePurposeRollup", () => {
       setOperations: 6,
       totalRecords: 9
     })
-    expect(rollup.purposes).toEqual(expect.arrayContaining([
-      expect.objectContaining({ label: "Analytics and event queues", count: 5, keyExamples: ["amzn:fwcim:events"] }),
-      expect.objectContaining({ label: "Cart and commerce", count: 1, keyExamples: ["cart"] }),
-      expect.objectContaining({ label: "Performance and diagnostics", count: 1, keyExamples: ["csm-hit"] }),
-      expect.objectContaining({ label: "Unclassified storage keys", count: 1, keyExamples: [] })
-    ]))
-    expect(rollup.takeaways).toEqual(expect.arrayContaining([
-      expect.stringContaining("localStorage"),
-      expect.stringContaining("sessionStorage"),
-      expect.stringContaining("rotating or clearing"),
-      expect.stringContaining("clear operation wiped"),
-      expect.stringContaining("analytics and event queues")
-    ]))
+    expect(rollup.purposes).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ label: "Analytics and event queues", count: 5, keyExamples: ["amzn:fwcim:events"] }),
+        expect.objectContaining({ label: "Cart and commerce", count: 1, keyExamples: ["cart"] }),
+        expect.objectContaining({ label: "Performance and diagnostics", count: 1, keyExamples: ["csm-hit"] }),
+        expect.objectContaining({ label: "Unclassified storage keys", count: 1, keyExamples: [] })
+      ])
+    )
+    expect(rollup.takeaways).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("localStorage"),
+        expect.stringContaining("sessionStorage"),
+        expect.stringContaining("rotating or clearing"),
+        expect.stringContaining("clear operation wiped"),
+        expect.stringContaining("analytics and event queues")
+      ])
+    )
   })
 })
 
@@ -406,8 +482,12 @@ describe("display formatting helpers", () => {
 
   it("summarizes each event type in factual language", () => {
     expect(eventSummary(event({ eventType: "canvas_read" }))).toBe("The page read image data that can identify your device.")
-    expect(eventSummary(event({ eventType: "webgl_query" }))).toBe("The page asked for graphics-card details that can identify your device.")
-    expect(eventSummary(event({ eventType: "audio_fingerprint" }))).toBe("The page tested audio processing in a way that can identify your device.")
+    expect(eventSummary(event({ eventType: "webgl_query" }))).toBe(
+      "The page asked for graphics-card details that can identify your device."
+    )
+    expect(eventSummary(event({ eventType: "audio_fingerprint" }))).toBe(
+      "The page tested audio processing in a way that can identify your device."
+    )
     expect(eventSummary(event({ eventType: "font_enumeration" }))).toBe("The page checked which fonts you have installed.")
     expect(eventSummary(event({ eventType: "identity_digest_observed" }))).toBe(
       "The page created a SHA-256 identifier hash. The original value and hash were not recorded."
@@ -425,22 +505,22 @@ describe("display formatting helpers", () => {
     expect(eventSummary(event({ eventType: "cache_validator_seen" }))).toBe(
       "Cache identifier observed — the browser used a freshness marker for saved content. The marker value was not recorded."
     )
-    expect(eventSummary(event({ eventType: "extension_diagnostic" }))).toBe("A routine self-check by this extension — not something the page did.")
+    expect(eventSummary(event({ eventType: "extension_diagnostic" }))).toBe(
+      "A routine self-check by this extension — not something the page did."
+    )
     expect(eventSummary(event({ eventType: "browser_surface" }))).toBe(
       "Basic facts about your device (screen size, time zone, language) were readable by this page."
     )
-    expect(eventSummary(event({ eventType: "cookie_sync" }))).toBe("Two tracking companies swapped IDs so they can combine what they know about you.")
+    expect(eventSummary(event({ eventType: "cookie_sync" }))).toBe(
+      "Two tracking companies swapped IDs so they can combine what they know about you."
+    )
   })
 
   it("describes capability for every blockability class without overclaiming", () => {
     expect(blockabilitySummary({ blockability: "network_blockable", status: "blocked" })).toBe("Seen, then blocked")
-    expect(blockabilitySummary({ blockability: "network_blockable", status: "active" })).toBe(
-      "Seen — you can block it"
-    )
+    expect(blockabilitySummary({ blockability: "network_blockable", status: "active" })).toBe("Seen — you can block it")
     expect(blockabilitySummary({ blockability: "content_mitigatable", status: "mitigated" })).toBe("Seen, and limited")
-    expect(blockabilitySummary({ blockability: "content_mitigatable", status: "active" })).toBe(
-      "Seen — it can be limited"
-    )
+    expect(blockabilitySummary({ blockability: "content_mitigatable", status: "active" })).toBe("Seen — it can be limited")
     expect(blockabilitySummary({ blockability: "observable_only", status: "active" })).toBe("Seen — can be watched but not stopped")
     expect(blockabilitySummary({ blockability: "pre_request_unblockable", status: "cannot_block" })).toBe(
       "Sent before this extension could act"

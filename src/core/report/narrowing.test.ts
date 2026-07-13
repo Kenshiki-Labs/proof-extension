@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { ObserverEvent } from "~core/domain/types"
+
 import { buildNarrowingModel, formatCandidates, POPULATION_BASE } from "./narrowing"
 
 function event(overrides: Partial<ObserverEvent>): ObserverEvent {

@@ -40,12 +40,7 @@ export type DynamicBlockRuleMetadata = {
   resourceTypes: readonly string[]
 }
 
-const DEFAULT_RESOURCE_TYPES: ResourceType[] = [
-  RESOURCE_TYPE.SCRIPT,
-  RESOURCE_TYPE.XMLHTTPREQUEST,
-  RESOURCE_TYPE.IMAGE,
-  RESOURCE_TYPE.PING
-]
+const DEFAULT_RESOURCE_TYPES: ResourceType[] = [RESOURCE_TYPE.SCRIPT, RESOURCE_TYPE.XMLHTTPREQUEST, RESOURCE_TYPE.IMAGE, RESOURCE_TYPE.PING]
 
 const VALID_RESOURCE_TYPES = new Set<string>(Object.values(RESOURCE_TYPE))
 let installedDynamicBlockRuleMetadata = new Map<number, DynamicBlockRuleMetadata>()
@@ -134,9 +129,7 @@ export function buildDynamicBlockRuleSet(blockedTrackerIds: readonly string[] = 
     if (tracker.browserAction.blockability !== "network_blockable") continue
     if (!enabledIds.has(tracker.id)) continue
 
-    const resourceTypes = normalizeRequestTypes(
-      tracker.match.requestTypes
-    ) as chrome.declarativeNetRequest.ResourceType[]
+    const resourceTypes = normalizeRequestTypes(tracker.match.requestTypes) as chrome.declarativeNetRequest.ResourceType[]
 
     // Domain-wide rules only. Path-scoped rules (`||domain^/path`) were dead
     // syntax — in DNR urlFilter, `^` consumes the `/`, so the literal path
@@ -243,9 +236,7 @@ export async function installDynamicBlockRules(blockedTrackerIds: readonly strin
   if (!hasDeclarativeNetRequest()) return { installed: 0, requested: 0 }
 
   const existingRules = await chrome.declarativeNetRequest.getDynamicRules()
-  const removeRuleIds = existingRules
-    .map((rule) => rule.id)
-    .filter((ruleId) => ruleId >= DYNAMIC_RULE_ID_BASE)
+  const removeRuleIds = existingRules.map((rule) => rule.id).filter((ruleId) => ruleId >= DYNAMIC_RULE_ID_BASE)
   const { metadata, rules } = buildDynamicBlockRuleSet(blockedTrackerIds, shimmedTrackerIds)
 
   // Never let one over-quota update reject wholesale: that would leave the
@@ -255,8 +246,7 @@ export async function installDynamicBlockRules(blockedTrackerIds: readonly strin
   const foreignRuleCount = existingRules.length - removeRuleIds.length
   // MAX_NUMBER_OF_DYNAMIC_RULES shipped in Chrome 121; @types/chrome doesn't declare it yet.
   const ruleLimit =
-    (chrome.declarativeNetRequest as { MAX_NUMBER_OF_DYNAMIC_RULES?: number }).MAX_NUMBER_OF_DYNAMIC_RULES ??
-    FALLBACK_DYNAMIC_RULE_LIMIT
+    (chrome.declarativeNetRequest as { MAX_NUMBER_OF_DYNAMIC_RULES?: number }).MAX_NUMBER_OF_DYNAMIC_RULES ?? FALLBACK_DYNAMIC_RULE_LIMIT
   const available = Math.max(0, ruleLimit - foreignRuleCount)
   const addRules = rules.slice(0, available)
 

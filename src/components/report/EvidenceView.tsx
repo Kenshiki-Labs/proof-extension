@@ -1,20 +1,9 @@
-import { useState } from "react"
 import { Banknote, Clock, Share2, Users } from "lucide-react"
+import { useState } from "react"
 
-import type { SiteSummary, UserSettings } from "~core/domain/types"
-import type { VisitFrequency } from "~core/domain/visit-frequency"
-import type { ReportModel } from "~hooks/useReportModel"
 import CleanupFlow from "~components/CleanupFlow"
 import LocationReveal from "~components/LocationReveal"
 import { NarrowingReportSection } from "~components/NarrowingPanel"
-import VerdictBanner from "~components/VerdictBanner"
-import VisitFrequencyAsk from "~components/VisitFrequencyAsk"
-import Button from "~components/system/Button"
-import Disclosure from "~components/system/Disclosure"
-import { TYPE, UI } from "~components/system/tokens"
-import TrackerGraph from "~components/value/TrackerGraph"
-import WatcherList from "~components/watchers/WatcherList"
-
 import AiAuditReportPanel, { govHostname } from "~components/report/AiAuditPanel"
 import AuditBrief from "~components/report/AuditBrief"
 import { AtomicSignalMatrix, ExposureScanSection, LocalPageSignalsSection } from "~components/report/EvidenceAppendix"
@@ -23,6 +12,16 @@ import ObservationTable from "~components/report/ObservationTable"
 import RemediationPanel from "~components/report/RemediationPanel"
 import { SectionTitle } from "~components/report/shared"
 import ValuationSection from "~components/report/ValuationSection"
+import Button from "~components/system/Button"
+import Disclosure from "~components/system/Disclosure"
+import { TYPE, UI } from "~components/system/tokens"
+import TrackerGraph from "~components/value/TrackerGraph"
+import VerdictBanner from "~components/VerdictBanner"
+import VisitFrequencyAsk from "~components/VisitFrequencyAsk"
+import WatcherList from "~components/watchers/WatcherList"
+import type { SiteSummary, UserSettings } from "~core/domain/types"
+import type { VisitFrequency } from "~core/domain/visit-frequency"
+import type { ReportModel } from "~hooks/useReportModel"
 
 export default function EvidenceView({
   model,
@@ -47,7 +46,7 @@ export default function EvidenceView({
   // supporting tables — see the report-tab story-arc discussion (verdict ->
   // picture -> receipts -> action).
   const [lens, setLens] = useState<"actors" | "money" | "network" | "timeline">("network")
-  const statedFrequency = model.siteDomain ? (settings.siteVisitFrequency[model.siteDomain] ?? null) : null
+  const statedFrequency = model.siteDomain ? settings.siteVisitFrequency[model.siteDomain] ?? null : null
   const {
     allObservations,
     atomicSignalRows,
@@ -78,7 +77,7 @@ export default function EvidenceView({
         annualHighUsd={observedRollup.annualRevenueHighUsd}
         annualLowUsd={observedRollup.annualRevenueLowUsd}
         domain={siteDomain}
-        frequency={siteDomain ? (settings.siteVisitFrequency[siteDomain] ?? null) : null}
+        frequency={siteDomain ? settings.siteVisitFrequency[siteDomain] ?? null : null}
         onAnswer={onAnswerVisitFrequency}
         revenueTrackerCount={observedRollup.revenueTrackerCount}
       />
@@ -128,7 +127,8 @@ export default function EvidenceView({
           tabEdges.length > 0 || unclassifiedTabEdges.length > 0 ? (
             <div className="mt-4">
               <p className={`${TYPE.small}`}>
-                Every third party on this page, named or not — gray nodes are observed but not yet in our tracker database. Switch to "Who makes what" to size named ones by estimated annual value.
+                Every third party on this page, named or not — gray nodes are observed but not yet in our tracker database. Switch to "Who
+                makes what" to size named ones by estimated annual value.
               </p>
               <div className={`mt-2 ${UI.subtlePanel} p-4`}>
                 <TrackerGraph edges={tabEdges} unclassifiedEdges={unclassifiedTabEdges} />
@@ -139,9 +139,21 @@ export default function EvidenceView({
           )
         ) : null}
         {lens === "actors" ? (
-          <ObservationTable blockedTrackerIds={settings.blockedTrackerIds} observations={observations} onToggleBlocking={onToggleBlocking} />
+          <ObservationTable
+            blockedTrackerIds={settings.blockedTrackerIds}
+            observations={observations}
+            onToggleBlocking={onToggleBlocking}
+          />
         ) : null}
-        {lens === "money" ? <ValuationSection embedded events={summary.events} frequency={statedFrequency} outcomes={valuationOutcomes} rollup={observedRollup} /> : null}
+        {lens === "money" ? (
+          <ValuationSection
+            embedded
+            events={summary.events}
+            frequency={statedFrequency}
+            outcomes={valuationOutcomes}
+            rollup={observedRollup}
+          />
+        ) : null}
         {lens === "timeline" ? <EvidenceTimeline embedded events={summary.events} /> : null}
       </section>
 
@@ -176,9 +188,17 @@ export default function EvidenceView({
 
       <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
         <SectionTitle number="04" title="The money" />
-        <ValuationSection embedded events={summary.events} frequency={statedFrequency} outcomes={valuationOutcomes} rollup={observedRollup} />
+        <ValuationSection
+          embedded
+          events={summary.events}
+          frequency={statedFrequency}
+          outcomes={valuationOutcomes}
+          rollup={observedRollup}
+        />
         <div className="mt-4">
-          <Button onClick={onOpenValueLedger} variant="secondary">Open the full value ledger</Button>
+          <Button onClick={onOpenValueLedger} variant="secondary">
+            Open the full value ledger
+          </Button>
         </div>
       </section>
 
@@ -191,9 +211,14 @@ export default function EvidenceView({
         <section className={`mt-4 ${UI.panel} ${UI.reportInset}`}>
           <SectionTitle number="05" title="All observed activity" />
           <p className={`${TYPE.small} mt-2`}>
-            Grouped rows from the page's full activity stream — named watchers, site tools, not-yet-classified hosts, and storage/cache surfaces.
+            Grouped rows from the page's full activity stream — named watchers, site tools, not-yet-classified hosts, and storage/cache
+            surfaces.
           </p>
-          <ObservationTable blockedTrackerIds={settings.blockedTrackerIds} observations={allObservations} onToggleBlocking={onToggleBlocking} />
+          <ObservationTable
+            blockedTrackerIds={settings.blockedTrackerIds}
+            observations={allObservations}
+            onToggleBlocking={onToggleBlocking}
+          />
         </section>
         <LocalPageSignalsSection observations={localPageSignals} />
         <ExposureScanSection events={exposureEvents} />

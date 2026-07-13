@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react"
 
-import { formatUsdRange, getTrackerValuation, SERVES_LABELS } from "~core/domain/valuation"
-import { getTrackerSupplyChainRole, SUPPLY_CHAIN_STAGES, SUPPLY_CHAIN_LABELS, type SupplyChainRole } from "~core/domain/supply-chain"
-import type { UnclassifiedGraphEdge, ValuationEdge } from "~core/domain/types"
 import { TYPE, UI } from "~components/system/tokens"
+import { getTrackerSupplyChainRole, SUPPLY_CHAIN_LABELS, SUPPLY_CHAIN_STAGES, type SupplyChainRole } from "~core/domain/supply-chain"
+import type { UnclassifiedGraphEdge, ValuationEdge } from "~core/domain/types"
+import { formatUsdRange, getTrackerValuation, SERVES_LABELS } from "~core/domain/valuation"
 
 // Site ↔ tracker network, rendered as a deterministic bipartite SVG built in
 // real time from the user's local ledger. Sites on the left, trackers on the
@@ -128,10 +128,15 @@ export default function TrackerGraph({
       trackerWeight.set(edge.nodeId, (trackerWeight.get(edge.nodeId) ?? 0) + edge.observations)
     }
     const bySeverity = (a: [string, number], b: [string, number]) => b[1] - a[1] || a[0].localeCompare(b[0])
-    const sites = [...siteWeight.entries()].sort(bySeverity).slice(0, MAX_SITES).map(([id]) => id)
+    const sites = [...siteWeight.entries()]
+      .sort(bySeverity)
+      .slice(0, MAX_SITES)
+      .map(([id]) => id)
     const byChain = (a: [string, number], b: [string, number]) =>
-      (STAGE_ORDER[getTrackerSupplyChainRole(a[0]) ?? "site_tooling"] - STAGE_ORDER[getTrackerSupplyChainRole(b[0]) ?? "site_tooling"]) || bySeverity(a, b)
-    const byValue = (a: [string, number], b: [string, number]) => trackerAnnualMidpoint(b[0]) - trackerAnnualMidpoint(a[0]) || bySeverity(a, b)
+      STAGE_ORDER[getTrackerSupplyChainRole(a[0]) ?? "site_tooling"] - STAGE_ORDER[getTrackerSupplyChainRole(b[0]) ?? "site_tooling"] ||
+      bySeverity(a, b)
+    const byValue = (a: [string, number], b: [string, number]) =>
+      trackerAnnualMidpoint(b[0]) - trackerAnnualMidpoint(a[0]) || bySeverity(a, b)
     const modeSort = mode === "chain" ? byChain : mode === "value" ? byValue : bySeverity
     const trackers = [...trackerWeight.entries()]
       .sort(bySeverity)
@@ -153,7 +158,9 @@ export default function TrackerGraph({
   // Radius scales by sqrt of value, not value itself — circle AREA should
   // read as proportional to the dollar amount, or a 10x tracker looks 100x.
   const nodeRadius = (trackerId: string) =>
-    mode === "value" ? MIN_NODE_RADIUS + Math.sqrt(trackerAnnualMidpoint(trackerId) / maxAnnualMidpoint) * (MAX_NODE_RADIUS - MIN_NODE_RADIUS) : 4
+    mode === "value"
+      ? MIN_NODE_RADIUS + Math.sqrt(trackerAnnualMidpoint(trackerId) / maxAnnualMidpoint) * (MAX_NODE_RADIUS - MIN_NODE_RADIUS)
+      : 4
   const siteY = (id: string) => TOP_PAD + sites.indexOf(id) * ROW_HEIGHT + ROW_HEIGHT / 2
   const trackerY = (id: string) => TOP_PAD + trackers.indexOf(id) * ROW_HEIGHT + ROW_HEIGHT / 2
   const isDimmed = (edge: GraphEdge) => focused !== null && edge.siteOrigin !== focused && edge.nodeId !== focused
@@ -198,13 +205,14 @@ export default function TrackerGraph({
           )
         })}
         {sites.map((site) => (
-          <g
-            key={site}
-            onMouseEnter={() => setFocused(site)}
-            onMouseLeave={() => setFocused(null)}>
+          <g key={site} onMouseEnter={() => setFocused(site)} onMouseLeave={() => setFocused(null)}>
             <text
               fontSize="12"
-              opacity={focused !== null && focused !== site && !visibleEdges.some((edge) => edge.nodeId === focused && edge.siteOrigin === site) ? 0.3 : 1}
+              opacity={
+                focused !== null && focused !== site && !visibleEdges.some((edge) => edge.nodeId === focused && edge.siteOrigin === site)
+                  ? 0.3
+                  : 1
+              }
               textAnchor="end"
               x="210"
               y={siteY(site) + 4}>
@@ -217,18 +225,23 @@ export default function TrackerGraph({
           const nodeClasses = classesFor(mode, representativeEdge?.servesCategory ?? null, tracker)
           const annualRange = mode === "value" ? trackerAnnualRange(tracker) : null
           return (
-            <g
-              key={tracker}
-              onMouseEnter={() => setFocused(tracker)}
-              onMouseLeave={() => setFocused(null)}>
+            <g key={tracker} onMouseEnter={() => setFocused(tracker)} onMouseLeave={() => setFocused(null)}>
               <circle className={nodeClasses.fill} cx="508" cy={trackerY(tracker)} r={nodeRadius(tracker)} />
               <text
                 fontSize="12"
-                opacity={focused !== null && focused !== tracker && !visibleEdges.some((edge) => edge.siteOrigin === focused && edge.nodeId === tracker) ? 0.3 : 1}
+                opacity={
+                  focused !== null &&
+                  focused !== tracker &&
+                  !visibleEdges.some((edge) => edge.siteOrigin === focused && edge.nodeId === tracker)
+                    ? 0.3
+                    : 1
+                }
                 x="520"
                 y={trackerY(tracker) + 4}>
                 {representativeEdge?.nodeLabel ?? tracker}
-                {annualRange ? <tspan className="fill-current opacity-60"> · {formatUsdRange(annualRange.low, annualRange.high)}/yr</tspan> : null}
+                {annualRange ? (
+                  <tspan className="fill-current opacity-60"> · {formatUsdRange(annualRange.low, annualRange.high)}/yr</tspan>
+                ) : null}
               </text>
             </g>
           )

@@ -1,6 +1,6 @@
+import { TYPE, UI } from "~components/system/tokens"
 import type { RollingValuationSummary } from "~core/domain/types"
 import { formatUsd, formatUsdRange } from "~core/domain/valuation"
-import { TYPE, UI } from "~components/system/tokens"
 
 export default function LedgerTables({ rollup }: { rollup: RollingValuationSummary }) {
   return (

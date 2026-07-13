@@ -21,7 +21,10 @@ function byteLength(data: unknown): number | null {
   return null
 }
 
-export function installIdentityDigestHook(report: IdentityDigestReporter, cryptoTarget: CryptoLike = crypto as unknown as CryptoLike): boolean {
+export function installIdentityDigestHook(
+  report: IdentityDigestReporter,
+  cryptoTarget: CryptoLike = crypto as unknown as CryptoLike
+): boolean {
   const subtle = cryptoTarget.subtle
   const original = subtle?.digest
   if (!subtle || typeof original !== "function") return false

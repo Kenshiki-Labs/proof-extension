@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import { validateTrackerDatabase } from "~core/db/validate"
+
 import { getTrackerSupplyChainRole, groupBySupplyChainStage, SUPPLY_CHAIN_STAGES } from "./supply-chain"
 
 describe("supply chain roles", () => {

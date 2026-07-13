@@ -59,7 +59,10 @@ export default function LocationReveal({ watching }: { watching: number }) {
 
   const place = state.status === "ready" ? [state.geo.city, state.geo.region, state.geo.country].filter(Boolean).join(", ") : ""
   const radius = state.status === "ready" && state.geo.accuracyRadiusKm != null ? ` (±${state.geo.accuracyRadiusKm} km)` : ""
-  const url = state.status === "ready" && state.geo.latitude != null && state.geo.longitude != null ? mapUrl(state.geo.latitude, state.geo.longitude) : null
+  const url =
+    state.status === "ready" && state.geo.latitude != null && state.geo.longitude != null
+      ? mapUrl(state.geo.latitude, state.geo.longitude)
+      : null
 
   return (
     <div className={`${UI.panel} ${UI.reportInset}`}>
@@ -68,7 +71,8 @@ export default function LocationReveal({ watching }: { watching: number }) {
       {state.status === "idle" ? (
         <>
           <p className={`${TYPE.body} mt-2 max-w-2xl`}>
-            Pulse never reaches the network to show you anything — except this, at your click. One request to a location service, which reads your IP the way every server on this page already did. Then it draws the pin.
+            Pulse never reaches the network to show you anything — except this, at your click. One request to a location service, which
+            reads your IP the way every server on this page already did. Then it draws the pin.
           </p>
           <button
             className={`mt-3 border border-foreground bg-foreground px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-background transition-colors hover:border-signal hover:bg-signal`}
@@ -82,7 +86,9 @@ export default function LocationReveal({ watching }: { watching: number }) {
       {state.status === "loading" ? <p className={`${TYPE.body} mt-2`}>Locating from your IP…</p> : null}
 
       {state.status === "error" ? (
-        <p className={`${TYPE.body} mt-2`}>Couldn't reach the location service. The point stands: your IP left on every request here, and any recipient can do this.</p>
+        <p className={`${TYPE.body} mt-2`}>
+          Couldn't reach the location service. The point stands: your IP left on every request here, and any recipient can do this.
+        </p>
       ) : null}
 
       {state.status === "ready" ? (
@@ -91,9 +97,16 @@ export default function LocationReveal({ watching }: { watching: number }) {
             Your IP alone puts you near <strong>{place || "an identifiable place"}</strong>
             {radius ? <span className={TYPE.small}>{radius}</span> : null}.
           </p>
-          {url ? <img alt={`Approximate map location near ${place}`} className="mt-3 w-full max-w-[480px] rounded border border-border" src={url} /> : null}
+          {url ? (
+            <img
+              alt={`Approximate map location near ${place}`}
+              className="mt-3 w-full max-w-[480px] rounded border border-border"
+              src={url}
+            />
+          ) : null}
           <p className={`${TYPE.small} mt-2`}>
-            MaxMind IP geolocation — approximate, not GPS. Every one of the {watching} {watching === 1 ? "company" : "companies"} on this page can do exactly this, and none of them asked.
+            MaxMind IP geolocation — approximate, not GPS. Every one of the {watching} {watching === 1 ? "company" : "companies"} on this
+            page can do exactly this, and none of them asked.
           </p>
         </>
       ) : null}

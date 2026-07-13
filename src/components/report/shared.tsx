@@ -1,9 +1,9 @@
 import { Activity, Bug, Database, FileCheck2, LineChart, type LucideIcon } from "lucide-react"
 
+import { TYPE, UI } from "~components/system/tokens"
 import { registrableDomain } from "~core/domain/party"
 import type { ObserverEvent } from "~core/domain/types"
 import { titleCase } from "~core/report/display"
-import { TYPE, UI } from "~components/system/tokens"
 
 export function domainForOrigin(origin: string): string | null {
   try {
@@ -63,12 +63,22 @@ export function Metric({
 }
 
 export function StatusChip({ status }: { status: ObserverEvent["status"] }) {
-  return <span className="inline-flex border border-border bg-background/70 px-2 py-0.5 font-mono text-[0.6875rem] uppercase text-muted-foreground">{titleCase(status)}</span>
+  return (
+    <span className="inline-flex border border-border bg-background/70 px-2 py-0.5 font-mono text-[0.6875rem] uppercase text-muted-foreground">
+      {titleCase(status)}
+    </span>
+  )
 }
 
 export function BulletList({ items }: { items: string[] }) {
   if (items.length === 0) return <p className={TYPE.body}>None stated.</p>
-  return <ul className={`${TYPE.body} list-disc pl-5`}>{items.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul>
+  return (
+    <ul className={`${TYPE.body} list-disc pl-5`}>
+      {items.map((item, index) => (
+        <li key={`${item}-${index}`}>{item}</li>
+      ))}
+    </ul>
+  )
 }
 
 export function SectionTitle({ number, title }: { number: string; title: string }) {

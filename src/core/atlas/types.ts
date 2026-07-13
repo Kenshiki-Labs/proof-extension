@@ -18,10 +18,7 @@ export const PatternFamilySchema = z.enum(Object.values(PATTERN_FAMILIES) as [Pa
 // automatically widens this union and cannot leave a stale entry behind.
 export type GiveupCategory = (typeof DETECTION_RULES)[number]["category"]
 
-const GIVEUP_CATEGORY_VALUES = Array.from(new Set(DETECTION_RULES.map((rule) => rule.category))) as [
-  GiveupCategory,
-  ...GiveupCategory[]
-]
+const GIVEUP_CATEGORY_VALUES = Array.from(new Set(DETECTION_RULES.map((rule) => rule.category))) as [GiveupCategory, ...GiveupCategory[]]
 
 export const GiveupCategorySchema = z.enum(GIVEUP_CATEGORY_VALUES)
 

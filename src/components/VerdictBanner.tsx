@@ -1,8 +1,8 @@
 import Chip from "~components/system/Chip"
-import { buildVerdict } from "~core/domain/attention"
-import { formatUsdRange } from "~core/domain/valuation"
-import type { SiteSummary } from "~core/domain/types"
 import { TYPE, UI } from "~components/system/tokens"
+import { buildVerdict } from "~core/domain/attention"
+import type { SiteSummary } from "~core/domain/types"
+import { formatUsdRange } from "~core/domain/valuation"
 
 // Act I: the verdict. One sentence, three tier chips, one action cue.
 // Everything below any surface that renders this is supporting detail.
@@ -25,7 +25,9 @@ export default function VerdictBanner({ compact = false, summary }: { compact?: 
     return (
       <section className={sectionClass}>
         <p className={sentenceClass}>No watchers observed on this page yet.</p>
-        <p className={`${TYPE.small} mt-1.5`}>Evidence is recorded as the page runs — reload the tab if it was open before Pulse was installed.</p>
+        <p className={`${TYPE.small} mt-1.5`}>
+          Evidence is recorded as the page runs — reload the tab if it was open before Pulse was installed.
+        </p>
       </section>
     )
   }

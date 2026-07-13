@@ -10,7 +10,8 @@ export default function BetaBreadthNotice({ compact = false }: { compact?: boole
         <div>
           <h2 className={TYPE.label}>Beta coverage note</h2>
           <p className={`${TYPE.small} mt-1`}>
-            Pulse Observer is in beta. It names source-backed trackers it recognizes today; some observers may remain unclassified while we expand breadth. Treat this as local evidence, not a complete privacy audit.
+            Pulse Observer is in beta. It names source-backed trackers it recognizes today; some observers may remain unclassified while we
+            expand breadth. Treat this as local evidence, not a complete privacy audit.
           </p>
         </div>
       </div>

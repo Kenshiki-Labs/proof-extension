@@ -197,8 +197,7 @@ function sanitizeCacheStorageAccess(details: ObserverEvent["details"]): Sanitize
   const cache = detailString(details, "cache")
   if (!op || !cache || !["open", "delete", "match", "has"].includes(op)) return null
   const redactedCache = redactIdentifier(cache)
-  const verb =
-    op === "open" ? "opened" : op === "delete" ? "deleted" : op === "match" ? "searched" : "checked for"
+  const verb = op === "open" ? "opened" : op === "delete" ? "deleted" : op === "match" ? "searched" : "checked for"
 
   return {
     details: { op, cache: redactedCache },

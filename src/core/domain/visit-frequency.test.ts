@@ -6,7 +6,7 @@ import {
   isVisitFrequency,
   VISIT_FREQUENCIES,
   VISITS_PER_YEAR,
-  type VisitFrequency,
+  type VisitFrequency
 } from "~core/domain/visit-frequency"
 
 describe("visit frequency", () => {

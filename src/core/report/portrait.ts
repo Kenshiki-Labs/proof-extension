@@ -102,7 +102,10 @@ function screenTrait(detail: string): string {
 function platformLanguageTrait(detail: string): string {
   // buildNarrowingModel composes this detail as "platform · language" (either
   // part may be absent). Re-split what the model joined.
-  const parts = detail.split(" · ").map((part) => part.trim()).filter(Boolean)
+  const parts = detail
+    .split(" · ")
+    .map((part) => part.trim())
+    .filter(Boolean)
   const platform = parts.find((part) => !/^[a-z]{2,3}(-[A-Za-z0-9]+)*$/.test(part))
   const language = parts.find((part) => /^[a-z]{2,3}(-[A-Za-z0-9]+)*$/.test(part))
   if (platform && language) return `use ${platformName(platform)} set to ${languageName(language)}`

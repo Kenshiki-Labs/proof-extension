@@ -1,15 +1,21 @@
 import browser from "webextension-polyfill"
 
 import { generateAiAuditReport } from "~core/ai/audit-client"
-import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
 import { runConsentAuditForTab } from "~core/atlas/tab-audit"
-import { hasCookieMetadataPermission, inspectSiteCookieValues, requestCookieMetadataPermission, scanSiteCookieMetadata } from "~core/browser/cookie-store"
+import {
+  hasCookieMetadataPermission,
+  inspectSiteCookieValues,
+  requestCookieMetadataPermission,
+  scanSiteCookieMetadata
+} from "~core/browser/cookie-store"
 import { installDynamicBlockRules, syncGpcHeaderRule, uninstallDynamicBlockRules } from "~core/db/dnr"
-import { validateTrackerDatabase } from "~core/db/validate"
-import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
-import { matchTrackerRequest } from "~core/domain/network-match"
-import { filterBlockableTrackerIds } from "~core/domain/blocking-policy"
 import { filterShimmableTrackerIds } from "~core/db/shims"
+import { validateTrackerDatabase } from "~core/db/validate"
+import { filterBlockableTrackerIds } from "~core/domain/blocking-policy"
+import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
+import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
+import { matchTrackerRequest } from "~core/domain/network-match"
+import type { ObserverEvent, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
 import {
   createEmptyValuationLedger,
   normalizeValuationLedger,
@@ -28,7 +34,6 @@ import { normalizePersistenceEvent } from "~core/signals/persistence"
 import { enrichSdkDetection } from "~core/signals/sdk-globals"
 import { createCoalescedWriter } from "~core/state/coalesced-writer"
 import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, upsertEvent } from "~core/state/summaries"
-import type { ObserverEvent, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
 
 const summaries = new Map<number, SiteSummary>()
 const recentEventFingerprints = new Map<string, number>()
@@ -36,7 +41,6 @@ const SUMMARY_STORAGE_KEY = "siteSummaries"
 const SETTINGS_STORAGE_KEY = "userSettings"
 const VALUATION_LEDGER_STORAGE_KEY = "valuationLedger"
 const CONTENT_EVENT_DEDUPE_TTL_MS = 750
-
 
 let settings = DEFAULT_SETTINGS
 let valuationLedger = createEmptyValuationLedger()
@@ -150,7 +154,10 @@ async function recordEvent(event: ObserverEvent) {
   summaries.set(event.tabId, summary)
   updateActionBadge(event.tabId, summary)
   const visit = await ensureSiteVisitForTab(event.tabId, summary.origin ?? event.origin, event.observedAt)
-  valuationLedger = pruneValuationLedger(upsertValuationLedgerEvent(valuationLedger, { ...event, origin: visit.origin }, visit.visitId), settings.retentionDays)
+  valuationLedger = pruneValuationLedger(
+    upsertValuationLedgerEvent(valuationLedger, { ...event, origin: visit.origin }, visit.visitId),
+    settings.retentionDays
+  )
   summaryWriter.schedule()
   ledgerWriter.schedule()
 }
@@ -270,11 +277,15 @@ async function recordActiveTabScan(tabId: number) {
       world: "ISOLATED",
       func: () => location.origin
     })
-    evidence.push("Proof active-tab scan reached this page. Reload the tab to attach document-start API hooks if this tab was open before the extension was loaded.")
+    evidence.push(
+      "Proof active-tab scan reached this page. Reload the tab to attach document-start API hooks if this tab was open before the extension was loaded."
+    )
   } catch (error) {
     console.warn("Failed to run active tab scan", error)
     scanReachedPage = false
-    evidence.push("Chrome refused active script injection on this tab. This can happen on browser pages, extension pages, restricted URLs, or stale tabs.")
+    evidence.push(
+      "Chrome refused active script injection on this tab. This can happen on browser pages, extension pages, restricted URLs, or stale tabs."
+    )
   }
 
   // A refused injection is a scan limitation, not an observation of page
@@ -403,7 +414,9 @@ browser.runtime.onMessage.addListener(
     recordObservedEvent: (event) =>
       recordEvent(
         normalizeCanvasReadEvent(
-          normalizePersistenceEvent(normalizeIdentityDigestEvent(normalizeConsentSignal(enrichSdkDetection(enrichScriptInjection(event), trackers)))),
+          normalizePersistenceEvent(
+            normalizeIdentityDigestEvent(normalizeConsentSignal(enrichSdkDetection(enrichScriptInjection(event), trackers)))
+          ),
           settings.mitigateCanvas
         )
       ),

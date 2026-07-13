@@ -1,28 +1,28 @@
 import "~style.css"
 
-import { useEffect, useRef, useState } from "react"
 import { Eye, LineChart } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
 import browser from "webextension-polyfill"
 import type { Storage } from "webextension-polyfill"
 
-import { RuntimeMessageSchema } from "~core/contracts/messages"
-import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
-import { EMPTY_SUMMARY, parseSiteSummaryResponse } from "~core/report/display"
-import { buildWatcherListModel } from "~core/report/watchers"
-import Button from "~components/system/Button"
 import { NarrowingMirror } from "~components/NarrowingPanel"
+import Button from "~components/system/Button"
 import SiteLogo from "~components/system/SiteLogo"
 import SurfaceSection from "~components/system/SurfaceSection"
 import Toggle from "~components/system/Toggle"
+import { TYPE, UI } from "~components/system/tokens"
 import VerdictBanner from "~components/VerdictBanner"
 import VisitFrequencyAsk from "~components/VisitFrequencyAsk"
 import WatcherList from "~components/watchers/WatcherList"
-import { TYPE, UI } from "~components/system/tokens"
-import { buildNarrowingModel } from "~core/report/narrowing"
+import { RuntimeMessageSchema } from "~core/contracts/messages"
+import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
 import { registrableDomain } from "~core/domain/party"
+import type { SiteSummary, UserSettings } from "~core/domain/types"
 import { formatUsd, rollupObservedValuations, rollupValuationOutcomes } from "~core/domain/valuation"
 import type { VisitFrequency } from "~core/domain/visit-frequency"
-import type { SiteSummary, UserSettings } from "~core/domain/types"
+import { EMPTY_SUMMARY, parseSiteSummaryResponse } from "~core/report/display"
+import { buildNarrowingModel } from "~core/report/narrowing"
+import { buildWatcherListModel } from "~core/report/watchers"
 
 // The glance surface (docs/surface-contract.md): report action first (the
 // exit is deliberate chrome, always in the same place), then mirror →
@@ -30,7 +30,6 @@ import type { SiteSummary, UserSettings } from "~core/domain/types"
 // toggle → footer. This file renders the contract's popup section and
 // nothing else; if a block is not in the contract's popup list, it does not
 // belong in this file — amend the contract first, then this file.
-
 
 const POPUP_WATCHER_LIMIT = 5
 const COOKIE_METADATA_PERMISSION: chrome.permissions.Permissions = { permissions: ["cookies"] }
@@ -64,7 +63,17 @@ function domainForOrigin(origin: string): string | null {
   }
 }
 
-function HeaderIconButton({ label, onClick, disabled = false, children }: { label: string; onClick: () => void; disabled?: boolean; children: React.ReactNode }) {
+function HeaderIconButton({
+  label,
+  onClick,
+  disabled = false,
+  children
+}: {
+  label: string
+  onClick: () => void
+  disabled?: boolean
+  children: React.ReactNode
+}) {
   return (
     <button
       aria-label={label}
@@ -96,12 +105,16 @@ function IndexPopup() {
         return
       }
 
-      setLoadError(`Background returned a malformed site summary: ${parsedResponse.error.issues.map((issue) => issue.path.join(".") || issue.message).join(", ")}`)
+      setLoadError(
+        `Background returned a malformed site summary: ${parsedResponse.error.issues.map((issue) => issue.path.join(".") || issue.message).join(", ")}`
+      )
     }
 
     async function loadSummary() {
       const [currentWindowTab] = await browser.tabs.query({ active: true, currentWindow: true })
-      const [lastFocusedTab] = currentWindowTab?.id ? [currentWindowTab] : await browser.tabs.query({ active: true, lastFocusedWindow: true })
+      const [lastFocusedTab] = currentWindowTab?.id
+        ? [currentWindowTab]
+        : await browser.tabs.query({ active: true, lastFocusedWindow: true })
       const tab = currentWindowTab?.id ? currentWindowTab : lastFocusedTab
       if (!tab?.id) {
         setLoadError("Chrome did not expose an active tab to this popup.")
@@ -133,7 +146,10 @@ function IndexPopup() {
     function onStorageChanged(changes: Record<string, Storage.StorageChange>, area: string) {
       if (area !== "local") return
       if ("siteSummaries" in changes && liveTabId !== undefined) {
-        browser.runtime.sendMessage({ type: "GET_SITE_SUMMARY", tabId: liveTabId }).then(applySummaryResponse).catch(() => undefined)
+        browser.runtime
+          .sendMessage({ type: "GET_SITE_SUMMARY", tabId: liveTabId })
+          .then(applySummaryResponse)
+          .catch(() => undefined)
       }
       if ("userSettings" in changes) loadSettings().catch(() => undefined)
     }
@@ -209,7 +225,6 @@ function IndexPopup() {
     if (summary.tabId < 0) return
     await browser.tabs.create({ url: browser.runtime.getURL(`tabs/report.html?tabId=${summary.tabId}&view=contract`) })
   }
-
 
   const watcherModel = buildWatcherListModel(summary.events, summary.origin, POPUP_WATCHER_LIMIT)
   const narrowingModel = buildNarrowingModel(summary.events)
@@ -295,7 +310,7 @@ function IndexPopup() {
         annualLowUsd={valuationRollup.annualRevenueLowUsd}
         compact
         domain={siteDomain}
-        frequency={siteDomain ? (settings.siteVisitFrequency[siteDomain] ?? null) : null}
+        frequency={siteDomain ? settings.siteVisitFrequency[siteDomain] ?? null : null}
         onAnswer={(frequency) => answerVisitFrequency(frequency).catch(() => undefined)}
         revenueTrackerCount={valuationRollup.revenueTrackerCount}
       />
