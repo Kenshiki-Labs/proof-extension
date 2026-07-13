@@ -188,6 +188,55 @@ function hasDeclarativeNetRequest(): boolean {
   return typeof chrome !== "undefined" && Boolean(chrome.declarativeNetRequest?.updateDynamicRules)
 }
 
+// Global Privacy Control request header. Lives BELOW DYNAMIC_RULE_ID_BASE on
+// purpose: every blocking-sync path filters on `ruleId >= DYNAMIC_RULE_ID_BASE`
+// before removing rules, so the GPC rule survives block/shim reinstalls and
+// uninstalls untouched, and vice versa.
+export const GPC_RULE_ID = 9_999
+
+// The header is the legally meaningful half of GPC (CCPA regs treat Sec-GPC
+// as a valid do-not-sell/share opt-out); the JS half
+// (navigator.globalPrivacyControl) is exposed by the MAIN-world observer.
+// Chromium-only: Firefox MV2 has no DNR — its builds rely on the browser's
+// own built-in GPC setting instead, and this is a silent no-op there.
+export function buildGpcHeaderRule(): chrome.declarativeNetRequest.Rule {
+  return {
+    id: GPC_RULE_ID,
+    priority: 1,
+    action: {
+      type: "modifyHeaders" as chrome.declarativeNetRequest.RuleActionType,
+      requestHeaders: [
+        {
+          header: "Sec-GPC",
+          operation: "set" as chrome.declarativeNetRequest.HeaderOperation,
+          value: "1"
+        }
+      ]
+    },
+    condition: {
+      urlFilter: "*",
+      resourceTypes: Object.values(RESOURCE_TYPE) as chrome.declarativeNetRequest.ResourceType[]
+    }
+  }
+}
+
+// Idempotent: installs or removes exactly the one GPC rule to match the
+// setting. Called on hydration and on every gpcEnabled change.
+export async function syncGpcHeaderRule(enabled: boolean): Promise<{ active: boolean }> {
+  if (!hasDeclarativeNetRequest()) return { active: false }
+
+  const existingRules = await chrome.declarativeNetRequest.getDynamicRules()
+  const installed = existingRules.some((rule) => rule.id === GPC_RULE_ID)
+
+  if (enabled && !installed) {
+    await chrome.declarativeNetRequest.updateDynamicRules({ addRules: [buildGpcHeaderRule()] })
+  } else if (!enabled && installed) {
+    await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: [GPC_RULE_ID] })
+  }
+
+  return { active: enabled }
+}
+
 const FALLBACK_DYNAMIC_RULE_LIMIT = 30_000
 
 export async function installDynamicBlockRules(blockedTrackerIds: readonly string[] = [], shimmedTrackerIds: readonly string[] = []) {

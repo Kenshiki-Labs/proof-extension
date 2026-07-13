@@ -1,5 +1,6 @@
 import type { PlasmoCSConfig } from "plasmo"
 
+import { createNoiseSeed, installCanvasElementReadHooks } from "~core/content/canvas-hooks"
 import { installIdentityDigestHook } from "~core/content/identity-digest-hooks"
 import { installPersistenceHooks } from "~core/content/persistence-hooks"
 import { isIgnoredPageError } from "~core/domain/page-errors"
@@ -179,6 +180,88 @@ function observePersistenceSurfaces() {
 }
 
 observePersistenceSurfaces()
+
+// Canvas readback observation, plus opt-in mitigation. The hooks install at
+// document_start unconditionally (observation is default-on like the
+// persistence hooks), but noise is applied only while the isolated bridge
+// has synced mitigateCanvas=true into the dataset flag — checked at call
+// time, so no reinstall is ever needed. The bridge syncs once per page
+// load, so a settings change applies to pages loaded after it. The
+// payload's status is a claim; the background refuses "mitigated" unless
+// the setting is actually on (core/signals/canvas-read.ts).
+function observeCanvasReads() {
+  const mitigationEnabled = () => document.documentElement.dataset.proofExtensionMitigateCanvas === "true"
+
+  const send = createRateLimitedReporter<{ mitigated: boolean; details: Record<string, string | number> }>(
+    (id, { mitigated, details }) => {
+      const payload = {
+        id,
+        origin: location.origin,
+        observedAt: Date.now(),
+        source: "api-hook",
+        firstParty: true,
+        policyLabel: "unknown_first_party",
+        eventType: "canvas_read",
+        blockability: "content_mitigatable",
+        status: mitigated ? "mitigated" : "active",
+        confidence: "confirmed",
+        evidence: ["Reported by the canvas observer; evidence is rebuilt by the extension before recording."],
+        details
+      }
+      window.postMessage({ type: PAGE_EVENT_TYPE, payload }, location.origin)
+    }
+  )
+
+  installCanvasElementReadHooks(
+    ({ api, mitigated, details }) => send(`canvas_read:${location.origin}:${api}`, { mitigated, details }),
+    mitigationEnabled,
+    createNoiseSeed()
+  )
+}
+
+observeCanvasReads()
+
+// Global Privacy Control, JS half. The Sec-GPC request header (the legally
+// meaningful half under CCPA) is emitted by a DNR rule in the background;
+// this exposes navigator.globalPrivacyControl to page scripts that check it.
+// Deliberately narrow:
+// - never defined until the user's opt-in flag has actually been seen true,
+//   so installing the extension changes nothing a site can read
+// - never defined when the browser already implements GPC natively
+//   (Firefox) — the browser's own signal stays authoritative
+// - the getter reads the synced flag rather than a captured constant; the
+//   bridge syncs once per page load, so a settings change applies to pages
+//   loaded after it
+function installGpcSignal() {
+  if ("globalPrivacyControl" in navigator) return
+
+  const enabled = () => document.documentElement.dataset.proofExtensionGpc === "true"
+  let defined = false
+
+  const defineIfEnabled = () => {
+    if (defined || !enabled()) return
+    defined = true
+    try {
+      Object.defineProperty(Navigator.prototype, "globalPrivacyControl", {
+        configurable: true,
+        enumerable: true,
+        get() {
+          return document.documentElement.dataset.proofExtensionGpc === "true"
+        }
+      })
+    } catch {
+      /* a page that froze Navigator.prototype simply keeps no JS signal */
+    }
+  }
+
+  defineIfEnabled()
+  new MutationObserver(defineIfEnabled).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-proof-extension-gpc"]
+  })
+}
+
+installGpcSignal()
 
 // We cannot reliably know whether a given page error was caused by our own
 // hooks or by a pre-existing bug in the page's own script (e.g. an anti-bot

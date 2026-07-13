@@ -94,8 +94,8 @@ export function createRuntimeMessageRouter(deps: RuntimeMessageRouterDeps) {
       // blockedTrackerIds and per-domain visit frequencies must not be
       // readable from arbitrary page contexts.
       if (message.type === "GET_CONTENT_SCRIPT_SETTINGS") {
-        const { mitigateCanvas } = deps.getSettings()
-        return { type: "CONTENT_SCRIPT_SETTINGS", payload: { mitigateCanvas } }
+        const { mitigateCanvas, gpcEnabled } = deps.getSettings()
+        return { type: "CONTENT_SCRIPT_SETTINGS", payload: { mitigateCanvas, gpcEnabled } }
       }
 
       // The blocked-space marker asks one question: "did this extension block

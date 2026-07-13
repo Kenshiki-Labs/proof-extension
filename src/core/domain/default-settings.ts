@@ -14,6 +14,7 @@ export const DEFAULT_SETTINGS: UserSettings = {
   mitigateCanvas: false,
   mitigateAudio: false,
   mitigateWebgl: false,
+  gpcEnabled: false,
   skipReportOpenConfirm: false,
   cookieMetadataEnabled: false,
   siteVisitFrequency: {}

@@ -1,7 +1,6 @@
 import * as z from "zod"
 
 import { DocTypeSchema, GiveupSchema } from "~core/atlas/types"
-import { VISIT_FREQUENCIES, type VisitFrequency } from "~core/domain/visit-frequency"
 
 export const BlockabilityClassSchema = z.enum([
   "network_blockable",
@@ -131,25 +130,9 @@ export const CookieValueInspectResultSchema = z.object({
   }))
 })
 
-export const VisitFrequencySchema = z.enum(VISIT_FREQUENCIES as [VisitFrequency, ...VisitFrequency[]])
-
-export const UserSettingsSchema = z.object({
-  retentionDays: z.number().int().min(1).max(365),
-  maxEventsPerTab: z.number().int().min(1).max(500),
-  // Observer first, not a blocker: blocking is opt-in and per-tracker (from
-  // the popup), empty by default so install never changes site behavior.
-  blockedTrackerIds: z.array(z.string().min(1)),
-  // Page-safe alternative to blocking: script served by a local shim
-  // (core/db/shims.ts), return path closed. .default keeps old settings parseable.
-  shimmedTrackerIds: z.array(z.string().min(1)).default([]),
-  mitigateCanvas: z.boolean(),
-  mitigateAudio: z.boolean(),
-  mitigateWebgl: z.boolean(),
-  skipReportOpenConfirm: z.boolean(),
-  cookieMetadataEnabled: z.boolean().default(false),
-  // Per-domain stated visit rate; .default({}) keeps old settings parseable.
-  siteVisitFrequency: z.record(z.string(), VisitFrequencySchema).default({})
-})
+// Settings live in their own contract module (no-god-files split); this
+// re-export keeps ~core/contracts/schemas the single import path.
+export { UserSettingsSchema, VisitFrequencySchema } from "~core/contracts/settings-schema"
 
 export const ValuationPeriodSchema = z.enum(["day", "week", "month", "all"])
 

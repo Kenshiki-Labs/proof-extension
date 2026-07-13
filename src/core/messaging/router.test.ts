@@ -26,6 +26,7 @@ const settings: UserSettings = {
   mitigateCanvas: false,
   mitigateAudio: false,
   mitigateWebgl: false,
+  gpcEnabled: false,
   skipReportOpenConfirm: false,
   cookieMetadataEnabled: false,
   siteVisitFrequency: {}
@@ -169,12 +170,15 @@ describe("createRuntimeMessageRouter", () => {
     }
   })
 
-  it("serves GET_CONTENT_SCRIPT_SETTINGS to content-script senders with only the mitigation flag — never full settings", async () => {
+  it("serves GET_CONTENT_SCRIPT_SETTINGS to content-script senders with only the page-synced flags — never full settings", async () => {
     const deps = makeDeps()
     const route = createRuntimeMessageRouter(deps)
 
     const response = await route({ type: "GET_CONTENT_SCRIPT_SETTINGS" }, WEB_PAGE_SENDER)
-    expect(response).toEqual({ type: "CONTENT_SCRIPT_SETTINGS", payload: { mitigateCanvas: settings.mitigateCanvas } })
+    expect(response).toEqual({
+      type: "CONTENT_SCRIPT_SETTINGS",
+      payload: { mitigateCanvas: settings.mitigateCanvas, gpcEnabled: settings.gpcEnabled }
+    })
     // The narrow view must not leak blockedTrackerIds or visit frequencies.
     expect(JSON.stringify(response)).not.toContain("blockedTrackerIds")
     expect(JSON.stringify(response)).not.toContain("siteVisitFrequency")

@@ -176,11 +176,12 @@ function OptionsPage() {
 
       <Section
         title="Mitigation toggles"
-        description="These flag which content-mitigatable classes are reported as mitigated once a hook actually constrains the API result. They do not themselves add new hooks.">
+        description="Each enabled toggle constrains a real API result and the report shows those reads as mitigated. A toggle is only offered once a hook actually constrains something.">
         <Toggle
           checked={settings.mitigateCanvas}
           onChange={(checked) => updateSettings({ mitigateCanvas: checked })}
           label="mitigate canvas"
+          note="Answers canvas pixel reads with invisible per-session noise. This makes your canvas fingerprint unstable across sessions — different, not invisible: sites can detect that a fingerprint is randomized. May subtly affect canvas-based image tools. Applies to pages loaded from now on."
         />
         {/* Audio and WebGL hooks currently observe only — no code constrains
             their API results yet. A toggle that changes nothing would imply
@@ -188,6 +189,40 @@ function OptionsPage() {
             mitigation paths are implemented. */}
         <Toggle checked={false} onChange={() => undefined} label="mitigate audio" disabled note="Not implemented yet — audio is observed, not constrained." />
         <Toggle checked={false} onChange={() => undefined} label="mitigate webgl" disabled note="Not implemented yet — WebGL is observed, not constrained." />
+      </Section>
+
+      <Section
+        title="Privacy signals"
+        description={
+          "Global Privacy Control is a legal opt-out signal: under the CCPA and several state laws, sites that receive it must treat it as a do-not-sell/share request. Off by default — installing this extension never changes what a site receives until you opt in."
+        }>
+        <Toggle
+          checked={settings.gpcEnabled}
+          onChange={(checked) => updateSettings({ gpcEnabled: checked })}
+          label="send Global Privacy Control"
+          note="Adds the Sec-GPC header to requests (Chromium browsers) and exposes navigator.globalPrivacyControl to pages. GPC asks sites to stop selling or sharing your data; whether a site honors it is up to the site and its regulator. On Firefox, use the browser's built-in GPC setting instead — the header half here is Chromium-only."
+        />
+      </Section>
+
+      <Section
+        title="What we can't protect"
+        description={
+          "The honest boundary of any browser extension — including this one. Claims past this line would be false, so here is the line."
+        }>
+        <ul className="mt-2 space-y-1.5">
+          <li className={TYPE.small}>
+            Your IP address. It belongs to the network path, not the browser. Only something that actually routes your traffic elsewhere — a VPN, Tor — changes what servers see.
+          </li>
+          <li className={TYPE.small}>
+            Your connection's transport fingerprint (TLS/JA3-style). It is produced below the layer any extension can reach.
+          </li>
+          <li className={TYPE.small}>
+            Server-side collection. What a site's own servers record, share, or resell happens entirely outside the browser. The real lever is revocation at the source — see "Stop at source" in the audit report.
+          </li>
+          <li className={TYPE.small}>
+            Identity you hand over. Logging in or providing an email links your activity regardless of any client-side protection.
+          </li>
+        </ul>
       </Section>
 
       <Section

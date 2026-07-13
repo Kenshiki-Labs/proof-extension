@@ -108,6 +108,7 @@ async function syncSettingsToPage() {
   if (!parsed.success || parsed.data.type !== "CONTENT_SCRIPT_SETTINGS") return
 
   document.documentElement.dataset.proofExtensionMitigateCanvas = String(parsed.data.payload.mitigateCanvas)
+  document.documentElement.dataset.proofExtensionGpc = String(parsed.data.payload.gpcEnabled)
   for (const event of collectBrowserSurfaceExposure(location.origin)) emit(event)
 }
 

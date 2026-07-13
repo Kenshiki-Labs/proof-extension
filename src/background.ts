@@ -4,7 +4,7 @@ import { generateAiAuditReport } from "~core/ai/audit-client"
 import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
 import { runConsentAuditForTab } from "~core/atlas/tab-audit"
 import { hasCookieMetadataPermission, inspectSiteCookieValues, requestCookieMetadataPermission, scanSiteCookieMetadata } from "~core/browser/cookie-store"
-import { installDynamicBlockRules, uninstallDynamicBlockRules } from "~core/db/dnr"
+import { installDynamicBlockRules, syncGpcHeaderRule, uninstallDynamicBlockRules } from "~core/db/dnr"
 import { validateTrackerDatabase } from "~core/db/validate"
 import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
 import { matchTrackerRequest } from "~core/domain/network-match"
@@ -21,6 +21,7 @@ import {
 import { createRuntimeMessageRouter } from "~core/messaging/router"
 import { registerNetworkObserver } from "~core/network/observer"
 import { badgeTextForSummary } from "~core/report/badge"
+import { normalizeCanvasReadEvent } from "~core/signals/canvas-read"
 import { normalizeConsentSignal } from "~core/signals/consent-signals"
 import { normalizeIdentityDigestEvent } from "~core/signals/identity-digest"
 import { normalizePersistenceEvent } from "~core/signals/persistence"
@@ -218,6 +219,7 @@ async function syncBlockingRules() {
 // sync finishing.
 const initialRuleSync = ensureHydrated()
   .then(syncBlockingRules)
+  .then(() => syncGpcHeaderRule(settings.gpcEnabled))
   .catch((error: unknown) => console.warn("Failed to sync DNR rules", error))
 
 const { trackers } = validateTrackerDatabase()
@@ -358,6 +360,7 @@ ensureMainWorldObserverRegistered().catch((error: unknown) => console.warn("Fail
 browser.runtime.onInstalled.addListener(() => {
   ensureHydrated()
     .then(syncBlockingRules)
+    .then(() => syncGpcHeaderRule(settings.gpcEnabled))
     .catch((error: unknown) => console.warn("Failed to sync DNR rules", error))
   ensureMainWorldObserverRegistered().catch((error: unknown) => console.warn("Failed to verify main-world observer", error))
 })
@@ -398,7 +401,12 @@ browser.runtime.onMessage.addListener(
   createRuntimeMessageRouter({
     ensureHydrated,
     recordObservedEvent: (event) =>
-      recordEvent(normalizePersistenceEvent(normalizeIdentityDigestEvent(normalizeConsentSignal(enrichSdkDetection(enrichScriptInjection(event), trackers))))),
+      recordEvent(
+        normalizeCanvasReadEvent(
+          normalizePersistenceEvent(normalizeIdentityDigestEvent(normalizeConsentSignal(enrichSdkDetection(enrichScriptInjection(event), trackers)))),
+          settings.mitigateCanvas
+        )
+      ),
     recordPageError: (tabId, origin, pageError) => {
       const summary = recordPageError(readSummary(tabId, origin), pageError)
       summaries.set(tabId, summary)
@@ -424,9 +432,11 @@ browser.runtime.onMessage.addListener(
     updateSettings: async (payload) => {
       const blockingChanged =
         payload.blockedTrackerIds !== undefined && !sameTrackerIdSet(payload.blockedTrackerIds, settings.blockedTrackerIds)
+      const gpcChanged = payload.gpcEnabled !== undefined && payload.gpcEnabled !== settings.gpcEnabled
       settings = { ...settings, ...payload }
       await persistSettings()
       if (blockingChanged) await syncBlockingRules()
+      if (gpcChanged) await syncGpcHeaderRule(settings.gpcEnabled)
       return settings
     },
     clearValuationLedger,

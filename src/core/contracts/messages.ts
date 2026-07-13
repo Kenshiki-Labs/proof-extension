@@ -45,7 +45,7 @@ export const RuntimeMessageSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("AI_AUDIT_REPORT"), payload: z.object({ report: z.string().min(1) }) }),
   z.object({ type: z.literal("AI_AUDIT_REPORT_FAILED"), error: z.string().min(1) }),
   z.object({ type: z.literal("GET_CONTENT_SCRIPT_SETTINGS") }),
-  z.object({ type: z.literal("CONTENT_SCRIPT_SETTINGS"), payload: z.object({ mitigateCanvas: z.boolean() }) }),
+  z.object({ type: z.literal("CONTENT_SCRIPT_SETTINGS"), payload: z.object({ mitigateCanvas: z.boolean(), gpcEnabled: z.boolean() }) }),
   z.object({ type: z.literal("GET_BLOCK_MARKER_STATE") }),
   z.object({ type: z.literal("BLOCK_MARKER_STATE"), payload: z.object({ active: z.boolean() }) }),
   z.object({ type: z.literal("GET_SETTINGS") }),

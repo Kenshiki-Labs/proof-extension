@@ -9,8 +9,7 @@ import { describe, expect, it } from "vitest"
 // commit, so the headroom can never be spent on new growth.
 const LINE_LIMIT = 450
 const SHRINK_ONLY_BASELINE: Record<string, number> = {
-  "src/core/atlas/rules.ts": 482,
-  "src/core/contracts/schemas.ts": 455
+  "src/core/atlas/rules.ts": 482
 }
 
 const SRC_ROOT = join(__dirname, "..")
