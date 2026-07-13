@@ -1,4 +1,5 @@
 import { formatBits, formatCandidates, POPULATION_BASE, type NarrowingModel } from "~core/report/narrowing"
+import { joinTraits, portraitCloser, portraitTraits } from "~core/report/portrait"
 import { TYPE, UI } from "~components/system/tokens"
 
 function compactPopulation(value: number) {
@@ -16,39 +17,54 @@ function deviceTimezone(model: NarrowingModel): string | null {
   return timezone && timezone.length > 0 ? timezone : null
 }
 
+// The mirror performs the product thesis — "the internet met your digital
+// self before you did" — so it leads with the introduction and renders the
+// surface reads as a described person (core/report/portrait.ts), not an
+// inventory. Nothing is hidden by the reframe: every raw read stays
+// verbatim behind the disclosure, and the closing line scales with the
+// arithmetic so it never claims "it's you" when the model doesn't.
 export function NarrowingMirror({ model }: { model: NarrowingModel }) {
   if (model.values.length === 0) return null
 
   const timezone = deviceTimezone(model)
+  const traits = portraitTraits(model.steps)
 
   return (
     <section className={`mt-3.5 ${UI.panel} ${UI.inset}`}>
-      <p className={TYPE.label}>What this page could read about you</p>
-      {/* flex-wrap, not inline text: the value spans carry no whitespace
-          between them, so an inline run has no break opportunities and
-          overflows. Flex items wrap between chunks; each value stays intact
-          (whitespace-nowrap) and long reads (the GPU string) are trimmed for
-          the glance so no single chunk exceeds the panel — full value on
-          hover, untrimmed in the report narrowing. */}
-      <div className="mt-2 flex flex-wrap items-baseline gap-x-1 font-mono text-xs leading-6 text-foreground">
-        {model.values.map((value, index) => (
-          <span className="whitespace-nowrap" key={`${value}:${index}`} title={value}>
-            {index > 0 ? <span className="pr-1 text-border">·</span> : null}
-            {value.length > 30 ? `${value.slice(0, 29)}…` : value}
-          </span>
-        ))}
-      </div>
+      <p className={TYPE.label}>This page just met your digital self</p>
       {model.steps.length > 0 ? (
-        <p className="mt-2 text-sm leading-snug text-foreground">
-          That narrows <strong className="tabular-nums">330,000,000</strong> people to about{" "}
-          <strong className="tabular-nums">{compactPopulation(model.remaining)}</strong>.
-        </p>
+        <>
+          <p className="mt-2 text-sm leading-snug text-foreground">
+            Before you read a word, it could already describe someone: {joinTraits(traits)}.
+          </p>
+          <p className="mt-2 text-sm leading-snug text-foreground">
+            That description fits about <strong className="tabular-nums">{compactPopulation(model.remaining)}</strong> of{" "}
+            <strong className="tabular-nums">330,000,000</strong> people. {portraitCloser(model.remaining)}
+          </p>
+        </>
       ) : null}
       {timezone ? (
         <p className={`${TYPE.small} mt-2`}>
-          Your device clock is set to <strong>{timezone}</strong> — a whole time zone. Your IP narrows that to a city on a map — open the full report to see it.
+          So far, location is only your device's own clock — <strong>{timezone}</strong>, a whole time zone. Your IP narrows that to a city on a map. The full report shows you that meeting too.
         </p>
       ) : null}
+      <details className="mt-2">
+        <summary className={`${TYPE.small} cursor-pointer select-none`}>Show the raw reads</summary>
+        {/* flex-wrap, not inline text: the value spans carry no whitespace
+            between them, so an inline run has no break opportunities and
+            overflows. Flex items wrap between chunks; each value stays intact
+            (whitespace-nowrap) and long reads (the GPU string) are trimmed for
+            the glance so no single chunk exceeds the panel — full value on
+            hover, untrimmed in the report narrowing. */}
+        <div className="mt-1 flex flex-wrap items-baseline gap-x-1 font-mono text-xs leading-6 text-foreground">
+          {model.values.map((value, index) => (
+            <span className="whitespace-nowrap" key={`${value}:${index}`} title={value}>
+              {index > 0 ? <span className="pr-1 text-border">·</span> : null}
+              {value.length > 30 ? `${value.slice(0, 29)}…` : value}
+            </span>
+          ))}
+        </div>
+      </details>
       {model.hasConsentSignal ? (
         <p className={`${TYPE.small} mt-2 border-l-2 border-amber-700 pl-2`}>This page asked for cookie consent. The readable surface above exists regardless of that answer.</p>
       ) : null}

@@ -3,7 +3,7 @@
   "sources": [
     {
       "file": "src/popup.tsx",
-      "sha256": "07719e81a50402486e38eeb0bcc1b9b13d982c2618ad676b5e91330128c88ec7"
+      "sha256": "bbf5f0349579604a696e97ea7a18ad86e73d49e2de65d20420afc2a38ba43773"
     },
     {
       "file": "src/tabs/report.tsx",
@@ -383,7 +383,7 @@
     },
     {
       "word": "mt-",
-      "count": 59
+      "count": 57
     },
     {
       "word": "report",
@@ -554,10 +554,6 @@
       "count": 8
     },
     {
-      "word": "border",
-      "count": 8
-    },
-    {
       "word": "copy",
       "count": 8
     },
@@ -586,7 +582,7 @@
       "count": 8
     },
     {
-      "word": "bg-background",
+      "word": "border",
       "count": 7
     },
     {
@@ -614,14 +610,6 @@
       "count": 7
     },
     {
-      "word": "text-base",
-      "count": 7
-    },
-    {
-      "word": "text-foreground",
-      "count": 7
-    },
-    {
       "word": "text-left",
       "count": 7
     },
@@ -646,7 +634,7 @@
       "count": 6
     },
     {
-      "word": "bg-card",
+      "word": "bg-background",
       "count": 6
     },
     {
@@ -686,11 +674,23 @@
       "count": 6
     },
     {
-      "word": "ledger",
+      "word": "min-w-",
       "count": 6
     },
     {
-      "word": "min-w-",
+      "word": "rail",
+      "count": 6
+    },
+    {
+      "word": "recorded",
+      "count": 6
+    },
+    {
+      "word": "running",
+      "count": 6
+    },
+    {
+      "word": "saved",
       "count": 6
     }
   ]
