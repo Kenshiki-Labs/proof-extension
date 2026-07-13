@@ -69,12 +69,16 @@ function platformName(platform: string): string {
 function languageName(tag: string): string {
   const match = /^([a-z]{2,3})(?:-([A-Za-z0-9]+))*$/.exec(tag)
   if (!match) return tag
-  let base = tag
+  // Base is the language subtag, never the whole tag: an unknown language
+  // (DisplayNames echoes the code) must not keep the region baked in and then
+  // have it appended again — "xx-US" would become "xx-US (US)".
+  const language = match[1] ?? tag
+  let base = language
   try {
-    const name = new Intl.DisplayNames(["en"], { type: "language" }).of(match[1] ?? tag)
-    if (name && name !== match[1]) base = name
+    const name = new Intl.DisplayNames(["en"], { type: "language" }).of(language)
+    if (name && name !== language) base = name
   } catch {
-    /* keep the raw tag */
+    /* keep the raw language subtag */
   }
   const region = tag.split("-").find((part) => /^[A-Z]{2}$/.test(part))
   return region ? `${base} (${region})` : base

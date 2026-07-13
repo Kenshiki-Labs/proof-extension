@@ -73,6 +73,14 @@ describe("portraitTraits", () => {
       "browse in English (GB)"
     ])
   })
+
+  it("does not duplicate the region when the language subtag is unknown", () => {
+    // Intl.DisplayNames echoes an unknown language code; the region must not
+    // stay baked into the base and then be appended again ("xx-US (US)").
+    expect(portraitTraits(stepsFor([{ key: "platformLanguage", detail: "xx-US" }]))).toEqual([
+      "browse in xx (US)"
+    ])
+  })
 })
 
 describe("joinTraits", () => {
