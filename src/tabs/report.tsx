@@ -172,7 +172,7 @@ function ReportTab() {
                   ? "Debug data"
                   : reportView === "contract"
                     ? "Done vs. declared"
-                    : "Your digital self, in full"}
+                    : "Runtime audit"}
             </h1>
             <p className={`${TYPE.body} mt-2 break-all`}>
               {reportView === "value"

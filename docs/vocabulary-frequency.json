@@ -7,7 +7,7 @@
     },
     {
       "file": "src/tabs/report.tsx",
-      "sha256": "043ed3a9ab276d3a0806a0f037243088deb712bfaa7140819780b9277149bbb1"
+      "sha256": "1f6c1a8a5550b59e73bdd062f9f70c6a9a66c061179c474ac0611702dae9ed3b"
     },
     {
       "file": "src/components/report/AiAuditPanel.tsx",
@@ -15,7 +15,7 @@
     },
     {
       "file": "src/components/report/AuditBrief.tsx",
-      "sha256": "d59cb885df0978a44f2bd6df413201bacf70a89dbae013a6fc82d3af223bfc21"
+      "sha256": "a7dc22700c5616cc31aacdd082483a803847a49022df1f764eadc0c8bc7eebdb"
     },
     {
       "file": "src/components/report/EvidenceAppendix.tsx",
@@ -466,11 +466,11 @@
       "count": 16
     },
     {
-      "word": "you",
-      "count": 15
+      "word": "display",
+      "count": 14
     },
     {
-      "word": "display",
+      "word": "you",
       "count": 14
     },
     {
@@ -494,10 +494,6 @@
       "count": 12
     },
     {
-      "word": "your",
-      "count": 12
-    },
-    {
       "word": "copied",
       "count": 11
     },
@@ -515,6 +511,10 @@
     },
     {
       "word": "tabular-nums",
+      "count": 11
+    },
+    {
+      "word": "your",
       "count": 11
     },
     {
@@ -548,6 +548,10 @@
     {
       "word": "revenue",
       "count": 9
+    },
+    {
+      "word": "audit",
+      "count": 8
     },
     {
       "word": "copy",
@@ -624,10 +628,6 @@
     {
       "word": "was",
       "count": 7
-    },
-    {
-      "word": "audit",
-      "count": 6
     },
     {
       "word": "available",

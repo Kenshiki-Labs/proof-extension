@@ -37,7 +37,7 @@ export default function AuditBrief({
 
   return (
     <section className={`mt-6 ${UI.panel} ${UI.reportInset}`}>
-      <SectionTitle number="00" title="Who met you here" />
+      <SectionTitle number="00" title="Runtime audit brief" />
       <p className={`${TYPE.body} mt-2 max-w-4xl`}>
         Who met your digital self on this page, measured on your device. Use it before and after consent,
         login, document upload, payment, account, or benefits flows to catch vendor drift and sensitive-context leakage.
