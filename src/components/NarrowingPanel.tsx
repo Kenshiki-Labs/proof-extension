@@ -35,7 +35,7 @@ export function NarrowingMirror({ model }: { model: NarrowingModel }) {
       {model.steps.length > 0 ? (
         <>
           <p className="mt-2 text-sm leading-snug text-foreground">
-            Before you read a word, it could already describe someone: {joinTraits(traits)}.
+            Before you read a word on this page, it could already describe you. You {joinTraits(traits)}.
           </p>
           <p className="mt-2 text-sm leading-snug text-foreground">
             That description fits about <strong className="tabular-nums">{compactPopulation(model.remaining)}</strong> of{" "}

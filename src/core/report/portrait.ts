@@ -38,26 +38,34 @@ function platformName(platform: string): string {
   return `a ${platform} device`
 }
 
+// "English (US)", not Intl.DisplayNames' "American English": the parenthesis
+// form reads as a setting the user recognizes from their own machine.
 function languageName(tag: string): string {
+  const match = /^([a-z]{2,3})(?:-([A-Za-z0-9]+))*$/.exec(tag)
+  if (!match) return tag
+  let base = tag
   try {
-    const name = new Intl.DisplayNames(["en"], { type: "language" }).of(tag)
-    if (name && name !== tag) return name
+    const name = new Intl.DisplayNames(["en"], { type: "language" }).of(match[1] ?? tag)
+    if (name && name !== match[1]) base = name
   } catch {
-    /* fall through to the raw tag */
+    /* keep the raw tag */
   }
-  return tag
+  const region = tag.split("-").find((part) => /^[A-Z]{2}$/.test(part))
+  return region ? `${base} (${region})` : base
 }
 
+// Traits are second-person clauses completing "You …" — the mirror talks TO
+// the person it describes, not about a specimen.
 function timezoneTrait(detail: string): string {
   const zone = ZONE_NAMES[detail]
-  return zone ? `living on ${zone}` : `living in the ${detail} time zone`
+  return zone ? `live on ${zone}` : `live in the ${detail} time zone`
 }
 
 function screenTrait(detail: string): string {
   const match = /^(\d+x\d+) @([\d.]+)x$/.exec(detail)
-  if (!match) return `looking at a ${detail} screen`
+  if (!match) return `look at a ${detail} screen`
   const [, resolution, ratio] = match
-  return ratio === "1" ? `looking at a ${resolution} screen` : `looking at a ${resolution} screen at ${ratio}× density`
+  return ratio === "1" ? `look at a ${resolution} screen` : `look at a ${resolution} screen at ${ratio}× density`
 }
 
 function platformLanguageTrait(detail: string): string {
@@ -66,23 +74,23 @@ function platformLanguageTrait(detail: string): string {
   const parts = detail.split(" · ").map((part) => part.trim()).filter(Boolean)
   const platform = parts.find((part) => !/^[a-z]{2,3}(-[A-Za-z0-9]+)*$/.test(part))
   const language = parts.find((part) => /^[a-z]{2,3}(-[A-Za-z0-9]+)*$/.test(part))
-  if (platform && language) return `using ${platformName(platform)} in ${languageName(language)}`
-  if (platform) return `using ${platformName(platform)}`
-  if (language) return `browsing in ${languageName(language)}`
-  return `using ${detail}`
+  if (platform && language) return `use ${platformName(platform)} set to ${languageName(language)}`
+  if (platform) return `use ${platformName(platform)}`
+  if (language) return `browse in ${languageName(language)}`
+  return `use ${detail}`
 }
 
 function gpuTrait(detail: string): string {
-  if (/apple/i.test(detail)) return "drawing with an Apple GPU"
-  if (/nvidia|geforce|rtx|gtx/i.test(detail)) return "drawing with an NVIDIA GPU"
-  if (/amd|radeon/i.test(detail)) return "drawing with an AMD GPU"
-  if (/intel/i.test(detail)) return "drawing with an Intel GPU"
-  return "drawing with a graphics stack that named itself"
+  if (/apple/i.test(detail)) return "draw with an Apple GPU"
+  if (/nvidia|geforce|rtx|gtx/i.test(detail)) return "draw with an NVIDIA GPU"
+  if (/amd|radeon/i.test(detail)) return "draw with an AMD GPU"
+  if (/intel/i.test(detail)) return "draw with an Intel GPU"
+  return "draw with a graphics stack that names itself"
 }
 
 function fontsTrait(detail: string): string {
   const match = /^(\d+) of (\d+) probed$/.exec(detail)
-  return match ? `with ${match[1]} of ${match[2]} common fonts installed` : "with a recognizable set of fonts installed"
+  return match ? `have ${match[1]} of ${match[2]} common fonts installed` : "have a recognizable set of fonts installed"
 }
 
 const TRAIT_BUILDERS: Partial<Record<NarrowingStep["key"], (detail: string) => string>> = {
@@ -90,8 +98,8 @@ const TRAIT_BUILDERS: Partial<Record<NarrowingStep["key"], (detail: string) => s
   screen: screenTrait,
   platformLanguage: platformLanguageTrait,
   gpu: gpuTrait,
-  canvas: () => "leaving a canvas signature few others share",
-  audio: () => "carrying an audio signature of its own",
+  canvas: () => "leave a canvas signature few others share",
+  audio: () => "carry an audio signature of your own",
   fonts: fontsTrait
 }
 

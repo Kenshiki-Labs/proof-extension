@@ -20,19 +20,25 @@ describe("portraitTraits", () => {
     ])
 
     expect(portraitTraits(steps)).toEqual([
-      "living on US Pacific time",
-      "looking at a 2560x1440 screen at 2× density",
-      "using a Mac in American English",
-      "drawing with an Apple GPU",
-      "leaving a canvas signature few others share",
-      "carrying an audio signature of its own",
-      "with 22 of 30 common fonts installed"
+      "live on US Pacific time",
+      "look at a 2560x1440 screen at 2× density",
+      "use a Mac set to English (US)",
+      "draw with an Apple GPU",
+      "leave a canvas signature few others share",
+      "carry an audio signature of your own",
+      "have 22 of 30 common fonts installed"
+    ])
+  })
+
+  it("keeps fractional pixel densities readable", () => {
+    expect(portraitTraits(stepsFor([{ key: "screen", detail: "2560x1440 @2.2x" }]))).toEqual([
+      "look at a 2560x1440 screen at 2.2× density"
     ])
   })
 
   it("never renders a timezone as a city: unmapped zones keep their IANA id", () => {
     expect(portraitTraits(stepsFor([{ key: "timezone", detail: "Europe/Berlin" }]))).toEqual([
-      "living in the Europe/Berlin time zone"
+      "live in the Europe/Berlin time zone"
     ])
   })
 
@@ -45,16 +51,16 @@ describe("portraitTraits", () => {
     ])
 
     expect(portraitTraits(steps)).toEqual([
-      "looking at a unusual-screen screen",
-      "using a PlayStation 5 device",
-      "drawing with a graphics stack that named itself",
-      "with a recognizable set of fonts installed"
+      "look at a unusual-screen screen",
+      "use a PlayStation 5 device",
+      "draw with a graphics stack that names itself",
+      "have a recognizable set of fonts installed"
     ])
   })
 
   it("handles a language-only platformLanguage reading", () => {
     expect(portraitTraits(stepsFor([{ key: "platformLanguage", detail: "en-GB" }]))).toEqual([
-      "browsing in British English"
+      "browse in English (GB)"
     ])
   })
 })

@@ -51,7 +51,12 @@ export function buildNarrowingModel(events: ObserverEvent[]): NarrowingModel {
   }
 
   if (hasValue(details.screen)) {
-    const detail = `${String(details.screen)} @${hasValue(details.pixelRatio) ? String(details.pixelRatio) : "1"}x`
+    // devicePixelRatio on a zoomed/scaled display is a raw float artifact
+    // (2.200000047683716) — two decimals carries the same identifying
+    // information without the noise.
+    const ratio = Number(details.pixelRatio)
+    const ratioLabel = Number.isFinite(ratio) && ratio > 0 ? String(Math.round(ratio * 100) / 100) : "1"
+    const detail = `${String(details.screen)} @${ratioLabel}x`
     values.push(detail)
     readings.push({ key: "screen", detail })
   }
