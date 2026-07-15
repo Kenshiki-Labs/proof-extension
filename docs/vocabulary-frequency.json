@@ -15,7 +15,7 @@
     },
     {
       "file": "src/components/report/AuditBrief.tsx",
-      "sha256": "18303f382772d94f437be71ff4db9e60b31a8bc27d763f471b9e919090e5c181"
+      "sha256": "447a7dccf15b589519b5f796346dfde743300e543acf58fc205d895cf21218ea"
     },
     {
       "file": "src/components/report/EvidenceAppendix.tsx",
@@ -67,7 +67,7 @@
     },
     {
       "file": "src/core/report/display.ts",
-      "sha256": "2947c6cb8f62656d49cc6cee7b724118844b8cfac25d94d306dfe239921114d4"
+      "sha256": "5db824fa67287d95907426e522927fee4707cf8107fd972b185eec88d468f327"
     },
     {
       "file": "src/core/domain/valuation.ts",
@@ -379,7 +379,7 @@
     },
     {
       "word": "core",
-      "count": 59
+      "count": 60
     },
     {
       "word": "mt-",
@@ -387,7 +387,7 @@
     },
     {
       "word": "report",
-      "count": 52
+      "count": 53
     },
     {
       "word": "gap-",
@@ -403,7 +403,7 @@
     },
     {
       "word": "page",
-      "count": 29
+      "count": 31
     },
     {
       "word": "system",
@@ -426,12 +426,12 @@
       "count": 23
     },
     {
-      "word": "flex-wrap",
+      "word": "can",
       "count": 21
     },
     {
-      "word": "can",
-      "count": 20
+      "word": "flex-wrap",
+      "count": 21
     },
     {
       "word": "grid",
@@ -474,6 +474,10 @@
       "count": 14
     },
     {
+      "word": "your",
+      "count": 14
+    },
+    {
       "word": "data",
       "count": 13
     },
@@ -498,6 +502,10 @@
       "count": 11
     },
     {
+      "word": "network",
+      "count": 11
+    },
+    {
       "word": "scanning",
       "count": 11
     },
@@ -511,10 +519,6 @@
     },
     {
       "word": "tabular-nums",
-      "count": 11
-    },
-    {
-      "word": "your",
       "count": 11
     },
     {
@@ -538,15 +542,23 @@
       "count": 9
     },
     {
+      "word": "device",
+      "count": 9
+    },
+    {
       "word": "error",
       "count": 9
     },
     {
-      "word": "network",
+      "word": "local",
       "count": 9
     },
     {
       "word": "revenue",
+      "count": 9
+    },
+    {
+      "word": "that",
       "count": 9
     },
     {
@@ -567,10 +579,6 @@
     },
     {
       "word": "identity",
-      "count": 8
-    },
-    {
-      "word": "local",
       "count": 8
     },
     {
@@ -614,10 +622,6 @@
       "count": 7
     },
     {
-      "word": "that",
-      "count": 7
-    },
-    {
       "word": "update",
       "count": 7
     },
@@ -647,10 +651,6 @@
     },
     {
       "word": "cookies",
-      "count": 6
-    },
-    {
-      "word": "device",
       "count": 6
     },
     {

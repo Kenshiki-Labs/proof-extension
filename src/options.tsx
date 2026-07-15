@@ -182,12 +182,14 @@ function OptionsPage() {
           checked={settings.mitigateCanvas}
           onChange={(checked) => updateSettings({ mitigateCanvas: checked })}
           label="mitigate canvas"
-          note="Answers 2D-canvas pixel reads (toDataURL, toBlob, getImageData) with invisible per-session noise, so that fingerprint is unstable across sessions — different, not invisible: sites can still detect that a fingerprint is randomized. Does not cover OffscreenCanvas or WebGL readbacks. May subtly affect canvas-based image tools. Applies to pages loaded from now on."
+          note="Answers pixel-readback fingerprinting with invisible per-session noise, so that fingerprint is unstable across sessions — different, not invisible: sites can still detect that a fingerprint is randomized. Covers 2D canvas (toDataURL, toBlob, getImageData) and, on the main thread, OffscreenCanvas (convertToBlob, getImageData) and WebGL readPixels (RGBA/8-bit reads). It cannot reach canvas reads made inside a Web Worker, non-RGBA or float WebGL reads, or WebGL renderer identity. May subtly affect canvas-based image tools. Applies to pages loaded from now on."
         />
-        {/* Audio and WebGL hooks currently observe only — no code constrains
-            their API results yet. A toggle that changes nothing would imply
-            protection that does not exist, so these stay disabled until the
-            mitigation paths are implemented. */}
+        {/* Audio observes only — no code constrains its API result yet. WebGL
+            pixel readback IS constrained, but by the canvas toggle above (all
+            readback surfaces share the mitigateCanvas flag); the WebGL toggle
+            below refers to the remaining, still-observe-only WebGL surface. A
+            toggle that changes nothing would imply protection that does not
+            exist, so these stay disabled until their paths are implemented. */}
         <Toggle
           checked={false}
           onChange={() => undefined}
@@ -200,7 +202,7 @@ function OptionsPage() {
           onChange={() => undefined}
           label="mitigate webgl"
           disabled
-          note="Not implemented yet — WebGL is observed, not constrained."
+          note="WebGL pixel readback is covered by 'mitigate canvas' above. The remaining WebGL surface — renderer identity, extensions, precision — is observed, not constrained."
         />
       </Section>
 
@@ -225,7 +227,8 @@ function OptionsPage() {
         <ul className="mt-2 space-y-1.5">
           <li className={TYPE.small}>
             Your IP address. It belongs to the network path, not the browser. Only something that actually routes your traffic elsewhere — a
-            VPN, Tor — changes what servers see.
+            VPN, Tor — changes what servers see. Pulse flags when a page sets up WebRTC, which can expose even a local-network address a VPN
+            would not hide, but naming that is all an extension can do — it cannot stop the address from being revealed.
           </li>
           <li className={TYPE.small}>
             Your connection's transport fingerprint (TLS/JA3-style). It is produced below the layer any extension can reach.

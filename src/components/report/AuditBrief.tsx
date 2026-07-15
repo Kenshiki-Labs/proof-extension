@@ -8,6 +8,7 @@ import {
 } from "~core/domain/observer-counts"
 import type { ObserverEvent, SiteSummary } from "~core/domain/types"
 import type { DisplayObservation } from "~core/report/display"
+import { fingerprintReadTakeaway } from "~core/report/fingerprint-digest"
 
 export default function AuditBrief({
   allObservations,
@@ -36,6 +37,9 @@ export default function AuditBrief({
       "No third-party observer was recorded for this tab yet; drive the critical journey and reload if the tab was open before Pulse attached."
     )
   }
+
+  const fingerprintTakeaway = fingerprintReadTakeaway(summary.events)
+  if (fingerprintTakeaway) takeaways.push(fingerprintTakeaway)
 
   if (unclassifiedParties > 0)
     takeaways.push(

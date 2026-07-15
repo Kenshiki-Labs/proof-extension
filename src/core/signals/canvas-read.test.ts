@@ -66,4 +66,33 @@ describe("normalizeCanvasReadEvent", () => {
     expect(normalized.details).toBeUndefined()
     expect(normalized.evidence).toEqual(["A canvas read report arrived with malformed metadata and was recorded without detail."])
   })
+
+  it("normalizes the OffscreenCanvas convertToBlob readback and keeps it settings-gated", () => {
+    const event = canvasEvent({ details: { api: "convertToBlob", width: 256, height: 256 } })
+
+    const on = normalizeCanvasReadEvent(event, true)
+    expect(on.status).toBe("mitigated")
+    expect(on.confidence).toBe("confirmed")
+    expect(on.evidence).toEqual([
+      "The page read canvas pixels back via convertToBlob (width 256, height 256); the read was answered with per-session noise."
+    ])
+
+    const off = normalizeCanvasReadEvent(event, false)
+    expect(off.status).toBe("active")
+  })
+
+  it("normalizes the WebGL readPixels readback and keeps it settings-gated", () => {
+    const event = canvasEvent({ details: { api: "readPixels", pixels: 4096 } })
+
+    const on = normalizeCanvasReadEvent(event, true)
+    expect(on.status).toBe("mitigated")
+    expect(on.details).toEqual({ api: "readPixels", pixels: 4096 })
+    expect(on.evidence).toEqual([
+      "The page read canvas pixels back via readPixels (pixels 4096); the read was answered with per-session noise."
+    ])
+
+    const off = normalizeCanvasReadEvent(event, false)
+    expect(off.status).toBe("active")
+    expect(off.evidence).toEqual(["The page read canvas pixels back via readPixels (pixels 4096); the read passed through unmodified."])
+  })
 })

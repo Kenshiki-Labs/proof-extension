@@ -46,6 +46,10 @@ export const OBSERVER_EVENT_TYPES = [
   // script_injected stays reserved for real dynamic-script detection.
   "extension_diagnostic",
   "browser_surface",
+  // A page script actually READING a high-entropy device field (cores, memory,
+  // languages, screen size, time zone) via a MAIN-world getter hook — proof the
+  // page queried it, unlike browser_surface's capability scan (extension-scan).
+  "device_field_read",
   "canvas_read",
   "audio_fingerprint",
   "webgl_query",

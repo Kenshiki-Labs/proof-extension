@@ -14,7 +14,6 @@ import { validateTrackerDatabase } from "~core/db/validate"
 import { filterBlockableTrackerIds } from "~core/domain/blocking-policy"
 import { MAIN_WORLD_SCRIPT_ID } from "~core/domain/constants"
 import { DEFAULT_SETTINGS } from "~core/domain/default-settings"
-import { matchTrackerRequest } from "~core/domain/network-match"
 import type { ObserverEvent, RuntimeMessage, SiteSummary, UserSettings } from "~core/domain/types"
 import {
   createEmptyValuationLedger,
@@ -27,11 +26,7 @@ import {
 import { createRuntimeMessageRouter } from "~core/messaging/router"
 import { registerNetworkObserver } from "~core/network/observer"
 import { badgeTextForSummary } from "~core/report/badge"
-import { normalizeCanvasReadEvent } from "~core/signals/canvas-read"
-import { normalizeConsentSignal } from "~core/signals/consent-signals"
-import { normalizeIdentityDigestEvent } from "~core/signals/identity-digest"
-import { normalizePersistenceEvent } from "~core/signals/persistence"
-import { enrichSdkDetection } from "~core/signals/sdk-globals"
+import { normalizeObservedEvent } from "~core/signals/normalize-observed-event"
 import { createCoalescedWriter } from "~core/state/coalesced-writer"
 import { createEmptySiteSummary, normalizeSiteSummary, pruneExpiredEvents, recordPageError, upsertEvent } from "~core/state/summaries"
 
@@ -240,30 +235,6 @@ function originFromUrl(url: string | undefined) {
   }
 }
 
-// A dom_script event carries only what the content script can see: a script
-// element and its src. The tracker DB join happens here so a known vendor's
-// injection gets named (e.g. connect.facebook.net → Meta) with deterministic
-// evidence, while unknown scripts stay honestly unattributed.
-function enrichScriptInjection(event: ObserverEvent): ObserverEvent {
-  if (event.eventType !== "script_injected" || event.trackerId) return event
-
-  const src = typeof event.details?.src === "string" ? event.details.src : undefined
-  if (!src) return event
-
-  const match = matchTrackerRequest({ type: "script", url: src }, trackers)[0]
-  if (!match) return event
-
-  return {
-    ...event,
-    trackerId: match.tracker.id,
-    companyId: match.tracker.companyId,
-    firstParty: false,
-    policyLabel: undefined,
-    confidence: match.tracker.confidence,
-    evidence: [...event.evidence, ...match.evidence]
-  }
-}
-
 async function recordActiveTabScan(tabId: number) {
   const tab = await browser.tabs.get(tabId)
   const origin = originFromUrl(tab.url)
@@ -411,15 +382,7 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
 browser.runtime.onMessage.addListener(
   createRuntimeMessageRouter({
     ensureHydrated,
-    recordObservedEvent: (event) =>
-      recordEvent(
-        normalizeCanvasReadEvent(
-          normalizePersistenceEvent(
-            normalizeIdentityDigestEvent(normalizeConsentSignal(enrichSdkDetection(enrichScriptInjection(event), trackers)))
-          ),
-          settings.mitigateCanvas
-        )
-      ),
+    recordObservedEvent: (event) => recordEvent(normalizeObservedEvent(event, { trackers, mitigateCanvas: settings.mitigateCanvas })),
     recordPageError: (tabId, origin, pageError) => {
       const summary = recordPageError(readSummary(tabId, origin), pageError)
       summaries.set(tabId, summary)

@@ -87,6 +87,10 @@ export function eventSummary(event: ObserverEvent) {
   if (event.eventType === "extension_diagnostic") return "A routine self-check by this extension — not something the page did."
   if (event.eventType === "browser_surface")
     return "Basic facts about your device (screen size, time zone, language) were readable by this page."
+  if (event.eventType === "device_field_read")
+    return "The page read a basic device detail (such as processor cores, memory, screen size, or time zone) that helps identify your device."
+  if (event.eventType === "webrtc_probe")
+    return "The page set up a WebRTC connection that can reveal your network (IP) addresses, including ones on your local network."
   return `${titleCase(event.eventType)} observed.`
 }
 

@@ -77,7 +77,8 @@ const FINGERPRINT_EVENT_TYPES = new Set<ObserverEvent["eventType"]>([
   "webgl_query",
   "font_enumeration",
   "webrtc_probe",
-  "browser_surface"
+  "browser_surface",
+  "device_field_read"
 ])
 
 const HANDOFF_EVENT_TYPES = new Set<ObserverEvent["eventType"]>(["cookie_sync", "identity_digest_observed"])

@@ -343,8 +343,13 @@ describe("eventSummary", () => {
     expect(eventSummary(event({ eventType: "service_worker_registered", evidence: ["x"] }))).toContain("background worker")
   })
 
+  it("names the WebRTC IP-exposure capability in plain language", () => {
+    expect(eventSummary(event({ eventType: "webrtc_probe", evidence: ["x"] }))).toContain("WebRTC")
+    expect(eventSummary(event({ eventType: "webrtc_probe", evidence: ["x"] }))).toContain("IP")
+  })
+
   it("falls back to a titled summary for event types without bespoke copy", () => {
-    expect(eventSummary(event({ eventType: "webrtc_probe", evidence: ["x"] }))).toMatch(/observed\.$/)
+    expect(eventSummary(event({ eventType: "totally_unknown" as never, evidence: ["x"] }))).toMatch(/observed\.$/)
   })
 })
 

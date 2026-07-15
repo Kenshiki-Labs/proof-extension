@@ -10,10 +10,7 @@ const LINE_LIMIT = 450
 const SHRINK_ONLY_BASELINE: Record<string, number> = {
   // Declarative rules table, kept compact and prettier-ignored (.prettierignore):
   // exploding its inline factor objects adds hundreds of noise lines for nothing.
-  "src/core/atlas/rules.ts": 482,
-  // Service worker; Prettier normalization pushed it a few lines over the limit.
-  // Shrink-only — trim back under 450 when it's next meaningfully touched.
-  "src/background.ts": 459
+  "src/core/atlas/rules.ts": 482
 }
 
 const SRC_ROOT = join(__dirname, "..")

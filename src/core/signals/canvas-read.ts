@@ -12,7 +12,7 @@ import type { ObserverEvent } from "~core/domain/types"
 // downgraded to "active" here — the background's own setting is the only
 // authority on whether noise could have been applied.
 
-const CANVAS_READ_APIS = new Set(["toDataURL", "toBlob", "getImageData"])
+const CANVAS_READ_APIS = new Set(["toDataURL", "toBlob", "getImageData", "convertToBlob", "readPixels"])
 
 function sanitizedDimension(details: ObserverEvent["details"], key: string): number | null {
   const value = details?.[key]

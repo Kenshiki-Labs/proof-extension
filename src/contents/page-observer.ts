@@ -1,8 +1,15 @@
 import type { PlasmoCSConfig } from "plasmo"
 
-import { createNoiseSeed, installCanvasElementReadHooks } from "~core/content/canvas-hooks"
+import {
+  createNoiseSeed,
+  installCanvasElementReadHooks,
+  installOffscreenCanvasReadHooks,
+  installWebglReadHooks
+} from "~core/content/canvas-hooks"
+import { installDeviceFieldReadHooks } from "~core/content/device-field-hooks"
 import { installIdentityDigestHook } from "~core/content/identity-digest-hooks"
 import { installPersistenceHooks } from "~core/content/persistence-hooks"
+import { installWebrtcProbeHook } from "~core/content/webrtc-hooks"
 import { isIgnoredPageError } from "~core/domain/page-errors"
 import { consentSignalGlobalNames } from "~core/signals/consent-signals"
 import { createRateLimitedReporter } from "~core/signals/persistence"
@@ -216,14 +223,74 @@ function observeCanvasReads() {
     })
   })
 
-  installCanvasElementReadHooks(
-    ({ api, mitigated, details }) => send(`canvas_read:${location.origin}:${api}`, { mitigated, details }),
-    mitigationEnabled,
-    createNoiseSeed()
-  )
+  const reporter = ({ api, mitigated, details }: { api: string; mitigated: boolean; details: Record<string, string | number> }) =>
+    send(`canvas_read:${location.origin}:${api}`, { mitigated, details })
+
+  // One seed per page load, shared across every readback surface, so a page
+  // reading the same content via 2D, OffscreenCanvas, and WebGL gets coherent
+  // per-session noise (and cannot diff surfaces to isolate the flips). Each
+  // installer is a no-op in browsers/contexts missing its APIs.
+  const seed = createNoiseSeed()
+  installCanvasElementReadHooks(reporter, mitigationEnabled, seed)
+  installOffscreenCanvasReadHooks(reporter, mitigationEnabled, seed)
+  installWebglReadHooks(reporter, mitigationEnabled, seed)
 }
 
 observeCanvasReads()
+
+// WebRTC observation. A page constructing an RTCPeerConnection can gather ICE
+// candidates that reveal the device's public and local-network IP addresses,
+// below the reach of request blocking. Observe-only: the MAIN world reports
+// only that a connection was constructed (never an address), and the
+// privileged side rebuilds evidence (normalizeWebrtcProbeEvent). Rate-limited
+// so a page opening connections in a loop cannot become a message storm.
+function observeWebrtc() {
+  const send = createRateLimitedReporter<{ details: Record<string, string | number> }>((id, { details }) => {
+    postApiHookEvent({
+      id,
+      policyLabel: "unknown_first_party",
+      eventType: "webrtc_probe",
+      blockability: "observable_only",
+      status: "active",
+      confidence: "confirmed",
+      evidence: ["Reported by the WebRTC observer; evidence is rebuilt by the extension before recording."],
+      details
+    })
+  })
+
+  installWebrtcProbeHook(({ key, details }) => {
+    send(`webrtc_probe:${location.origin}:${key}`, { details })
+  })
+}
+
+observeWebrtc()
+
+// Passive fingerprint observation. Where the background's exposure scan says
+// "these device fields are readable," this reports when a page script actually
+// reads one (processor cores, memory, languages, screen size, time zone). The
+// MAIN world reports only the field name, never the value; the privileged side
+// rebuilds evidence (normalizeDeviceFieldReadEvent). Rate-limited, though the
+// hook already reports each field at most once per page.
+function observeDeviceFieldReads() {
+  const send = createRateLimitedReporter<{ details: Record<string, string | number> }>((id, { details }) => {
+    postApiHookEvent({
+      id,
+      policyLabel: "unknown_first_party",
+      eventType: "device_field_read",
+      blockability: "observable_only",
+      status: "active",
+      confidence: "confirmed",
+      evidence: ["Reported by the device-field observer; evidence is rebuilt by the extension before recording."],
+      details
+    })
+  })
+
+  installDeviceFieldReadHooks(({ key, details }) => {
+    send(`device_field_read:${location.origin}:${key}`, { details })
+  })
+}
+
+observeDeviceFieldReads()
 
 // Global Privacy Control, JS half. The Sec-GPC request header (the legally
 // meaningful half under CCPA) is emitted by a DNR rule in the background;

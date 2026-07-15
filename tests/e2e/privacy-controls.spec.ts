@@ -34,6 +34,50 @@ const CANVAS_FIXTURE_HTML = `<!DOCTYPE html>
   </body>
 </html>`
 
+// Drives the two 0.7 readback surfaces from the page's own MAIN world:
+// a main-thread OffscreenCanvas (convertToBlob for the event, getImageData for
+// a deterministic byte comparison) and a WebGL context (readPixels). Both are
+// gated by the same mitigateCanvas flag as the 2D path.
+const CANVAS_ADVANCED_FIXTURE_HTML = `<!DOCTYPE html>
+<html>
+  <head><title>Canvas advanced fixture</title></head>
+  <body>
+    <h1>Canvas advanced fixture</h1>
+    <canvas id="gl" width="64" height="64"></canvas>
+    <script>
+      const off = new OffscreenCanvas(64, 64)
+      const octx = off.getContext("2d")
+      const gradient = octx.createLinearGradient(0, 0, 64, 0)
+      gradient.addColorStop(0, "#ff6600")
+      gradient.addColorStop(1, "#0066ff")
+      octx.fillStyle = gradient
+      octx.fillRect(0, 0, 64, 64)
+      octx.fillStyle = "#123456"
+      octx.font = "12px sans-serif"
+      octx.fillText("fp", 4, 20)
+      window.readOffscreen = () => {
+        // Emit a convertToBlob event too, so the store sees that surface.
+        off.convertToBlob().catch(() => undefined)
+        return Array.from(octx.getImageData(0, 0, 64, 64).data).join(",")
+      }
+
+      const glCanvas = document.getElementById("gl")
+      const gl = glCanvas.getContext("webgl") || glCanvas.getContext("experimental-webgl")
+      window.hasWebgl = () => Boolean(gl)
+      if (gl) {
+        gl.clearColor(0.2, 0.4, 0.6, 1.0)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+      }
+      window.readWebgl = () => {
+        if (!gl) return "no-webgl"
+        const buffer = new Uint8Array(64 * 64 * 4)
+        gl.readPixels(0, 0, 64, 64, gl.RGBA, gl.UNSIGNED_BYTE, buffer)
+        return Array.from(buffer).join(",")
+      }
+    </script>
+  </body>
+</html>`
+
 const GPC_FIXTURE_HTML = `<!DOCTYPE html>
 <html>
   <head><title>GPC fixture</title></head>
@@ -150,6 +194,59 @@ test("canvas mitigation noises exports only after opt-in, stably within a sessio
           async () => {
             const events = await readAllEvents(worker)
             return events.some((event) => event.eventType === "canvas_read" && event.status === "mitigated")
+          },
+          { timeout: 15_000 }
+        )
+        .toBe(true)
+    })
+  })
+})
+
+test("canvas mitigation reaches OffscreenCanvas and WebGL readbacks only after opt-in, and records them mitigated", async () => {
+  await withExtensionContext("privacy-canvas-advanced", async (context, worker, extensionId) => {
+    await withHeaderRecordingServer(CANVAS_ADVANCED_FIXTURE_HTML, async (baseUrl) => {
+      const page = await context.newPage()
+      await page.goto(`${baseUrl}/`)
+      await waitForSyncedFlag(page, "proofExtensionMitigateCanvas", false)
+
+      // This environment must actually have WebGL, or the readPixels leg is
+      // untested — fail loudly rather than silently skip the honesty check.
+      expect(await page.evaluate(() => (window as never as { hasWebgl: () => boolean }).hasWebgl())).toBe(true)
+
+      // Default off: both readbacks are byte-identical to what the page drew.
+      const offUnmitigated = await page.evaluate(() => (window as never as { readOffscreen: () => string }).readOffscreen())
+      const glUnmitigated = await page.evaluate(() => (window as never as { readWebgl: () => string }).readWebgl())
+
+      await setOptionsToggle(context, extensionId, "mitigate canvas", true)
+      await waitForStoredSetting(worker, "mitigateCanvas", true)
+
+      await page.reload()
+      await waitForSyncedFlag(page, "proofExtensionMitigateCanvas", true)
+
+      const offMitigated = await page.evaluate(() => (window as never as { readOffscreen: () => string }).readOffscreen())
+      const offMitigatedRepeat = await page.evaluate(() => (window as never as { readOffscreen: () => string }).readOffscreen())
+      const glMitigated = await page.evaluate(() => (window as never as { readWebgl: () => string }).readWebgl())
+      const glMitigatedRepeat = await page.evaluate(() => (window as never as { readWebgl: () => string }).readWebgl())
+
+      // Noised, but stable within the session (a per-call random would be
+      // trivially detectable by diffing two reads).
+      expect(offMitigated).not.toBe(offUnmitigated)
+      expect(offMitigatedRepeat).toBe(offMitigated)
+      expect(glMitigated).not.toBe(glUnmitigated)
+      expect(glMitigatedRepeat).toBe(glMitigated)
+
+      // Both new surfaces must land in the store as mitigated — only granted
+      // because the setting is genuinely on.
+      await expect
+        .poll(
+          async () => {
+            const events = await readAllEvents(worker)
+            const mitigatedApis = new Set(
+              events
+                .filter((event) => event.eventType === "canvas_read" && event.status === "mitigated")
+                .map((event) => (event.details as { api?: string } | undefined)?.api)
+            )
+            return mitigatedApis.has("convertToBlob") && mitigatedApis.has("readPixels")
           },
           { timeout: 15_000 }
         )

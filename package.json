@@ -1,8 +1,8 @@
 {
   "name": "proof-extension",
   "displayName": "Pulse Observer",
-  "version": "0.6.0",
-  "description": "The internet met your digital self first. Pulse Observer names who's watching, hardens what it can, and helps you take it back.",
+  "version": "0.7.0",
+  "description": "Zero-trust ad blocker & tracker blocker. Pulse Observer names who's watching, hardens what it can, and helps you take it back.",
   "private": false,
   "license": "MIT",
   "repository": {
