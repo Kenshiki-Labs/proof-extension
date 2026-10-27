@@ -85,3 +85,5 @@ collision.
   `.postcssrc.json` (plain JSON) and `tailwind.config.mjs` (ESM) — plain
   `.js`/`.cjs` config files fail to load under Parcel's config resolution
   here.
+
+@AGENTS.md
