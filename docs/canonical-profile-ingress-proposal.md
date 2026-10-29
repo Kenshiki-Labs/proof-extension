@@ -173,3 +173,36 @@ No source configuration or manifest permission changed and no Mapbox network was
 used. The normal final QA rebuilds the artifact without that test token. Both
 source-review correction and final test runs must remain separate from production
 TLS, connection provenance or store-release qualification.
+
+
+## Exact source review
+
+- `a841700b65141eb8da4fc3573195b58c1d757039`: the independent native-transport
+  reviewer fully read all eight candidate files, governing repository and surface/
+  permission contracts, actual caller and extension fixtures, and current Chrome,
+  React cleanup, Fetch and Zod contracts. The reviewer then fully reread the two
+  corrected test/feature files and rechecked every committed blob against final
+  manifest `1c861dc8ee0c13c60b1460a389a81ab618ba5814d064c687c373858271a1633e`.
+  All eight matched at clean source tree
+  `bba227020c8266a81e0c268d981b11599ae84aeb`; the optional-image test finding was
+  resolved and no blocking security, reliability, cancellation or simplification/
+  SOLID/DRY issue remained. This is independent source review, not execution by
+  that reviewer of the author's named checks.
+
+The corrected source passed the unchanged whole QA command (555 cases/59 files,
+coverage,13 byte-stable intelligence artifacts,44 promoted trackers and the normal
+Chrome build), browser-mode smoke1/1, and the complete built-extension E2E23/23
+without retries. Its test-only synthetic-token Chrome build independently passed
+the actual reveal E2E with one locally fulfilled optional map image; the normal
+final build passed with none. The seven-case compiled-component receipt includes
+HTTP/envelope/null/redirect failures and unmount cancellation. Firefox and Edge
+builds with unchanged runtime source also passed and contain root manifests.
+
+The built extension's actual request carried no Origin, cookie or authorization,
+consistent with foreground extension host permissions; the paired public lane
+must retain its reviewed missing-Origin admission. It made one canonical GET
+after the click and none beforehand. Synthetic response data and all optional
+map images were fulfilled locally; no production TLS, location, authenticated
+ceremony, store publication or deployment is established. Final logs and
+source/artifact/transport receipts remain under the external evidence directory
+above. Paired private Worker publication and gateway delivery remain prerequisites.
