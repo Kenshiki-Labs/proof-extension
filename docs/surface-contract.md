@@ -91,6 +91,22 @@ Appendix (collapsed): exposure scan, evidence-type matrix, storage/cache observa
 
 **Deleted from the report:** the Summary metric-tile grid (12 tiles → the few that matter appear inside acts 1–3 with words around them); the Diagnostics section (Debug view).
 
+### Explicit IP-location reveal
+
+The report's narrowing section may offer “Show me on a map” as a separate, explicit
+user action. It never fetches automatically. Explain before the click that Kenshiki's
+canonical profile endpoint receives the connection IP; a configured optional map
+image then sends the returned coordinates to Mapbox. The profile describes the
+connection seen by Cloudflare, approximately, not GPS or a measured accuracy radius.
+Missing geography remains unavailable rather than a fabricated location.
+
+This reveal uses one bodyless, credential-free GET to
+`https://gateway.kenshikilabs.com/services/bond/api/session-profile`, with no
+query, custom headers, alternate endpoint or redirect fallback. Its data remains
+ephemeral component state; it is not observer evidence, stored telemetry or identity
+proof. Unmounting the reveal cancels the request and late responses cannot update it.
+The optional existing Mapbox image is a distinct, disclosed egress after that click.
+
 ## Debug view contract
 
 A separate route (`report.html?view=debug`), linked from both product surfaces. Fail-open: shows everything, never curated for presentation. Contents: every SummaryMetrics field with its definition, raw event stream (all tiers, all sources), identified/unclassified/source-backed/site-tool ladders, eviction and cap stats, storage keys, diagnostics, page errors. This is where "Observations 43 / Events 96" lives — labeled as what they are (grouped evidence rows / raw log entries).
