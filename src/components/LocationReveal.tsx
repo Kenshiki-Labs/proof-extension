@@ -1,34 +1,11 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { TYPE, UI } from "~components/system/tokens"
+import { requestConnectionProfile, type ConnectionLocation } from "~core/transport/connection-profile"
 
-// The one deliberate egress in the whole extension (docs/surface-contract.md
-// "The map"): user-initiated, disclosed, never automatic. Pulse observes
-// locally and never phones home — EXCEPT here, at an explicit click, to show
-// you the one thing it cannot derive on-device: where your IP actually puts
-// you on a map. The disclosure is the point: the trackers on this page did
-// exactly this, silently, with no button and no consent. This asks first.
-//
-// It resolves the CALLER's IP (no IP is sent as a parameter — the endpoint
-// reads it from the request), then draws a Mapbox static pin. Approximate,
-// from the IP, not GPS — labeled as such, with the geo provider's own
-// accuracy radius when it gives one.
-//
-// The geolocation source is Kenshiki's own MaxMind-backed session-profile
-// service (gate.kenshikilabs.com — the same endpoint the proof app calls
-// server-side), not a generic free IP API: the two products share one geo
-// source (the same lockstep discipline as the entropy model), and MaxMind
-// resolves far closer to the real location than a free service that often
-// returns a datacenter. Called directly from the user's browser so the
-// service reads THEIR IP; overridable to the proof proxy via env.
-
-const PROFILE_ENDPOINT = process.env.PLASMO_PUBLIC_PROFILE_ENDPOINT ?? "https://gate.kenshikilabs.com/api/session-profile"
-
-type GeoNetwork = { city?: string; region?: string; country?: string; latitude?: number; longitude?: number; accuracyRadiusKm?: number }
-// The service returns either a bare profile or a { ok, profile } envelope.
-type ProfileResponse = { ok?: boolean; profile?: { network?: GeoNetwork } | null; network?: GeoNetwork }
-
-type RevealState = { status: "idle" | "loading" | "error" } | { status: "ready"; geo: GeoNetwork }
+// Explicit report action only: the edge observes the connection IP, never GPS.
+// A configured Mapbox image is a separate disclosed egress after that action.
+type RevealState = { status: "idle" | "loading" | "error" } | { status: "ready"; geo: ConnectionLocation }
 
 const MAPBOX_TOKEN = process.env.PLASMO_PUBLIC_MAPBOX_TOKEN
 
@@ -41,24 +18,32 @@ function mapUrl(lat: number, lng: number) {
 export default function LocationReveal({ watching }: { watching: number }) {
   const [state, setState] = useState<RevealState>({ status: "idle" })
 
+  const activeRequest = useRef<AbortController | null>(null)
+
+  useEffect(
+    () => () => {
+      activeRequest.current?.abort()
+      activeRequest.current = null
+    },
+    []
+  )
+
   async function reveal() {
+    activeRequest.current?.abort()
+    const controller = new AbortController()
+    activeRequest.current = controller
     setState({ status: "loading" })
     try {
-      const response = await fetch(PROFILE_ENDPOINT)
-      const data = (await response.json()) as ProfileResponse
-      const geo = data.profile?.network ?? data.network
-      if (!geo || geo.latitude == null || geo.longitude == null) {
-        setState({ status: "error" })
-        return
-      }
-      setState({ status: "ready", geo })
+      const geo = await requestConnectionProfile(controller.signal)
+      if (!controller.signal.aborted && activeRequest.current === controller) setState({ status: "ready", geo })
     } catch {
-      setState({ status: "error" })
+      if (!controller.signal.aborted && activeRequest.current === controller) setState({ status: "error" })
+    } finally {
+      if (activeRequest.current === controller) activeRequest.current = null
     }
   }
 
   const place = state.status === "ready" ? [state.geo.city, state.geo.region, state.geo.country].filter(Boolean).join(", ") : ""
-  const radius = state.status === "ready" && state.geo.accuracyRadiusKm != null ? ` (±${state.geo.accuracyRadiusKm} km)` : ""
   const url =
     state.status === "ready" && state.geo.latitude != null && state.geo.longitude != null
       ? mapUrl(state.geo.latitude, state.geo.longitude)
@@ -71,12 +56,12 @@ export default function LocationReveal({ watching }: { watching: number }) {
       {state.status === "idle" ? (
         <>
           <p className={`${TYPE.body} mt-2 max-w-2xl`}>
-            Pulse never reaches the network to show you anything — except this, at your click. One request to a location service, which
-            reads your IP the way every server on this page already did. Then it draws the pin.
+            At your click, Kenshiki's location service receives your connection IP. If a map is configured, its approximate coordinates then
+            go to Mapbox to draw the pin. Nothing is sent for this reveal before you click.
           </p>
           <button
             className={`mt-3 border border-foreground bg-foreground px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-background transition-colors hover:border-signal hover:bg-signal`}
-            onClick={() => reveal().catch(() => setState({ status: "error" }))}
+            onClick={reveal}
             type="button">
             Show me on a map →
           </button>
@@ -94,8 +79,7 @@ export default function LocationReveal({ watching }: { watching: number }) {
       {state.status === "ready" ? (
         <>
           <p className={`${TYPE.body} mt-2`}>
-            Your IP alone puts you near <strong>{place || "an identifiable place"}</strong>
-            {radius ? <span className={TYPE.small}>{radius}</span> : null}.
+            Your connection IP puts you approximately near <strong>{place || "an identifiable place"}</strong>.
           </p>
           {url ? (
             <img
@@ -105,8 +89,8 @@ export default function LocationReveal({ watching }: { watching: number }) {
             />
           ) : null}
           <p className={`${TYPE.small} mt-2`}>
-            MaxMind IP geolocation — approximate, not GPS. Every one of the {watching} {watching === 1 ? "company" : "companies"} on this
-            page can do exactly this, and none of them asked.
+            Cloudflare IP location — approximate, not GPS or a measured accuracy radius. The {watching}{" "}
+            {watching === 1 ? "company" : "companies"} on this page also receive connection details with their requests.
           </p>
         </>
       ) : null}

@@ -88,7 +88,15 @@ Raw per-tab event state is memory-only in the background worker and subject to t
 ## The complete egress inventory (all user-initiated)
 
 1. **AI audit report** — runs only when the user explicitly clicks Generate, only for `.gov` origins (verified against the tab's real URL in the background worker), and sends only the report's evidence summary — the same payload shown by the copy action — to Kenshiki's audit endpoint (`worker/ai-audit-proxy`), which forwards it to the AI model. The API credential lives in that service, never in the extension (see `docs/observer-spec.md`, "Opt-In AI Assistance").
-2. **Location reveal** — an explicit click on "reveal" fetches Kenshiki's session-profile endpoint (`gate.kenshikilabs.com`), which reads the caller's IP server-side and returns an approximate city-level geolocation; no parameters identifying the user are sent. When a Mapbox token is configured at build time, the returned coordinates fetch one static map image from `api.mapbox.com`; the store build ships without a token, so no Mapbox request occurs. The disclosure is the feature's point: it shows the user what any tracker on the page could already learn silently (`docs/surface-contract.md`, "The map").
+2. **Location reveal** — only an explicit click on “Show me on a map” fetches
+   `https://gateway.kenshikilabs.com/services/bond/api/session-profile`. The
+   credential-free GET has no identifying parameters; the edge receives the
+   connection IP and returns Cloudflare's approximate connection geography, not
+   GPS or a measured accuracy radius. The result stays ephemeral in that report
+   view. When a Mapbox public token is configured at build time, the returned
+   coordinates fetch one static image from `api.mapbox.com`; without a token no
+   map request occurs. Both requests are disclosed before the click. No additional
+   manifest permission or CSP authority is introduced.
 3. **Consent audit** — selecting the Contract view fetches the visited site's own linked legal documents (privacy policy, terms, cookie policy) from that site's own domain, to reconcile observed behavior against what the documents declare. Nothing is sent to Kenshiki.
 
 ## User controls: pause, clear, limit
